@@ -1,4 +1,4 @@
-<img src="media/media/image1.jpeg" style="width:1in;height:1.14333in" />
+<img src="media/image1.jpeg" style="width:1in;height:1.14333in" />
 
 > **AX.25 Link Access Protocol**
 >
@@ -505,8 +505,7 @@ example shows a single link to the radio port.
 
 > 11
 
-<img src="media/media/image6.png"
-style="width:6.11417in;height:4.59333in" />
+<img src="media/image6.png" style="width:6.11417in;height:4.59333in" />
 
 > **Figure 2.2 AX.25 Finite State Machine Model (Single Link).**
 
@@ -518,8 +517,7 @@ implementation.
 
 > 12
 
-<img src="media/media/image7.png"
-style="width:6.11417in;height:4.61417in" />
+<img src="media/image7.png" style="width:6.11417in;height:4.61417in" />
 
 > **Figure 2.3 AX.25 Finite State Machine Model (Multiple Stream).**
 
@@ -552,7 +550,7 @@ between the data-link layer and the physical layer also
 
 > 13
 
-<img src="media/media/image8.png" style="width:6.66667in;height:3in" />
+<img src="media/image8.png" style="width:6.66667in;height:3in" />
 
 occurs via service primitives.) Primitives are discussed in greater
 detail in Section 5.
@@ -3145,8 +3143,7 @@ different return legs. Each subroutine has a single point of return.
 
 > 54
 
-<img src="media/media/image9.png"
-style="width:5.46917in;height:5.85in" />
+<img src="media/image9.png" style="width:5.46917in;height:5.85in" />
 
 > **Figure C1.1 SDL Symbol Definitions**
 >
@@ -3358,55 +3355,49 @@ Timers:
 
 > 59
 
-<img src="media/media/image10.png"
-style="width:8.00916in;height:5.89in" />
+<img src="media/image10.png" style="width:8.00916in;height:5.89in" />
 
 > **Figure C2a.1 Simplex Physical Ready State.**
 >
 > 60
 
-<img src="media/media/image11.png" style="width:4.8in;height:5.95in" />
+<img src="media/image11.png" style="width:4.8in;height:5.95in" />
 
 > **Figure C2a.2 Simplex Physical Receiving State.**
 >
 > 61
 
-<img src="media/media/image12.png"
-style="width:8.65in;height:5.66167in" />
+<img src="media/image12.png" style="width:8.65in;height:5.66167in" />
 
 > **Figure C2a.3 Simplex Physical Transmitter Suppression State.**
 >
 > 62
 
-<img src="media/media/image13.png"
-style="width:8.9925in;height:5.67833in" />
+<img src="media/image13.png" style="width:8.9925in;height:5.67833in" />
 
 > **Figure C2a.4 Simplex Physical Transmitter Start State.**
 >
 > 63
 
-<img src="media/media/image14.png"
-style="width:7.37917in;height:5.91in" />
+<img src="media/image14.png" style="width:7.37917in;height:5.91in" />
 
 > **Figure C2a.5 Simplex Physical Transmitting State.**
 >
 > 64
 
-<img src="media/media/image15.png"
-style="width:7.55in;height:5.88917in" />
+<img src="media/image15.png" style="width:7.55in;height:5.88917in" />
 
 > **Figure C2a.6. Simplex Physical Digipeating State.**
 >
 > 65
 
-<img src="media/media/image16.png" style="width:7in;height:5.95in" />
+<img src="media/image16.png" style="width:7in;height:5.95in" />
 
 > **Figure C2a.7 Simplex Physical Receiver Start State.**
 >
 > 66
 
-<img src="media/media/image17.png"
-style="width:3.45in;height:5.26917in" />
+<img src="media/image17.png" style="width:3.45in;height:5.26917in" />
 
 > **Figure C2a.s Simplex Physical Subroutines.**
 >
@@ -3557,34 +3548,30 @@ Timers:
 >
 > 70
 
-<img src="media/media/image18.png"
-style="width:5.16917in;height:5.94917in" />
+<img src="media/image18.png" style="width:5.16917in;height:5.94917in" />
 
 > **Figure C2b.1 Duplex Physical Receiver Ready State.**
 >
 > 71
 >
-> <img src="media/media/image19.png"
-> style="width:4.7in;height:5.87917in" />**Figure C2b.2 Duplex Physical
-> Receiving State.**
+> <img src="media/image19.png" style="width:4.7in;height:5.87917in" />**Figure
+> C2b.2 Duplex Physical Receiving State.**
 >
 > 72
 >
-> <img src="media/media/image20.png"
-> style="width:5.58917in;height:5.88in" />**Figure C2b.3 Duplex Physical
-> Transmitter Ready State.**
+> <img src="media/image20.png" style="width:5.58917in;height:5.88in" />**Figure
+> C2b.3 Duplex Physical Transmitter Ready State.**
 >
 > 73
 
-<img src="media/media/image21.png" style="width:5.31in;height:5.95in" />
+<img src="media/image21.png" style="width:5.31in;height:5.95in" />
 
 > **Figure C2b.4 Duplex Physical Transmitter Start State.**
 >
 > 74
 >
-> <img src="media/media/image22.png"
-> style="width:5.76917in;height:5.88in" />**Figure C2b.5 Duplex Physical
-> Transmitting State.**
+> <img src="media/image22.png" style="width:5.76917in;height:5.88in" />**Figure
+> C2b.5 Duplex Physical Transmitting State.**
 >
 > 75
 
@@ -3783,28 +3770,24 @@ Timers:
 >
 > 79
 
-<img src="media/media/image23.png"
-style="width:8.65in;height:5.20417in" />
+<img src="media/image23.png" style="width:8.65in;height:5.20417in" />
 
 > **Figure C3.1 Link Multiplexer Idle State.**
 >
 > 80
 >
-> <img src="media/media/image24.png"
-> style="width:8.9925in;height:5.41667in" />**Figure C3.2 Link
-> Multiplexer Seize Pending State.**
+> <img src="media/image24.png" style="width:8.9925in;height:5.41667in" />**Figure
+> C3.2 Link Multiplexer Seize Pending State.**
 >
 > 81
 >
-> <img src="media/media/image25.png"
-> style="width:8.9925in;height:5.41667in" />**Figure C3.3 Link
-> Multiplexer Seized State.**
+> <img src="media/image25.png" style="width:8.9925in;height:5.41667in" />**Figure
+> C3.3 Link Multiplexer Seized State.**
 >
 > 82
 >
-> <img src="media/media/image26.png"
-> style="width:5.54in;height:5.70917in" />**Figure C3.4 Link Multiplexer
-> Subroutines.**
+> <img src="media/image26.png" style="width:5.54in;height:5.70917in" />**Figure
+> C3.4 Link Multiplexer Subroutines.**
 >
 > 83
 
@@ -4032,14 +4015,12 @@ Queues:
 >
 > 88
 >
-> <img src="media/media/image31.jpeg"
-> style="width:8.645in;height:5.65892in" />**Figure C4.2 Data Link
-> Awaiting Connection State.**
+> <img src="media/image31.jpeg" style="width:8.645in;height:5.65892in" />**Figure
+> C4.2 Data Link Awaiting Connection State.**
 >
 > 89
 
-<img src="media/media/image32.png"
-style="width:8.64583in;height:5.64725in" />
+<img src="media/image32.png" style="width:8.64583in;height:5.64725in" />
 
 > **Figure C4.3 Data Link Awaiting Release State.**
 >
@@ -4053,9 +4034,8 @@ style="width:8.64583in;height:5.64725in" />
 >
 > 92
 >
-> <img src="media/media/image41.png"
-> style="width:8.64583in;height:5.64667in" />**Figure C4.4c Data Link
-> Connected State. (Continued)**
+> <img src="media/image41.png" style="width:8.64583in;height:5.64667in" />**Figure
+> C4.4c Data Link Connected State. (Continued)**
 >
 > 93
 >
@@ -4063,33 +4043,28 @@ style="width:8.64583in;height:5.64725in" />
 >
 > 94
 >
-> <img src="media/media/image46.png"
-> style="width:8.64583in;height:5.465in" />**Figure C4.5b Data Link
-> Timer Recovery State. (Continued)**
+> <img src="media/image46.png" style="width:8.64583in;height:5.465in" />**Figure
+> C4.5b Data Link Timer Recovery State. (Continued)**
 >
 > 95
 >
-> <img src="media/media/image47.png"
-> style="width:8.64583in;height:5.50879in" />**Figure C4.5c Data Link
-> Timer Recovery State. (Continued)**
+> <img src="media/image47.png" style="width:8.64583in;height:5.50879in" />**Figure
+> C4.5c Data Link Timer Recovery State. (Continued)**
 >
 > 96
 >
-> <img src="media/media/image48.png"
-> style="width:7.86917in;height:6.00917in" />**Figure C4.5d Data Link
-> Timer Recovery State. (Continued)**
+> <img src="media/image48.png" style="width:7.86917in;height:6.00917in" />**Figure
+> C4.5d Data Link Timer Recovery State. (Continued)**
 >
 > 97
 >
-> <img src="media/media/image49.png"
-> style="width:6.53917in;height:6.20917in" />**Figure C4.5e Data Link
-> Timer Recovery State. (Continued)**
+> <img src="media/image49.png" style="width:6.53917in;height:6.20917in" />**Figure
+> C4.5e Data Link Timer Recovery State. (Continued)**
 >
 > 98
 >
-> <img src="media/media/image50.jpeg"
-> style="width:8.645in;height:3.56667in" />**Figure C4.6a Data Link
-> Awaiting V2.2 Connection State.**
+> <img src="media/image50.jpeg" style="width:8.645in;height:3.56667in" />**Figure
+> C4.6a Data Link Awaiting V2.2 Connection State.**
 >
 > 99
 >
@@ -4101,8 +4076,7 @@ style="width:8.64583in;height:5.64725in" />
 >
 > 101
 
-<img src="media/media/image59.png"
-style="width:8.645in;height:4.26667in" />
+<img src="media/image59.png" style="width:8.645in;height:4.26667in" />
 
 > **Figure C4.7b Data Link Subroutines. (Continued)**
 >
@@ -4201,56 +4175,48 @@ style="width:8.645in;height:4.26667in" />
 >
 > 104
 
-<img src="media/media/image60.png"
-style="width:5.51917in;height:5.66917in" />
+<img src="media/image60.png" style="width:5.51917in;height:5.66917in" />
 
 > **Figure C5.1 Management Data Link Ready State.**
 >
 > 105
 
-<img src="media/media/image61.png"
-style="width:7.2475in;height:6.1975in" />
+<img src="media/image61.png" style="width:7.2475in;height:6.1975in" />
 
 > **Figure C5.2 Management Data Link Negotiating State.**
 >
 > 106
 
-<img src="media/media/image62.png"
-style="width:7.6in;height:5.92917in" />
+<img src="media/image62.png" style="width:7.6in;height:5.92917in" />
 
 > **Figure C5.3 MDL Classes of Procedures Negotiation Subroutines.**
 >
 > 107
 >
-> <img src="media/media/image63.png"
-> style="width:8.61in;height:4.79917in" />**Figure C5.4 MDL Optional
-> Functions Subroutines.**
+> <img src="media/image63.png" style="width:8.61in;height:4.79917in" />**Figure
+> C5.4 MDL Optional Functions Subroutines.**
 >
 > 108
 
-<img src="media/media/image64.png"
-style="width:5.87917in;height:5.93in" />
+<img src="media/image64.png" style="width:5.87917in;height:5.93in" />
 
 > **Figure C5.5 MDL N1 Negotiation Subroutines.**
 >
 > 109
 
-<img src="media/media/image65.png"
-style="width:5.85917in;height:5.92917in" />
+<img src="media/image65.png" style="width:5.85917in;height:5.92917in" />
 
 > **Figure C5.6 MDL Window Negotiation Subroutines.**
 >
 > 110
 
-<img src="media/media/image66.png"
-style="width:6.06in;height:5.92917in" />
+<img src="media/image66.png" style="width:6.06in;height:5.92917in" />
 
 > **Figure C5.7 MDL Retry Notification Subroutines**
 >
 > 111
 
-<img src="media/media/image67.png"
-style="width:5.86917in;height:5.92917in" />
+<img src="media/image67.png" style="width:5.86917in;height:5.92917in" />
 
 > **Figure C5.8 MDL T1 Negotiation Subroutines.**
 >
@@ -4461,29 +4427,25 @@ physical channel.
 
 > 116
 
-<img src="media/media/image68.png"
-style="width:5.91917in;height:6.03917in" />
+<img src="media/image68.png" style="width:5.91917in;height:6.03917in" />
 
 > **Figure C-6.1 Segmenter Ready State.**
 >
 > 117
 
-<img src="media/media/image69.png"
-style="width:5.52917in;height:5.63917in" />
+<img src="media/image69.png" style="width:5.52917in;height:5.63917in" />
 
 > **Figure C-6.2 Reassembler Ready State.**
 >
 > 118
 
-<img src="media/media/image70.png"
-style="width:4.87917in;height:6.04in" />
+<img src="media/image70.png" style="width:4.87917in;height:6.04in" />
 
 > **Figure C-6.3 Reassembler Assembling Data State.**
 >
 > 119
 
-<img src="media/media/image71.png"
-style="width:4.87917in;height:6.03917in" />
+<img src="media/image71.png" style="width:4.87917in;height:6.03917in" />
 
 > **Figure C-6.4 Reassembler Assembling Unit Data State.**
 >
@@ -4631,8 +4593,7 @@ connect object representing a DL-CONNECT response primitive.
 
 > 122
 
-<img src="media/media/image72.png"
-style="width:4.54167in;height:2.65667in" />
+<img src="media/image72.png" style="width:4.54167in;height:2.65667in" />
 
 The properties exhibited by the queues while the DLC exists represent
 the agreements reached among the DLS users and the DLS provider during
@@ -4719,7 +4680,7 @@ station B causing a Confirm in the station A.
 
 > 124
 
-<img src="media/media/image73.png" style="width:6in;height:7.62in" />
+<img src="media/image73.png" style="width:6in;height:7.62in" />
 
 > **Figure D.3 Example of a Connection-Oriented Data Exchange.**
 >
