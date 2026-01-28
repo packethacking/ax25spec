@@ -770,30 +770,10 @@ The H bit is set to “0” on frames going to a repeater. The repeater
 changes the H bit to “1” before it retransmits the frame. Stations
 monitor and repeat frames that meet the following conditions:
 
-- The frame is addressed to this station in a repeater address
-- subfield
-- The H bit in its repeater address subfield is 0
-
-- All previous H bits are set to one
-
 Figure 3.7 shows how the repeater address subfield is encoded. Figure
 3.8 is an example of a complete frame after being repeated.
 
-**Octet** **ASCII A15 N A16 7 A17 O A18 O A19** **space A20**
-**space**
-
-**A21 (SSID)** **none**
-
-**Binary Hex 10011100 0x9C 01101110 0x6E 10011110 0x9E 10011110 0x9E
-01000000 0x40 01000000 0x40 11100011 0xE3**
-
-**SSID Encoding**
-
-**Bit Position**
-
-**HRRSSSS1**
-
-**76543210**
+<img src="media/fig3.7.png" />
 
 **Figure 3.7 Repeater Address Encoding.**
 
@@ -802,42 +782,11 @@ Where:
 - The top octet is the first octet sent, with bit 0 being sent first
 and bit 7 sent last of each octet.
 
-- As with the source and destination address subfields discussed
-above, bit 0 of each octet is the HDLC
-
-- Address extension bit is set to “0” on all but the last address
-- octet, where it is set to “1”.
-- The “R” bits are reserved in the same
-manner as in the source and destination subfields.
-
 - The “H” bit is the has-been-repeated bit. It is set to “0” when a
 frame has not been repeated and set to “1” by the repeating station
 when repeated.
 
-**Octet ASCII Flag none A1 N A2 J A3 7 A4 P**
-
-**A5 space A6 space**
-
-**A7 (SSID)** **none A8 N A9 7**
-
-**A10** **L A11** **E A12** **M A13 space**
-
-**A14 (SSID)** **none A15 N A16 7 A17 O A18 O A19 space A20 space**
-
-**A21 (SSID) none Control none PID none FCS none FCS none**
-
-**Flag** **none**
-
-**Binary** **Hex 01111110 0x7E 10011100 0x9C 10010100 0x94 01101110 0x6E
-10100000 0xA0 01000000 0x40 01000000 0x40 11100000 0xE0 10011100 0x9C
-01101110 0x6E 10011000 0x98 10001010 0x8A 10011010 0x9A 01000000 0x40
-01100000 0x60 10011100 0x9C 01101110 0x6E 10011110 0x9E 10011110 0x9E
-01000000 0x40 01000000 0x40 11100011 0xE3 00111110 0x3E 11110000 0xF0
-XXXXXXXX 0xHH XXXXXXXX 0xHH**
-
-**01111110** **0x7E**
-
-**Bit Position** **76543210**
+<img src="media/fig3.8.png" />
 
 **Figure 3.8 AX.25 Frame In Repeater Mode.**
 
@@ -897,33 +846,11 @@ can be one or two octets long and may use sequence numbers to maintain
 link integrity. These sequence numbers may be three-bit (modulo 8) or
 seven-bit (modulo 128) integers.
 
-**Control Field Type**
-
-**Control-Field Bits**
-
-**7 6 5** **4** **3 2 1** **0**
-
-**I Frame** **N(R)**
-
-**S Frame** **N(R)**
-
-**P** **N(S)** **0**
-
-**P/F** **S S 0 1**
-
-**U Frame** **M M M** **P/F** **M M 1 1**
+<img src="media/fig4.1a.png" />
 
 **Figure 4.1a Control-Field Formats (Modulo 8).**
 
-**Control Field Type**
-
-**Control-Field Bits**
-
-**15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0**
-
-**I Frame N(R)** **S Frame N(R)**
-
-**P N(S) 0 P/F 0 0 0 0 S S 0 1**
+<img src="media/fig4.1b.png" />
 
 **Figure 4.1b Control-Field Formats (Modulo 128).**
 
@@ -1023,19 +950,11 @@ The information-frame control field is encoded as shown in Figures 4.2a
 and 4.2b. These frames are sequentially numbered by the N(S) subfield to
 maintain control of their passage over the link-layer connection.
 
-**Control Field Type Control-Field Bits 7 6 5 4 3 2 1 0**
-
-**I Frame** **N(R) P N(S) 0**
+<img src="media/fig4.2a.png" />
 
 **Figure 4.2a I Frame Control Field (Modulo 8).**
 
-**Control Field Type**
-
-**Control-Field Bits**
-
-**15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0**
-
-**I Frame** **N(R)** **P** **N(S)** **0**
+<img src="media/fig4.2b.png" />
 
 **Figure 4.2b I Frame Control Field (Modulo 128).**
 
@@ -1044,31 +963,11 @@ maintain control of their passage over the link-layer connection.
 The supervisory frame control fields are encoded as shown in Figures
 4.3a and 4.3b.
 
-**Control-Field Type** **7 6 5**
-
-**Control-Field Bits**
-
-**4** **3 2** **1 0**
-
-**Receive Ready (RR) Receive Not Ready (RNR) Implicit Reject (REJ)
-Selective Reject (SREJ)**
-
-**N(R)** **P/F** **0 0** **0 1 N(R)** **P/F** **0 1** **0 1 N(R)**
-**P/F** **1 0** **0 1 N(R)** **P/F** **1 1** **0 1**
+<img src="media/fig4.3a.png" />
 
 **Figure 4.3a S Frame Control Fields (Modulo 8).**
 
-**Control-Field Type**
-
-**Control-Field Bits**
-
-**15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0**
-
-**Receive Ready (RR) N(R) Receive Not Ready (RNR) N(R) Implicit Reject
-(REJ) N(R) Selective Reject (SREJ) N(R)**
-
-**P/F 0 0 0 0 0 0 0 1 P/F 0 0 0 0 0 1 0 1 P/F 0 0 0 0 1 0 0 1 P/F 0 0 0
-0 1 1 0 1**
+<img src="media/fig4.3b.png" />
 
 **Figure 4.3b S Frame Control Fields (Modulo 128).**
 
@@ -1076,14 +975,11 @@ Where:
 
 - RR Receive Ready
 - System Ready To Receive.
-- RNR Receive Not
-Ready - TNC Buffer Full.
+- RNR Receive Not Ready - TNC Buffer Full.
 
-- REJ Implicit Reject Frame
-- Out of Sequence or Duplicate.
+- REJ Implicit Reject Frame - Out of Sequence or Duplicate.
 
-- SREJ Selective Reject
-- Request Single or Multiple Frame Repeat.
+- SREJ Selective Reject - Request Single or Multiple Frame Repeat.
 
 ##### 4.3.2.1 Receive Ready (RR) Command and Response
 
@@ -1153,26 +1049,7 @@ SREJ frame.
 Unnumbered frame control fields are either commands or responses. Figure
 4.4 shows the layout of U frames implemented within this protocol.
 
-**Control Field Type** **Type** **Control-Field Bits**
-
-**Set Asynchronous Balanced Mode Extended (SABME) Set Asynchronous
-Balanced Mode(SABM) Disconnect (DISC) Disconnect Mode (DM)**
-
-**Unnumbered Acknowledge (UA) Frame Reject (FRMR) Unnumbered
-Information (UI) Exchange Identification (XID) Test (TEST)**
-
-**Command**
-
-**Command**
-
-**Command Response Response Response Either Either Either**
-
-**7 6 5 4 3 2 1 0 0 1 1 P 1 1 1 1**
-
-**0 0 1 P 1 1 1 1**
-
-**0 1 0 P 0 0 1 1 0 0 0 F 1 1 1 1 0 1 1 F 0 0 1 1 1 0 0 F 0 1 1 1 0 0 0
-P/F 0 0 1 1 1 0 1 P/F 1 1 1 1 1 1 1 P/F 0 0 1 1**
+<img src="media/fig4.4.png" />
 
 **Figure 4.4 U Frame Control Fields.**
 
@@ -1312,93 +1189,7 @@ The encoding of each PI/PL/PV applicable to AX.25 is detailed in Figure
 discussed below are required in an implementation that complies with
 this version of AX.25.
 
-**Name**
-
-**Classes of Procedures**
-
-**HDLC Optional Functions**
-
-**I Field Length Tx I Field Length Rx Window Size Tx Window Size Rx
-Ack Timer**
-
-**PI PL**
-
-**2 2**
-
-**3 3**
-
-**5 N**
-
-**6 N**
-
-**7 1**
-
-**8 1**
-
-**9 N**
-
-**Parameter Field Element**
-
-**Balanced-ABM Unbalanced-NRM-Primary \***
-
-**Unbalanced-NRM-Secondary \* Unbalanced-ARM-Primary \*
-Unbalanced-ARM-Secondary \* Half Duplex Full Duplex Reserved \* 1
-Reserved \***
-
-**2 REJ command/response 3A SREJ command/response 4 UI
-command/response \***
-
-**5 SIM command /RIM response \* 6 UP command \***
-
-**7A Basic address \* 7B Extended address 8 Delete I response \* 9
-Delete I command \* 10A Modulo 8 10B Modulo 128**
-
-**11 RSET command \***
-
-**12 TEST command/response 13 RD response \* 14A 16-bit FCS 14B 32-bit
-FCS \* 15A Synchronous Tx**
-
-**15B Start/stop Tx \***
-
-**15C Start/stop Basic Flow Ctl\***
-
-**15D Start/stop Octet Transparent \***
-
-**3B SREJ Multiframe \* 16 Segmenter/Reassembler**
-
-**Reserved \***
-
-**Max I fields length Tx (bits)N1\*8 \***
-
-**Max I fields length Rx (bits)N1\*8 \***
-
-**Window Size k (frames) Tx \***
-
-**Window Size k (frames) Rx \***
-
-**Wait for Ack T1 (msec)**
-
-**Type Bit Value**
-
-**E** **0** **1 E** **1** **0 E** **2** **0 E** **3** **0 E** **4**
-**0 E** **5 0/1 E** **6 0/1**
-
-**7-15** **0 E** **0** **0 E** **1 0/1 E** **2 0/1 E** **3** **0 E**
-**4** **0 E** **5** **0 E** **6** **0 E** **7** **1 E** **8** **0 E**
-**9** **0 E 10 0/1 E 11 0/1 E 12** **0 E 13** **1 E 14** **0 E 15**
-**1 E 16** **0 E 17** **1 E 18** **0 E 19** **0**
-
-**E** **20** **0**
-
-**E** **21** **0/1 E** **22** **0/1 E** **23 0 B** **NA B**
-
-**B** **NA** **B**
-
-**B B 0-6 0-127 7** **0**
-
-**B B 0-6 0-127 7** **0**
-
-**B** **NA** **B**
+<img src="media/fig4.5.png" />
 
 **Figure 4.5 Parameter Negotiation - Parameter Field Elements.**
 
@@ -1473,27 +1264,6 @@ versions, or the receiving station wants to use the defaults for version
 
 A typical XID frame is shown in Figure 4.6.
 
-**Octet ID Flag A1 A2 A3 A4 A5 A6**
-
-**A7 (SSID) A8 A9 A10 A11 A12 A13**
-
-**A14 (SSID) Control FI GI GL**
-
-**PI PL PV**
-
-**PI PL PV**
-
-**PI PL PV PI PL PV PI PL PV PI PL PV**
-
-**FCS**
-
-**Hex Value 0x7E 0x9C 0x94 0x6E 0xA0 0x40 0x40 0xE0 0x9C 0x6E 0x98 0x8A
-0x9A 0x40 0x61 0xAF 0x82 0x80**
-
-**0x00 0x17**
-
-**0x02 0x02**
-
 **0x22 0x00**
 
 **0x03 0x03**
@@ -1505,40 +1275,7 @@ A typical XID frame is shown in Figure 4.6.
 
 **0xXX 0xXX**
 
-**Meaning Start of frame flag**
-
-**From Address (NJ7P-0)**
-
-**To Address (N7LEM-0)**
-
-**XID Format Indicator**
-
-**Group Identifier - Parameter Negotiation**
-
-**Group Length – All of the PI/PL/PV Fields (2 octets)**
-
-**Parameter Indicator – Classes of Procedures Parameter Length**
-
-**Parameter Variable – Half Duplex, Asynchronous Balanced Mode**
-
-**Parameter Indicator – Optional Functions Parameter Length**
-
-**Parameter Variable – SREJ/REJ, Extended Address, 16-bit FCS, TEST
-command/response, Modulo 128, Synchronous Transmit, No
-Segmenter/Reassembler**
-
-**Parameter Indicator – Rx I Field Length (bits) Parameter Length**
-
-**Parameter Variable – 1024 bits (128 octets) Parameter Indicator – Rx
-Window Size Parameter Length**
-
-**Parameter Variable – 2 frames Parameter Indicator – Timer T1
-Parameter Length**
-
-**Parameter Variable – 4096 milliseconds Parameter Indicator – Retries
-(N2) Parameter Length**
-
-**Parameter Variable – 3 Retires Frame Check Sequence (2 octets)**
+<img src="media/fig4.6.png" />
 
 **Figure 4.6 Typical XID Frame.**
 
@@ -1929,12 +1666,7 @@ The command/response information is encoded into the address field as
 shown in Figure 6.1. Implementations of AX.25 prior to version 2.0
 defined these bits to be either both “0” or “1”.
 
-**Frame Type Previous Versions Command (V2) Response (V2) Previous
-Versions**
-
-**Destination SSID C-Bit 0 1 0 1**
-
-**Source SSID C-Bit 0 0 1 1**
+<img src="media/fig6.1.png" />
 
 **Figure 6.1 Command/Response Encoding.**
 
@@ -2432,19 +2164,7 @@ taken to prevent deadlock situations from arising in the buffer
 management of both stations on the link. The header is illustrated in
 Figure 6.2.
 
-**Bit Position** **Hex** **Description**
-
-**7 6 5 4 3 2 1 0 0 0 0 0 1 0 0 0**
-
-**F X X X X X X X**
-
-**0x08**
-
-**F\*128+X**
-
-**PID for segmented frame F=1 if first segmented frame,**
-
-**F=0 for all other frames; X=number of segments remaining**
+<img src="media/fig6.2.png" />
 
 **Figure 6.2 Segment Header Format.**
 
@@ -3665,6 +3385,8 @@ Queues:
 
 - I Frame Queue — queue of information to be transmitted in I frames.
 
+<img src="media/figc4.1.png" />
+
 **Figure C4.1 Data Link Disconnected State.**
 
 <img src="media/image31.jpeg" style="width:8.645in;height:5.65892in" />
@@ -3675,13 +3397,19 @@ Queues:
 
 **Figure C4.3 Data Link Awaiting Release State.**
 
+<img src="media/figc4.4a.png" />
+
 **Figure C4.4a Data Link Connected State.**
+
+<img src="media/figc4.4b.png" />
 
 **Figure C4.4b Data Link Connected State. (Continued)**
 
 <img src="media/image41.png" style="width:8.64583in;height:5.64667in" />
 
 **Figure C4.4c Data Link Connected State. (Continued)**
+
+<img src="media/figc4.5a.png" />
 
 **Figure C4.5a Data Link Timer Recovery State.**
 
@@ -3705,7 +3433,11 @@ Queues:
 
 **Figure C4.6a Data Link Awaiting V2.2 Connection State.**
 
+<img src="media/figc4.6b.png" />
+
 **Figure C4.6b Data Link Awaiting V2.2 Connection State (Continued)**
+
+<img src="media/figc4.7a.png" />
 
 **Figure C4.7a Data Link Subroutines.**
 
@@ -4220,6 +3952,8 @@ are defined to be destructive with respect to all objects.
 
 The relationship between objects that may be manipulated in the above
 fashion are summarized in Figure D.1.
+
+<img src="media/figd1.png" />
 
 **Figure D.1 Relationships between Queue Model Objects.**
 
