@@ -327,7 +327,7 @@ function or code is provided. Such is the case with the current TAPR TNC-2
 equipment, where only Layers 1, 2 and 7 are provided; these comprise the
 minimum configuration for reliable communications.
 
-<img src="media/image31.jpeg" alt="Figure 2.1 Seven Layer OSI Reference Model" />
+<img src="media/image5.png" alt="Figure 2.1 Seven Layer OSI Reference Model" />
 
 **Figure 2.1 Seven Layer OSI Reference Model.**
 
