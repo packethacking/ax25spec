@@ -490,31 +490,11 @@ Each frame is made up of several smaller groups, called fields. Figures
 3.1a and 3.1b illustrate the three basic types of frames. Note that the
 first bit to be transmitted is on the left side.
 
-**Flag 01111110**
-
-**Address 112/224 Bits**
-
-**Control 8/16 Bits**
-
-**Info N\*8 Bits**
-
-**FCS** **Flag**
-
-**16 Bits 01111110**
+<img src="media/fig3.1a.png" />
 
 **Figure 3.1a U and S Frame Construction.**
 
-**Flag 01111110**
-
-**Address 112/224 Bits**
-
-**Control 8/16 Bits**
-
-**PID Info** **FCS**
-
-**8 Bits N\*8 Bits 16 Bits**
-
-**Flag 01111110**
+<img src="media/fig3.1b.png" />
 
 **Figure 3.1b Information Frame Construction.**
 
@@ -560,29 +540,7 @@ The Protocol Identifier (PID) field appears in information frames (I and
 UI) only. It identifies which kind of Layer 3 protocol, if any, is in
 use.
 
-**HEX Binary \*\* XX01XXXX \*\* XX10XXXX**
-
-**0x01 00000001 0x06 00000110 0x07 00000111 0x08 00001000 0xC3
-11000011 0xC4 11000100 0xCA 11001010 0xCB 11001011 0xCC 11001100 0xCD
-11001101 0xCE 11001110 0xCF 11001111 0xF0 11110000 0xFF 11111111**
-
-**Layer 3 Type**
-
-**AX.25 Layer 3 Implemented AX.25 Layer 3 Implemented ISO 8208/CCITT
-X.25 PLP**
-
-**Compressed TCP/IP Packet Van Jacobson (RFC 1144) Uncompressed TCP/IP
-Packet Van Jacobson (RFC 1144) Segmentation Fragment TEXNET Datagram
-Protocol Link Quality Protocol Appletalk Appletalk ARP**
-
-**ARPA Internet Protocol ARPA Address Resolution Protocol**
-
-**FlexNet NET/ROM**
-
-**No Layer 3 Protocol**
-
-**Escape Character – Next octet contains more Layer3 protocol
-Information**
+<img src="media/fig3.2.png" />
 
 **Figure 3.2 PID Definitions.**
 
@@ -692,11 +650,7 @@ address contains the amateur call sign and SSID of the station that sent
 the frame. These call signs are the call signs of the two ends of a
 Layer 2 AX.25 link only.
 
-**Address Field of Frame**
-
-**Destination Address Subfield A1 A2 A3 A4 A5 A6 A7**
-
-**Source Address Subfield A8 A9 A10 A11 A12 A13 A14**
+<img src="media/fig3.3.png" />
 
 **Figure 3.3 Non-Repeater Address-Field Encoding.**
 
@@ -721,26 +675,7 @@ Each SSID octet contains two bits that are reserved for future use.
 Figure 3.4 shows a typical AX.25 frame in the non-repeater mode of
 operation.
 
-**Octet ASCII Flag none A1 N A2 J A3 7 A4 P**
-
-**A5 space A6 space**
-
-**A7 (SSID)** **none A8 N A9 7**
-
-**A10** **L A11** **E A12** **M A13 space**
-
-**A14 (SSID) none Control none PID none FCS none FCS none**
-
-**Flag** **none**
-
-**Binary** **Hex 01111110 0x7E 10011100 0x9C 10010100 0x94 01101110 0x6E
-10100000 0xA0 01000000 0x40 01000000 0x40 11100000 0xE0 10011100 0x9C
-01101110 0x6E 10011000 0x98 10001010 0x8A 10011010 0x9A 01000000 0x40
-01100001 0x61 00111110 0x3E 11110000 0xF0 XXXXXXXX 0xHH XXXXXXXX 0xHH**
-
-**01111110** **0x7E**
-
-**Bit Position** **76543210**
+<img src="media/fig3.4.png" />
 
 **Figure 3.4 Non-Repeater AX.25 Frame.**
 
@@ -754,16 +689,7 @@ number \[N(S)\] is 7.
 Figure 3.5 shows how an amateur call sign is placed in the destination
 address subfield, occupying octets A1 through A7.
 
-**Octet** **ASCII A1 N A2 J A3 7 A4 P A5** **space A6** **space**
-
-**A7 (SSID)** **none**
-
-**Binary** **Hex 10011100 0x9C 10010100 0x94 01101110 0x6E 10100000 0xA0
-01000000 0x40 01000000 0x40 11100000 0xE0**
-
-**SSID Encoding Bit Position**
-
-**CRRSSSS0** **0x98 76543210**
+<img src="media/fig3.5.png" />
 
 **Figure 3.5 Destination Field Encoding.**
 
@@ -796,22 +722,7 @@ use for the first station.
 Figure 3.6 shows how an amateur call sign is placed in the destination
 address subfield, occupying octets A8 through A14.
 
-**Octet ASCII A8 N A9 7**
-
-**A10** **L A11** **E A12** **M A13 space**
-
-**A14 (SSID) none**
-
-**Binary** **Hex 10011100 0x9C 10010100 0x6E 01101110 0x98 10100000 0x8A
-01000000 0x9A 01000000 0x40 01100000 0x00**
-
-**SSID Encoding**
-
-**Bit Position**
-
-**CRRSSSS0**
-
-**76543210**
+<img src="media/fig3.6.png" />
 
 **Figure 3.6 Source Field Encoding.**
 
