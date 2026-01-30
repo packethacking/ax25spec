@@ -1204,33 +1204,22 @@ Parameter field elements marked \* are defined in ISO 8885. They are
 shown for compatibility purposes only and are not needed to negotiate
 the features of this version of AX.25.
 
-The Classes of Procedures parameter field (PI=2) serves to negotiate
-- half
-- or full duplex:
+The Classes of Procedures parameter field (PI=2) serves to negotiate half- or full duplex:
 - Bit 0 is always a 1.
-
 - Bits 1 through 4 and 7 through 15 are always a 0.
-
-- Either Bit 5 (half-duplex) or bit 6 (full duplex), but not both,
-must be set. If this parameter field is not present, the current
-values are retained. The default is half-duplex.
+- Either Bit 5 (half-duplex) or bit 6 (full duplex), but not both, must be set. 
+If this parameter field is not present, the current values are retained. The default is half-duplex.
 
 The HDLC Optional Functions parameter field (PI=3) allows the
 negotiation of implicit reject (REJ), or selective reject (SREJ), and
 modulo 8 or 128:
 
 - Bits 0, 3-6, 8, 9, 12, 14, 16, 18-20, and 22 are always a 0.
-- Bits
-7, 13, 15 and 17 are always a 1.
-
+- Bits 7, 13, 15 and 17 are always a 1.
 - Implicit reject is selected by setting bit 1 and resetting bit 2.
-
 - Selective reject is selected by resetting bit 1 and setting bit 2.
 - Clearing both bit 1 and 2 is not allowed.
-
-- Modulo 8 operation is selected by setting bit 10 and resetting bit
-11.
-
+- Modulo 8 operation is selected by setting bit 10 and resetting bit 11.
 - Modulo 128 operation is selected by setting bit 11 and resetting
 bit 10. If this parameter field is not present, the current values are
 retained. The default is selective reject, modulo 128, TEST
