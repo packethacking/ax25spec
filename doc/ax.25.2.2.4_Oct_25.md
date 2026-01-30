@@ -1,4 +1,4 @@
-<img src="media/image1.jpeg" style="width:1in;height:1.14333in" />
+<img src="media/image1.jpeg" />
 
 # AX.25 Link Access Protocol for Amateur Packet Radio
 
@@ -341,7 +341,7 @@ The two lower layers, data link and physical, can be further subdivided
 into several distinct finite state machines as shown in Figure 2.2. This
 example shows a single link to the radio port.
 
-<img src="media/image6.png" style="width:6.11417in;height:4.59333in" />
+<img src="media/image6.png" />
 
 **Figure 2.2 AX.25 Finite State Machine Model (Single Link).**
 
@@ -351,7 +351,7 @@ data-link connections into one physical connection. A separate data-link
 machine must be provided for each connection allowed by the
 implementation.
 
-<img src="media/image7.png" style="width:6.11417in;height:4.61417in" />
+<img src="media/image7.png" />
 
 **Figure 2.3 AX.25 Finite State Machine Model (Multiple Stream).**
 
@@ -383,7 +383,7 @@ interactions known as service “primitives.” (Similarly, the interaction betw
 layer and the physical layer also occurs via service primitives.) Primitives are discussed in greater
 detail in Section 5.
 
-<img src="media/image8.png" style="width:6.66667in;height:3in" />
+<img src="media/image8.png" />
 
 **Figure 2.4 Example Use Of AX.25 Primitive Types.**
 
@@ -2515,7 +2515,7 @@ with the return-from-subroutine symbol. Note that subroutines are not
 permitted to contain states, nor are they permitted to branch into
 different return legs. Each subroutine has a single point of return.
 
-<img src="media/image9.png" style="width:5.46917in;height:5.85in" />
+<img src="media/image9.png" />
 
 **Figure C1.1 SDL Symbol Definitions**
 
@@ -2889,23 +2889,23 @@ Timers:
 - T106 — 10-minute transmission limit
 - T107 — anti-hogging limit
 
-<img src="media/image18.png" style="width:5.16917in;height:5.94917in" />
+<img src="media/image18.png" />
 
 **Figure C2b.1 Duplex Physical Receiver Ready State.**
 
-<img src="media/image19.png" style="width:4.7in;height:5.87917in" />
+<img src="media/image19.png" />
 
 **Figure C2b.2 Duplex Physical Receiving State.**
 
-<img src="media/image20.png" style="width:5.58917in;height:5.88in" />
+<img src="media/image20.png" />
 
 **Figure C2b.3 Duplex Physical Transmitter Ready State.**
 
-<img src="media/image21.png" style="width:5.31in;height:5.95in" />
+<img src="media/image21.png" />
 
 **Figure C2b.4 Duplex Physical Transmitter Start State.**
 
-<img src="media/image22.png" style="width:5.76917in;height:5.88in" />
+<img src="media/image22.png" />
 
 **Figure C2b.5 Duplex Physical Transmitting State.**
 
@@ -3358,11 +3358,11 @@ Queues:
 
 **Figure C4.1 Data Link Disconnected State.**
 
-<img src="media/image31.jpeg" style="width:8.645in;height:5.65892in" />
+<img src="media/image31.jpeg" />
 
 **Figure C4.2 Data Link Awaiting Connection State.**
 
-<img src="media/image32.png" style="width:8.64583in;height:5.64725in" />
+<img src="media/image32.png" />
 
 **Figure C4.3 Data Link Awaiting Release State.**
 
@@ -3374,7 +3374,7 @@ Queues:
 
 **Figure C4.4b Data Link Connected State. (Continued)**
 
-<img src="media/image41.png" style="width:8.64583in;height:5.64667in" />
+<img src="media/image41.png" />
 
 **Figure C4.4c Data Link Connected State. (Continued)**
 
@@ -3382,23 +3382,23 @@ Queues:
 
 **Figure C4.5a Data Link Timer Recovery State.**
 
-<img src="media/image46.png" style="width:8.64583in;height:5.465in" />
+<img src="media/image46.png" />
 
 **Figure C4.5b Data Link Timer Recovery State. (Continued)**
 
-<img src="media/image47.png" style="width:8.64583in;height:5.50879in" />
+<img src="media/image47.png" />
 
 **Figure C4.5c Data Link Timer Recovery State. (Continued)**
 
-<img src="media/image48.png" style="width:7.86917in;height:6.00917in" />
+<img src="media/image48.png" />
 
 **Figure C4.5d Data Link Timer Recovery State. (Continued)**
 
-<img src="media/image49.png" style="width:6.53917in;height:6.20917in" />
+<img src="media/image49.png" />
 
 **Figure C4.5e Data Link Timer Recovery State. (Continued)**
 
-<img src="media/image50.jpeg" style="width:8.645in;height:3.56667in" />
+<img src="media/image50.jpeg" />
 
 **Figure C4.6a Data Link Awaiting V2.2 Connection State.**
 
@@ -3410,7 +3410,7 @@ Queues:
 
 **Figure C4.7a Data Link Subroutines.**
 
-<img src="media/image59.png" style="width:8.645in;height:4.26667in" />
+<img src="media/image59.png" />
 
 **Figure C4.7b Data Link Subroutines. (Continued)**
 
@@ -3507,35 +3507,35 @@ Timers:
 
 - TM201 — Retry timer for management functions.
 
-<img src="media/image60.png" style="width:5.51917in;height:5.66917in" />
+<img src="media/image60.png" />
 
 **Figure C5.1 Management Data Link Ready State.**
 
-<img src="media/image61.png" style="width:7.2475in;height:6.1975in" />
+<img src="media/image61.png" />
 
 **Figure C5.2 Management Data Link Negotiating State.**
 
-<img src="media/image62.png" style="width:7.6in;height:5.92917in" />
+<img src="media/image62.png" />
 
 **Figure C5.3 MDL Classes of Procedures Negotiation Subroutines.**
 
-<img src="media/image63.png" style="width:8.61in;height:4.79917in" />
+<img src="media/image63.png" />
 
 **Figure C5.4 MDL Optional Functions Subroutines.**
 
-<img src="media/image64.png" style="width:5.87917in;height:5.93in" />
+<img src="media/image64.png" />
 
 **Figure C5.5 MDL N1 Negotiation Subroutines.**
 
-<img src="media/image65.png" style="width:5.85917in;height:5.92917in" />
+<img src="media/image65.png" />
 
 **Figure C5.6 MDL Window Negotiation Subroutines.**
 
-<img src="media/image66.png" style="width:6.06in;height:5.92917in" />
+<img src="media/image66.png" />
 
 **Figure C5.7 MDL Retry Notification Subroutines**
 
-<img src="media/image67.png" style="width:5.86917in;height:5.92917in" />
+<img src="media/image67.png" />
 
 **Figure C5.8 MDL T1 Negotiation Subroutines.**
 
@@ -3744,19 +3744,19 @@ will result in the loss of the entire segmented large data unit; higher
 level attempts at recovery will significantly increase congestion on the
 physical channel.
 
-<img src="media/image68.png" style="width:5.91917in;height:6.03917in" />
+<img src="media/image68.png" />
 
 **Figure C-6.1 Segmenter Ready State.**
 
-<img src="media/image69.png" style="width:5.52917in;height:5.63917in" />
+<img src="media/image69.png" />
 
 **Figure C-6.2 Reassembler Ready State.**
 
-<img src="media/image70.png" style="width:4.87917in;height:6.04in" />
+<img src="media/image70.png" />
 
 **Figure C-6.3 Reassembler Assembling Data State.**
 
-<img src="media/image71.png" style="width:4.87917in;height:6.03917in" />
+<img src="media/image71.png" />
 
 **Figure C-6.4 Reassembler Assembling Unit Data State.**
 
@@ -3965,6 +3965,6 @@ The other primitives work in groups of four with the Request from the
 station A causing an Indicate in the station B, and a Response in
 station B causing a Confirm in the station A.
 
-<img src="media/image73.png" style="width:6in;height:7.62in" />
+<img src="media/image73.png" />
 
 **Figure D.3 Example of a Connection-Oriented Data Exchange.**
