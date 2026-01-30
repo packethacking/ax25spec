@@ -39,6 +39,10 @@ Editors: William A. Beech, NJ7P, nj7p@nj7p.org,
 
 Code Implementation:
 
+Please note that this Markdown edition is a conversion (and subsequent manual/AI-assisted clean-up) from source PDF/docx 
+documents and as such may contain differences, which we hope through collaboration will be resolved by the community 
+through contributions to this document, made via issues and PRs.
+
 ## Forward
 
 Packet radio has linked many thousands of amateur radio stations together
