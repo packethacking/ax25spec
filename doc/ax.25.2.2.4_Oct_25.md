@@ -1,4 +1,4 @@
-<img src="media/fig_cover.jpeg" />
+![](media/fig_cover.jpeg)
 
 # AX.25 Link Access Protocol for Amateur Packet Radio
 
@@ -331,7 +331,7 @@ function or code is provided. Such is the case with the current TAPR TNC-2
 equipment, where only Layers 1, 2 and 7 are provided; these comprise the
 minimum configuration for reliable communications.
 
-<img src="media/fig2.1.png" alt="Figure 2.1 Seven Layer OSI Reference Model" />
+![Figure 2.1 Seven Layer OSI Reference Model](media/fig2.1.png)
 
 **Figure 2.1 Seven Layer OSI Reference Model.**
 
@@ -341,7 +341,7 @@ The two lower layers, data link and physical, can be further subdivided
 into several distinct finite state machines as shown in Figure 2.2. This
 example shows a single link to the radio port.
 
-<img src="media/fig2.2.png" />
+![Figure 2.2 AX.25 Finite State Machine Model (Single Link)](media/fig2.2.png)
 
 **Figure 2.2 AX.25 Finite State Machine Model (Single Link).**
 
@@ -351,7 +351,7 @@ data-link connections into one physical connection. A separate data-link
 machine must be provided for each connection allowed by the
 implementation.
 
-<img src="media/fig2.3.png" />
+![Figure 2.3 AX.25 Finite State Machine Model (Multiple Stream)](media/fig2.3.png)
 
 **Figure 2.3 AX.25 Finite State Machine Model (Multiple Stream).**
 
@@ -383,7 +383,7 @@ interactions known as service “primitives.” (Similarly, the interaction betw
 layer and the physical layer also occurs via service primitives.) Primitives are discussed in greater
 detail in Section 5.
 
-<img src="media/fig2.4.png" />
+![Figure 2.4 Example Use Of AX.25 Primitive Types](media/fig2.4.png)
 
 **Figure 2.4 Example Use Of AX.25 Primitive Types.**
 
@@ -494,11 +494,11 @@ Each frame is made up of several smaller groups, called fields. Figures
 3.1a and 3.1b illustrate the three basic types of frames. Note that the
 first bit to be transmitted is on the left side.
 
-<img src="media/fig3.1a.png" />
+![Figure 3.1a U and S Frame Construction](media/fig3.1a.png)
 
 **Figure 3.1a U and S Frame Construction.**
 
-<img src="media/fig3.1b.png" />
+![Figure 3.1b Information Frame Construction](media/fig3.1b.png)
 
 **Figure 3.1b Information Frame Construction.**
 
@@ -544,7 +544,7 @@ The Protocol Identifier (PID) field appears in information frames (I and
 UI) only. It identifies which kind of Layer 3 protocol, if any, is in
 use.
 
-<img src="media/fig3.2.png" />
+![Figure 3.2 PID Definitions](media/fig3.2.png)
 
 **Figure 3.2 PID Definitions.**
 
@@ -654,7 +654,7 @@ address contains the amateur call sign and SSID of the station that sent
 the frame. These call signs are the call signs of the two ends of a
 Layer 2 AX.25 link only.
 
-<img src="media/fig3.3.png" />
+![Figure 3.3 Non-Repeater Address-Field Encoding](media/fig3.3.png)
 
 **Figure 3.3 Non-Repeater Address-Field Encoding.**
 
@@ -679,7 +679,7 @@ Each SSID octet contains two bits that are reserved for future use.
 Figure 3.4 shows a typical AX.25 frame in the non-repeater mode of
 operation.
 
-<img src="media/fig3.4.png" />
+![Figure 3.4 Non-Repeater AX.25 Frame](media/fig3.4.png)
 
 **Figure 3.4 Non-Repeater AX.25 Frame.**
 
@@ -693,7 +693,7 @@ number \[N(S)\] is 7.
 Figure 3.5 shows how an amateur call sign is placed in the destination
 address subfield, occupying octets A1 through A7.
 
-<img src="media/fig3.5.png" />
+![Figure 3.5 Destination Field Encoding](media/fig3.5.png)
 
 **Figure 3.5 Destination Field Encoding.**
 
@@ -726,7 +726,7 @@ use for the first station.
 Figure 3.6 shows how an amateur call sign is placed in the destination
 address subfield, occupying octets A8 through A14.
 
-<img src="media/fig3.6.png" />
+![Figure 3.6 Source Field Encoding](media/fig3.6.png)
 
 **Figure 3.6 Source Field Encoding.**
 
@@ -777,7 +777,7 @@ monitor and repeat frames that meet the following conditions:
 Figure 3.7 shows how the repeater address subfield is encoded. Figure
 3.8 is an example of a complete frame after being repeated.
 
-<img src="media/fig3.7.png" />
+![Figure 3.7 Repeater Address Encoding](media/fig3.7.png)
 
 **Figure 3.7 Repeater Address Encoding.**
 
@@ -790,7 +790,7 @@ and bit 7 sent last of each octet.
 frame has not been repeated and set to “1” by the repeating station
 when repeated.
 
-<img src="media/fig3.8.png" />
+![Figure 3.8 AX.25 Frame In Repeater Mode](media/fig3.8.png)
 
 **Figure 3.8 AX.25 Frame In Repeater Mode.**
 
@@ -850,11 +850,11 @@ can be one or two octets long and may use sequence numbers to maintain
 link integrity. These sequence numbers may be three-bit (modulo 8) or
 seven-bit (modulo 128) integers.
 
-<img src="media/fig4.1a.png" />
+![Figure 4.1a Control-Field Formats (Modulo 8)](media/fig4.1a.png)
 
 **Figure 4.1a Control-Field Formats (Modulo 8).**
 
-<img src="media/fig4.1b.png" />
+![Figure 4.1b Control-Field Formats (Modulo 128)](media/fig4.1b.png)
 
 **Figure 4.1b Control-Field Formats (Modulo 128).**
 
@@ -954,11 +954,11 @@ The information-frame control field is encoded as shown in Figures 4.2a
 and 4.2b. These frames are sequentially numbered by the N(S) subfield to
 maintain control of their passage over the link-layer connection.
 
-<img src="media/fig4.2a.png" />
+![Figure 4.2a I Frame Control Field (Modulo 8)](media/fig4.2a.png)
 
 **Figure 4.2a I Frame Control Field (Modulo 8).**
 
-<img src="media/fig4.2b.png" />
+![Figure 4.2b I Frame Control Field (Modulo 128)](media/fig4.2b.png)
 
 **Figure 4.2b I Frame Control Field (Modulo 128).**
 
@@ -967,11 +967,11 @@ maintain control of their passage over the link-layer connection.
 The supervisory frame control fields are encoded as shown in Figures
 4.3a and 4.3b.
 
-<img src="media/fig4.3a.png" />
+![Figure 4.3a S Frame Control Fields (Modulo 8)](media/fig4.3a.png)
 
 **Figure 4.3a S Frame Control Fields (Modulo 8).**
 
-<img src="media/fig4.3b.png" />
+![Figure 4.3b S Frame Control Fields (Modulo 128)](media/fig4.3b.png)
 
 **Figure 4.3b S Frame Control Fields (Modulo 128).**
 
@@ -1053,7 +1053,7 @@ SREJ frame.
 Unnumbered frame control fields are either commands or responses. Figure
 4.4 shows the layout of U frames implemented within this protocol.
 
-<img src="media/fig4.4.png" />
+![Figure 4.4 U Frame Control Fields](media/fig4.4.png)
 
 **Figure 4.4 U Frame Control Fields.**
 
@@ -1193,7 +1193,7 @@ The encoding of each PI/PL/PV applicable to AX.25 is detailed in Figure
 discussed below are required in an implementation that complies with
 this version of AX.25.
 
-<img src="media/fig4.5.png" />
+![Figure 4.5 Parameter Negotiation - Parameter Field Elements](media/fig4.5.png)
 
 **Figure 4.5 Parameter Negotiation - Parameter Field Elements.**
 
@@ -1259,7 +1259,7 @@ A typical XID frame is shown in Figure 4.6.
 
 
 
-<img src="media/fig4.6.png" />
+![Figure 4.6 Typical XID Frame](media/fig4.6.png)
 
 **Figure 4.6 Typical XID Frame.**
 
@@ -1650,7 +1650,7 @@ The command/response information is encoded into the address field as
 shown in Figure 6.1. Implementations of AX.25 prior to version 2.0
 defined these bits to be either both “0” or “1”.
 
-<img src="media/fig6.1.png" />
+![Figure 6.1 Command/Response Encoding](media/fig6.1.png)
 
 **Figure 6.1 Command/Response Encoding.**
 
@@ -2148,7 +2148,7 @@ taken to prevent deadlock situations from arising in the buffer
 management of both stations on the link. The header is illustrated in
 Figure 6.2.
 
-<img src="media/fig6.2.png" />
+![Figure 6.2 Segment Header Format](media/fig6.2.png)
 
 **Figure 6.2 Segment Header Format.**
 
@@ -2504,7 +2504,7 @@ with the return-from-subroutine symbol. Note that subroutines are not
 permitted to contain states, nor are they permitted to branch into
 different return legs. Each subroutine has a single point of return.
 
-<img src="media/figc1.1.png" />
+![Figure C1.1 SDL Symbol Definitions](media/figc1.1.png)
 
 **Figure C1.1 SDL Symbol Definitions**
 
@@ -2697,35 +2697,35 @@ Timers:
 - T107 — Anti-Hogging Limit
 - T108 — Receiver Startup
 
-<img src="media/figc2a.1.png" />
+![Figure C2a.1 Simplex Physical Ready State](media/figc2a.1.png)
 
 **Figure C2a.1 Simplex Physical Ready State.**
 
-<img src="media/figc2a.2.png" />
+![Figure C2a.2 Simplex Physical Receiving State](media/figc2a.2.png)
 
 **Figure C2a.2 Simplex Physical Receiving State.**
 
-<img src="media/figc2a.3.png" />
+![Figure C2a.3 Simplex Physical Transmitter Suppression State](media/figc2a.3.png)
 
 **Figure C2a.3 Simplex Physical Transmitter Suppression State.**
 
-<img src="media/figc2a.4.png" />
+![Figure C2a.4 Simplex Physical Transmitter Start State](media/figc2a.4.png)
 
 **Figure C2a.4 Simplex Physical Transmitter Start State.**
 
-<img src="media/figc2a.5.png" />
+![Figure C2a.5 Simplex Physical Transmitting State](media/figc2a.5.png)
 
 **Figure C2a.5 Simplex Physical Transmitting State.**
 
-<img src="media/figc2a.6.png" />
+![Figure C2a.6. Simplex Physical Digipeating State](media/figc2a.6.png)
 
 **Figure C2a.6. Simplex Physical Digipeating State.**
 
-<img src="media/figc2a.7.png" />
+![Figure C2a.7 Simplex Physical Receiver Start State](media/figc2a.7.png)
 
 **Figure C2a.7 Simplex Physical Receiver Start State.**
 
-<img src="media/figc2a.s.png" />
+![Figure C2a.s Simplex Physical Subroutines](media/figc2a.s.png)
 
 **Figure C2a.s Simplex Physical Subroutines.**
 
@@ -2878,23 +2878,23 @@ Timers:
 - T106 — 10-minute transmission limit
 - T107 — anti-hogging limit
 
-<img src="media/figc2b.1.png" />
+![Figure C2b.1 Duplex Physical Receiver Ready State](media/figc2b.1.png)
 
 **Figure C2b.1 Duplex Physical Receiver Ready State.**
 
-<img src="media/figc2b.2.png" />
+![Figure C2b.2 Duplex Physical Receiving State](media/figc2b.2.png)
 
 **Figure C2b.2 Duplex Physical Receiving State.**
 
-<img src="media/figc2b.3.png" />
+![Figure C2b.3 Duplex Physical Transmitter Ready State](media/figc2b.3.png)
 
 **Figure C2b.3 Duplex Physical Transmitter Ready State.**
 
-<img src="media/figc2b.4.png" />
+![Figure C2b.4 Duplex Physical Transmitter Start State](media/figc2b.4.png)
 
 **Figure C2b.4 Duplex Physical Transmitter Start State.**
 
-<img src="media/figc2b.5.png" />
+![Figure C2b.5 Duplex Physical Transmitting State](media/figc2b.5.png)
 
 **Figure C2b.5 Duplex Physical Transmitting State.**
 
@@ -3094,19 +3094,19 @@ Timers:
 
 - No timers used.
 
-<img src="media/figc3.1.png" />
+![Figure C3.1 Link Multiplexer Idle State](media/figc3.1.png)
 
 **Figure C3.1 Link Multiplexer Idle State.**
 
-<img src="media/figc3.2.png" />
+![Figure C3.2 Link Multiplexer Seize Pending State](media/figc3.2.png)
 
 **Figure C3.2 Link Multiplexer Seize Pending State.**
 
-<img src="media/figc3.3.png" />
+![Figure C3.3 Link Multiplexer Seized State](media/figc3.3.png)
 
 **Figure C3.3 Link Multiplexer Seized State.**
 
-<img src="media/figc3.4.png" />
+![Figure C3.4 Link Multiplexer Subroutines](media/figc3.4.png)
 
 **Figure C3.4 Link Multiplexer Subroutines.**
 
@@ -3343,63 +3343,63 @@ Queues:
 
 - I Frame Queue — queue of information to be transmitted in I frames.
 
-<img src="media/figc4.1.png" />
+![Figure C4.1 Data Link Disconnected State](media/figc4.1.png)
 
 **Figure C4.1 Data Link Disconnected State.**
 
-<img src="media/figc4.2.jpeg" />
+![Figure C4.2 Data Link Awaiting Connection State](media/figc4.2.jpeg)
 
 **Figure C4.2 Data Link Awaiting Connection State.**
 
-<img src="media/figc4.3.png" />
+![Figure C4.3 Data Link Awaiting Release State](media/figc4.3.png)
 
 **Figure C4.3 Data Link Awaiting Release State.**
 
-<img src="media/figc4.4a.png" />
+![Figure C4.4a Data Link Connected State](media/figc4.4a.png)
 
 **Figure C4.4a Data Link Connected State.**
 
-<img src="media/figc4.4b.png" />
+![Figure C4.4b Data Link Connected State. (Continued)](media/figc4.4b.png)
 
 **Figure C4.4b Data Link Connected State. (Continued)**
 
-<img src="media/figc4.4c.png" />
+![Figure C4.4c Data Link Connected State. (Continued)](media/figc4.4c.png)
 
 **Figure C4.4c Data Link Connected State. (Continued)**
 
-<img src="media/figc4.5a.png" />
+![Figure C4.5a Data Link Timer Recovery State](media/figc4.5a.png)
 
 **Figure C4.5a Data Link Timer Recovery State.**
 
-<img src="media/figc4.5b.png" />
+![Figure C4.5b Data Link Timer Recovery State. (Continued)](media/figc4.5b.png)
 
 **Figure C4.5b Data Link Timer Recovery State. (Continued)**
 
-<img src="media/figc4.5c.png" />
+![Figure C4.5c Data Link Timer Recovery State. (Continued)](media/figc4.5c.png)
 
 **Figure C4.5c Data Link Timer Recovery State. (Continued)**
 
-<img src="media/figc4.5d.png" />
+![Figure C4.5d Data Link Timer Recovery State. (Continued)](media/figc4.5d.png)
 
 **Figure C4.5d Data Link Timer Recovery State. (Continued)**
 
-<img src="media/figc4.5e.png" />
+![Figure C4.5e Data Link Timer Recovery State. (Continued)](media/figc4.5e.png)
 
 **Figure C4.5e Data Link Timer Recovery State. (Continued)**
 
-<img src="media/figc4.6a.jpeg" />
+![Figure C4.6a Data Link Awaiting V2.2 Connection State](media/figc4.6a.jpeg)
 
 **Figure C4.6a Data Link Awaiting V2.2 Connection State.**
 
-<img src="media/figc4.6b.png" />
+![Figure C4.6b Data Link Awaiting V2.2 Connection State (Continued)](media/figc4.6b.png)
 
 **Figure C4.6b Data Link Awaiting V2.2 Connection State (Continued)**
 
-<img src="media/figc4.7a.png" />
+![Figure C4.7a Data Link Subroutines](media/figc4.7a.png)
 
 **Figure C4.7a Data Link Subroutines.**
 
-<img src="media/figc4.7b.png" />
+![Figure C4.7b Data Link Subroutines. (Continued)](media/figc4.7b.png)
 
 **Figure C4.7b Data Link Subroutines. (Continued)**
 
@@ -3496,35 +3496,35 @@ Timers:
 
 - TM201 — Retry timer for management functions.
 
-<img src="media/figc5.1.png" />
+![Figure C5.1 Management Data Link Ready State](media/figc5.1.png)
 
 **Figure C5.1 Management Data Link Ready State.**
 
-<img src="media/figc5.2.png" />
+![Figure C5.2 Management Data Link Negotiating State](media/figc5.2.png)
 
 **Figure C5.2 Management Data Link Negotiating State.**
 
-<img src="media/figc5.3.png" />
+![Figure C5.3 MDL Classes of Procedures Negotiation Subroutines](media/figc5.3.png)
 
 **Figure C5.3 MDL Classes of Procedures Negotiation Subroutines.**
 
-<img src="media/figc5.4.png" />
+![Figure C5.4 MDL Optional Functions Subroutines](media/figc5.4.png)
 
 **Figure C5.4 MDL Optional Functions Subroutines.**
 
-<img src="media/figc5.5.png" />
+![Figure C5.5 MDL N1 Negotiation Subroutines](media/figc5.5.png)
 
 **Figure C5.5 MDL N1 Negotiation Subroutines.**
 
-<img src="media/figc5.6.png" />
+![Figure C5.6 MDL Window Negotiation Subroutines](media/figc5.6.png)
 
 **Figure C5.6 MDL Window Negotiation Subroutines.**
 
-<img src="media/figc5.7.png" />
+![Figure C5.7 MDL Retry Notification Subroutines](media/figc5.7.png)
 
 **Figure C5.7 MDL Retry Notification Subroutines**
 
-<img src="media/figc5.8.png" />
+![Figure C5.8 MDL T1 Negotiation Subroutines](media/figc5.8.png)
 
 **Figure C5.8 MDL T1 Negotiation Subroutines.**
 
@@ -3733,19 +3733,19 @@ will result in the loss of the entire segmented large data unit; higher
 level attempts at recovery will significantly increase congestion on the
 physical channel.
 
-<img src="media/figc6.1.png" />
+![Figure C-6.1 Segmenter Ready State](media/figc6.1.png)
 
 **Figure C-6.1 Segmenter Ready State.**
 
-<img src="media/figc6.2.png" />
+![Figure C-6.2 Reassembler Ready State](media/figc6.2.png)
 
 **Figure C-6.2 Reassembler Ready State.**
 
-<img src="media/figc6.3.png" />
+![Figure C-6.3 Reassembler Assembling Data State](media/figc6.3.png)
 
 **Figure C-6.3 Reassembler Assembling Data State.**
 
-<img src="media/figc6.4.png" />
+![Figure C-6.4 Reassembler Assembling Unit Data State](media/figc6.4.png)
 
 **Figure C-6.4 Reassembler Assembling Unit Data State.**
 
@@ -3909,7 +3909,7 @@ are defined to be destructive with respect to all objects.
 The relationship between objects that may be manipulated in the above
 fashion are summarized in Figure D.1.
 
-<img src="media/figd1.png" />
+![Figure D.1 Relationships between Queue Model Objects](media/figd1.png)
 
 **Figure D.1 Relationships between Queue Model Objects.**
 
@@ -3936,7 +3936,7 @@ Where: N/A – Not a valid state of queue ---- Not to be destructive nor
 to be able to advance ahead DES – To be destructive to the preceding
 object
 
-<img src="media/figd2.png" />
+![Figure D.2 Relationship of Primitives at the Two DLC Endpoints](media/figd2.png)
 
 **D.2 Relationship of Primitives at the Two DLC Endpoints**
 
@@ -3954,6 +3954,6 @@ The other primitives work in groups of four with the Request from the
 station A causing an Indicate in the station B, and a Response in
 station B causing a Confirm in the station A.
 
-<img src="media/figd.3.png" />
+![Figure D.3 Example of a Connection-Oriented Data Exchange](media/figd.3.png)
 
 **Figure D.3 Example of a Connection-Oriented Data Exchange.**
