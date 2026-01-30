@@ -4,32 +4,23 @@
 
 **Version 2.2 Revision 4: 27 October 2025**
 
-Copyright (c) 1997 by Tucson Amateur Packet Radio Corporation. Portions
-Copyright (c) 1984, 1993 by The American Radio Relay League, Inc.
+Copyright (c) 1997 by Tucson Amateur Packet Radio Corporation. Portions Copyright (c) 1984, 1993 by The American Radio Relay League, Inc.
 
 Original: 1993 Version 1
 
-Authors: William A. Beech, NJ7P, nj7p@nj7p.org, Douglas E.
-Nielsen, N7LEM, n7lem@n7lem.net, Jack Taylor, N7OO,
-n7oo@outlook.com.
+Authors: William A. Beech, NJ7P, nj7p@nj7p.org, Douglas E. Nielsen, N7LEM, n7lem@n7lem.net, Jack Taylor, N7OO, n7oo@outlook.com.
 
-Code Implementation: Douglas E. Nielsen, N7LEM,
-n7lem@n7lem.net (original code in Borland C which ran on
-the 80188-based TNC-3 which has unfortunately been lost),
+Code Implementation: Douglas E. Nielsen, N7LEM, n7lem@n7lem.net (original code in Borland C which ran on the 80188-based TNC-3 which has unfortunately been lost),
 
 Revision: 1998 Version 2
 
-Authors: William A. Beech, NJ7P, nj7p@nj7p.org, Douglas E.
-Nielsen, N7LEM, n7lem@n7lem.net, Jack Taylor, N7OO,
-n7oo@outlook.com.
+Authors: William A. Beech, NJ7P, nj7p@nj7p.org, Douglas E. Nielsen, N7LEM, n7lem@n7lem.net, Jack Taylor, N7OO, n7oo@outlook.com.
 
-Production Editors: Greg Jones, WD5IVD, wd5ivd@tapr.org,
-William A. Beech, NJ7P, nj7p@nj7p.org.
+Production Editors: Greg Jones, WD5IVD, wd5ivd@tapr.org, William A. Beech, NJ7P, nj7p@nj7p.org.
 
 Revision: 2017 Version 3
 
-Editors: William A. Beech, NJ7P, nj7p@nj7p.org, Code
-Implementation: John Langner, WB2OSZ, wb2osz@comcast.net (2017 code as part of Direwolf project), John Wiseman, G8BPQ,
+Editors: William A. Beech, NJ7P, nj7p@nj7p.org, Code Implementation: John Langner, WB2OSZ, wb2osz@comcast.net (2017 code as part of Direwolf project), John Wiseman, G8BPQ,
 
 Code Implementation: john.wiseman@ntlworld.com (2017 code for the BPQ Switch).
 
@@ -39,40 +30,23 @@ Editors: William A. Beech, NJ7P, nj7p@nj7p.org,
 
 Code Implementation:
 
-Please note that this Markdown edition is a conversion (and subsequent manual/AI-assisted clean-up) from source PDF/docx 
-documents and as such may contain differences, which we hope through collaboration will be resolved by the community 
-through contributions to this document, made via issues and PRs.
+Please note that this Markdown edition is a conversion (and subsequent manual/AI-assisted clean-up) from source PDF/docx documents and as such may contain differences, which we hope through collaboration will be resolved by the community through contributions to this document, made via issues and PRs.
 
 ## Forward
 
-Packet radio has linked many thousands of amateur radio stations together
-directly and by the packet network. The packet network has grown from a
-series of digipeaters to a sophisticated global network consisting of
-several types of nodes, including HF gateways, Internet gateways and
-satellite links. This progress has happened since the publication of
-version 2.0 of the AX.25 protocol in 1984 by Terry L. Fox, WB4JFI.
+Packet radio has linked many thousands of amateur radio stations together directly and by the packet network. The packet network has grown from a series of digipeaters to a sophisticated global network consisting of several types of nodes, including HF gateways, Internet gateways and satellite links. This progress has happened since the publication of version 2.0 of the AX.25 protocol in 1984 by Terry L. Fox, WB4JFI.
 
-A major effort towards updating version 2.0 was published in the 7th
-Computer Networking Conference by Eric Scace, K3NA, in 1988. Additional
-portions of this update were handed out at the conference. Eric's work
-is included in this update of the standard, together with protocol
-improvements that will aid networking and HF users.
+A major effort towards updating version 2.0 was published in the 7th Computer Networking Conference by Eric Scace, K3NA, in 1988. Additional portions of this update were handed out at the conference. Eric's work is included in this update of the standard, together with protocol improvements that will aid networking and HF users.
 
-This document is a revision of the AX.25 Version 2.0 Protocol Standard
-found on the Internet and available from the American Radio Relay
-League. The authors of this new version took exception to the use of
-AX.25; none of the Layer 3 protocols have ever been developed.
+This document is a revision of the AX.25 Version 2.0 Protocol Standard found on the Internet and available from the American Radio Relay League. The authors of this new version took exception to the use of AX.25; none of the Layer 3 protocols have ever been developed.
 
-The authors wish to thank Eric Gustafson, N7CL, and Lyle Johnson, KK7P
-(ex-WA7GXD), for providing the material and encouragement during this
-development.
+The authors wish to thank Eric Gustafson, N7CL, and Lyle Johnson, KK7P (ex-WA7GXD), for providing the material and encouragement during this development.
 
 July 1993
 
 William A. Beech, NJ7P Douglas E. Nielsen, N7LEM Jack Taylor, N7OO
 
-This is a revision of the 1993 standard. Errors in the text and SDL have
-been corrected.
+This is a revision of the 1993 standard. Errors in the text and SDL have been corrected.
 
 July 1998, Revision 2
 
@@ -80,11 +54,7 @@ William A. Beech, NJ7P
 
 Douglas E. Nielsen, N7LEM Jack Taylor, N7OO
 
-This is a revision of the 1998 standard. It has revised text and SDL
-implementing changes found necessary by individuals implementing this
-protocol. The authors wish to thank John Langner, WB2OSZ, and John
-Wiseman, G8BPQ, for their feedback as they coded stacks to implement
-AX.25 Version 2.2.
+This is a revision of the 1998 standard. It has revised text and SDL implementing changes found necessary by individuals implementing this protocol. The authors wish to thank John Langner, WB2OSZ, and John Wiseman, G8BPQ, for their feedback as they coded stacks to implement AX.25 Version 2.2.
 
 September 2017, Revision 3
 
@@ -92,10 +62,7 @@ William A. Beech, NJ7P
 
 Douglas E. Nielsen, N7LEM Jack Taylor, N7OO
 
-This is a revision of the 2017 standard. It has revised text and SDL
-implementing changes found necessary by individuals implementing this
-protocol. The authors wish to thank XXX for their feedback as they coded
-stacks to implement AX.25 Version 2.2.
+This is a revision of the 2017 standard. It has revised text and SDL implementing changes found necessary by individuals implementing this protocol. The authors wish to thank XXX for their feedback as they coded stacks to implement AX.25 Version 2.2.
 
 September 2025, Revision 4
 
@@ -105,31 +72,15 @@ Douglas E. Nielsen, N7LEM Jack Taylor, N7OO, SK
 
 ## Preface
 
-This document is the fourth edition of the AX.25 Amateur Packet Radio
-Link Layer Protocol (Version 2.2, 1996) published by the American Radio
-Relay League (ARRL) and the Tucson Amateur Packet Radio Corporation
-(TAPR).
+This document is the fourth edition of the AX.25 Amateur Packet Radio Link Layer Protocol (Version 2.2, 1996) published by the American Radio Relay League (ARRL) and the Tucson Amateur Packet Radio Corporation (TAPR).
 
-In July 1984, the Administrative Council of the International Amateur
-Radio Union (IARU) met in Paris and designated the ARRL as the
-international clearinghouse for information relating to packet radio,
-with a view towards encouraging common standards and regulations.
+In July 1984, the Administrative Council of the International Amateur Radio Union (IARU) met in Paris and designated the ARRL as the international clearinghouse for information relating to packet radio, with a view towards encouraging common standards and regulations.
 
-This document defines a protocol used between two amateur radio stations
-in a point-to-point or networked communications environment. The
-protocol specifies only link layer and physical layer functions. It is
-not intended to specify any upper-layer protocol other than certain
-interface requirements to and from other layers.
+This document defines a protocol used between two amateur radio stations in a point-to-point or networked communications environment. The protocol specifies only link layer and physical layer functions. It is not intended to specify any upper-layer protocol other than certain interface requirements to and from other layers.
 
-This protocol recognizes and accommodates the uniqueness of the amateur
-radio operating environment.
+This protocol recognizes and accommodates the uniqueness of the amateur radio operating environment.
 
-This document goes a step beyond most international standards by making
-the System Description Language (SDL), included in Appendix C, the basis
-for the standard. The SDL takes precedence over the text of this
-document and should be used to resolve any apparent discrepancies
-between the two. The SDL is a much clearer description of the protocol
-than the verbal text.
+This document goes a step beyond most international standards by making the System Description Language (SDL), included in Appendix C, the basis for the standard. The SDL takes precedence over the text of this document and should be used to resolve any apparent discrepancies between the two. The SDL is a much clearer description of the protocol than the verbal text.
 
 ## Table of Contents
 1. [Abstract](#1-abstract)
@@ -259,77 +210,33 @@ No table of figures entries found.
 
 # 1 Abstract
 
-This document details AX.25 version 2.2 digital communication standard.
-The objective of this standard is to ensure link-layer compatibility
-between stations. This document is intended to assist the designers and
-users of amateur packet radio equipment by providing a high-level common
-reference publication. However, the existence of this protocol is not
-intended to disparage anyone from designing, marketing or using
-products, processes or procedures not conforming to the protocol.
+This document details AX.25 version 2.2 digital communication standard. The objective of this standard is to ensure link-layer compatibility between stations. This document is intended to assist the designers and users of amateur packet radio equipment by providing a high-level common reference publication. However, the existence of this protocol is not intended to disparage anyone from designing, marketing or using products, processes or procedures not conforming to the protocol.
 
-As with any evolving technical standard, this protocol is subject to
-periodic review. Interested parties are encouraged to use the latest
-edition.
+As with any evolving technical standard, this protocol is subject to periodic review. Interested parties are encouraged to use the latest edition.
 
 ## 1.1 General
 
-The amateur radio community has expressed the need and desire to define
-a protocol that can accept and reliably deliver data over a variety of
-communications links between two signaling terminals. The AX.25 version
-2.2 Link-Layer Protocol provides this service, independent of the
-existence of any upper layer.
+The amateur radio community has expressed the need and desire to define a protocol that can accept and reliably deliver data over a variety of communications links between two signaling terminals. The AX.25 version 2.2 Link-Layer Protocol provides this service, independent of the existence of any upper layer.
 
-This protocol conforms to International Standards Organization (ISO)
-Information Standards (IS) 3309, 4335 and 7809 High-Level Data Link
-Control (HDLC) and uses terminology found in these documents. It also
-follows the principles of Consultative Committee in International
-Telegraph and Telephone (CCITT) Recommendation Q.920 and Q.921 (LAP-D)
-in the use of multiple links, distinguished by the address field, on a
-single shared channel. Parameter negotiation was extracted from ISO IS
-8885. The data-link service definitions were extracted from ISO IS 8886.
+This protocol conforms to International Standards Organization (ISO) Information Standards (IS) 3309, 4335 and 7809 High-Level Data Link Control (HDLC) and uses terminology found in these documents. It also follows the principles of Consultative Committee in International Telegraph and Telephone (CCITT) Recommendation Q.920 and Q.921 (LAP-D) in the use of multiple links, distinguished by the address field, on a single shared channel. Parameter negotiation was extracted from ISO IS 8885. The data-link service definitions were extracted from ISO IS 8886.
 
-As defined, this protocol works equally well in either half- or
-full-duplex amateur radio environments and has been improved for
-operation over partially impaired HF circuits.
+As defined, this protocol works equally well in either half- or full-duplex amateur radio environments and has been improved for operation over partially impaired HF circuits.
 
-It works equally well for direct connections between two individual
-amateur packet radio stations, or between an individual station and a
-multi-port controller.
+It works equally well for direct connections between two individual amateur packet radio stations, or between an individual station and a multi-port controller.
 
-It permits the establishment of more than one link-layer connection per
-device, if the device is so capable.
+It permits the establishment of more than one link-layer connection per device, if the device is so capable.
 
-It also permits self-connections. A self-connection occurs when a device
-establishes a link to itself using its own address for both the source
-and destination of the frame.
+It also permits self-connections. A self-connection occurs when a device establishes a link to itself using its own address for both the source and destination of the frame.
 
-Most link-layer protocols assume that one primary (or master) device
-(generally called a Data Circuit Terminating Equipment, or DCE), is
-connected to one or more secondary (or slave) device(s) (usually called
-a Data Terminating Equipment, or DTE). This type of unbalanced operation
-is not practical in a shared RF amateur radio environment. Instead,
-AX.25 assumes that both ends of the link are of the same class, thereby
-eliminating the two different classes of devices.
+Most link-layer protocols assume that one primary (or master) device (generally called a Data Circuit Terminating Equipment, or DCE), is connected to one or more secondary (or slave) device(s) (usually called a Data Terminating Equipment, or DTE). This type of unbalanced operation is not practical in a shared RF amateur radio environment. Instead, AX.25 assumes that both ends of the link are of the same class, thereby eliminating the two different classes of devices.
 
-In this protocol specification, the phrase Terminal Node Controller
-(TNC) refers to the balanced type of device found in amateur packet
-radio. Other standards refer to these peer entities as DXEs.
+In this protocol specification, the phrase Terminal Node Controller (TNC) refers to the balanced type of device found in amateur packet radio. Other standards refer to these peer entities as DXEs.
 
 # 2 Concepts and Terminology
 
 ## 2.1 Basic Concepts
 
-ISO has developed a reference model for Open Systems Interconnection
-(OSI) to better facilitate the interconnection of different types of
-computing systems. The basic structuring technique in this reference
-model is known as layering. According to this technique, communication
-among application processes is viewed as being logically partitioned
-into an ordered set of layers represented in a vertical sequence as
-shown in Figure 2.1. Each layer provides a Service Access Point (SAP)
-for interface to the next higher layer. Note that any layer may be a null, where no
-function or code is provided. Such is the case with the current TAPR TNC-2
-equipment, where only Layers 1, 2 and 7 are provided; these comprise the
-minimum configuration for reliable communications.
+ISO has developed a reference model for Open Systems Interconnection (OSI) to better facilitate the interconnection of different types of computing systems. The basic structuring technique in this reference model is known as layering. According to this technique, communication among application processes is viewed as being logically partitioned into an ordered set of layers represented in a vertical sequence as shown in Figure 2.1. Each layer provides a Service Access Point (SAP) for interface to the next higher layer. Note that any layer may be a null, where no function or code is provided. Such is the case with the current TAPR TNC-2 equipment, where only Layers 1, 2 and 7 are provided; these comprise the minimum configuration for reliable communications.
 
 ![Figure 2.1 Seven Layer OSI Reference Model](media/fig2.1.png)
 
@@ -337,19 +244,13 @@ minimum configuration for reliable communications.
 
 ## 2.2 AX.25 Model
 
-The two lower layers, data link and physical, can be further subdivided
-into several distinct finite state machines as shown in Figure 2.2. This
-example shows a single link to the radio port.
+The two lower layers, data link and physical, can be further subdivided into several distinct finite state machines as shown in Figure 2.2. This example shows a single link to the radio port.
 
 ![Figure 2.2 AX.25 Finite State Machine Model (Single Link)](media/fig2.2.png)
 
 **Figure 2.2 AX.25 Finite State Machine Model (Single Link).**
 
-Figure 2.3 shows an example of multiple links to the radio port. The
-link multiplexer described in this standard multiplexes multiple
-data-link connections into one physical connection. A separate data-link
-machine must be provided for each connection allowed by the
-implementation.
+Figure 2.3 shows an example of multiple links to the radio port. The link multiplexer described in this standard multiplexes multiple data-link connections into one physical connection. A separate data-link machine must be provided for each connection allowed by the implementation.
 
 ![Figure 2.3 AX.25 Finite State Machine Model (Multiple Stream)](media/fig2.3.png)
 
@@ -357,142 +258,71 @@ implementation.
 
 ## 2.3 Data-Link Service Access Point
 
-Figures 2.2 and 2.3 indicate a Data-Link Service Access Point (DLSAP) at
-the upper boundary of Layer 2. This DLSAP is the point at which the
-data-link layer provides services to Layer 3. Associated with each DLSAP
-is one or more data-link connection endpoint(s).
+Figures 2.2 and 2.3 indicate a Data-Link Service Access Point (DLSAP) at the upper boundary of Layer 2. This DLSAP is the point at which the data-link layer provides services to Layer 3. Associated with each DLSAP is one or more data-link connection endpoint(s).
 
-Entities exist in each layer. Entities may be the Link Multiplexer, Data
-Link, Management Data Link, or Segmenter. Entities in the same layer,
-but in different systems that must exchange information to achieve a
-common objective, are called “peer entities.” Entities in adjacent
-layers interact through their common boundary. The services provided by
-the data-link layer are the combination of the services and functions
-provided by both the data-link layer and the physical layer.
+Entities exist in each layer. Entities may be the Link Multiplexer, Data Link, Management Data Link, or Segmenter. Entities in the same layer, but in different systems that must exchange information to achieve a common objective, are called "peer entities." Entities in adjacent layers interact through their common boundary. The services provided by the data-link layer are the combination of the services and functions provided by both the data-link layer and the physical layer.
 
-Cooperation between data-link layer entities is governed by a
-peer-to-peer protocol specific to the layer. For example, when
-information is to be exchanged between two Layer 3 entities, an
-association must be established between the entities through the
-data-link layer using the AX.25 protocol. This association is called a
-data-link connection. Data-link connections are provided by the
-data-link layer between two or more DLSAPs.
+Cooperation between data-link layer entities is governed by a peer-to-peer protocol specific to the layer. For example, when information is to be exchanged between two Layer 3 entities, an association must be established between the entities through the data-link layer using the AX.25 protocol. This association is called a data-link connection. Data-link connections are provided by the data-link layer between two or more DLSAPs.
 
-Layer 3 requests services from the data-link layer via command/response
-interactions known as service “primitives.” (Similarly, the interaction between the data-link
-layer and the physical layer also occurs via service primitives.) Primitives are discussed in greater
-detail in Section 5.
+Layer 3 requests services from the data-link layer via command/response interactions known as service "primitives." (Similarly, the interaction between the data-link layer and the physical layer also occurs via service primitives.) Primitives are discussed in greater detail in Section 5.
 
 ![Figure 2.4 Example Use Of AX.25 Primitive Types](media/fig2.4.png)
 
 **Figure 2.4 Example Use Of AX.25 Primitive Types.**
 
-The primitives that are exchanged between the data-link layer and
-adjacent layers are of the following four types:
+The primitives that are exchanged between the data-link layer and adjacent layers are of the following four types:
 
-- REQUEST primitive type: used by a higher layer to request a service
-  from the next lower layer.
-- INDICATION primitive type: used by the next lower layer to provide a service
-  to notify the next higher layer of any specific activity that is service related.
-  INDICATION primitive may be the result of an activity of the lower layer related to the
-  primitive type REQUEST at the peer entity.
+- REQUEST primitive type: used by a higher layer to request a service from the next lower layer.
+- INDICATION primitive type: used by the next lower layer to provide a service to notify the next higher layer of any specific activity that is service related. INDICATION primitive may be the result of an activity of the lower layer related to the primitive type REQUEST at the peer entity.
 
-- RESPONSE primitive type: used by a layer to acknowledge receipt
-  from a lower layer of the primitive type INDICATION. AX.25 does not
-  use the RESPONSE primitive. Actual frames will be sent as shown in the
-  example below with the UA frame.
+- RESPONSE primitive type: used by a layer to acknowledge receipt from a lower layer of the primitive type INDICATION. AX.25 does not use the RESPONSE primitive. Actual frames will be sent as shown in the example below with the UA frame.
 
-- CONFIRM primitive type: used by the upper layer to provide the
-  requested service to confirm that the activity has been completed by
-  the lower layer.
+- CONFIRM primitive type: used by the upper layer to provide the requested service to confirm that the activity has been completed by the lower layer.
 
-Figure 2.4 illustrates the use of the four primitive types in
-conjunction with the Connect primitive.
+Figure 2.4 illustrates the use of the four primitive types in conjunction with the Connect primitive.
 
 ## 2.4 Segmenter/Reassembler
 
-The Segmenter State Machine accepts input from the higher layer through
-the DLSAP. If the unit of data to be sent exceeds the limits of an AX.25
-Information (I) frame (see Section 4.3.1) or Unnumbered Information (UI)
-frame (see Section 4.3.3.6), the segmenter breaks the unit down into
-smaller segments for transmission. Incoming segments are reassembled for
-delivery to the higher layer and passed through the DLSAP. The segmenter
-passes all other signals unchanged.
+The Segmenter State Machine accepts input from the higher layer through the DLSAP. If the unit of data to be sent exceeds the limits of an AX.25 Information (I) frame (see Section 4.3.1) or Unnumbered Information (UI) frame (see Section 4.3.3.6), the segmenter breaks the unit down into smaller segments for transmission. Incoming segments are reassembled for delivery to the higher layer and passed through the DLSAP. The segmenter passes all other signals unchanged.
 
-One segmenter exists per data link. Because a single piece of equipment
-may have multiple data links in operation simultaneously (e.g., to
-support multiple higher-layer applications), there can be multiple
-independently operating segmenters within the equipment.
+One segmenter exists per data link. Because a single piece of equipment may have multiple data links in operation simultaneously (e.g., to support multiple higher-layer applications), there can be multiple independently operating segmenters within the equipment.
 
 ## 2.5 Data Link
 
-The Data-link State Machine is the heart of the AX.25 protocol. The
-Data-link State Machine provides all logic necessary to establish and
-release connections between two stations and to exchange information in
-a connectionless (i.e., via UI frames) and connection-oriented (i.e.,
-via I frames with recovery procedures) manner.
+The Data-link State Machine is the heart of the AX.25 protocol. The Data-link State Machine provides all logic necessary to establish and release connections between two stations and to exchange information in a connectionless (i.e., via UI frames) and connection-oriented (i.e., via I frames with recovery procedures) manner.
 
-One Data-link State Machine exists per data link. Because a single piece
-of equipment may have multiple data links in operation simultaneously
-(e.g., to support multiple higher layer applications), there can be
-multiple, independently operating data-link machines within the
-equipment.
+One Data-link State Machine exists per data link. Because a single piece of equipment may have multiple data links in operation simultaneously (e.g., to support multiple higher layer applications), there can be multiple, independently operating data-link machines within the equipment.
 
 ## 2.6 Management Data Link
 
-The Management Data-link State Machine provides for the parameter
-negotiation of the AX.25 protocol. The Management Data-link State
-Machine provides all logic necessary to negotiate operating parameters
-between two stations.
+The Management Data-link State Machine provides for the parameter negotiation of the AX.25 protocol. The Management Data-link State Machine provides all logic necessary to negotiate operating parameters between two stations.
 
-One Management Data-link State Machine exists per data link. Because a
-single piece of equipment may have multiple data links in operation
-simultaneously (e.g., to support multiple higher layer applications),
-there can be multiple, independently operating management data-link
-machines within the equipment.
+One Management Data-link State Machine exists per data link. Because a single piece of equipment may have multiple data links in operation simultaneously (e.g., to support multiple higher layer applications), there can be multiple, independently operating management data-link machines within the equipment.
 
 ## 2.7 Link Multiplexer
 
-The Link Multiplexer State Machine allows one or more data links to
-share the same physical (radio) channel. The Link Multiplexer State
-Machine provides the logic necessary to give each data link an
-opportunity to use the channel, according to the rotation algorithm
-embedded within the link multiplexer. One Link Multiplexer State Machine
-exists per physical channel. If a single piece of equipment has multiple
-physical channels operating simultaneously, then an independently
-operating Link Multiplexer
-
-State Machine exists for each channel.
+The Link Multiplexer State Machine allows one or more data links to share the same physical (radio) channel. The Link Multiplexer State Machine provides the logic necessary to give each data link an opportunity to use the channel, according to the rotation algorithm embedded within the link multiplexer. One Link Multiplexer State Machine exists per physical channel. If a single piece of equipment has multiple physical channels operating simultaneously, then an independently operating Link Multiplexer State Machine exists for each channel.
 
 ## 2.8 Physical
 
-The Physical State Machine manipulates the radio transmitter and
-receiver. One Physical State Machine exists per physical channel.
+The Physical State Machine manipulates the radio transmitter and receiver. One Physical State Machine exists per physical channel.
 
-Because different types of radio channel operations are used, the
-Physical State Machine exists in different forms. Each form hides the
-peculiar characteristics of each radio channel from the higher layer
-state machines. Two Physical State Machines have been defined in this
-standard: simplex and full duplex Physical State Machines.
+Because different types of radio channel operations are used, the Physical State Machine exists in different forms. Each form hides the peculiar characteristics of each radio channel from the higher layer state machines. Two Physical State Machines have been defined in this standard: simplex and full duplex Physical State Machines.
 
 ## 2.9 System Description Language
 
-Each of the above finite state machines is described in the System
-Description Language in Appendix C.
+Each of the above finite state machines is described in the System Description Language in Appendix C.
 
 # 3 Frame Structure
 
-Link layer packet radio transmissions are sent in small blocks of data,
-called frames. There are three general types of AX.25 frames:
+Link layer packet radio transmissions are sent in small blocks of data, called frames. There are three general types of AX.25 frames:
 
 - Information frame (I frame)
 
 - Supervisory frame (S frame)
 - Unnumbered frame (U frame)
 
-Each frame is made up of several smaller groups, called fields. Figures
-3.1a and 3.1b illustrate the three basic types of frames. Note that the
-first bit to be transmitted is on the left side.
+Each frame is made up of several smaller groups, called fields. Figures 3.1a and 3.1b illustrate the three basic types of frames. Note that the first bit to be transmitted is on the left side.
 
 ![Figure 3.1a U and S Frame Construction](media/fig3.1a.png)
 
@@ -668,30 +498,19 @@ address subfield is then sent in octets A8 through A14. Both of these
 subfields are encoded in the same manner, except that the last octet of
 the address field has the HDLC address extension bit set.
 
-The SSID octet at the end of each address subfield (A7 and A14) contains
-the SSID and the “C” bit. The C bits identify command and response
-frames (see Section 6.1.2). The SSID octet at the end of each optional
-Layer 2 repeater address subfield (A21 and A28) contains the SSID and
-the “H” bit (“\[H\]as-been-repeated”). The H bits indicate that the
-Layer 2 repeater station has repeated the frame (see Section 3.12.3).
-Each SSID octet contains two bits that are reserved for future use.
+The SSID octet at the end of each address subfield (A7 and A14) contains the SSID and the "C" bit. The C bits identify command and response frames (see Section 6.1.2). The SSID octet at the end of each optional Layer 2 repeater address subfield (A21 and A28) contains the SSID and the "H" bit ("\[H\]as-been-repeated"). The H bits indicate that the Layer 2 repeater station has repeated the frame (see Section 3.12.3). Each SSID octet contains two bits that are reserved for future use.
 
-Figure 3.4 shows a typical AX.25 frame in the non-repeater mode of
-operation.
+Figure 3.4 shows a typical AX.25 frame in the non-repeater mode of operation.
 
 ![Figure 3.4 Non-Repeater AX.25 Frame](media/fig3.4.png)
 
 **Figure 3.4 Non-Repeater AX.25 Frame.**
 
-The frame shown is an I frame, not going through a Layer 2 repeater,
-from N7LEM(SSID=0) to NJ7P (SSID=0), without a Layer 3 protocol. The P/F
-bit is set; the receive sequence number \[N(R)\] is 1; the send sequence
-number \[N(S)\] is 7.
+The frame shown is an I frame, not going through a Layer 2 repeater, from N7LEM(SSID=0) to NJ7P (SSID=0), without a Layer 3 protocol. The P/F bit is set; the receive sequence number \[N(R)\] is 1; the send sequence number \[N(S)\] is 7.
 
 ### 3.12.2 Destination Subfield Encoding
 
-Figure 3.5 shows how an amateur call sign is placed in the destination
-address subfield, occupying octets A1 through A7.
+Figure 3.5 shows how an amateur call sign is placed in the destination address subfield, occupying octets A1 through A7.
 
 ![Figure 3.5 Destination Field Encoding](media/fig3.5.png)
 
@@ -699,32 +518,20 @@ address subfield, occupying octets A1 through A7.
 
 Where:
 
-- The top octet (A1) is the first octet sent, with bit 0 of each
-octet being the first bit sent, and bit 7 being the last bit sent.
+- The top octet (A1) is the first octet sent, with bit 0 of each octet being the first bit sent, and bit 7 being the last bit sent.
 
-- The first (low-order or bit 0) bit of each octet is the HDLC
-address extension bit, set to zero on all but the last octet in the
-address field, where it is set to one.
+- The first (low-order or bit 0) bit of each octet is the HDLC address extension bit, set to zero on all but the last octet in the address field, where it is set to one.
 
-- The bits marked “R” are reserved bits. They may be used in an
-agreed-upon manner in individual networks. When not implemented, they
-are set to one.
+- The bits marked "R" are reserved bits. They may be used in an agreed-upon manner in individual networks. When not implemented, they are set to one.
 
-- The bit marked “C” is the command/response bit of an AX.25
-  frame, as outlined in Section 6.1.2.
-- The characters of the call sign are standard seven-bit ASCII (upper case only) placed in the
-  left-most seven bits of the octet to make room for the address extension bit. If the call sign
-  contains fewer than six characters, it
-  is padded with ASCII spaces between the last call sign character and the SSID octet.
+- The bit marked "C" is the command/response bit of an AX.25 frame, as outlined in Section 6.1.2.
+- The characters of the call sign are standard seven-bit ASCII (upper case only) placed in the left-most seven bits of the octet to make room for the address extension bit. If the call sign contains fewer than six characters, it is padded with ASCII spaces between the last call sign character and the SSID octet.
 
-- The 0000 SSID is reserved for the first personal AX.25 station.
-This provision establishes one standard SSID for “normal” stations to
-use for the first station.
+- The 0000 SSID is reserved for the first personal AX.25 station. This provision establishes one standard SSID for "normal" stations to use for the first station.
 
 ### 3.12.3 Source Subfield Encoding
 
-Figure 3.6 shows how an amateur call sign is placed in the destination
-address subfield, occupying octets A8 through A14.
+Figure 3.6 shows how an amateur call sign is placed in the destination address subfield, occupying octets A8 through A14.
 
 ![Figure 3.6 Source Field Encoding](media/fig3.6.png)
 
@@ -732,50 +539,24 @@ address subfield, occupying octets A8 through A14.
 
 Where:
 
-- The top octet (A8) is the first octet sent, with bit 0 of each
-octet being the first bit sent, and bit 7 being the last bit sent.
+- The top octet (A8) is the first octet sent, with bit 0 of each octet being the first bit sent, and bit 7 being the last bit sent.
 
-- The first (low-order or bit 0) bit of each octet is the HDLC
-address extension bit, set to zero on all but the last octet in the
-address field, where it is set to one.
+- The first (low-order or bit 0) bit of each octet is the HDLC address extension bit, set to zero on all but the last octet in the address field, where it is set to one.
 
-- The bits marked “R” are reserved bits. They may be used in an
-agreed-upon manner in individual networks. When not implemented, they
-are set to one.
+- The bits marked "R" are reserved bits. They may be used in an agreed-upon manner in individual networks. When not implemented, they are set to one.
 
-- The bit marked “C” is the command/response bit of an LA PA
-  frame, as outlined in Section 6.1.2.
-- The characters of the call sign are standard seven-bit ASCII (upper case only) placed in the
-  left-most seven bits of the octet to make room for the address extension bit. If the call sign
-  contains fewer than six characters, it
-left-most seven bits of the octet to make room for the address extension
-bit. If the call sign contains fewer than six characters, it is padded
-with ASCII spaces between the last call sign character and the SSID octet.
+- The bit marked "C" is the command/response bit of an LA PA frame, as outlined in Section 6.1.2.
+- The characters of the call sign are standard seven-bit ASCII (upper case only) placed in the left-most seven bits of the octet to make room for the address extension bit. If the call sign contains fewer than six characters, it is padded with ASCII spaces between the last call sign character and the SSID octet.
 
-- The 0000 SSID is reserved for the first personal AX.25 station.
-This provision establishes one standard SSID for “normal” stations to
-use for the first station.
+- The 0000 SSID is reserved for the first personal AX.25 station. This provision establishes one standard SSID for "normal" stations to use for the first station.
 
 ### 3.12.4 Layer 2 Repeater Address Encoding
 
-If a frame is to go through Layer 2 amateur packet repeater(s), an
-additional address subfield is appended to the end of the address field.
-This additional subfield contains the call sign(s) of the repeater(s) to
-be used. This allows more than one repeater to share the same RF channel.
-If this subfield exists, the last octet of the source subfield has its
-address extension bit set to “0”, indicating that more address-field
-data follows. The repeater address subfield is encoded in the same
-manner as the destination and source address subfields, except for the
-most-significant bit in the last octet, called the H bit. As discussed
-in Section 3.12.1, the H bit indicates whether a frame has been repeated
-or not.
+If a frame is to go through Layer 2 amateur packet repeater(s), an additional address subfield is appended to the end of the address field. This additional subfield contains the call sign(s) of the repeater(s) to be used. This allows more than one repeater to share the same RF channel. If this subfield exists, the last octet of the source subfield has its address extension bit set to "0", indicating that more address-field data follows. The repeater address subfield is encoded in the same manner as the destination and source address subfields, except for the most-significant bit in the last octet, called the H bit. As discussed in Section 3.12.1, the H bit indicates whether a frame has been repeated or not.
 
-The H bit is set to “0” on frames going to a repeater. The repeater
-changes the H bit to “1” before it retransmits the frame. Stations
-monitor and repeat frames that meet the following conditions:
+The H bit is set to "0" on frames going to a repeater. The repeater changes the H bit to "1" before it retransmits the frame. Stations monitor and repeat frames that meet the following conditions:
 
-Figure 3.7 shows how the repeater address subfield is encoded. Figure
-3.8 is an example of a complete frame after being repeated.
+Figure 3.7 shows how the repeater address subfield is encoded. Figure 3.8 is an example of a complete frame after being repeated.
 
 ![Figure 3.7 Repeater Address Encoding](media/fig3.7.png)
 
@@ -783,58 +564,33 @@ Figure 3.7 shows how the repeater address subfield is encoded. Figure
 
 Where:
 
-- The top octet is the first octet sent, with bit 0 being sent first
-and bit 7 sent last of each octet.
+- The top octet is the first octet sent, with bit 0 being sent first and bit 7 sent last of each octet.
 
-- The “H” bit is the has-been-repeated bit. It is set to “0” when a
-frame has not been repeated and set to “1” by the repeating station
-when repeated.
+- The "H" bit is the has-been-repeated bit. It is set to "0" when a frame has not been repeated and set to "1" by the repeating station when repeated.
 
 ![Figure 3.8 AX.25 Frame In Repeater Mode](media/fig3.8.png)
 
 **Figure 3.8 AX.25 Frame In Repeater Mode.**
 
-The above frame is the same as shown in Figure 3.3, except for the
-addition of a repeater address subfield (N7OO, SSID=1). The H bit is
-set, indicating this frame is from the output of the repeater.
+The above frame is the same as shown in Figure 3.3, except for the addition of a repeater address subfield (N7OO, SSID=1). The H bit is set, indicating this frame is from the output of the repeater.
 
 ### 3.12.5 Multiple Repeater Operation
 
-The link-layer AX.25 protocol allows operation through more than one
-repeater. Up to eight repeaters may be used by extending the repeater
-address subfield. When there is more than one repeater address, the
-repeater address immediately following the source address subfield will
-be considered the address of the first repeater of a multiple-repeater
-chain. As a frame progresses through a chain of repeaters, each
-successive repeater will set the H bit in its SSID octet, indicating
-that the frame has been successfully repeated through it. No other
-changes to the frame are made (except for the necessary recalculation of
-the FCS). The destination station can determine the route the frame took
-to reach it by examining the address field and use this path to return
-frames.
+The link-layer AX.25 protocol allows operation through more than one repeater. Up to eight repeaters may be used by extending the repeater address subfield. When there is more than one repeater address, the repeater address immediately following the source address subfield will be considered the address of the first repeater of a multiple-repeater chain. As a frame progresses through a chain of repeaters, each successive repeater will set the H bit in its SSID octet, indicating that the frame has been successfully repeated through it. No other changes to the frame are made (except for the necessary recalculation of the FCS). The destination station can determine the route the frame took to reach it by examining the address field and use this path to return frames.
 
-The number of repeater addresses is variable. The last repeater
-address will have the address extension bit of the SSID octet set to “1” indicating the end of the
-address field. All other address octets will have their address
-extension bit set to “0”.
+The number of repeater addresses is variable. The last repeater address will have the address extension bit of the SSID octet set to "1" indicating the end of the address field. All other address octets will have their address extension bit set to "0".
 
-Note that various timers (see Section 6.6.1) may require adjustment to
-accommodate the additional delays encountered when a frame must pass
-through a multiple-repeater chain.
+Note that various timers (see Section 6.6.1) may require adjustment to accommodate the additional delays encountered when a frame must pass through a multiple-repeater chain.
 
 # 4 Elements of Procedure and Formats of Fields
 
 ## 4.1 General
 
-The elements of procedure define the command and response frames used on
-the AX.25 link. Procedures are built from these elements and are
-described in Section 6.
+The elements of procedure define the command and response frames used on the AX.25 link. Procedures are built from these elements and are described in Section 6.
 
 ## 4.2 Control Fields
 
-The control field identifies the type of frame being sent. The control
-fields in AX.25 are modeled after the ISO HDLC balanced operation
-control fields.
+The control field identifies the type of frame being sent. The control fields in AX.25 are modeled after the ISO HDLC balanced operation control fields.
 
 ### 4.2.1 Control-Field Formats
 
@@ -844,11 +600,7 @@ The three formats of control fields used in AX.25 are the:
 - Supervisory frame (S frame)
 - Unnumbered frame (U frame)
 
-Figures 4.1a and 4.1b illustrate the basic format of the control field
-associated with each of these three types of frames. The control field
-can be one or two octets long and may use sequence numbers to maintain
-link integrity. These sequence numbers may be three-bit (modulo 8) or
-seven-bit (modulo 128) integers.
+Figures 4.1a and 4.1b illustrate the basic format of the control field associated with each of these three types of frames. The control field can be one or two octets long and may use sequence numbers to maintain link integrity. These sequence numbers may be three-bit (modulo 8) or seven-bit (modulo 128) integers.
 
 ![Figure 4.1a Control-Field Formats (Modulo 8)](media/fig4.1a.png)
 
@@ -1174,9 +926,7 @@ Parameter Length (PL), and Parameter Value (PV) set structures, in that
 order. Each PI identifies a parameter and is one octet in length. Each
 PL indicates the length of the associated PV in octets and is one octet
 in length. Each PV contains the parameter value and is PL octets in
-length. The PL does not include its own length or the length of its
-associatedPI. A PL value of zeroindicates that the associatedPV is
-absent; the parameter assumes the default value. A PI/PL/PV set may be
+length. The PL does not include its own length or the length of its associated PI. A PL value of zero indicates that the associated PV is absent; the parameter assumes the default value. A PI/PL/PV set may be
 omitted if it is not required to convey information, or if present
 values for the parameter are to be used. The PI/PL/PV fields are placed
 into the information field of the XID frame in ascending order. There is
@@ -1188,21 +938,15 @@ The parameter fields described below represent the minimum
 implementation and do not preclude the negotiation of other parameters
 between consenting stations.
 
-The encoding of each PI/PL/PV applicable to AX.25 is detailed in Figure
-4.5. Some of the fields are defined in this standard. Only the fields
-discussed below are required in an implementation that complies with
-this version of AX.25.
+The encoding of each PI/PL/PV applicable to AX.25 is detailed in Figure 4.5. Some of the fields are defined in this standard. Only the fields discussed below are required in an implementation that complies with this version of AX.25.
 
 ![Figure 4.5 Parameter Negotiation - Parameter Field Elements](media/fig4.5.png)
 
 **Figure 4.5 Parameter Negotiation - Parameter Field Elements.**
 
-Note: that Type E is a bit field and Type B is a numeric field of N
-octets. 32
+Note: that Type E is a bit field and Type B is a numeric field of N octets. 32
 
-Parameter field elements marked \* are defined in ISO 8885. They are
-shown for compatibility purposes only and are not needed to negotiate
-the features of this version of AX.25.
+Parameter field elements marked \* are defined in ISO 8885. They are shown for compatibility purposes only and are not needed to negotiate the features of this version of AX.25.
 
 The Classes of Procedures parameter field (PI=2) serves to negotiate half- or full duplex:
 - Bit 0 is always a 1.
@@ -1210,9 +954,7 @@ The Classes of Procedures parameter field (PI=2) serves to negotiate half- or fu
 - Either Bit 5 (half-duplex) or bit 6 (full duplex), but not both, must be set. 
 If this parameter field is not present, the current values are retained. The default is half-duplex.
 
-The HDLC Optional Functions parameter field (PI=3) allows the
-negotiation of implicit reject (REJ), or selective reject (SREJ), and
-modulo 8 or 128:
+The HDLC Optional Functions parameter field (PI=3) allows the negotiation of implicit reject (REJ), or selective reject (SREJ), and modulo 8 or 128:
 
 - Bits 0, 3-6, 8, 9, 12, 14, 16, 18-20, and 22 are always a 0.
 - Bits 7, 13, 15 and 17 are always a 1.
@@ -1220,40 +962,17 @@ modulo 8 or 128:
 - Selective reject is selected by resetting bit 1 and setting bit 2.
 - Clearing both bit 1 and 2 is not allowed.
 - Modulo 8 operation is selected by setting bit 10 and resetting bit 11.
-- Modulo 128 operation is selected by setting bit 11 and resetting
-bit 10. If this parameter field is not present, the current values are
-retained. The default is selective reject, modulo 128, TEST
-command/response, no segmenter/reassembler and selective REJ.
+- Modulo 128 operation is selected by setting bit 11 and resetting bit 10. If this parameter field is not present, the current values are retained. The default is selective reject, modulo 128, TEST command/response, no segmenter/reassembler and selective REJ.
 
-The I Field Length Receive parameter field (PI=6) allows the sending TNC
-to notify the receiving TNC of the maximum size of an Information field
-(N1) it will handle without error. A transmitting TNC may not exceed
-this size but may send smaller frames. If this field is not present, the
-current values are retained. The default is 256 octets (2048 bits).
+The I Field Length Receive parameter field (PI=6) allows the sending TNC to notify the receiving TNC of the maximum size of an Information field (N1) it will handle without error. A transmitting TNC may not exceed this size but may send smaller frames. If this field is not present, the current values are retained. The default is 256 octets (2048 bits).
 
-The Window Size Receive parameter field (PI=8) allows the sending TNC to
-notify the receiving TNC of the maximum size of the window (k) it will
-handle without error. If the TNCs are using modulo 128, this allows the
-negotiation of a window size less than 127 to conserve memory. If the
-TNCs are using selective reject or selective reject-reject, the
-receiving TNC is required to buffer k frames at any time. A transmitting
-TNC may not exceed this size but may send fewer frames. If this field is
-not present, the current values are retained. The default is 4 for
-modulo 8 and 32 for modulo 128.
+The Window Size Receive parameter field (PI=8) allows the sending TNC to notify the receiving TNC of the maximum size of the window (k) it will handle without error. If the TNCs are using modulo 128, this allows the negotiation of a window size less than 127 to conserve memory. If the TNCs are using selective reject or selective reject-reject, the receiving TNC is required to buffer k frames at any time. A transmitting TNC may not exceed this size but may send fewer frames. If this field is not present, the current values are retained. The default is 4 for modulo 8 and 32 for modulo 128.
 
-The Acknowledge Timer parameter field (PI=9) allows the negotiation of
-the wait for acknowledgement timer (T1). If this field is not present,
-the current values are retained. The default is 3000 msec.
+The Acknowledge Timer parameter field (PI=9) allows the negotiation of the wait for acknowledgement timer (T1). If this field is not present, the current values are retained. The default is 3000 msec.
 
-The Retries parameter field (PI=10) allows the negotiation of the retry
-count (N1). If this field is not present, the current values are
-retained. The default is 10 retries.
+The Retries parameter field (PI=10) allows the negotiation of the retry count (N1). If this field is not present, the current values are retained. The default is 10 retries.
 
-A FRMR error condition may be established if the received XID command
-information field exceeds the maximum defined storage capability of the
-station, if the receiving station is using AX.25 version 2.0 or earlier
-versions, or the receiving station wants to use the defaults for version
-2.0 or earlier.
+A FRMR error condition may be established if the received XID command information field exceeds the maximum defined storage capability of the station, if the receiving station is using AX.25 version 2.0 or earlier versions, or the receiving station wants to use the defaults for version 2.0 or earlier.
 
 A typical XID frame is shown in Figure 4.6.
 
@@ -1265,23 +984,11 @@ A typical XID frame is shown in Figure 4.6.
 
 #### 4.3.3.8 Test (TEST) Frame
 
-The Test command causes the addressed station to respond with the TEST
-response at the first respond opportunity; this performs a basic test of
-the data-link control. An information field is optional with the TEST
-command. If present, the received information field is returned, if
-possible, by the addressed station, with the TEST response. The TEST
-command has no effect on the mode or sequence variables maintained by
-the station.
+The Test command causes the addressed station to respond with the TEST response at the first respond opportunity; this performs a basic test of the data-link control. An information field is optional with the TEST command. If present, the received information field is returned, if possible, by the addressed station, with the TEST response. The TEST command has no effect on the mode or sequence variables maintained by the station.
 
-A FRMR condition may be established if the received TEST command
-information field exceeds the maximum defined storage capability of the
-station. If a FRMR response is not returned for this condition, a TEST
-response without an information field is returned.
+A FRMR condition may be established if the received TEST command information field exceeds the maximum defined storage capability of the station. If a FRMR response is not returned for this condition, a TEST response without an information field is returned.
 
-The station considers the data-link layer test terminated on receipt of
-the TEST response, or when a time-out period has expired. The results of
-the TEST command/response exchange are made available for interrogation
-by a higher layer.
+The station considers the data-link layer test terminated on receipt of the TEST response, or when a time-out period has expired. The results of the TEST command/response exchange are made available for interrogation by a higher layer.
 
 #### 4.3.3.9 Frame Reject (FRMR) Response Frame
 
@@ -1295,56 +1002,31 @@ The FRMR response is removed from the standard for the following reasons:
 
 - SDL is simplified and removes the need for one state in the data-link state machine.
 
-This version of AX.25 operates with previous versions of AX.25. It does
-not generate a FRMR Response frame, but handles error conditions by
-resetting the link.
+This version of AX.25 operates with previous versions of AX.25. It does not generate a FRMR Response frame, but handles error conditions by resetting the link.
 
 #### 4.4 Link Error Reporting and Recovery
 
-Several link-layer errors can be recovered without terminating the
-connection. These error situations may occur as a result of transmission
-errors or malfunctions within the TNC.
+Several link-layer errors can be recovered without terminating the connection. These error situations may occur as a result of transmission errors or malfunctions within the TNC.
 
 ##### 4.4.1 TNC Busy Condition
 
-When a TNC is temporarily unable to receive I frames (e.g., when receive
-buffers are full), it sends a Receive Not Ready (RNR) frame. This
-informs the sending TNC that the receiving TNC cannot handle any more I
-frames at the moment. This receiving TNC clears this condition by the
-sending a UA, RR, REJ or SABM(E) command frame.
+When a TNC is temporarily unable to receive I frames (e.g., when receive buffers are full), it sends a Receive Not Ready (RNR) frame. This informs the sending TNC that the receiving TNC cannot handle any more I frames at the moment. This receiving TNC clears this condition by the sending a UA, RR, REJ or SABM(E) command frame.
 
 ##### 4.4.2 Send Sequence Number Error
 
-If the send sequence number, N(S), of an otherwise error-free received
-frame does not match the receive state variable, V(R), a send sequence
-error has occurred. If SREJ has been negotiated and the N(s) is in the
-range “greater-than V(r)” and “less-than V(r)+k,” the information field
-is saved; otherwise, it is discarded. The receiver will not acknowledge
-this frame or any other I frames until N(S) matches V(R).
+If the send sequence number, N(S), of an otherwise error-free received frame does not match the receive state variable, V(R), a send sequence error has occurred. If SREJ has been negotiated and the N(s) is in the range "greater-than V(r)" and "less-than V(r)+k," the information field is saved; otherwise, it is discarded. The receiver will not acknowledge this frame or any other I frames until N(S) matches V(R).
 
-The control field of the erroneous I frame(s) is accepted so that link
-supervisory functions such as checking the P/F bit can be performed.
-Because of this update, the retransmitted I frame may have an updated P bit and N(R).
+The control field of the erroneous I frame(s) is accepted so that link supervisory functions such as checking the P/F bit can be performed. Because of this update, the retransmitted I frame may have an updated P bit and N(R).
 
 ##### 4.4.3 Implicit Reject (REJ) Recovery
 
-The REJ frame requests a retransmission of I frames following the
-detection of an N(S) sequence error. Only one outstanding “sent REJ”
-condition is allowed at a time. This condition is cleared when the
-requested I frame has been received.
+The REJ frame requests a retransmission of I frames following the detection of an N(S) sequence error. Only one outstanding "sent REJ" condition is allowed at a time. This condition is cleared when the requested I frame has been received.
 
-A TNC receiving the REJ command clears the condition by resending all
-outstanding I frames (up to the window size), starting with the frame
-indicated in N(R) of the REJ frame.
+A TNC receiving the REJ command clears the condition by resending all outstanding I frames (up to the window size), starting with the frame indicated in N(R) of the REJ frame.
 
 ##### 4.4.4 Selective Reject (SREJ) Recovery
 
-The SREJ command/response initiates more-efficient error recovery by
-requesting the retransmission of a single I frame following the
-detection of a sequence error. This is an advance over the earlier
-versions in which the requested I frame was retransmitted together with
-all additional I frames subsequently transmitted and successfully
-received.
+The SREJ command/response initiates more-efficient error recovery by requesting the retransmission of a single I frame following the detection of a sequence error. This is an advance over the earlier versions in which the requested I frame was retransmitted together with all additional I frames subsequently transmitted and successfully received.
 
 When a TNC sends one or more SREJ commands, each with the P bit set to
 “0” or “1”, or one or more SREJ responses, each with the F bit set to
@@ -1572,8 +1254,7 @@ primitive to release the radio channel.
 - **PH-QUIET Indication**. The Physical State Machine uses this
 primitive to indicate that the channel is not busy.
 
-- **PH-BUSY Indication**. The Physical State Machine uses this
-primitiveto indicate that the channel is busy.
+- **PH-BUSY Indication**. The Physical State Machine uses this primitive to indicate that the channel is busy.
 
 - **PH-EXPEDITED-DATA Request**. The Link Multiplexer State Machine
 uses this primitive to request transmission of each digipeat or
@@ -1582,8 +1263,7 @@ expedite data frame.
 - **PH-DATA Request**. The Link Multiplexer State Machine uses this
 primitive to request transmission of each normal frame.
 
-- **PH-DATA Indication**. The Physical State Machine uses this
-primitiveto provideincoming frames to the link multiplexer.
+- **PH-DATA Indication**. The Physical State Machine uses this primitive to provide incoming frames to the link multiplexer.
 
 ## 5.6 Physical State Machine <—> Hardware
 
@@ -1637,10 +1317,7 @@ AX.25 implements the command/response information in the address field.
 The command/response information is conveyed using two bits to maintain
 compatibility with previous versions of AX.25.
 
-An upward-compatible AX.25 TNC communicating witha distant TNCdetermines
-if the latter is using an older version of this protocol by testing the
-command/response bit information located in bit 7 of the SSID octets of
-both the destination and source address subfields. If both C bits are
+An upward-compatible AX.25 TNC communicating with a distant TNC determines if the latter is using an older version of this protocol by testing the command/response bit information located in bit 7 of the SSID octets of both the destination and source address subfields. If both C bits are
 set to “0”, then the distant device is using the older protocol. The
 newer version of the protocol always has one of these two bits set to
 “1” and the other bit set to “0”, depending on whether the frame is a
@@ -1740,58 +1417,31 @@ the XID response. Both TNCs set up based on the values used in the XID
 response. Negotiation is used by Classes of Procedures, HDLC Optional
 Functions, Acknowledge Timer and Retries.
 
-The Classes of Procedure parameter field (PI=2) negotiates half- or
-full-duplex operation. This reverts to half-duplex if either TNC cannot
-support full-duplex (i.e., if the XID command requests full-duplex and
-the receiving TNC can only support half-duplex, it sets the value to
-half-duplex in the XID response. If this parameter field is not present,
-the default half-duplex operation is selected.
+The Classes of Procedure parameter field (PI=2) negotiates half- or full-duplex operation. This reverts to half-duplex if either TNC cannot support full-duplex (i.e., if the XID command requests full-duplex and the receiving TNC can only support half-duplex, it sets the value to half-duplex in the XID response. If this parameter field is not present, the default half-duplex operation is selected.
 
-The HDLC Optional Functions parameter field (PI=3) allows the
-negotiation of implicit reject (REJ), or selective reject (SREJ and
-modulo 8 or 128. Function reverts to the lesser of the selection offered
-in the XID command and XID response frames. Ordering is (highest to
-lowest): selective reject and implicit reject: Modulo 128 and modulo 8.
-If this parameter field is absent, the default selective reject function
-and modulo 128 are selected.
+The HDLC Optional Functions parameter field (PI=3) allows the negotiation of implicit reject (REJ), or selective reject (SREJ and modulo 8 or 128. Function reverts to the lesser of the selection offered in the XID command and XID response frames. Ordering is (highest to lowest): selective reject and implicit reject: Modulo 128 and modulo 8. If this parameter field is absent, the default selective reject function and modulo 128 are selected.
 
-The I Field Length Receive parameter field (PI=6) allows the sending TNC
-to notify the receiving TNC of the maximum size of an Information field
-(N1) it will handle without error. A transmitting TNC may not exceed
-this size but may send smaller frames.
+The I Field Length Receive parameter field (PI=6) allows the sending TNC to notify the receiving TNC of the maximum size of an Information field (N1) it will handle without error. A transmitting TNC may not exceed this size but may send smaller frames.
 
-The Window Size Receive parameter field (PI=8) allows the sending TNC to
-notify the receiving TNC of the maximum size of the window (k) it will
-handle without error. If the TNCs are using modulo 128, this allows the
-negotiation of a window size less than 127 to conserve memory. If the
-TNCs are using selective reject the receiving TNC is required to buffer
-k frames at any time.
+The Window Size Receive parameter field (PI=8) allows the sending TNC to notify the receiving TNC of the maximum size of the window (k) it will handle without error. If the TNCs are using modulo 128, this allows the negotiation of a window size less than 127 to conserve memory. If the TNCs are using selective reject the receiving TNC is required to buffer k frames at any time.
 
-The Acknowledge Timer parameter field (PI=9) allows the negotiation of
-the “Wait for Acknowledgement” timer (T1). Function reverts to the
-greater of the values offered in the XID command and XID response
-frames.
+The Acknowledge Timer parameter field (PI=9) allows the negotiation of the "Wait for Acknowledgement" timer (T1). Function reverts to the greater of the values offered in the XID command and XID response frames.
 
-The Retries parameter field (PI=10) allows the negotiation of the retry
-count (N1). Function reverts to the greater of the values offered in the
-XID command and XID response frames.
+The Retries parameter field (PI=10) allows the negotiation of the retry count (N1). Function reverts to the greater of the values offered in the XID command and XID response frames.
 
-Defaults for the negotiated parameters for use with version 2.0 or
-- lower of AX.25 are:
+Defaults for the negotiated parameters for use with version 2.0 or lower of AX.25 are:
 - Set Half Duplex
 
 - Set Implicit Reject
 - Modulo = 8
 
 - I Field Length Receive = 2048 bits (256 octets)
-- Window Size
-Receive = 7
+- Window Size Receive = 7
 
 - Acknowledge Timer = 3000 msec
 - Retries = 10
 
-Defaults for the negotiated parameters for use with version 2.2 of
-- AX.25 are:
+Defaults for the negotiated parameters for use with version 2.2 of AX.25 are:
 - Set Half Duplex
 
 - Set Selective Reject
@@ -2006,9 +1656,7 @@ a frame with an improper address, that frame is discarded.
 
 Whenever an I or S frame is correctly received, even in a busy
 condition, the N(R) of the received frame is checked to see if it
-includes an acknowledgement of outstanding sent I frames. The T1 timer
-is canceledif the received frame actually acknowledges
-previouslyunacknowledged frames. If the T1 timer is canceled and there
+includes an acknowledgement of outstanding sent I frames. The T1 timer is canceled if the received frame actually acknowledges previously unacknowledged frames. If the T1 timer is canceled and there
 are still some frames that have been sent that are not acknowledged, T1
 is started again. If the T1 timer expires before an acknowledgement is
 received, the TNC proceeds with the retransmission procedure outlined in
@@ -2113,9 +1761,7 @@ A TNC resets the link by sending a SABM(E) frame and starting timer T1.
 After receiving a SABM(E) frame from the previously connected TNC, the
 receiver sends a UA frame back at the earliest opportunity, sets its
 send and receive state variables V(S) and V(R) to “0” and stops T1,
-unless it has sent a SABM(E) or DISC itself. If the UA frame is
-correctly received by the first TNC, it resets its send and receive
-state variables V(S)andV(R) and stops timer T1. Any busy condition that
+unless it has sent a SABM(E) or DISC itself. If the UA frame is correctly received by the first TNC, it resets its send and receive state variables V(S) and V(R) and stops timer T1. Any busy condition that
 previously existed is also cleared.
 
 If a DM response is received, the TNC enters the disconnected state and
@@ -2353,9 +1999,7 @@ Note: This appendix is not part of the protocol.
 
 Black, Uyless D., 1993, “Data-Link Protocols.”
 
-CCITT Recommendation X.25, “Interface Between DataTerminal Equipment
-(DTE) andData-Circuit Terminating Equipment (DCE) for Terminals
-Operating in the Packet Mode on Public Data Networks.”
+CCITT Recommendation X.25, "Interface Between Data Terminal Equipment (DTE) and Data-Circuit Terminating Equipment (DCE) for Terminals Operating in the Packet Mode on Public Data Networks."
 
 CCITT Recommendation Q.920/Q.921, Blue Book, 1989, “Digital Subscriber
 Signaling System No. 1 (DSS 1), Data link Layer.”
