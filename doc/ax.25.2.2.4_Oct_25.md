@@ -3974,7 +3974,7 @@ The insertion of a disconnect object may also represent the rejection of
 a DLC establishment attempt or the failure to complete DLC
 establishment. In such cases, if a connect object representing a DL-CONNECT request primitive
 is deleted by a disconnect object, then the disconnect object is also deleted.
-The disconnect object representing the DL-CONNECT response is also deleted.
+The disconnect object representing the DL-CONNECT response.
 
 Where: N/A – Not a valid state of queue ---- Not to be destructive nor
 to be able to advance ahead DES – To be destructive to the preceding
