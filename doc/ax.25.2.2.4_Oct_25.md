@@ -1,4 +1,4 @@
-<img src="media/image1.jpeg" />
+<img src="media/fig_cover.jpeg" />
 
 # AX.25 Link Access Protocol for Amateur Packet Radio
 
@@ -331,7 +331,7 @@ function or code is provided. Such is the case with the current TAPR TNC-2
 equipment, where only Layers 1, 2 and 7 are provided; these comprise the
 minimum configuration for reliable communications.
 
-<img src="media/image5.png" alt="Figure 2.1 Seven Layer OSI Reference Model" />
+<img src="media/fig2.1.png" alt="Figure 2.1 Seven Layer OSI Reference Model" />
 
 **Figure 2.1 Seven Layer OSI Reference Model.**
 
@@ -341,7 +341,7 @@ The two lower layers, data link and physical, can be further subdivided
 into several distinct finite state machines as shown in Figure 2.2. This
 example shows a single link to the radio port.
 
-<img src="media/image6.png" />
+<img src="media/fig2.2.png" />
 
 **Figure 2.2 AX.25 Finite State Machine Model (Single Link).**
 
@@ -351,7 +351,7 @@ data-link connections into one physical connection. A separate data-link
 machine must be provided for each connection allowed by the
 implementation.
 
-<img src="media/image7.png" />
+<img src="media/fig2.3.png" />
 
 **Figure 2.3 AX.25 Finite State Machine Model (Multiple Stream).**
 
@@ -383,7 +383,7 @@ interactions known as service “primitives.” (Similarly, the interaction betw
 layer and the physical layer also occurs via service primitives.) Primitives are discussed in greater
 detail in Section 5.
 
-<img src="media/image8.png" />
+<img src="media/fig2.4.png" />
 
 **Figure 2.4 Example Use Of AX.25 Primitive Types.**
 
@@ -2515,7 +2515,7 @@ with the return-from-subroutine symbol. Note that subroutines are not
 permitted to contain states, nor are they permitted to branch into
 different return legs. Each subroutine has a single point of return.
 
-<img src="media/image9.png" />
+<img src="media/figc1.1.png" />
 
 **Figure C1.1 SDL Symbol Definitions**
 
@@ -2708,35 +2708,35 @@ Timers:
 - T107 — Anti-Hogging Limit
 - T108 — Receiver Startup
 
-<img src="media/image10.png" />
+<img src="media/figc2a.1.png" />
 
 **Figure C2a.1 Simplex Physical Ready State.**
 
-<img src="media/image11.png" />
+<img src="media/figc2a.2.png" />
 
 **Figure C2a.2 Simplex Physical Receiving State.**
 
-<img src="media/image12.png" />
+<img src="media/figc2a.3.png" />
 
 **Figure C2a.3 Simplex Physical Transmitter Suppression State.**
 
-<img src="media/image13.png" />
+<img src="media/figc2a.4.png" />
 
 **Figure C2a.4 Simplex Physical Transmitter Start State.**
 
-<img src="media/image14.png" />
+<img src="media/figc2a.5.png" />
 
 **Figure C2a.5 Simplex Physical Transmitting State.**
 
-<img src="media/image15.png" />
+<img src="media/figc2a.6.png" />
 
 **Figure C2a.6. Simplex Physical Digipeating State.**
 
-<img src="media/image16.png" />
+<img src="media/figc2a.7.png" />
 
 **Figure C2a.7 Simplex Physical Receiver Start State.**
 
-<img src="media/image17.png" />
+<img src="media/figc2a.s.png" />
 
 **Figure C2a.s Simplex Physical Subroutines.**
 
@@ -2889,23 +2889,23 @@ Timers:
 - T106 — 10-minute transmission limit
 - T107 — anti-hogging limit
 
-<img src="media/image18.png" />
+<img src="media/figc2b.1.png" />
 
 **Figure C2b.1 Duplex Physical Receiver Ready State.**
 
-<img src="media/image19.png" />
+<img src="media/figc2b.2.png" />
 
 **Figure C2b.2 Duplex Physical Receiving State.**
 
-<img src="media/image20.png" />
+<img src="media/figc2b.3.png" />
 
 **Figure C2b.3 Duplex Physical Transmitter Ready State.**
 
-<img src="media/image21.png" />
+<img src="media/figc2b.4.png" />
 
 **Figure C2b.4 Duplex Physical Transmitter Start State.**
 
-<img src="media/image22.png" />
+<img src="media/figc2b.5.png" />
 
 **Figure C2b.5 Duplex Physical Transmitting State.**
 
@@ -3105,19 +3105,19 @@ Timers:
 
 - No timers used.
 
-<img src="media/image23.png" />
+<img src="media/figc3.1.png" />
 
 **Figure C3.1 Link Multiplexer Idle State.**
 
-<img src="media/image24.png" />
+<img src="media/figc3.2.png" />
 
 **Figure C3.2 Link Multiplexer Seize Pending State.**
 
-<img src="media/image25.png" />
+<img src="media/figc3.3.png" />
 
 **Figure C3.3 Link Multiplexer Seized State.**
 
-<img src="media/image26.png" />
+<img src="media/figc3.4.png" />
 
 **Figure C3.4 Link Multiplexer Subroutines.**
 
@@ -3358,11 +3358,11 @@ Queues:
 
 **Figure C4.1 Data Link Disconnected State.**
 
-<img src="media/image31.jpeg" />
+<img src="media/figc4.2.jpeg" />
 
 **Figure C4.2 Data Link Awaiting Connection State.**
 
-<img src="media/image32.png" />
+<img src="media/figc4.3.png" />
 
 **Figure C4.3 Data Link Awaiting Release State.**
 
@@ -3374,7 +3374,7 @@ Queues:
 
 **Figure C4.4b Data Link Connected State. (Continued)**
 
-<img src="media/image41.png" />
+<img src="media/figc4.4c.png" />
 
 **Figure C4.4c Data Link Connected State. (Continued)**
 
@@ -3382,23 +3382,23 @@ Queues:
 
 **Figure C4.5a Data Link Timer Recovery State.**
 
-<img src="media/image46.png" />
+<img src="media/figc4.5b.png" />
 
 **Figure C4.5b Data Link Timer Recovery State. (Continued)**
 
-<img src="media/image47.png" />
+<img src="media/figc4.5c.png" />
 
 **Figure C4.5c Data Link Timer Recovery State. (Continued)**
 
-<img src="media/image48.png" />
+<img src="media/figc4.5d.png" />
 
 **Figure C4.5d Data Link Timer Recovery State. (Continued)**
 
-<img src="media/image49.png" />
+<img src="media/figc4.5e.png" />
 
 **Figure C4.5e Data Link Timer Recovery State. (Continued)**
 
-<img src="media/image50.jpeg" />
+<img src="media/figc4.6a.jpeg" />
 
 **Figure C4.6a Data Link Awaiting V2.2 Connection State.**
 
@@ -3410,7 +3410,7 @@ Queues:
 
 **Figure C4.7a Data Link Subroutines.**
 
-<img src="media/image59.png" />
+<img src="media/figc4.7b.png" />
 
 **Figure C4.7b Data Link Subroutines. (Continued)**
 
@@ -3507,35 +3507,35 @@ Timers:
 
 - TM201 — Retry timer for management functions.
 
-<img src="media/image60.png" />
+<img src="media/figc5.1.png" />
 
 **Figure C5.1 Management Data Link Ready State.**
 
-<img src="media/image61.png" />
+<img src="media/figc5.2.png" />
 
 **Figure C5.2 Management Data Link Negotiating State.**
 
-<img src="media/image62.png" />
+<img src="media/figc5.3.png" />
 
 **Figure C5.3 MDL Classes of Procedures Negotiation Subroutines.**
 
-<img src="media/image63.png" />
+<img src="media/figc5.4.png" />
 
 **Figure C5.4 MDL Optional Functions Subroutines.**
 
-<img src="media/image64.png" />
+<img src="media/figc5.5.png" />
 
 **Figure C5.5 MDL N1 Negotiation Subroutines.**
 
-<img src="media/image65.png" />
+<img src="media/figc5.6.png" />
 
 **Figure C5.6 MDL Window Negotiation Subroutines.**
 
-<img src="media/image66.png" />
+<img src="media/figc5.7.png" />
 
 **Figure C5.7 MDL Retry Notification Subroutines**
 
-<img src="media/image67.png" />
+<img src="media/figc5.8.png" />
 
 **Figure C5.8 MDL T1 Negotiation Subroutines.**
 
@@ -3744,19 +3744,19 @@ will result in the loss of the entire segmented large data unit; higher
 level attempts at recovery will significantly increase congestion on the
 physical channel.
 
-<img src="media/image68.png" />
+<img src="media/figc6.1.png" />
 
 **Figure C-6.1 Segmenter Ready State.**
 
-<img src="media/image69.png" />
+<img src="media/figc6.2.png" />
 
 **Figure C-6.2 Reassembler Ready State.**
 
-<img src="media/image70.png" />
+<img src="media/figc6.3.png" />
 
 **Figure C-6.3 Reassembler Assembling Data State.**
 
-<img src="media/image71.png" />
+<img src="media/figc6.4.png" />
 
 **Figure C-6.4 Reassembler Assembling Unit Data State.**
 
@@ -3965,6 +3965,6 @@ The other primitives work in groups of four with the Request from the
 station A causing an Indicate in the station B, and a Response in
 station B causing a Confirm in the station A.
 
-<img src="media/image73.png" />
+<img src="media/figd.3.png" />
 
 **Figure D.3 Example of a Connection-Oriented Data Exchange.**
