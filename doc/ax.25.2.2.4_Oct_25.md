@@ -890,7 +890,7 @@ Unnumbered frames have both bits 0 and 1 of the control field set to
 “1”. U frames are responsible for maintaining additional control over
 the link beyond what is accomplished with S frames. U frames are
 responsible for establishing and terminating link connections. U frames
-also allow for the transmission and reception of informationoutside of the
+also allow for the transmission and reception of information outside of the
 normal flow control. Some U frames may contain both information and PID
 fields.
 
@@ -1376,7 +1376,7 @@ that the checkpoint retransmission will not be initiated at the remote
 TNC.
 
 With respect to each direction of transmission on the data link, one or
-more “sent SREJ” exception conditions from a TNC toanother TNC may be
+more “sent SREJ” exception conditions from a TNC to another TNC may be
 established at a time. A “sent SREJ” exception condition is cleared when
 the requested I frame is received.
 
@@ -1713,7 +1713,7 @@ frame and resets all of its internal state variables (V(S), V(A) and
 V(R)). Reception of the UA response frame by the originating TNC causes
 it to cancel the T1 timer and set its internal state variables to “0”.
 
-If the distantTNC doesn’t respond before T1 times out, the originating
+If the distant TNC doesn’t respond before T1 times out, the originating
 TNC resendsthe SABM frame and starts T1 running again. The originating
 TNC tries to establish a connection until it has tried unsuccessfully N2
 times. N2 is defined in Section 6.7.2.3.
@@ -3972,11 +3972,9 @@ the dissociation of the queues with the DLC.
 
 The insertion of a disconnect object may also represent the rejection of
 a DLC establishment attempt or the failure to complete DLC
-establishment. In such cases, if a connect object representing a DL-
-
-CONNECT request primitive is deleted byadisconnect object, then the
-disconnect object is also deleted. The disconnect object representing
-the DL-CONNECT response.
+establishment. In such cases, if a connect object representing a DL-CONNECT request primitive
+is deleted by a disconnect object, then the disconnect object is also deleted.
+The disconnect object representing the DL-CONNECT response is also deleted.
 
 Where: N/A – Not a valid state of queue ---- Not to be destructive nor
 to be able to advance ahead DES – To be destructive to the preceding
