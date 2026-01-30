@@ -330,11 +330,15 @@ Link layer packet radio transmissions are sent in small blocks of data, called f
 
 Each frame is made up of several smaller groups, called fields. Figures 3.1a and 3.1b illustrate the three basic types of frames. Note that the first bit to be transmitted is on the left side.
 
-![Figure 3.1a U and S Frame Construction](media/fig3.1a.png)
+| Flag     | Address        | Control     | Info     | FCS     | Flag     |
+|----------|----------------|-------------|----------|---------|----------|
+| 01111110 | 112/224 Bits   | 8/16 Bits   | N*8 Bits | 16 Bits | 01111110 |
 
 **Figure 3.1a U and S Frame Construction.**
 
-![Figure 3.1b Information Frame Construction](media/fig3.1b.png)
+| Flag     | Address        | Control     | PID    | Info     | FCS     | Flag     |
+|----------|----------------|-------------|--------|----------|---------|----------|
+| 01111110 | 112/224 Bits   | 8/16 Bits   | 8 Bits | N*8 Bits | 16 Bits | 01111110 |
 
 **Figure 3.1b Information Frame Construction.**
 
