@@ -1,56 +1,52 @@
 <img src="media/image1.jpeg" style="width:1in;height:1.14333in" />
 
-> **AX.25 Link Access Protocol**
->
-> **for Amateur Packet Radio**
->
-> ***Version 2.2 Revision 4: 27 October 2025***
->
-> 1
+# AX.25 Link Access Protocol for Amateur Packet Radio
+
+**Version 2.2 Revision 4: 27 October 2025**
 
 Copyright (c) 1997 by Tucson Amateur Packet Radio Corporation. Portions
 Copyright (c) 1984, 1993 by The American Radio Relay League, Inc.
 
 Original: 1993 Version 1
 
-Authors: William A. Beech, NJ7P, <u>mailto:nj7p@nj7p.org</u>, Douglas E.
-Nielsen, N7LEM, <u>mailto:n7lem@n7lem.net,</u> Jack Taylor, N7OO,
-<u>mailto:n7oo@outlook.com.</u>
+Authors: William A. Beech, NJ7P, nj7p@nj7p.org, Douglas E.
+Nielsen, N7LEM, n7lem@n7lem.net, Jack Taylor, N7OO,
+n7oo@outlook.com.
 
 Code Implementation: Douglas E. Nielsen, N7LEM,
-<u>mailto:n7lem@n7lem.net</u> (original code in Borland C which ran on
+n7lem@n7lem.net (original code in Borland C which ran on
 the 80188-based TNC-3 which has unfortunately been lost),
 
 Revision: 1998 Version 2
 
-Authors: William A. Beech, NJ7P, <u>mailto:nj7p@nj7p.org</u>, Douglas E.
-Nielsen, N7LEM, <u>mailto:n7lem@n7lem.net,</u> Jack Taylor, N7OO,
-<u>mailto:n7oo@outlook.com.</u>
+Authors: William A. Beech, NJ7P, nj7p@nj7p.org, Douglas E.
+Nielsen, N7LEM, n7lem@n7lem.net, Jack Taylor, N7OO,
+n7oo@outlook.com.
 
-Production Editors: Greg Jones, WD5IVD, <u>mailto:wd5ivd@tapr.org,</u>
-William A. Beech, NJ7P, <u>mailto:nj7p@nj7p.org.</u>
+Production Editors: Greg Jones, WD5IVD, wd5ivd@tapr.org,
+William A. Beech, NJ7P, nj7p@nj7p.org.
 
 Revision: 2017 Version 3
 
-Editors: William A. Beech, NJ7P, <u>mailto:nj7p@nj7p.org</u>, Code
-Implementation: John Langner, WB2OSZ, <u>mailto:wb2osz@comcast.net</u>
-(2017 code as part of Direwolf project), John Wiseman, G8BPQ, mailto:
+Editors: William A. Beech, NJ7P, nj7p@nj7p.org, Code
+Implementation: John Langner, WB2OSZ, wb2osz@comcast.net (2017 code as part of Direwolf project), John Wiseman, G8BPQ,
 
-Code Implementation: <u>john.wiseman@ntlworld.com</u> (2017 code for the
-BPQ Switch).
+Code Implementation: john.wiseman@ntlworld.com (2017 code for the BPQ Switch).
 
 Revision: 2025 Version 4
 
-Editors: William A. Beech, NJ7P, <u>mailto:nj7p@nj7p.org</u>,
+Editors: William A. Beech, NJ7P, nj7p@nj7p.org,
 
 Code Implementation:
 
-> 2
+Please note that this Markdown edition is a conversion (and subsequent manual/AI-assisted clean-up) from source PDF/docx 
+documents and as such may contain differences, which we hope through collaboration will be resolved by the community 
+through contributions to this document, made via issues and PRs.
 
-**Forward**
+## Forward
 
-Packet radio has linkedmany thousands of amateur radio stations together
-directly and by thepacket network. The packet network has grown from a
+Packet radio has linked many thousands of amateur radio stations together
+directly and by the packet network. The packet network has grown from a
 series of digipeaters to a sophisticated global network consisting of
 several types of nodes, including HF gateways, Internet gateways and
 satellite links. This progress has happened since the publication of
@@ -71,18 +67,18 @@ The authors wish to thank Eric Gustafson, N7CL, and Lyle Johnson, KK7P
 (ex-WA7GXD), for providing the material and encouragement during this
 development.
 
-> July 1993
->
-> William A. Beech, NJ7P Douglas E. Nielsen, N7LEM Jack Taylor, N7OO
+July 1993
+
+William A. Beech, NJ7P Douglas E. Nielsen, N7LEM Jack Taylor, N7OO
 
 This is a revision of the 1993 standard. Errors in the text and SDL have
 been corrected.
 
-> July 1998, Revision 2
->
-> William A. Beech, NJ7P
->
-> Douglas E. Nielsen, N7LEM Jack Taylor, N7OO
+July 1998, Revision 2
+
+William A. Beech, NJ7P
+
+Douglas E. Nielsen, N7LEM Jack Taylor, N7OO
 
 This is a revision of the 1998 standard. It has revised text and SDL
 implementing changes found necessary by individuals implementing this
@@ -90,24 +86,24 @@ protocol. The authors wish to thank John Langner, WB2OSZ, and John
 Wiseman, G8BPQ, for their feedback as they coded stacks to implement
 AX.25 Version 2.2.
 
-> September 2017, Revision 3
->
-> William A. Beech, NJ7P
->
-> Douglas E. Nielsen, N7LEM Jack Taylor, N7OO
+September 2017, Revision 3
+
+William A. Beech, NJ7P
+
+Douglas E. Nielsen, N7LEM Jack Taylor, N7OO
 
 This is a revision of the 2017 standard. It has revised text and SDL
 implementing changes found necessary by individuals implementing this
 protocol. The authors wish to thank XXX for their feedback as they coded
 stacks to implement AX.25 Version 2.2.
 
-> September 2025, Revision 4
->
-> William A. Beech, NJ7P
->
-> Douglas E. Nielsen, N7LEM Jack Taylor, N7OO, SK
+September 2025, Revision 4
 
-**Preface**
+William A. Beech, NJ7P
+
+Douglas E. Nielsen, N7LEM Jack Taylor, N7OO, SK
+
+## Preface
 
 This document is the fourth edition of the AX.25 Amateur Packet Radio
 Link Layer Protocol (Version 2.2, 1996) published by the American Radio
@@ -135,291 +131,133 @@ document and should be used to resolve any apparent discrepancies
 between the two. The SDL is a much clearer description of the protocol
 than the verbal text.
 
-> 4
->
-> **Table of Contents**
+## Table of Contents
+1. [Abstract](#1-abstract)
+2. [1.1 General](#11-general)
+3. [2 Concepts and Terminology](#2-concepts-and-terminology)
+   1. [2.1 Basic Concepts](#21-basic-concepts)
+   2. [2.2 AX.25 Model](#22-ax25-model)
+   3. [2.3 Data-Link Service Access Point](#23-data-link-service-access-point)
+   4. [2.4 Segmenter/Reassembler](#24-segmenterreassembler)
+   5. [2.5 Data Link](#25-data-link)
+   6. [2.6 Management Data Link](#26-management-data-link)
+   7. [2.7 Link Multiplexer](#27-link-multiplexer)
+   8. [2.8 Physical](#28-physical)
+   9. [2.9 System Description Language](#29-system-description-language)
+4. [3 Frame Structure](#3-frame-structure)
+   1. [3.1 Flag Field](#31-flag-field)
+   2. [3.2 Address Field](#32-address-field)
+   3. [3.3 Control Field](#33-control-field)
+   4. [3.4 PID Field](#34-pid-field)
+   5. [3.5 Information Field](#35-information-field)
+   6. [3.6 Bit Stuffing](#36-bit-stuffing)
+   7. [3.7 Frame-Check Sequence](#37-frame-check-sequence)
+   8. [3.8 Order of Octet and Bit Transmission](#38-order-of-octet-and-bit-transmission)
+   9. [3.9 Invalid Frames](#39-invalid-frames)
+   10. [3.10 Frame Abort](#310-frame-abort)
+   11. [3.11 Inter-Frame Time Fill](#311-inter-frame-time-fill)
+   12. [3.12 Address-Field Encoding](#312-address-field-encoding)
+       1. [3.12.1 Non-repeater Address-Field Encoding](#3121-non-repeater-address-field-encoding)
+       2. [3.12.2 Destination Subfield Encoding](#3122-destination-subfield-encoding)
+       3. [3.12.3 Source Subfield Encoding](#3123-source-subfield-encoding)
+       4. [3.12.4 Layer 2 Repeater Address Encoding](#3124-layer-2-repeater-address-encoding)
+       5. [3.12.5 Multiple Repeater Operation](#3125-multiple-repeater-operation)
+5. [4 Elements of Procedure and Formats of Fields](#4-elements-of-procedure-and-formats-of-fields)
+   1. [4.1 General](#41-general)
+   2. [4.2 Control Fields](#42-control-fields)
+       1. [4.2.1 Control-Field Formats](#421-control-field-formats)
+       2. [4.2.2 Control-Field Parameters](#422-control-field-parameters)
+       3. [4.3 Control-Field Coding for Commands and Responses](#43-control-field-coding-for-commands-and-responses)
+       4. [4.3.1 Information Command Frame Control Field](#431-information-command-frame-control-field)
+       5. [4.3.2 Supervisory Frame Control Field](#432-supervisory-frame-control-field)
+       6. [4.3.3 Unnumbered Frame Control Fields](#433-unnumbered-frame-control-fields)
+       7. [4.4 Link Error Reporting and Recovery](#44-link-error-reporting-and-recovery)
+       8. [4.4.1 TNC Busy Condition](#441-tnc-busy-condition)
+       9. [4.4.2 Send Sequence Number Error](#442-send-sequence-number-error)
+       10. [4.4.3 Implicit Reject (REJ) Recovery](#443-implicit-reject-rej-recovery)
+       11. [4.4.4 Selective Reject (SREJ) Recovery](#444-selective-reject-srej-recovery)
+       12. [4.4.5 Timeout Error Recovery](#445-timeout-error-recovery)
+       13. [4.4.6 Invalid Frame or FCS Error](#446-invalid-frame-or-fcs-error)
+6. [5 Elements for Layer-to-Layer Communication](#5-elements-for-layer-to-layer-communication)
+   1. [5.1 Layer 3 Entity <—> Management Data-link State Machine](#51-layer-3-entity-management-data-link-state-machine)
+   2. [5.2 Management Data-Link State Machine <—> Link Multiplexer State Machine](#52-management-data-link-state-machine-link-multiplexer-state)
+   3. [5.3 Layer 3 Entity <—> Data-Link State Machine](#53-layer-3-entity-data-link-state-machine)
+   4. [5.4 Data-Link State Machine <—> Link Multiplexer State Machine](#54-data-link-state-machine-link-multiplexer-state-machine)
+   5. [5.5 Link Multiplexer State Machine <—> Physical State Machine](#55-link-multiplexer-state-machine-physical-state-machine)
+   6. [5.6 Physical State Machine <—> Hardware](#56-physical-state-machine-hardware)
+7. [6 Description of AX.25 Procedures](#6-description-of-ax25-procedures)
+   1. [6.1 Address Field Operation](#61-address-field-operation)
+   2. [6.1.1 Address Information](#611-address-information)
+   3. [6.1.2 Command/Response Procedure](#612-commandresponse-procedure)
+   4. [6.2 Poll/Final (P/F) Bit Procedures](#62-pollfinal-pf-bit-procedures)
+   5. [6.3 Procedures for Link Set-Up and Disconnection](#63-procedures-for-link-set-up-and-disconnection)
+       1. [6.3.1 AX.25 Link Connection Establishment](#631-ax25-link-connection-establishment)
+       2. [6.3.2 Parameter Negotiation Phase](#632-parameter-negotiation-phase)
+       3. [6.3.3 Information-Transfer Phase](#633-information-transfer-phase)
+       4. [6.3.4 Link Disconnection](#634-link-disconnection)
+       5. [6.3.5 Disconnected State](#635-disconnected-state)
+       6. [6.3.6 Collision Recovery](#636-collision-recovery)
+       7. [6.3.7 Connectionless Operation](#637-connectionless-operation)
+   6. [6.4 Procedures for Information Transfer](#64-procedures-for-information-transfer)
+       1. [6.4.1 Sending I Frames](#641-sending-i-frames)
+       2. [6.4.2 Receiving I Frames](#642-receiving-i-frames)
+       3. [6.4.3 Priority Acknowledge](#643-priority-acknowledge)
+       4. [6.4.4 Reception of Out-of-Sequence Frames](#644-reception-of-out-of-sequence-frames)
+       5. [6.4.5 Reception of Incorrect Frames](#645-reception-of-incorrect-frames)
+       6. [6.4.6 Receiving Acknowledgement](#646-receiving-acknowledgement)
+       7. [6.4.7 Receiving REJ](#647-receiving-rej)
+       8. [6.4.8 Receiving an SREJ](#648-receiving-an-srej)
+       9. [6.4.9 Receiving an RNR Frame](#649-receiving-an-rnr-frame)
+       10. [6.4.10 Sending a Busy Indication](#6410-sending-a-busy-indication)
+       11. [6.4.11 Waiting Acknowledgement](#6411-waiting-acknowledgement)
+   7. [6.5 Resetting Procedure](#65-resetting-procedure)
+   8. [6.6 Disassembler/Reassembler](#66-disassemblerreassembler)
+   9. [6.7 List of System Defined Parameters](#67-list-of-system-defined-parameters)
+       1. [6.7.1 Timers](#671-timers)
+       2. [6.7.2 Parameters](#672-parameters)
+8. [Appendix A - Glossary](#appendix-a-glossary)
+9. [Appendix B - References](#appendix-b-references)
+10. [Appendix C1 - Introduction to System Description Language](#appendix-c1-introduction-to-system-description-language)
+    1. [C1.1 Principles of Extended Finite State Machines](#c11-principles-of-extended-finite-state-machines)
+    2. [C1.2 SDL Symbol Definition](#c12-sdl-symbol-definition)
+11. [Appendix C2a - Simplex Physical Layer State Machines](#appendix-c2a-simplex-physical-layer-state-machines)
+    1. [C2a.1 Interaction with the Link Multiplexer](#c2a1-interaction-with-the-link-multiplexer)
+    2. [C2a.2 Interface to the Hardware](#c2a2-interface-to-the-hardware)
+    3. [C2a.3 Internal Operation of the Machine](#c2a3-internal-operation-of-the-machine)
+12. [Appendix C2b - Duplex Physical Layer State Machines](#appendix-c2b-duplex-physical-layer-state-machines)
+    1. [C2b.1 Interaction with the Link Multiplexer](#c2b1-interaction-with-the-link-multiplexer)
+    2. [C2b.2 Interface to the Hardware](#c2b2-interface-to-the-hardware)
+    3. [C2b.3 Internal Operation of the Machine](#c2b3-internal-operation-of-the-machine)
+13. [Appendix C3 - Link Multiplexer State Machine](#appendix-c3-link-multiplexer-state-machine)
+    1. [C3.1 Interaction with the Data-Link State Machine](#c31-interaction-with-the-data-link-state-machine)
+    2. [C3.2 Interaction with the Physical Layer State Machine](#c32-interaction-with-the-physical-layer-state-machine)
+    3. [C3.3 Internal Operation of the Machine](#c33-internal-operation-of-the-machine)
+14. [Appendix C4 - Data-Link State Machine](#appendix-c4-data-link-state-machine)
+    1. [C4.1 Interaction with the Data-Link Service Access Point](#c41-interaction-with-the-data-link-service-access-point)
+    2. [C4.2 Interaction with the Link Multiplexer State Machine](#c42-interaction-with-the-link-multiplexer-state-machine)
+    3. [C4.3 Internal Operation of the Machine](#c43-internal-operation-of-the-machine)
+15. [Appendix C5 - Management Data Link State Machine](#appendix-c5-management-data-link-state-machine)
+    1. [C5.1 Interaction with the Data Link Service Access Point](#c51-interaction-with-the-data-link-service-access-point)
+    2. [C5.2 Interaction with the Link Multiplexer State Machine](#c52-interaction-with-the-link-multiplexer-state-machine)
+    3. [C5.3 Internal Operation of the Machine](#c53-internal-operation-of-the-machine)
+16. [Appendix C6 - Segmenter/Reassembler](#appendix-c6-segmenterreassembler)
+    1. [C6.1 Segmenter State Machine](#c61-segmenter-state-machine)
+    2. [C6.2 Reassembler State Machine](#c62-reassembler-state-machine)
+    3. [C6.3 Internal Operation of the Machine](#c63-internal-operation-of-the-machine)
+       1. [C6.3.1 Internal Operation of the Segmenter State Machine](#c631-internal-operation-of-the-segmenter-state-machine)
+       2. [C6.3.2 Internal Operation of the Reassembler State Machine](#c632-internal-operation-of-the-reassembler-state-machine)
+    4. [C6.4 Final Observations](#c64-final-observations)
+17. [Appendix D - Data Link Service Access Point and Primitives](#appendix-d-data-link-service-access-point-and-primitives)
+    1. [D.1 Model of a Data-Link Connection](#d1-model-of-a-data-link-connection)
+    2. [D.2 Queue Model Concepts](#d2-queue-model-concepts)
+    3. [D.3 DLC Establishment](#d3-dlc-establishment)
+    4. [D.4. Data Transfer](#d4-data-transfer)
+    5. [D.5 DLC Release](#d5-dlc-release)
+## Figures
 
-Contents
+No table of figures entries found.
 
-1
-Abstract.....................................................................................................................................................
-10
-
-1.1 General
-...............................................................................................................................................
-10 2 Concepts and Terminology
-.......................................................................................................................
-10
-
-> 2.1 Basic Concepts
-> ...................................................................................................................................
-> 10 2.2 AX.25 Model
-> .......................................................................................................................................
-> 11 2.3 Data-Link Service Access Point
-> .........................................................................................................
-> 13 2.4 Segmenter/Reassembler
-> ....................................................................................................................
-> 14 2.5 Data Link
-> ............................................................................................................................................
-> 15 2.6 Management Data Link
-> ......................................................................................................................
-> 15 2.7 Link Multiplexer
-> ...................................................................................................................................
-> 15 2.8 Physical
-> ..............................................................................................................................................
-> 15 2.9 System Description Language
-> ............................................................................................................
-> 15
-
-3 Frame Structure
-........................................................................................................................................
-15 3.1 Flag Field
-............................................................................................................................................
-16 3.2 Address
-Field......................................................................................................................................
-16 3.3 Control
-Field.......................................................................................................................................
-16 3.4 PID Field
-.............................................................................................................................................
-17 3.5 Information
-Field.................................................................................................................................
-17 3.6 Bit Stuffing
-..........................................................................................................................................
-18 3.7 Frame-Check Sequence
-.....................................................................................................................
-18 3.8 Order of Octet and Bit Transmission
-..................................................................................................
-18 3.9 Invalid Frames
-....................................................................................................................................
-18 3.10 Frame Abort
-......................................................................................................................................
-18 3.11 Inter-Frame Time Fill
-........................................................................................................................
-18 3.12 Address-Field Encoding
-...................................................................................................................
-18 3.12.1 Non-repeater Address-Field
-Encoding.......................................................................................
-19 3.12.2 Destination Subfield
-Encoding...................................................................................................
-20 3.12.3 Source Subfield
-Encoding..........................................................................................................
-21 3.12.4 Layer 2 Repeater Address
-Encoding.........................................................................................
-22 3.12.5 Multiple Repeater Operation
-......................................................................................................
-24
-
-4 Elements of Procedure and Formats of Fields
-..........................................................................................
-25
-
-> 4.1 General
-> ...............................................................................................................................................
-> 25 5
->
-> 4.2 Control Fields
-> .....................................................................................................................................
-> 25 4.2.1 Control-Field Formats
-> ..................................................................................................................
-> 25 4.2.2 Control-Field Parameters
-> .............................................................................................................
-> 26 4.3 Control-Field Coding for Commands and Responses
-> ........................................................................
-> 27 4.3.1 Information Command Frame Control Field
-> .................................................................................
-> 27 4.3.2 Supervisory Frame Control Field
-> .................................................................................................
-> 27 4.3.3 Unnumbered Frame Control Fields
-> ..............................................................................................
-> 29 4.4 Link Error Reporting and Recovery
-> ....................................................................................................
-> 35 4.4.1 TNC Busy Condition
-> ....................................................................................................................
-> 35 4.4.2 Send Sequence Number Error
-> .....................................................................................................
-> 35 4.4.3 Implicit Reject (REJ) Recovery
-> ....................................................................................................
-> 36 4.4.4 Selective Reject (SREJ) Recovery
-> ..............................................................................................
-> 36 4.4.5 Timeout Error Recovery
-> ...............................................................................................................
-> 36 4.4.6 Invalid Frame or FCS Error
-> ..........................................................................................................
-> 37
-
-5 Elements for Layer-to-Layer Communication
-............................................................................................
-37 5.1 Layer 3 Entity \<—\> Management Data-link State Machine
-................................................................ 37 5.2
-Management Data-Link State Machine \<—\> Link Multiplexer State Machine
-................................... 37 5.3 Layer 3 Entity \<—\>
-Data-Link State Machine
-....................................................................................
-38 5.4 Data-Link State Machine \<—\> Link Multiplexer State Machine
-......................................................... 38 5.5 Link
-Multiplexer State Machine \<—\> Physical State Machine
-........................................................... 39 5.6
-Physical State Machine \<—\> Hardware
-.............................................................................................
-39
-
-6 Description of AX.25 Procedures
-..............................................................................................................
-40 6.1 Address Field Operation
-.....................................................................................................................
-40 6.1.1 Address Information
-.....................................................................................................................
-40 6.1.2 Command/Response Procedure
-..................................................................................................
-40
-
-> 6.2 Poll/Final (P/F) Bit Procedures
-> ...........................................................................................................
-> 41 6.3 Procedures for Link Set-Up and Disconnection
-> ..................................................................................
-> 41 6.3.1 AX.25 Link Connection
-> Establishment.........................................................................................
-> 41 6.3.2 Parameter Negotiation
-> Phase......................................................................................................
-> 41 6.3.3 Information-Transfer Phase
-> .........................................................................................................
-> 43 6.3.4 Link
-> Disconnection.......................................................................................................................
-> 43 6.3.5 Disconnected State
-> ......................................................................................................................
-> 43 6.3.6 Collision Recovery
-> .......................................................................................................................
-> 43 6.3.7 Connectionless Operation
-> ............................................................................................................
-> 44
->
-> 6.4 Procedures for Information Transfer
-> ...................................................................................................
-> 44 6
->
-> 6.4.1 Sending I Frames
-> .........................................................................................................................
-> 44 6.4.2 Receiving I Frames
-> ......................................................................................................................
-> 44 6.4.3 Priority Acknowledge
-> ...................................................................................................................
-> 45 6.4.4 Reception of Out-of-Sequence Frames
-> .......................................................................................
-> 45 6.4.5 Reception of Incorrect Frames
-> .....................................................................................................
-> 45 6.4.6 Receiving Acknowledgement
-> .......................................................................................................
-> 46 6.4.7 Receiving REJ
-> .............................................................................................................................
-> 46 6.4.8 Receiving an SREJ
-> ......................................................................................................................
-> 46 6.4.9 Receiving an RNR
-> Frame............................................................................................................
-> 46 6.4.10 Sending a Busy Indication
-> .........................................................................................................
-> 46 6.4.11 Waiting Acknowledgement
-> .........................................................................................................
-> 47 6.5 Resetting Procedure
-> ...........................................................................................................................
-> 47 6.6 Disassembler/Reassembler
-> ................................................................................................................
-> 47 6.7 List of System Defined Parameters
-> ....................................................................................................
-> 48 6.7.1 Timers
-> ..........................................................................................................................................
-> 48 6.7.2 Parameters
-> ..................................................................................................................................
-> 50
-
-Appendix A - Glossary
-.................................................................................................................................
-51 Appendix B - References
-.............................................................................................................................
-52 Appendix C1 - Introduction to System Description Language
-......................................................................
-53 C1.1 Principles of Extended Finite State Machines
-..................................................................................
-53 C1.2 SDL Symbol Definition
-.....................................................................................................................
-53 Appendix C2a - Simplex Physical Layer State Machines
-............................................................................
-56 C2a.1 Interaction with the Link Multiplexer
-...............................................................................................
-56 C2a.2 Interface to the Hardware
-..............................................................................................................
-57 C2a.3 Internal Operation of the Machine
-..................................................................................................
-57 Appendix C2b - Duplex Physical Layer State Machines
-..............................................................................
-68 C2b.1 Interaction with the Link Multiplexer
-...............................................................................................
-68 C2b.2 Interface to the Hardware
-..............................................................................................................
-68 C2b.3 Internal Operation of the Machine
-..................................................................................................
-69 Appendix C3 - Link Multiplexer State Machine
-............................................................................................
-76 C3.1 Interaction with the Data-Link State Machine
-..................................................................................
-76 C3.2 Interaction with the Physical Layer State Machine
-..........................................................................
-76 C3.3 Internal Operation of the Machine
-....................................................................................................
-77 Appendix C4 - Data-Link State Machine
-......................................................................................................
-84
-
-> C4.1 Interaction with the Data-Link Service Access
-> Point........................................................................
-> 84 7
-
-C4.2 Interaction with the Link Multiplexer State Machine
-.........................................................................
-84 C4.3 Internal Operation of the Machine
-....................................................................................................
-85 Appendix C5 - Management Data Link State
-Machine..............................................................................
-103 C5.1 Interaction with the Data Link Service Access
-Point......................................................................
-103 C5.2 Interaction with the Link Multiplexer State Machine
-.......................................................................
-103 C5.3 Internal Operation of the Machine
-..................................................................................................
-103 Appendix C6 - Segmenter/Reassembler
-....................................................................................................
-113 C6.1 Segmenter State Machine
-.............................................................................................................
-113 C6.2 Reassembler State Machine
-..........................................................................................................
-113 C6.3 Internal Operation of the Machine
-..................................................................................................
-114 C6.3.1 Internal Operation of the Segmenter State Machine
-............................................................... 115
-C6.3.2 Internal Operation of the Reassembler State Machine
-........................................................... 115 C6.4
-Final Observations
-.........................................................................................................................
-116 Appendix D - Data Link Service Access Point and Primitives
-.................................................................... 121
-D.1 Model of a Data-Link
-Connection.....................................................................................................
-121 D.2 Queue Model Concepts
-...................................................................................................................
-122 D.3 DLC Establishment
-..........................................................................................................................
-122 D.4. Data Transfer
-..................................................................................................................................
-123 D.5 DLC Release
-....................................................................................................................................
-123
-
-> 8
-
-**Figures No table of figures entries found.**
-
-> 9
-
-1 Abstract
+# 1 Abstract
 
 This document details AX.25 version 2.2 digital communication standard.
 The objective of this standard is to ensure link-layer compatibility
@@ -433,7 +271,7 @@ As with any evolving technical standard, this protocol is subject to
 periodic review. Interested parties are encouraged to use the latest
 edition.
 
-1.1 General
+## 1.1 General
 
 The amateur radio community has expressed the need and desire to define
 a protocol that can accept and reliably deliver data over a variety of
@@ -477,7 +315,9 @@ In this protocol specification, the phrase Terminal Node Controller
 (TNC) refers to the balanced type of device found in amateur packet
 radio. Other standards refer to these peer entities as DXEs.
 
-2 Concepts and Terminology 2.1 Basic Concepts
+# 2 Concepts and Terminology
+
+## 2.1 Basic Concepts
 
 ISO has developed a reference model for Open Systems Interconnection
 (OSI) to better facilitate the interconnection of different types of
@@ -486,28 +326,24 @@ model is known as layering. According to this technique, communication
 among application processes is viewed as being logically partitioned
 into an ordered set of layers represented in a vertical sequence as
 shown in Figure 2.1. Each layer provides a Service Access Point (SAP)
-for interface to the
-
-> 10
-
-next higher layer. Note that any layer may be a null, where no function
-or code is provided. Such is the case with the current TAPR TNC-2
+for interface to the next higher layer. Note that any layer may be a null, where no
+function or code is provided. Such is the case with the current TAPR TNC-2
 equipment, where only Layers 1, 2 and 7 are provided; these comprise the
 minimum configuration for reliable communications.
 
-> **Figure 2.1 Seven Layer OSI Reference Model.**
+<img src="media/image5.png" alt="Figure 2.1 Seven Layer OSI Reference Model" />
 
-2.2 AX.25 Model
+**Figure 2.1 Seven Layer OSI Reference Model.**
+
+## 2.2 AX.25 Model
 
 The two lower layers, data link and physical, can be further subdivided
 into several distinct finite state machines as shown in Figure 2.2. This
 example shows a single link to the radio port.
 
-> 11
-
 <img src="media/image6.png" style="width:6.11417in;height:4.59333in" />
 
-> **Figure 2.2 AX.25 Finite State Machine Model (Single Link).**
+**Figure 2.2 AX.25 Finite State Machine Model (Single Link).**
 
 Figure 2.3 shows an example of multiple links to the radio port. The
 link multiplexer described in this standard multiplexes multiple
@@ -515,13 +351,11 @@ data-link connections into one physical connection. A separate data-link
 machine must be provided for each connection allowed by the
 implementation.
 
-> 12
-
 <img src="media/image7.png" style="width:6.11417in;height:4.61417in" />
 
-> **Figure 2.3 AX.25 Finite State Machine Model (Multiple Stream).**
+**Figure 2.3 AX.25 Finite State Machine Model (Multiple Stream).**
 
-2.3 Data-Link Service Access Point
+## 2.3 Data-Link Service Access Point
 
 Figures 2.2 and 2.3 indicate a Data-Link Service Access Point (DLSAP) at
 the upper boundary of Layer 2. This DLSAP is the point at which the
@@ -545,42 +379,37 @@ data-link connection. Data-link connections are provided by the
 data-link layer between two or more DLSAPs.
 
 Layer 3 requests services from the data-link layer via command/response
-interactions known as service “primitives.” (Similarly, the interaction
-between the data-link layer and the physical layer also
-
-> 13
+interactions known as service “primitives.” (Similarly, the interaction between the data-link
+layer and the physical layer also occurs via service primitives.) Primitives are discussed in greater
+detail in Section 5.
 
 <img src="media/image8.png" style="width:6.66667in;height:3in" />
 
-occurs via service primitives.) Primitives are discussed in greater
-detail in Section 5.
+**Figure 2.4 Example Use Of AX.25 Primitive Types.**
 
 The primitives that are exchanged between the data-link layer and
 adjacent layers are of the following four types:
 
-> • REQUEST primitive type: used by a higher layer to request a service
-> from the next lower layer. • INDICATION primitive type: used by the
-> next lower layer to provide a service to notify the next
->
-> higher layer of any specific activity that is service related. The
-> INDICATION primitive may be the result of an activity of the lower
-> layer related to the primitive type REQUEST at the peer entity.
->
-> •  RESPONSE primitive type: used by a layer to acknowledge receipt
-> from a lower layer of the primitive type INDICATION. AX.25 does not
-> use the RESPONSE primitive. Actual frames will be sent as shown in the
-> example below with the UA frame.
->
-> •  CONFIRM primitive type: used by the upper layer to provide the
-> requested service to confirm that the activity has been completed by
-> the lower layer.
->
-> Figure 2.4 illustrates the use of the four primitive types in
-> conjunction with the Connect primitive.
->
-> **Figure 2.4 Example Use Of AX.25 Primitive Types.**
+- REQUEST primitive type: used by a higher layer to request a service
+  from the next lower layer.
+- INDICATION primitive type: used by the next lower layer to provide a service
+  to notify the next higher layer of any specific activity that is service related.
+  INDICATION primitive may be the result of an activity of the lower layer related to the
+  primitive type REQUEST at the peer entity.
 
-2.4 Segmenter/Reassembler
+- RESPONSE primitive type: used by a layer to acknowledge receipt
+  from a lower layer of the primitive type INDICATION. AX.25 does not
+  use the RESPONSE primitive. Actual frames will be sent as shown in the
+  example below with the UA frame.
+
+- CONFIRM primitive type: used by the upper layer to provide the
+  requested service to confirm that the activity has been completed by
+  the lower layer.
+
+Figure 2.4 illustrates the use of the four primitive types in
+conjunction with the Connect primitive.
+
+## 2.4 Segmenter/Reassembler
 
 The Segmenter State Machine accepts input from the higher layer through
 the DLSAP. If the unit of data to be sent exceeds the limits of an AX.25
@@ -595,9 +424,7 @@ may have multiple data links in operation simultaneously (e.g., to
 support multiple higher-layer applications), there can be multiple
 independently operating segmenters within the equipment.
 
-> 14
-
-2.5 Data Link
+## 2.5 Data Link
 
 The Data-link State Machine is the heart of the AX.25 protocol. The
 Data-link State Machine provides all logic necessary to establish and
@@ -611,7 +438,7 @@ of equipment may have multiple data links in operation simultaneously
 multiple, independently operating data-link machines within the
 equipment.
 
-2.6 Management Data Link
+## 2.6 Management Data Link
 
 The Management Data-link State Machine provides for the parameter
 negotiation of the AX.25 protocol. The Management Data-link State
@@ -624,7 +451,7 @@ simultaneously (e.g., to support multiple higher layer applications),
 there can be multiple, independently operating management data-link
 machines within the equipment.
 
-2.7 Link Multiplexer
+## 2.7 Link Multiplexer
 
 The Link Multiplexer State Machine allows one or more data links to
 share the same physical (radio) channel. The Link Multiplexer State
@@ -637,7 +464,7 @@ operating Link Multiplexer
 
 State Machine exists for each channel.
 
-2.8 Physical
+## 2.8 Physical
 
 The Physical State Machine manipulates the radio transmitter and
 receiver. One Physical State Machine exists per physical channel.
@@ -648,59 +475,38 @@ peculiar characteristics of each radio channel from the higher layer
 state machines. Two Physical State Machines have been defined in this
 standard: simplex and full duplex Physical State Machines.
 
-2.9 System Description Language
+## 2.9 System Description Language
 
 Each of the above finite state machines is described in the System
 Description Language in Appendix C.
 
-3 Frame Structure
+# 3 Frame Structure
 
 Link layer packet radio transmissions are sent in small blocks of data,
 called frames. There are three general types of AX.25 frames:
 
-> • Information frame (I frame)
->
-> 15
->
-> • Supervisory frame (S frame) • Unnumbered frame (U frame)
+- Information frame (I frame)
+
+- Supervisory frame (S frame)
+- Unnumbered frame (U frame)
 
 Each frame is made up of several smaller groups, called fields. Figures
 3.1a and 3.1b illustrate the three basic types of frames. Note that the
 first bit to be transmitted is on the left side.
 
-> **Flag 01111110**
+<img src="media/fig3.1a.png" />
 
-**Address 112/224 Bits**
+**Figure 3.1a U and S Frame Construction.**
 
-**Control 8/16 Bits**
+<img src="media/fig3.1b.png" />
 
-**Info N\*8 Bits**
+**Figure 3.1b Information Frame Construction.**
 
-**FCS** **Flag**
+Where:
 
-**16 Bits 01111110**
-
-> **Figure 3.1a U and S Frame Construction.**
->
-> **Flag 01111110**
-
-**Address 112/224 Bits**
-
-**Control 8/16 Bits**
-
-> **PID Info** **FCS**
-
-**8 Bits N\*8 Bits 16 Bits**
-
-**Flag 01111110**
-
-> **Figure 3.1b Information Frame Construction.**
->
-> Where:
->
-> • The Info field exists only in certain frames (Section 4.4.3) • FCS
-> is the Frame Check Sequence field (Section 4.4.6) • PID is the
-> Protocol Identifier field (Section 3.4)
+- The Info field exists only in certain frames (Section 4.4.3).
+- FCS is the Frame Check Sequence field (Section 4.4.6).
+- PID is the Protocol Identifier field (Section 3.4).
 
 Each field is made up of an integral number of octets (8-bit byte of
 binary data) and serves the specific function outlined below.
@@ -708,7 +514,7 @@ binary data) and serves the specific function outlined below.
 All fields except the Frame Check Sequence (FCS) are transmitted
 low-order bit first. FCS is transmitted bit 15 first.
 
-3.1 Flag Field
+## 3.1 Flag Field
 
 The flag field is one octet long. Because the flag delimits frames, it
 occurs at both the beginning and end of each frame. Two frames may share
@@ -718,7 +524,7 @@ by another zero, or 01111110 (7E hex). As a result of bit stuffing (see
 Section 3.6), this sequence is not allowed to occur anywhere else inside
 a complete frame.
 
-3.2 Address Field
+## 3.2 Address Field
 
 The address field identifies both the source of the frame and its
 destination. In addition, the address field contains the
@@ -726,50 +532,26 @@ command/response information and facilities for Layer 2 repeater
 operation. The encoding of the address field is described in Section
 3.12.
 
-3.3 Control Field
+## 3.3 Control Field
 
 The control field identifies the type of frame being passed and controls
 several attributes of the Layer 2 connection. It is one or two octets in
 length; its encoding is discussed in Section 4.2.
 
-> 16
-
-3.4 PID Field
+## 3.4 PID Field
 
 The Protocol Identifier (PID) field appears in information frames (I and
 UI) only. It identifies which kind of Layer 3 protocol, if any, is in
 use.
 
-> **HEX Binary \*\* XX01XXXX \*\* XX10XXXX**
->
-> **0x01 00000001 0x06 00000110 0x07 00000111 0x08 00001000 0xC3
-> 11000011 0xC4 11000100 0xCA 11001010 0xCB 11001011 0xCC 11001100 0xCD
-> 11001101 0xCE 11001110 0xCF 11001111 0xF0 11110000 0xFF 11111111**
->
-> **Layer 3 Type**
->
-> **AX.25 Layer 3 Implemented AX.25 Layer 3 Implemented ISO 8208/CCITT
-> X.25 PLP**
+<img src="media/fig3.2.png" />
 
-**Compressed TCP/IP Packet Van Jacobson (RFC 1144) Uncompressed TCP/IP
-Packet Van Jacobson (RFC 1144) Segmentation Fragment TEXNET Datagram
-Protocol Link Quality Protocol Appletalk Appletalk ARP**
-
-> **ARPA Internet Protocol ARPA Address Resolution Protocol**
->
-> **FlexNet NET/ROM**
->
-> **No Layer 3 Protocol**
-
-**Escape Character – Next octet contains more Layer3 protocol
-Information**
-
-> **Figure 3.2 PID Definitions.**
+**Figure 3.2 PID Definitions.**
 
 The PID itself is not included as part of the octet count of the
 information field. The encoding of the PID is as follows:
 
-> Where: An “X” indicates all combinations used.
+Where: An “X” indicates all combinations used.
 
 Note: All forms of XX11XXXX and XX00XXXX other than those listed above
 are reserved at this time for future Layer 3 protocols. The assignment
@@ -777,18 +559,18 @@ of these formats is subject to mutual agreement among amateur radio
 operators. It is recommended that the creators of Layer 3 protocols
 contact the ARRL for suggested encodings.
 
-3.5 Information Field
+## 3.5 Information Field
 
 The information (I) field conveys user data from one end of the link to
 the other. The I fields are allowed in only five types of frames:
 
-> • The I frame • The UI frame
->
-> • The XID frame
->
-> • The TEST frame • The FRMR frame
->
-> 17
+- The I frame
+- The UI frame
+
+- The XID frame
+
+- The TEST frame
+- The FRMR frame
 
 The I field defaults to a length of 256 octets and contains an integral
 number of octets. These constraints apply prior to the insertion of zero
@@ -797,7 +579,7 @@ passed along the link transparently, except for the zero-bit insertion
 (see Section 3.6) necessary to prevent flags from accidentally appearing
 in the I field.
 
-3.6 Bit Stuffing
+## 3.6 Bit Stuffing
 
 In order to ensure that the flag bit sequence mentioned above does not
 appear accidentally anywhere else in a frame, the sending station
@@ -807,15 +589,15 @@ inserts a “0” bit after the fifth “1” bit. During frame reception, any
 time five contiguous “1” bits are received, a “0” bit immediately
 following five “1” bits is discarded.
 
-3.7 Frame-Check Sequence
+## 3.7 Frame-Check Sequence
 
 The Frame-Check Sequence (FCS) is a sixteen-bit number calculated by
 both the sender and the receiver of a frame. It ensures that the frame
-was not corrupted bythe transmissionmedium. The Frame-Check Sequence is
+was not corrupted bythe transmission medium. The Frame-Check Sequence is
 calculated in accordance with recommendations in the HDLC reference
 document, ISO 3309.
 
-3.8 Order of Octet and Bit Transmission
+## 3.8 Order of Octet and Bit Transmission
 
 The FCS field of an AX.25 frame is sent most-significant bit first. That
 is bit 15 to bit 0, most significant octet first.
@@ -825,37 +607,34 @@ That is bit 0 to bit 7. Multiple octet fields are sent in ascending
 order. That is the high-order octet first, the next lower octet next,
 etc. (little endian).
 
-3.9 Invalid Frames
+## 3.9 Invalid Frames
 
-> A frame is considered by the link layer to be an invalid frame if it:
->
-> • Consists of less than 136 bits (including the opening and closing
-> flags) • Is not bounded by opening and closing flags
->
-> • Is not octet aligned (an integral number of octets)
+A frame is considered by the link layer to be an invalid frame if it:
 
-3.10 Frame Abort
+- Consists of less than 136 bits (including the opening and closing
+- flags)
+- Is not bounded by opening and closing flags
+
+- Is not octet aligned (an integral number of octets)
+
+## 3.10 Frame Abort
 
 If a frame must be prematurely aborted, at least fifteen contiguous “1”s
 are sent without bit stuffing added.
 
-3.11 Inter-Frame Time Fill
+## 3.11 Inter-Frame Time Fill
 
 Whenever it is necessary for a TNC to keep its transmitter on while not
 actually sending frames, the time between frames should be filled with
 contiguous flags.
 
-3.12 Address-Field Encoding
+## 3.12 Address-Field Encoding
 
 The address field of all frames consists of a destination, source and
 (optionally) eight Layer 2 repeater subfields. Each subfield consists of
 an amateur call sign and a Secondary Station Identifier (SSID). The call
 sign is made up of upper-case alpha and numeric ASCII characters only.
-The SSID is
-
-> 18
-
-a four-bit integer that uniquely identifies multiple stations using the
+The SSID is a four-bit integer that uniquely identifies multiple stations using the
 same amateur call sign.
 
 The HDLC address field is extended beyond one octet by assigning the
@@ -866,7 +645,7 @@ the last octet of the HDLC address field. To make room for this
 extension bit, the amateur radio call sign information is shifted one
 bit left.
 
-3.12.1 Non-repeater Address-Field Encoding
+### 3.12.1 Non-repeater Address-Field Encoding
 
 If Layer 2 repeaters are not being used, the address field is encoded as
 shown in Figure 3.3. The destination address is the call sign and SSID
@@ -875,13 +654,9 @@ address contains the amateur call sign and SSID of the station that sent
 the frame. These call signs are the call signs of the two ends of a
 Layer 2 AX.25 link only.
 
-> **Address Field of Frame**
->
-> **Destination Address Subfield A1 A2 A3 A4 A5 A6 A7**
+<img src="media/fig3.3.png" />
 
-**Source Address Subfield A8 A9 A10 A11 A12 A13 A14**
-
-> **Figure 3.3 Non-Repeater Address-Field Encoding.**
+**Figure 3.3 Non-Repeater Address-Field Encoding.**
 
 A1 through A14, above, are the fourteen octets that make up the two
 address subfields of the address field. The destination subfield is
@@ -901,143 +676,92 @@ the “H” bit (“\[H\]as-been-repeated”). The H bits indicate that the
 Layer 2 repeater station has repeated the frame (see Section 3.12.3).
 Each SSID octet contains two bits that are reserved for future use.
 
-> 19
->
-> Figure 3.4 shows a typical AX.25 frame in the non-repeater mode of
-> operation.
->
-> **Octet ASCII Flag none A1 N A2 J A3 7 A4 P**
->
-> **A5 space A6 space**
->
-> **A7 (SSID)** **none A8 N A9 7**
->
-> **A10** **L A11** **E A12** **M A13 space**
->
-> **A14 (SSID) none Control none PID none FCS none FCS none**
->
-> **Flag** **none**
+Figure 3.4 shows a typical AX.25 frame in the non-repeater mode of
+operation.
 
-**Binary** **Hex 01111110 0x7E 10011100 0x9C 10010100 0x94 01101110 0x6E
-10100000 0xA0 01000000 0x40 01000000 0x40 11100000 0xE0 10011100 0x9C
-01101110 0x6E 10011000 0x98 10001010 0x8A 10011010 0x9A 01000000 0x40
-01100001 0x61 00111110 0x3E 11110000 0xF0 XXXXXXXX 0xHH XXXXXXXX 0xHH**
+<img src="media/fig3.4.png" />
 
-**01111110** **0x7E**
-
-> **Bit Position** **76543210**
->
-> **Figure 3.4 Non-Repeater AX.25 Frame.**
+**Figure 3.4 Non-Repeater AX.25 Frame.**
 
 The frame shown is an I frame, not going through a Layer 2 repeater,
 from N7LEM(SSID=0) to NJ7P (SSID=0), without a Layer 3 protocol. The P/F
 bit is set; the receive sequence number \[N(R)\] is 1; the send sequence
 number \[N(S)\] is 7.
 
-3.12.2 Destination Subfield Encoding
+### 3.12.2 Destination Subfield Encoding
 
 Figure 3.5 shows how an amateur call sign is placed in the destination
 address subfield, occupying octets A1 through A7.
 
-> 20
->
-> **Octet** **ASCII A1 N A2 J A3 7 A4 P A5** **space A6** **space**
->
-> **A7 (SSID)** **none**
+<img src="media/fig3.5.png" />
 
-**Binary** **Hex 10011100 0x9C 10010100 0x94 01101110 0x6E 10100000 0xA0
-01000000 0x40 01000000 0x40 11100000 0xE0**
-
-> **SSID Encoding Bit Position**
-
-**CRRSSSS0** **0x98 76543210**
-
-> **Figure 3.5 Destination Field Encoding.**
+**Figure 3.5 Destination Field Encoding.**
 
 Where:
 
-> •  The top octet (A1) is the first octet sent, with bit 0 of each
-> octet being the first bit sent, and bit 7 being the last bit sent.
->
-> •  The first (low-order or bit 0) bit of each octet is the HDLC
-> address extension bit, set to zero on all but the last octet in the
-> address field, where it is set to one.
->
-> •  The bits marked “R” are reserved bits. They may be used in an
-> agreed-upon manner in individual networks. When not implemented, they
-> are set to one.
->
-> •     The bit marked “C” is the command/response bit of an AX.25
-> frame, as outlined in Section 6.1.2. •     The characters of the call
-> sign are standard seven-bit ASCII (upper case only) placed in the
-> left-most seven bits of the octet to make room for the address
-> extension bit. If the call sign contains fewer than six characters, it
-> is padded with ASCII spaces between the last call sign character
->
-> and the SSID octet.
->
-> •  The 0000 SSID is reserved for the first personal AX.25 station.
-> This provision establishes one standard SSID for “normal” stations to
-> use for the first station.
+- The top octet (A1) is the first octet sent, with bit 0 of each
+octet being the first bit sent, and bit 7 being the last bit sent.
 
-3.12.3 Source Subfield Encoding
+- The first (low-order or bit 0) bit of each octet is the HDLC
+address extension bit, set to zero on all but the last octet in the
+address field, where it is set to one.
+
+- The bits marked “R” are reserved bits. They may be used in an
+agreed-upon manner in individual networks. When not implemented, they
+are set to one.
+
+- The bit marked “C” is the command/response bit of an AX.25
+  frame, as outlined in Section 6.1.2.
+- The characters of the call sign are standard seven-bit ASCII (upper case only) placed in the
+  left-most seven bits of the octet to make room for the address extension bit. If the call sign
+  contains fewer than six characters, it
+  is padded with ASCII spaces between the last call sign character and the SSID octet.
+
+- The 0000 SSID is reserved for the first personal AX.25 station.
+This provision establishes one standard SSID for “normal” stations to
+use for the first station.
+
+### 3.12.3 Source Subfield Encoding
 
 Figure 3.6 shows how an amateur call sign is placed in the destination
 address subfield, occupying octets A8 through A14.
 
-> 21
->
-> **Octet ASCII A8 N A9 7**
->
-> **A10** **L A11** **E A12** **M A13 space**
->
-> **A14 (SSID) none**
+<img src="media/fig3.6.png" />
 
-**Binary** **Hex 10011100 0x9C 10010100 0x6E 01101110 0x98 10100000 0x8A
-01000000 0x9A 01000000 0x40 01100000 0x00**
+**Figure 3.6 Source Field Encoding.**
 
-> **SSID Encoding**
->
-> **Bit Position**
+Where:
 
-**CRRSSSS0**
+- The top octet (A8) is the first octet sent, with bit 0 of each
+octet being the first bit sent, and bit 7 being the last bit sent.
 
-**76543210**
+- The first (low-order or bit 0) bit of each octet is the HDLC
+address extension bit, set to zero on all but the last octet in the
+address field, where it is set to one.
 
-> **Figure 3.6 Source Field Encoding.**
->
-> Where:
->
-> •  The top octet (A8) is the first octet sent, with bit 0 of each
-> octet being the first bit sent, and bit 7 being the last bit sent.
->
-> •  The first (low-order or bit 0) bit of each octet is the HDLC
-> address extension bit, set to zero on all but the last octet in the
-> address field, where it is set to one.
->
-> •  The bits marked “R” are reserved bits. They may be used in an
-> agreed-upon manner in individual networks. When not implemented, they
-> are set to one.
->
-> •     The bit marked “C” is the command/response bit of an LA PA
-> frame, as outlined in Section 6.1.2. •     The characters of the call
-> sign are standard seven-bit ASCII (upper case only) placed in the
-> leftmost seven bits of the octet to make roomforthe address extension
-> bit. If the call sign contains fewer than six characters, it is padded
-> with ASCII spaces between the last call sign character
->
-> and the SSID octet.
->
-> •  The 0000 SSID is reserved for the first personal AX.25 station.
-> This provision establishes one standard SSID for “normal” stations to
-> use for the first station.
+- The bits marked “R” are reserved bits. They may be used in an
+agreed-upon manner in individual networks. When not implemented, they
+are set to one.
 
-3.12.4 Layer 2 Repeater Address Encoding
+- The bit marked “C” is the command/response bit of an LA PA
+  frame, as outlined in Section 6.1.2.
+- The characters of the call sign are standard seven-bit ASCII (upper case only) placed in the
+  left-most seven bits of the octet to make room for the address extension bit. If the call sign
+  contains fewer than six characters, it
+left-most seven bits of the octet to make room for the address extension
+bit. If the call sign contains fewer than six characters, it is padded
+with ASCII spaces between the last call sign character and the SSID octet.
+
+- The 0000 SSID is reserved for the first personal AX.25 station.
+This provision establishes one standard SSID for “normal” stations to
+use for the first station.
+
+### 3.12.4 Layer 2 Repeater Address Encoding
 
 If a frame is to go through Layer 2 amateur packet repeater(s), an
 additional address subfield is appended to the end of the address field.
 This additional subfield contains the call sign(s) of the repeater(s) to
-be used. This allows more than one repeater to share thesame RF channel.
+be used. This allows more than one repeater to share the same RF channel.
 If this subfield exists, the last octet of the source subfield has its
 address extension bit set to “0”, indicating that more address-field
 data follows. The repeater address subfield is encoded in the same
@@ -1050,84 +774,31 @@ The H bit is set to “0” on frames going to a repeater. The repeater
 changes the H bit to “1” before it retransmits the frame. Stations
 monitor and repeat frames that meet the following conditions:
 
-> • The frame is addressed to this station in a repeater address
-> subfield • The H bit in its repeater address subfield is 0
->
-> • All previous H bits are set to one
->
-> 22
-
 Figure 3.7 shows how the repeater address subfield is encoded. Figure
 3.8 is an example of a complete frame after being repeated.
 
-> **Octet** **ASCII A15 N A16 7 A17 O A18 O A19** **space A20**
-> **space**
->
-> **A21 (SSID)** **none**
->
-> **Binary Hex 10011100 0x9C 01101110 0x6E 10011110 0x9E 10011110 0x9E
-> 01000000 0x40 01000000 0x40 11100011 0xE3**
->
-> **SSID Encoding**
->
-> **Bit Position**
+<img src="media/fig3.7.png" />
 
-**HRRSSSS1**
-
-**76543210**
-
-> **Figure 3.7 Repeater Address Encoding.**
+**Figure 3.7 Repeater Address Encoding.**
 
 Where:
 
-> • The top octet is the first octet sent, with bit 0 being sent first
-> and bit 7 sent last of each octet.
->
-> •  As with the source and destination address subfields discussed
-> above, bit 0 of each octet is the HDLC
->
-> • Address extension bit is set to “0” on all but the last address
-> octet, where it is set to “1”. • The “R” bits are reserved in the same
-> manner as in the source and destination subfields.
->
-> •  The “H” bit is the has-been-repeated bit. It is set to “0” when a
-> frame has not been repeated and set to “1” by the repeating station
-> when repeated.
->
-> 23
->
-> **Octet ASCII Flag none A1 N A2 J A3 7 A4 P**
->
-> **A5 space A6 space**
->
-> **A7 (SSID)** **none A8 N A9 7**
->
-> **A10** **L A11** **E A12** **M A13 space**
->
-> **A14 (SSID)** **none A15 N A16 7 A17 O A18 O A19 space A20 space**
->
-> **A21 (SSID) none Control none PID none FCS none FCS none**
->
-> **Flag** **none**
+- The top octet is the first octet sent, with bit 0 being sent first
+and bit 7 sent last of each octet.
 
-**Binary** **Hex 01111110 0x7E 10011100 0x9C 10010100 0x94 01101110 0x6E
-10100000 0xA0 01000000 0x40 01000000 0x40 11100000 0xE0 10011100 0x9C
-01101110 0x6E 10011000 0x98 10001010 0x8A 10011010 0x9A 01000000 0x40
-01100000 0x60 10011100 0x9C 01101110 0x6E 10011110 0x9E 10011110 0x9E
-01000000 0x40 01000000 0x40 11100011 0xE3 00111110 0x3E 11110000 0xF0
-XXXXXXXX 0xHH XXXXXXXX 0xHH**
+- The “H” bit is the has-been-repeated bit. It is set to “0” when a
+frame has not been repeated and set to “1” by the repeating station
+when repeated.
 
-**01111110** **0x7E**
+<img src="media/fig3.8.png" />
 
-> **Bit Position** **76543210**
->
-> **Figure 3.8 AX.25 Frame In Repeater Mode.**
+**Figure 3.8 AX.25 Frame In Repeater Mode.**
 
 The above frame is the same as shown in Figure 3.3, except for the
 addition of a repeater address subfield (N7OO, SSID=1). The H bit is
 set, indicating this frame is from the output of the repeater.
 
-3.12.5 Multiple Repeater Operation
+### 3.12.5 Multiple Repeater Operation
 
 The link-layer AX.25 protocol allows operation through more than one
 repeater. Up to eight repeaters may be used by extending the repeater
@@ -1142,12 +813,8 @@ the FCS). The destination station can determine the route the frame took
 to reach it by examining the address field and use this path to return
 frames.
 
-> The number of repeater addresses is variable. The last repeater
-> address will have the address
->
-> 24
-
-extension bit of the SSID octet set to “1” indicating the end of the
+The number of repeater addresses is variable. The last repeater
+address will have the address extension bit of the SSID octet set to “1” indicating the end of the
 address field. All other address octets will have their address
 extension bit set to “0”.
 
@@ -1155,24 +822,27 @@ Note that various timers (see Section 6.6.1) may require adjustment to
 accommodate the additional delays encountered when a frame must pass
 through a multiple-repeater chain.
 
-4 Elements of Procedure and Formats of Fields 4.1 General
+# 4 Elements of Procedure and Formats of Fields
+
+## 4.1 General
 
 The elements of procedure define the command and response frames used on
 the AX.25 link. Procedures are built from these elements and are
 described in Section 6.
 
-4.2 Control Fields
+## 4.2 Control Fields
 
 The control field identifies the type of frame being sent. The control
 fields in AX.25 are modeled after the ISO HDLC balanced operation
 control fields.
 
-4.2.1 Control-Field Formats
+### 4.2.1 Control-Field Formats
 
-> The three formats of control fields used in AX.25 are the: •
-> Information frame (I frame)
->
-> • Supervisory frame (S frame) • Unnumbered frame (U frame)
+The three formats of control fields used in AX.25 are the:
+
+- Information frame (I frame)
+- Supervisory frame (S frame)
+- Unnumbered frame (U frame)
 
 Figures 4.1a and 4.1b illustrate the basic format of the control field
 associated with each of these three types of frames. The control field
@@ -1180,61 +850,28 @@ can be one or two octets long and may use sequence numbers to maintain
 link integrity. These sequence numbers may be three-bit (modulo 8) or
 seven-bit (modulo 128) integers.
 
-> **Control Field Type**
+<img src="media/fig4.1a.png" />
 
-**Control-Field Bits**
+**Figure 4.1a Control-Field Formats (Modulo 8).**
 
-**7 6 5** **4** **3 2 1** **0**
+<img src="media/fig4.1b.png" />
 
-> **I Frame** **N(R)**
->
-> **S Frame** **N(R)**
-
-**P** **N(S)** **0**
-
-**P/F** **S S 0 1**
-
-> **U Frame** **M M M** **P/F** **M M 1 1 Figure 4.1a Control-Field
-> Formats (Modulo 8).**
->
-> **Control Field Type**
->
-> **Control-Field Bits**
-
-**15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0**
-
-> **I Frame N(R) S Frame N(R)**
-
-**P N(S) 0 P/F 0 0 0 0 S S 0 1**
-
-> **Figure 4.1b Control-Field Formats (Modulo 128).**
+**Figure 4.1b Control-Field Formats (Modulo 128).**
 
 Where:
 
-> 25
->
-> • Bit 0 is the first bit sent and bit 7 (or bit 15 for modulo 128) is
-> the last bit sent of the control field. • N(S) is the send sequence
-> number (bit 1 is the LSB).
->
-> • N(R) is the receive sequence number \[bit 5 (or bit 9 for modulo
-> 128) is the LSB\].
->
-> • The “S” bits are the supervisory function bits; their encoding is
-> discussed in Section 4.2.1.2.
->
-> •  The “M” bits are the unnumbered frame modifier bits; their encoding
-> is discussed in Section 4.2.1.3.
->
-> •  The P/F bit is the Poll/Final bit. The P/F bit is used in all types
-> of frames. The P/F bit is also used in a command (poll) mode to
-> request an immediate reply to a frame. The reply to this poll is
-> indicated by setting the response (final) bit in the appropriate
-> frame. Only one outstanding poll condition per direction is allowed at
-> a time. The procedure for P/F bit operation is described in Section
-> 6.2.
+- Bit 0 is the first bit sent and bit 7 (or bit 15 for modulo 128) is the last bit sent of the control field.
+- N(S) is the send sequence number (bit 1 is the LSB).
 
-*4.2.1.1. Information-Transfer Format*
+- N(R) is the receive sequence number [bit 5 (or bit 9 for modulo 128) is the LSB].
+
+- The “S” bits are the supervisory function bits; their encoding is discussed in Section 4.2.1.2.
+
+- The “M” bits are the unnumbered frame modifier bits; their encoding is discussed in Section 4.2.1.3.
+
+- The P/F bit is the Poll/Final bit. The P/F bit is used in all types of frames. The P/F bit is also used in a command (poll) mode to request an immediate reply to a frame. The reply to this poll is indicated by setting the response (final) bit in the appropriate frame. Only one outstanding poll condition per direction is allowed at a time. The procedure for P/F bit operation is described in Section 6.2.
+
+#### 4.2.1.1 Information-Transfer Format
 
 All I frames have bit 0 of the control field set to “0”. N(S) is the
 sender’s send sequence number (the send sequence number of this frame).
@@ -1242,7 +879,7 @@ N(R) is the sender’s receive sequence number (the sequence number of the
 next expected receive frame). These numbers are described in Section
 4.2.4.
 
-*4.2.1.2 Supervisory Format*
+#### 4.2.1.2 Supervisory Format
 
 Supervisory frames have bit 0 of the control field set to “1”, and bit 1
 of the control field set to “0”. S frames provide supervisory link
@@ -1251,17 +888,19 @@ and link-layer window control. Because S frames do not have an
 information field, the sender’s send variable and the receiver’s receive
 variable are not incremented for S frames.
 
-*4.2.1.3 Unnumbered Format*
+#### 4.2.1.3 Unnumbered Format
 
 Unnumbered frames have both bits 0 and 1 of the control field set to
 “1”. U frames are responsible for maintaining additional control over
 the link beyond what is accomplished with S frames. U frames are
 responsible for establishing and terminating link connections. U frames
-also allow for the transmissionandreception of informationoutside of the
-normalflow control. Some U frames may contain both information and PID
+also allow for the transmission and reception of information outside of the
+normal flow control. Some U frames may contain both information and PID
 fields.
 
-4.2.2 Control-Field Parameters *4.2.2.1 Sequence Numbers*
+### 4.2.2 Control-Field Parameters
+
+#### 4.2.2.1 Sequence Numbers
 
 If modulo 8 operation is in effect (the default), an I frame is assigned
 a sequential number from 0 to 7. This step allows up to seven
@@ -1271,45 +910,42 @@ If modulo 128 operation is in effect, an I frame is assigned a
 sequential number between 0 and 127. This step allows up to 127
 outstanding I frames per Layer 2 connection at one time.
 
-*4.2.2.2 Send State Variable V(S)*
+#### 4.2.2.2 Send State Variable V(S)
 
 The send state variable exists within the TNC and is never sent. It
 contains the next sequential number to be assigned to the next
 transmitted I frame. This variable is updated with the transmission of
 each I frame.
 
-*4.2.2.3 Send Sequence Number N(S)*
+#### 4.2.2.3 Send Sequence Number N(S)
 
 The send sequence number is found in the control field of all I frames.
 It contains the sequence number of the I frame being sent. Just prior to
-the transmission of the I frame, N(S) is updated to equal
+the transmission of the I frame, N(S) is updated to equal the send state variable.
 
-> 26
-
-the send state variable.
-
-*4.2.2.4 Receive State Variable V(R)*
+#### 4.2.2.4 Receive State Variable V(R)
 
 The receive-state variable exists within the TNC. It contains the
 sequence number of the next expected received I frame. This variable is
 updated upon the reception of an error-free I frame whose send sequence
 number equals the present received state variable value.
 
-*4.2.2.5 Received Sequence Number N(R)*
+#### 4.2.2.5 Received Sequence Number N(R)
 
 The received sequence number exists in both I and S frames. Prior to
 sending an I or S frame, this variable is updated to equal that of the
 received state variable, thus implicitly acknowledging the proper
 reception of all frames up to and including N(R)-1.
 
-*4.2.2.6 Acknowledge State Variable V(A)*
+#### 4.2.2.6 Acknowledge State Variable V(A)
 
 The acknowledge-state variable exists within the TNC and is never sent.
 It contains the sequence number of the last frame acknowledged by its
 peer \[V(A)-1 equals the N(S) of the last acknowledged I frame\].
 
-4.3 Control-Field Coding for Commands and Responses 4.3.1 Information
-Command Frame Control Field
+### 4.3 Control-Field Coding for Commands and Responses
+
+#### 4.3.1 Information Command Frame Control Field
 
 The information (I) command transfers sequentially numbered frames
 containing an information field across a data link.
@@ -1318,67 +954,38 @@ The information-frame control field is encoded as shown in Figures 4.2a
 and 4.2b. These frames are sequentially numbered by the N(S) subfield to
 maintain control of their passage over the link-layer connection.
 
-> **Control Field Type Control-Field Bits 7 6 5 4 3 2 1 0**
->
-> **I Frame** **N(R) P N(S) 0**
->
-> **Figure 4.2a I Frame Control Field (Modulo 8).**
->
-> **Control Field Type**
->
-> **Control-Field Bits**
+<img src="media/fig4.2a.png" />
 
-**15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0**
+**Figure 4.2a I Frame Control Field (Modulo 8).**
 
-> **I Frame** **N(R)** **P** **N(S)** **0**
->
-> **Figure 4.2b I Frame Control Field (Modulo 128).**
+<img src="media/fig4.2b.png" />
 
-4.3.2 Supervisory Frame Control Field
+**Figure 4.2b I Frame Control Field (Modulo 128).**
 
-> The supervisory frame control fields are encoded as shown in Figures
-> 4.3a and 4.3b.
->
-> 27
->
-> **Control-Field Type** **7 6 5**
+#### 4.3.2 Supervisory Frame Control Field
 
-**Control-Field Bits**
+The supervisory frame control fields are encoded as shown in Figures
+4.3a and 4.3b.
 
-> **4** **3 2** **1 0**
->
-> **Receive Ready (RR) Receive Not Ready (RNR) Implicit Reject (REJ)
-> Selective Reject (SREJ)**
+<img src="media/fig4.3a.png" />
 
-**N(R)** **P/F** **0 0** **0 1 N(R)** **P/F** **0 1** **0 1 N(R)**
-**P/F** **1 0** **0 1 N(R)** **P/F** **1 1** **0 1**
+**Figure 4.3a S Frame Control Fields (Modulo 8).**
 
-> **Figure 4.3a S Frame Control Fields (Modulo 8).**
->
-> **Control-Field Type**
->
-> **Control-Field Bits**
+<img src="media/fig4.3b.png" />
 
-**15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0**
+**Figure 4.3b S Frame Control Fields (Modulo 128).**
 
-> **Receive Ready (RR) N(R) Receive Not Ready (RNR) N(R) Implicit Reject
-> (REJ) N(R) Selective Reject (SREJ) N(R)**
+Where:
 
-**P/F 0 0 0 0 0 0 0 1 P/F 0 0 0 0 0 1 0 1 P/F 0 0 0 0 1 0 0 1 P/F 0 0 0
-0 1 1 0 1**
+- RR Receive Ready
+- System Ready To Receive.
+- RNR Receive Not Ready - TNC Buffer Full.
 
-> **Figure 4.3b S Frame Control Fields (Modulo 128).**
->
-> Where:
->
-> • RR Receive Ready - System Ready To Receive. • RNR Receive Not
-> Ready - TNC Buffer Full.
->
-> • REJ Implicit Reject Frame - Out of Sequence or Duplicate.
->
-> • SREJ Selective Reject - Request Single or Multiple Frame Repeat.
+- REJ Implicit Reject Frame - Out of Sequence or Duplicate.
 
-*4.3.2.1 Receive Ready (RR) Command and Response*
+- SREJ Selective Reject - Request Single or Multiple Frame Repeat.
+
+##### 4.3.2.1 Receive Ready (RR) Command and Response
 
 Receive Ready accomplishes the following indicates that the sender of
 the RR is now able to receive more I frames and acknowledges properly
@@ -1389,7 +996,7 @@ sent.
 The status of the TNC at the other end of the link can be requested by
 sending an RR command with the P-bit set to one.
 
-*4.3.2.2 Receive Not Ready (RNR) Command and Response*
+##### 4.3.2.2 Receive Not Ready (RNR) Command and Response
 
 Receive Not Ready indicates to the sender of I frames that the receiving
 TNC is temporarily busy and cannot accept any more I frames. Frames up
@@ -1397,31 +1004,25 @@ to N(R)-1 are acknowledged. Frames N(R) and above that may have been
 transmitted are discarded and must be retransmitted when the busy
 condition clears.
 
-> The RNR condition is cleared by the sending of a UA, RR, REJ or
-> SABM(E) frame.
+The RNR condition is cleared by the sending of a UA, RR, REJ or
+SABM(E) frame.
 
 The status of the TNC at the other end of the link is requested by
 sending an RNR command frame with the P bit set to one.
 
-*4.3.2.3 Implicit Reject (REJ) Command and Response*
+##### 4.3.2.3 Implicit Reject (REJ) Command and Response
 
 The implicit reject frame requests retransmission of I frames starting
 with N(R). Any frames sent with a sequence number of N(R)-1 or less are
 acknowledged. Additional I frames which may exist may be appended to the
 retransmission of the N(R) frame.
 
-> Only one reject frame condition is allowed in each direction at a
-> time. The reject condition is cleared
->
-> 28
-
-by the proper reception of I frames up to the I frame that caused the
+Only one reject frame condition is allowed in each direction at a
+time. The reject condition is cleared by the proper reception of I frames up to the I frame that caused the
 reject condition to be initiated. The status of the TNC at the other end
-of the link is requested by sending a REJ command frame
+of the link is requested by sending a REJ command frame with the P bit set to one.
 
-with the P bit set to one.
-
-*4.3.2.4 Selective Reject (SREJ) (remove Command and) Response*
+##### 4.3.2.4 Selective Reject (SREJ) (remove Command and) Response
 
 The selective reject frame is used by the receiving TNC to request
 retransmission of the single I frame numbered N(R). If the P/F bit in
@@ -1447,41 +1048,20 @@ Additional I frames awaiting initial transmission may be transmitted
 following the retransmission of the specific I frame requested by the
 SREJ frame.
 
-4.3.3 Unnumbered Frame Control Fields
+#### 4.3.3 Unnumbered Frame Control Fields
 
 Unnumbered frame control fields are either commands or responses. Figure
 4.4 shows the layout of U frames implemented within this protocol.
 
-> **Control Field Type** **Type** **Control-Field Bits**
->
-> **Set Asynchronous Balanced Mode Extended (SABME) Set Asynchronous
-> Balanced Mode(SABM) Disconnect (DISC) Disconnect Mode (DM)**
->
-> **Unnumbered Acknowledge (UA) Frame Reject (FRMR) Unnumbered
-> Information (UI) Exchange Identification (XID) Test (TEST)**
->
-> **Command**
->
-> **Command**
+<img src="media/fig4.4.png" />
 
-**Command Response Response Response Either Either Either**
+**Figure 4.4 U Frame Control Fields.**
 
-**7 6 5 4 3 2 1 0 0 1 1 P 1 1 1 1**
-
-**0 0 1 P 1 1 1 1**
-
-**0 1 0 P 0 0 1 1 0 0 0 F 1 1 1 1 0 1 1 F 0 0 1 1 1 0 0 F 0 1 1 1 0 0 0
-P/F 0 0 1 1 1 0 1 P/F 1 1 1 1 1 1 1 P/F 0 0 1 1**
-
-> **Figure 4.4 U Frame Control Fields.**
-
-*4.3.3.1 Set Asynchronous Balanced Mode (SABM) Command*
+##### 4.3.3.1 Set Asynchronous Balanced Mode (SABM) Command
 
 The SABM command places two Terminal Node Controllers (TNC) in the
 asynchronous balanced mode (modulo 8). This is a balanced mode of
 operation in which both devices are treated as equals or peers.
-
-> 29
 
 Information fields are not allowed in SABM commands. Any outstanding I
 frames left when the SABM command is issued remain unacknowledged.
@@ -1490,7 +1070,7 @@ The TNC confirms reception and acceptance of a SABM command by sending a
 UA response frame at the earliest opportunity. If the TNC is not capable
 of accepting a SABM command, it responds with a DM frame if possible.
 
-*4.3.3.2 Set Asynchronous Balanced Mode Extended (SABME) Command*
+##### 4.3.3.2 Set Asynchronous Balanced Mode Extended (SABME) Command
 
 The SABME command places two TNCs in the asynchronous balanced mode
 extended (modulo 128). This is a balanced mode of operation in which
@@ -1504,7 +1084,7 @@ a UA response frame at the earliest opportunity. If the TNC is not
 capable of accepting a SABME command, it responds with a DM frame. A TNC
 that uses a version of AX.25 prior to v2.2 responds with a FRMR.
 
-*4.3.3.3 Disconnect (DISC) Command*
+##### 4.3.3.3 Disconnect (DISC) Command
 
 The DISC command terminates a link session between two stations. An
 information field is not permitted in a DISC command frame.
@@ -1514,17 +1094,17 @@ of the DISC by issuing a UA response frame at its earliest opportunity.
 The TNC sending the DISC enters the disconnected state when it receives
 the UA response.
 
-> Any unacknowledged I frames left when this command is acted upon
-> remain unacknowledged.
+Any unacknowledged I frames left when this command is acted upon
+remain unacknowledged.
 
-*4.3.3.4 Unnumbered Acknowledge (UA) Response*
+##### 4.3.3.4 Unnumbered Acknowledge (UA) Response
 
 The UA response frame acknowledges the reception and acceptance of a
 SABM(E) or DISC command frame. A received command is not actually
 processed until the UA response frame is sent. Information fields are
 not permitted in a UA frame.
 
-*4.3.3.5 Disconnected Mode (DM) Response*
+##### 4.3.3.5 Disconnected Mode (DM) Response
 
 The disconnected mode response is sent whenever a TNC receives a frame
 other than a SABM(E) or UI frame while in a disconnected mode. The
@@ -1540,7 +1120,7 @@ While a TNC is in the disconnected mode, it responds to any command
 other than a SABM(E) or UI frame with a DM response with the P/F bit set
 to “1”.
 
-*4.3.3.6 Unnumbered Information (UI) Frame*
+##### 4.3.3.6 Unnumbered Information (UI) Frame
 
 The Unnumbered Information frame contains PID and information fields and
 passes information along the link outside the normal information
@@ -1550,15 +1130,11 @@ bypassing flow control.
 Because these frames cannot be acknowledged, if one such frame is
 obliterated, it cannot be recovered.
 
-> A received UI frame with the P bit set causes a response to be
-> transmitted. This response is a DM
->
-> 30
-
-frame whenin the disconnected state, or an RR (or RNR, if appropriate)
+A received UI frame with the P bit set causes a response to be
+transmitted. This response is a DM frame when in the disconnected state, or an RR (or RNR, if appropriate)
 frame in the information transfer state.
 
-*4.3.3.7 Exchange Identification (XID) Frame*
+##### 4.3.3.7 Exchange Identification (XID) Frame
 
 The Exchange Identification frame causes the addressed station to
 identify itself, and to provide its characteristics to the sending
@@ -1617,97 +1193,9 @@ The encoding of each PI/PL/PV applicable to AX.25 is detailed in Figure
 discussed below are required in an implementation that complies with
 this version of AX.25.
 
-> 31
->
-> **Name**
->
-> **Classes of Procedures**
->
-> **HDLC Optional Functions**
->
-> **I Field Length Tx I Field Length Rx Window Size Tx Window Size Rx
-> Ack Timer**
+<img src="media/fig4.5.png" />
 
-**PI PL**
-
-> **2 2**
->
-> **3 3**
->
-> **5 N**
->
-> **6 N**
->
-> **7 1**
->
-> **8 1**
->
-> **9 N**
->
-> **Parameter Field Element**
->
-> **Balanced-ABM Unbalanced-NRM-Primary \***
->
-> **Unbalanced-NRM-Secondary \* Unbalanced-ARM-Primary \*
-> Unbalanced-ARM-Secondary \* Half Duplex Full Duplex Reserved \* 1
-> Reserved \***
->
-> **2 REJ command/response 3A SREJ command/response 4 UI
-> command/response \***
-
-**5 SIM command /RIM response \* 6 UP command \***
-
-> **7A Basic address \* 7B Extended address 8 Delete I response \* 9
-> Delete I command \* 10A Modulo 8 10B Modulo 128**
->
-> **11 RSET command \***
->
-> **12 TEST command/response 13 RD response \* 14A 16-bit FCS 14B 32-bit
-> FCS \* 15A Synchronous Tx**
->
-> **15B Start/stop Tx \***
->
-> **15C Start/stop Basic Flow Ctl\***
->
-> **15D Start/stop Octet Transparent \***
->
-> **3B SREJ Multiframe \* 16 Segmenter/Reassembler**
->
-> **Reserved \***
->
-> **Max I fields length Tx (bits)N1\*8 \***
->
-> **Max I fields length Rx (bits)N1\*8 \***
->
-> **Window Size k (frames) Tx \***
->
-> **Window Size k (frames) Rx \***
->
-> **Wait for Ack T1 (msec)**
-
-**Type Bit Value**
-
-> **E** **0** **1 E** **1** **0 E** **2** **0 E** **3** **0 E** **4**
-> **0 E** **5 0/1 E** **6 0/1**
->
-> **7-15** **0 E** **0** **0 E** **1 0/1 E** **2 0/1 E** **3** **0 E**
-> **4** **0 E** **5** **0 E** **6** **0 E** **7** **1 E** **8** **0 E**
-> **9** **0 E 10 0/1 E 11 0/1 E 12** **0 E 13** **1 E 14** **0 E 15**
-> **1 E 16** **0 E 17** **1 E 18** **0 E 19** **0**
->
-> **E** **20** **0**
->
-> **E** **21** **0/1 E** **22** **0/1 E** **23 0 B** **NA B**
->
-> **B** **NA** **B**
->
-> **B B 0-6 0-127 7** **0**
->
-> **B B 0-6 0-127 7** **0**
->
-> **B** **NA** **B**
->
-> **Figure 4.5 Parameter Negotiation - Parameter Field Elements.**
+**Figure 4.5 Parameter Negotiation - Parameter Field Elements.**
 
 Note: that Type E is a bit field and Type B is a numeric field of N
 octets. 32
@@ -1716,34 +1204,37 @@ Parameter field elements marked \* are defined in ISO 8885. They are
 shown for compatibility purposes only and are not needed to negotiate
 the features of this version of AX.25.
 
-> The Classes of Procedures parameter field (PI=2) serves to negotiate
-> half- or full duplex: • Bit 0 is always a 1.
->
-> • Bits 1 through 4 and 7 through 15 are always a 0.
->
-> •  Either Bit 5 (half-duplex) or bit 6 (full duplex), but not both,
-> must be set. If this parameter field is not present, the current
-> values are retained. The default is half-duplex.
+The Classes of Procedures parameter field (PI=2) serves to negotiate
+- half
+- or full duplex:
+- Bit 0 is always a 1.
+
+- Bits 1 through 4 and 7 through 15 are always a 0.
+
+- Either Bit 5 (half-duplex) or bit 6 (full duplex), but not both,
+must be set. If this parameter field is not present, the current
+values are retained. The default is half-duplex.
 
 The HDLC Optional Functions parameter field (PI=3) allows the
 negotiation of implicit reject (REJ), or selective reject (SREJ), and
 modulo 8 or 128:
 
-> • Bits 0, 3-6, 8, 9, 12, 14, 16, 18-20, and 22 are always a 0. • Bits
-> 7, 13, 15 and 17 are always a 1.
->
-> • Implicit reject is selected by setting bit 1 and resetting bit 2.
->
-> • Selective reject is selected by resetting bit 1 and setting bit 2. •
-> Clearing both bit 1 and 2 is not allowed.
->
-> • Modulo 8 operation is selected by setting bit 10 and resetting bit
-> 11.
->
-> •  Modulo 128 operation is selected by setting bit 11 and resetting
-> bit 10. If this parameter field is not present, the current values are
-> retained. The default is selective reject, modulo 128, TEST
-> command/response, no segmenter/reassembler and selective REJ.
+- Bits 0, 3-6, 8, 9, 12, 14, 16, 18-20, and 22 are always a 0.
+- Bits
+7, 13, 15 and 17 are always a 1.
+
+- Implicit reject is selected by setting bit 1 and resetting bit 2.
+
+- Selective reject is selected by resetting bit 1 and setting bit 2.
+- Clearing both bit 1 and 2 is not allowed.
+
+- Modulo 8 operation is selected by setting bit 10 and resetting bit
+11.
+
+- Modulo 128 operation is selected by setting bit 11 and resetting
+bit 10. If this parameter field is not present, the current values are
+retained. The default is selective reject, modulo 128, TEST
+command/response, no segmenter/reassembler and selective REJ.
 
 The I Field Length Receive parameter field (PI=6) allows the sending TNC
 to notify the receiving TNC of the maximum size of an Information field
@@ -1775,82 +1266,24 @@ station, if the receiving station is using AX.25 version 2.0 or earlier
 versions, or the receiving station wants to use the defaults for version
 2.0 or earlier.
 
-> A typical XID frame is shown in Figure 4.6.
->
-> 33
->
-> **Octet ID Flag A1 A2 A3 A4 A5 A6**
->
-> **A7 (SSID) A8 A9 A10 A11 A12 A13**
->
-> **A14 (SSID) Control FI GI GL**
->
-> **PI PL PV**
->
-> **PI PL PV**
->
-> **PI PL PV PI PL PV PI PL PV PI PL PV**
->
-> **FCS**
+A typical XID frame is shown in Figure 4.6.
 
-**Hex Value 0x7E 0x9C 0x94 0x6E 0xA0 0x40 0x40 0xE0 0x9C 0x6E 0x98 0x8A
-0x9A 0x40 0x61 0xAF 0x82 0x80**
+**0x22 0x00**
 
-> **0x00 0x17**
->
-> **0x02 0x02**
->
-> **0x22 0x00**
->
-> **0x03 0x03**
->
-> **0x82 0xA8 0x22**
+**0x03 0x03**
+
+**0x82 0xA8 0x22**
 
 **0x06 0x02 0x04 0x00 0x08 0x01 0x02 0x09 0x02 0x10 0x00 0x0A 0x01
 0x03**
 
 **0xXX 0xXX**
 
-> **Meaning Start of frame flag**
->
-> **From Address (NJ7P-0)**
->
-> **To Address (N7LEM-0)**
->
-> **XID Format Indicator**
->
-> **Group Identifier - Parameter Negotiation**
->
-> **Group Length – All of the PI/PL/PV Fields (2 octets)**
->
-> **Parameter Indicator – Classes of Procedures Parameter Length**
->
-> **Parameter Variable – Half Duplex, Asynchronous Balanced Mode**
->
-> **Parameter Indicator – Optional Functions Parameter Length**
->
-> **Parameter Variable – SREJ/REJ, Extended Address, 16-bit FCS, TEST
-> command/response, Modulo 128, Synchronous Transmit, No
-> Segmenter/Reassembler**
->
-> **Parameter Indicator – Rx I Field Length (bits) Parameter Length**
->
-> **Parameter Variable – 1024 bits (128 octets) Parameter Indicator – Rx
-> Window Size Parameter Length**
->
-> **Parameter Variable – 2 frames Parameter Indicator – Timer T1
-> Parameter Length**
->
-> **Parameter Variable – 4096 milliseconds Parameter Indicator – Retries
-> (N2) Parameter Length**
->
-> **Parameter Variable – 3 Retires Frame Check Sequence (2 octets)**
+<img src="media/fig4.6.png" />
 
 **Figure 4.6 Typical XID Frame.**
 
-> 34
-
-*4.3.3.8 Test (TEST) Frame*
+#### 4.3.3.8 Test (TEST) Frame
 
 The Test command causes the addressed station to respond with the TEST
 response at the first respond opportunity; this performs a basic test of
@@ -1870,34 +1303,29 @@ the TEST response, or when a time-out period has expired. The results of
 the TEST command/response exchange are made available for interrogation
 by a higher layer.
 
-*4.3.3.9 Frame Reject (FRMR) Response Frame*
+#### 4.3.3.9 Frame Reject (FRMR) Response Frame
 
-> The FRMR response is removed from the standard for the following
-> reasons: • UI frame transmission was not allowed during FRMR recovery
->
-> • During FRMR recovery, the link could not be reestablished by the
-> station that sent the FRMR • The above functions are better handled by
-> simply resetting the link with a SABM(E) + UA
->
-> exchange
->
-> •  An implementation that receives and process FRMRs but does not
-> transmit them is compatible with older versions of the standard
->
-> • SDL is simplified and removes the need for one state in the
-> data-link state machine.
+The FRMR response is removed from the standard for the following reasons:
+- UI frame transmission was not allowed during FRMR recovery.
+
+- During FRMR recovery, the link could not be reestablished by the station that sent the FRMR.
+- The above functions are better handled by simply resetting the link with a SABM(E) + UA exchange.
+
+- An implementation that receives and processes FRMRs but does not transmit them is compatible with older versions of the standard.
+
+- SDL is simplified and removes the need for one state in the data-link state machine.
 
 This version of AX.25 operates with previous versions of AX.25. It does
 not generate a FRMR Response frame, but handles error conditions by
 resetting the link.
 
-4.4 Link Error Reporting and Recovery
+#### 4.4 Link Error Reporting and Recovery
 
 Several link-layer errors can be recovered without terminating the
 connection. These error situations may occur as a result of transmission
 errors or malfunctions within the TNC.
 
-4.4.1 TNC Busy Condition
+##### 4.4.1 TNC Busy Condition
 
 When a TNC is temporarily unable to receive I frames (e.g., when receive
 buffers are full), it sends a Receive Not Ready (RNR) frame. This
@@ -1905,7 +1333,7 @@ informs the sending TNC that the receiving TNC cannot handle any more I
 frames at the moment. This receiving TNC clears this condition by the
 sending a UA, RR, REJ or SABM(E) command frame.
 
-4.4.2 Send Sequence Number Error
+##### 4.4.2 Send Sequence Number Error
 
 If the send sequence number, N(S), of an otherwise error-free received
 frame does not match the receive state variable, V(R), a send sequence
@@ -1916,13 +1344,9 @@ this frame or any other I frames until N(S) matches V(R).
 
 The control field of the erroneous I frame(s) is accepted so that link
 supervisory functions such as checking the P/F bit can be performed.
-Because of this update, the retransmitted I frame may have an
+Because of this update, the retransmitted I frame may have an updated P bit and N(R).
 
-> 35
-
-updated P bit and N(R).
-
-4.4.3 Implicit Reject (REJ) Recovery
+##### 4.4.3 Implicit Reject (REJ) Recovery
 
 The REJ frame requests a retransmission of I frames following the
 detection of an N(S) sequence error. Only one outstanding “sent REJ”
@@ -1933,7 +1357,7 @@ A TNC receiving the REJ command clears the condition by resending all
 outstanding I frames (up to the window size), starting with the frame
 indicated in N(R) of the REJ frame.
 
-4.4.4 Selective Reject (SREJ) Recovery
+##### 4.4.4 Selective Reject (SREJ) Recovery
 
 The SREJ command/response initiates more-efficient error recovery by
 requesting the retransmission of a single I frame following the
@@ -1956,8 +1380,8 @@ that the checkpoint retransmission will not be initiated at the remote
 TNC.
 
 With respect to each direction of transmission on the data link, one or
-more “sent SREJ” exception conditions from a TNC toanother TNC may be
-established at atime. A“sent SREJ” exception condition is cleared when
+more “sent SREJ” exception conditions from a TNC to another TNC may be
+established at a time. A “sent SREJ” exception condition is cleared when
 the requested I frame is received.
 
 The SREJ frame may be repeated when a TNC perceives by timeout that a
@@ -1982,22 +1406,20 @@ When the SREJ mechanism is used, the receiving station retains correctly
 received I frames and delivers them to the higher layer in sequence
 number order.
 
-4.4.5 Timeout Error Recovery *4.4.5.1 T1 Timer Recovery*
+##### 4.4.5 Timeout Error Recovery
+
+###### 4.4.5.1 T1 Timer Recovery
 
 If a transmission error causes a TNC to fail to receive (or to receive
 and discard) a single I frame, or the last I frame in a sequence of I
 frames, then the TNC does not detect a send-sequence-number error and
 consequently does not transmit an REJ/SREJ. The TNC that transmitted the
 unacknowledged I frame(s) following the completion of timeout period T1,
-takes appropriate recovery action to determine
-
-> 36
-
-when I frame retransmission as described in Section 6.4.10 should begin.
+takes appropriate recovery action to determine when I frame retransmission as described in Section 6.4.10 should begin.
 This condition is cleared by the reception of an acknowledgement for the
 sent frame(s), or by the link being reset.
 
-*4.4.5.2 Timer T3 Recovery*
+###### 4.4.5.2 Timer T3 Recovery
 
 Timer T3 ensures that the link is still functional during periods of low
 information transfer. When T1 is not running (no outstanding I frames),
@@ -2008,12 +1430,12 @@ received, T1 is stopped and T3 is started. If T1 expires before a
 response is received, then the waiting acknowledgement procedure
 (Section 6.4.11) is executed.
 
-4.4.6 Invalid Frame or FCS Error
+##### 4.4.6 Invalid Frame or FCS Error
 
 If an invalid frame is received, or a frame is received with an FCS
 error, that frame is discarded with no further action taken.
 
-5 Elements for Layer-to-Layer Communication
+# 5 Elements for Layer-to-Layer Communication
 
 Communication between layers is accomplished with primitives. In an
 abstract way, primitives represent the logical exchange of information
@@ -2026,201 +1448,196 @@ primitive is formed by a 2-letter indicator of the level, a hyphen, a
 label that indicates the function, and a type (Request, Indication or
 Confirm).
 
-> For this Standard, the 2-letter level indicators are:
->
-> • DL for communications between Layer 3 and the data-link layer;
->
-> • LM for communications between the data-link layer and the link
-> multiplexer;
->
-> • PH for communications between the link multiplexer and the physical
-> layer; and • MDL for communications between Layer 3 and the layer
-> management.
->
-> • HW for the hardware interface to layer 1.
+For this Standard, the 2-letter level indicators are:
 
-5.1 Layer 3 Entity \<—\> Management Data-link State Machine
+- DL for communications between Layer 3 and the data-link layer;
+
+- LM for communications between the data-link layer and the link
+multiplexer;
+
+- PH for communications between the link multiplexer and the physical
+- layer; and
+- MDL for communications between Layer 3 and the layer
+management.
+
+- HW for the hardware interface to layer 1.
+
+## 5.1 Layer 3 Entity <—> Management Data-link State Machine
 
 Communication between the Layer 3 Entity and the Management Data-link
 State Machine is characterized by three primitives:
 
-> •  **MDL-NEGOTIATE Request**. The Layer 3 entity uses this primitive
-> to request the Data-link State Machine to notify/negotiate.
->
-> • **MDL-NEGOTIATE Confirm**. The Management Data-link State Machine
-> uses this primitive to notify the Layer 3 entity that
-> notification/negotiation is complete.
->
-> • **MDL-ERROR Indicate**. The Management Data-link State Machine uses
-> this primitive to notify the Layer 3 entity that
-> notification/negotiation has failed.
+- **MDL-NEGOTIATE Request**. The Layer 3 entity uses this primitive
+to request the Data-link State Machine to notify/negotiate.
 
-5.2 Management Data-Link State Machine \<—\> Link Multiplexer State
+- **MDL-NEGOTIATE Confirm**. The Management Data-link State Machine
+uses this primitive to notify the Layer 3 entity that
+notification/negotiation is complete.
+
+- **MDL-ERROR Indicate**. The Management Data-link State Machine uses
+this primitive to notify the Layer 3 entity that
+notification/negotiation has failed.
+
+## 5.2 Management Data-Link State Machine <—> Link Multiplexer State
 Machine Communication between the Management Data-link State Machine and
 the Link Multiplexer State
 
 Machine is characterized by two primitives:
 
-> • **LM-DATA Request**. The Management Data-link State Machine uses
-> this primitive to pass 37
->
-> frames of any type (XID, UI, etc.) to the Link Multiplexer State
-> Machine.
->
-> •  **LM-DATA Indication**. The Link Multiplexer State Machine uses
-> this primitive to pass frames of any type (XID, UI, etc.) to the
-> Management Data-link State Machine.
+- **LM-DATA Request**. The Management Data-link State Machine uses
+this primitive to pass frames of any type (XID, UI, etc.) to the Link Multiplexer State
+Machine.
 
-5.3 Layer 3 Entity \<—\> Data-Link State Machine
+- **LM-DATA Indication**. The Link Multiplexer State Machine uses
+this primitive to pass frames of any type (XID, UI, etc.) to the
+Management Data-link State Machine.
+
+## 5.3 Layer 3 Entity <—> Data-Link State Machine
 
 Communication between the Layer 3 Entity and the Data-link State Machine
 is characterized by thirteen primitives:
 
-> •  **DL-CONNECT Request**. The Layer 3 entity uses this primitive to
-> request the establishment of an AX.25 connection.
->
-> • **DL-CONNECT Indication**. The Data-link State Machine uses this
-> primitive to indicate that an AX.25 connection has been requested.
->
-> • **DL-CONNECT Confirm**. The Data-link State Machine uses this
-> primitive to indicate that an AX.25 connection has been made.
->
-> •  **DL-DISCONNECT Request**. The Layer 3 entity uses this primitive
-> to request the release of an AX.25 connection.
->
-> •  **DL-DISCONNECT Indication**. The Data-link State Machine uses this
-> primitive to indicate that an AX.25 connection has been released.
->
-> • **DL-DISCONNECT Confirm**. The Data-link State Machine uses this
-> primitive to indicate that an AX.25 connection has been released and
-> confirmed.
->
-> • **DL-DATA Request**. The Layer 3 entity uses this primitive to
-> request the transmission of data using connection-oriented protocol.
-> If necessary, this frame is examined and acted upon by the segmenter.
->
-> • **DL-DATA Indication**. The reassembler uses this primitive to
-> indicate reception of Layer 3 data using connection-oriented protocol.
->
-> •  **DL-UNIT-DATA Request**. The Layer 3 entity uses this primitive to
-> request the transmission of data using connectionless protocol. If
-> necessary, this frame is examined and acted upon by the segmenter.
-> This frame is sent as a UI frame in normal order.
->
-> •  **DL-UNIT-DATA Indication**. The reassembler uses this primitive to
-> indicate reception of Layer 3 data using connectionless protocol. This
-> frame was received as a UI frame.
->
-> • **DL-ERROR Indication**. The Data-link State Machine uses this
-> primitive to indicate when frames inconsistent with this protocol
-> definition have been received. This includes short frames, frames with
-> inconsistent parameter values, etc. The error indications are
-> discussed in the SDL appendices.
->
-> •  **DL-FLOW-OFF Request**. The Layer 3 entity uses this primitive to
-> temporarily suspend the flow of incoming information.
->
-> •  **DL-FLOW-ON Request**. The Layer 3 entity uses this primitive to
-> resume the flow of incoming information.
+- **DL-CONNECT Request**. The Layer 3 entity uses this primitive to
+request the establishment of an AX.25 connection.
 
-5.4 Data-Link State Machine \<—\> Link Multiplexer State Machine
+- **DL-CONNECT Indication**. The Data-link State Machine uses this
+primitive to indicate that an AX.25 connection has been requested.
+
+- **DL-CONNECT Confirm**. The Data-link State Machine uses this
+primitive to indicate that an AX.25 connection has been made.
+
+- **DL-DISCONNECT Request**. The Layer 3 entity uses this primitive
+to request the release of an AX.25 connection.
+
+- **DL-DISCONNECT Indication**. The Data-link State Machine uses this
+primitive to indicate that an AX.25 connection has been released.
+
+- **DL-DISCONNECT Confirm**. The Data-link State Machine uses this
+primitive to indicate that an AX.25 connection has been released and
+confirmed.
+
+- **DL-DATA Request**. The Layer 3 entity uses this primitive to
+request the transmission of data using connection-oriented protocol.
+If necessary, this frame is examined and acted upon by the segmenter.
+
+- **DL-DATA Indication**. The reassembler uses this primitive to
+indicate reception of Layer 3 data using connection-oriented protocol.
+
+- **DL-UNIT-DATA Request**. The Layer 3 entity uses this primitive to
+request the transmission of data using connectionless protocol. If
+necessary, this frame is examined and acted upon by the segmenter.
+This frame is sent as a UI frame in normal order.
+
+- **DL-UNIT-DATA Indication**. The reassembler uses this primitive to
+indicate reception of Layer 3 data using connectionless protocol. This
+frame was received as a UI frame.
+
+- **DL-ERROR Indication**. The Data-link State Machine uses this
+primitive to indicate when frames inconsistent with this protocol
+definition have been received. This includes short frames, frames with
+inconsistent parameter values, etc. The error indications are
+discussed in the SDL appendices.
+
+- **DL-FLOW-OFF Request**. The Layer 3 entity uses this primitive to
+temporarily suspend the flow of incoming information.
+
+- **DL-FLOW-ON Request**. The Layer 3 entity uses this primitive to
+resume the flow of incoming information.
+
+## 5.4 Data-Link State Machine <—> Link Multiplexer State Machine
 
 Communication between the Data-link State Machine and the Link
 Multiplexer State Machine is characterized by six primitives:
 
-> • **LM-SEIZE Request**. The Data-link State Machine uses this
-> primitive to request the Link Multiplexer State Machine to arrange for
-> transmission at thenextavailable opportunity. The Data-link State
-> Machine uses this primitive when an acknowledgement must be made; the
-> exact frame
->
-> 38
->
-> in which the acknowledgement is sent will be chosen when the actual
-> time for transmission arrives.
->
-> • **LM-SEIZE Confirm**. This primitive indicates to the Data-link
-> State Machine that the transmission opportunity has arrived.
->
-> •  **LM-RELEASE Request**. The Link Multiplexer State Machine uses
-> this primitive to stop transmission.
->
-> • **LM-EXPEDITED-DATA Request**. The data-link machine uses this
-> primitive to request transmission of each digipeat or expedite data
-> frame.
->
-> • **LM-DATA Request**. The Data-link State Machine uses this primitive
-> to pass frames of any type (SABM, RR, UI, etc.) to the Link
-> Multiplexer State Machine.
->
-> •  **LM-DATA Indication**. The Link Multiplexer State Machine uses
-> this primitive to pass frames of any type (SABM, RR, UI, etc.) to the
-> Data-link State Machine.
+- **LM-SEIZE Request**. The Data-link State Machine uses this
+primitive to request the Link Multiplexer State Machine to arrange for
+transmission at the next available opportunity. The Data-link State
+Machine uses this primitive when an acknowledgement must be made; the
+exact frame in which the acknowledgement is sent will be chosen when the actual
+time for transmission arrives.
 
-5.5 Link Multiplexer State Machine \<—\> Physical State Machine
+- **LM-SEIZE Confirm**. This primitive indicates to the Data-link
+State Machine that the transmission opportunity has arrived.
+
+- **LM-RELEASE Request**. The Link Multiplexer State Machine uses
+this primitive to stop transmission.
+
+- **LM-EXPEDITED-DATA Request**. The data-link machine uses this
+primitive to request transmission of each digipeat or expedite data
+frame.
+
+- **LM-DATA Request**. The Data-link State Machine uses this primitive
+to pass frames of any type (SABM, RR, UI, etc.) to the Link
+Multiplexer State Machine.
+
+- **LM-DATA Indication**. The Link Multiplexer State Machine uses
+this primitive to pass frames of any type (SABM, RR, UI, etc.) to the
+Data-link State Machine.
+
+## 5.5 Link Multiplexer State Machine <—> Physical State Machine
 
 Communication between the Link Multiplexer State Machine and the
 Physical State Machine is characterized by eight primitives:
 
-> • **PH-SEIZE Request**. The Link Multiplexer State Machine uses this
-> primitive before each transmission to request access to the radio
-> channel.
->
-> • **PH-SEIZE Confirm**. The Physical State Machine uses this primitive
-> to confirm that the channel has been seized.
->
-> • **PH-RELEASE Request**. The Link Multiplexer State Machine uses this
-> primitive to release the radio channel.
->
-> • **PH-QUIET Indication**. The Physical State Machine uses this
-> primitive to indicate that the channel is not busy.
->
-> •  **PH-BUSY Indication**. The Physical State Machine uses this
-> primitiveto indicate that the channel is busy.
->
-> • **PH-EXPEDITED-DATA Request**. The Link Multiplexer State Machine
-> uses this primitive to request transmission of each digipeat or
-> expedite data frame.
->
-> •  **PH-DATA Request**. The Link Multiplexer State Machine uses this
-> primitive to request transmission of each normal frame.
->
-> • **PH-DATA Indication**. The Physical State Machine uses this
-> primitiveto provideincoming frames to the link multiplexer.
+- **PH-SEIZE Request**. The Link Multiplexer State Machine uses this
+primitive before each transmission to request access to the radio
+channel.
 
-5.6 Physical State Machine \<—\> Hardware
+- **PH-SEIZE Confirm**. The Physical State Machine uses this primitive
+to confirm that the channel has been seized.
+
+- **PH-RELEASE Request**. The Link Multiplexer State Machine uses this
+primitive to release the radio channel.
+
+- **PH-QUIET Indication**. The Physical State Machine uses this
+primitive to indicate that the channel is not busy.
+
+- **PH-BUSY Indication**. The Physical State Machine uses this
+primitiveto indicate that the channel is busy.
+
+- **PH-EXPEDITED-DATA Request**. The Link Multiplexer State Machine
+uses this primitive to request transmission of each digipeat or
+expedite data frame.
+
+- **PH-DATA Request**. The Link Multiplexer State Machine uses this
+primitive to request transmission of each normal frame.
+
+- **PH-DATA Indication**. The Physical State Machine uses this
+primitiveto provideincoming frames to the link multiplexer.
+
+## 5.6 Physical State Machine <—> Hardware
 
 Communication between the Physical State Machine and the Hardware is
 characterized by six primitives:
 
-> • **HW-DATA Request**. The Physical State Machine uses this primitive
-> to pass frames to send to the hardware.
->
-> •  **HW-TON Request**. The Physical State Machine uses this primitive
-> to tell the hardware to key the transmitter.
->
-> •  **HW-TOFF Request**. The Physical State Machine uses this primitive
-> to tell the hardware to unkey the transmitter.
->
-> •  **HW-AOS Indication**. The hardware uses this primitive to notify
-> the Physical State Machine that modem synchronization, flag fill or
-> frame structure have been detected.
->
-> 39
->
-> • **HW-LOS Indication**. The hardware uses this primitive to notify
-> the Physical State Machine that modem synchronization, flag fill or
-> frame structure have been lost.
->
-> • **HW-DATA Indication**. The hardware uses this primitive to pass
-> frames that have been received to the Physical State Machine.
+- **HW-DATA Request**. The Physical State Machine uses this primitive
+to pass frames to send to the hardware.
 
-6 Description of AX.25 Procedures
+- **HW-TON Request**. The Physical State Machine uses this primitive
+to tell the hardware to key the transmitter.
+
+- **HW-TOFF Request**. The Physical State Machine uses this primitive
+to tell the hardware to unkey the transmitter.
+
+- **HW-AOS Indication**. The hardware uses this primitive to notify
+the Physical State Machine that modem synchronization, flag fill or
+frame structure have been detected.
+
+- **HW-LOS Indication**. The hardware uses this primitive to notify
+the Physical State Machine that modem synchronization, flag fill or
+frame structure have been lost.
+
+- **HW-DATA Indication**. The hardware uses this primitive to pass
+frames that have been received to the Physical State Machine.
+
+# 6 Description of AX.25 Procedures
 
 The following paragraphs describe the procedures involved in setting up,
 using and disconnecting a balanced link between two TNC stations.
 
-6.1 Address Field Operation 6.1.1 Address Information
+## 6.1 Address Field Operation
+
+### 6.1.1 Address Information
 
 All transmitted frames have address fields conforming to Section 3.12.
 All frames have both the destination device and the source device
@@ -2234,7 +1651,7 @@ If point-to-multipoint operation is desired, the destination address can
 be a group name or club call sign. Operation with destination addresses
 other than actual amateur call signs is a subject for further study.
 
-6.1.2 Command/Response Procedure
+### 6.1.2 Command/Response Procedure
 
 AX.25 implements the command/response information in the address field.
 The command/response information is conveyed using two bits to maintain
@@ -2253,26 +1670,19 @@ The command/response information is encoded into the address field as
 shown in Figure 6.1. Implementations of AX.25 prior to version 2.0
 defined these bits to be either both “0” or “1”.
 
-> **Frame Type Previous Versions Command (V2) Response (V2) Previous
-> Versions**
+<img src="media/fig6.1.png" />
 
-**Destination SSID C-Bit 0 1 0 1**
-
-**Source SSID C-Bit 0 0 1 1**
-
-> **Figure 6.1 Command/Response Encoding.**
+**Figure 6.1 Command/Response Encoding.**
 
 Because all frames are considered to be either commands or responses, a
 device always has one of the bits set to “1” and the other bit set to
 “0”.
 
-> The use of the command/response information in AX.25 allows S frames
-> to be either commands or 40
-
-responses. This arrangement helps maintain proper control over the link
+The use of the command/response information in AX.25 allows S frames
+to be either commands or responses. This arrangement helps maintain proper control over the link
 during the information transfer state.
 
-6.2 Poll/Final (P/F) Bit Procedures
+## 6.2 Poll/Final (P/F) Bit Procedures
 
 The response frame returned by a TNC depends on the previous command
 received, as described in the following paragraphs.
@@ -2296,8 +1706,9 @@ frame with the F bit set to “1”.
 The P bit is used in conjunction with the timeout recovery condition
 discussed in Section 4.5.5. When not used, the P/F bit is set to “0”.
 
-6.3 Procedures for Link Set-Up and Disconnection 6.3.1 AX.25 Link
-Connection Establishment
+## 6.3 Procedures for Link Set-Up and Disconnection
+
+### 6.3.1 AX.25 Link Connection Establishment
 
 To connect to a distant TNC, the originating TNC sends a SABM command
 frame to the distant TNC and starts its T1 timer. If the distant TNC
@@ -2306,7 +1717,7 @@ frame and resets all of its internal state variables (V(S), V(A) and
 V(R)). Reception of the UA response frame by the originating TNC causes
 it to cancel the T1 timer and set its internal state variables to “0”.
 
-If the distantTNC doesn’t respond before T1 times out, the originating
+If the distant TNC doesn’t respond before T1 times out, the originating
 TNC resendsthe SABM frame and starts T1 running again. The originating
 TNC tries to establish a connection until it has tried unsuccessfully N2
 times. N2 is defined in Section 6.7.2.3.
@@ -2323,7 +1734,7 @@ frames except SABM, DISC, UA and DM frames from the distant TNC.
 In response to a received SABM/SABME, frames other than UA and DM are
 sent only after the link is set up and if no outstanding SABM(E) exists.
 
-6.3.2 Parameter Negotiation Phase
+### 6.3.2 Parameter Negotiation Phase
 
 Parameter negotiation occurs only before the connection is made. It is
 accomplished by sending the XID command frame and receiving the XID
@@ -2335,8 +1746,6 @@ response from the other station establishes that both stations are using
 AX.25 version 2.2 or higher and enables the use of the
 segmenter/reassembler and selective reject. A version 2.2 connection is
 made.
-
-> 41
 
 This version of AX.25 implements the negotiation or notification of six
 AX.25 parameters. Notification simply tells the distant TNC some limit
@@ -2387,30 +1796,35 @@ The Retries parameter field (PI=10) allows the negotiation of the retry
 count (N1). Function reverts to the greater of the values offered in the
 XID command and XID response frames.
 
-> Defaults for the negotiated parameters for use with version 2.0 or
-> lower of AX.25 are: • Set Half Duplex
->
-> • Set Implicit Reject • Modulo = 8
->
-> • I Field Length Receive = 2048 bits (256 octets) • Window Size
-> Receive = 7
->
-> • Acknowledge Timer = 3000 msec • Retries = 10
->
-> Defaults for the negotiated parameters for use with version 2.2 of
-> AX.25 are: • Set Half Duplex
->
-> • Set Selective Reject • Modulo = 128
->
-> • I Field Length Receive = 2048 bits (256 octets)
->
-> 42
->
-> • Window Size Receive = 32
->
-> • Acknowledge Timer = 3000 msec • Retries = 10
+Defaults for the negotiated parameters for use with version 2.0 or
+- lower of AX.25 are:
+- Set Half Duplex
 
-6.3.3 Information-Transfer Phase
+- Set Implicit Reject
+- Modulo = 8
+
+- I Field Length Receive = 2048 bits (256 octets)
+- Window Size
+Receive = 7
+
+- Acknowledge Timer = 3000 msec
+- Retries = 10
+
+Defaults for the negotiated parameters for use with version 2.2 of
+- AX.25 are:
+- Set Half Duplex
+
+- Set Selective Reject
+- Modulo = 128
+
+- I Field Length Receive = 2048 bits (256 octets)
+
+- Window Size Receive = 32
+
+- Acknowledge Timer = 3000 msec
+- Retries = 10
+
+### 6.3.3 Information-Transfer Phase
 
 After establishing a link connection, the TNC enters the
 information-transfer state. In this state, the TNC accepts and transmits
@@ -2418,7 +1832,7 @@ I and S frames according to the procedure outlined in Section 6.4. If
 the TNC receives a SABM(E) command while in the information-transfer
 state, it follows the resetting procedure outlined in Section 6.5.
 
-6.3.4 Link Disconnection
+### 6.3.4 Link Disconnection
 
 While in the information-transfer state, either TNC may indicate a
 request to disconnect the link by transmitting a DISC command frame and
@@ -2433,7 +1847,7 @@ If a UA or DM response is not correctly received before T1 times out,
 the DISC frame is sent again and T1 is restarted. If this happens N2
 times, the TNC enters the disconnected state.
 
-6.3.5 Disconnected State
+### 6.3.5 Disconnected State
 
 In the disconnected state, a TNC monitors received commands, reacts to
 the receipt of a SABM(E) as described in Section 6.3.1, and transmits a
@@ -2455,15 +1869,15 @@ DISC frame and follows the link disconnection procedure outlined in
 Section 6.3.4. The TNC may then try to reestablish the link using the
 link set up procedure outlined in Section 6.3.1.
 
-6.3.6 Collision Recovery
+### 6.3.6 Collision Recovery
 
-*6.3.6.1 Collisions in a Half-Duplex Environment*
+#### 6.3.6.1 Collisions in a Half-Duplex Environment
 
 Collisions of frames in a half-duplex environment are taken care of by
 the retry nature of the T1 timer and retransmission count variable. No
 other special action is required.
 
-*6.3.6.2 Collisions of Unnumbered Commands.*
+#### 6.3.6.2 Collisions of Unnumbered Commands.
 
 If sent and received SABM(E) or DISC command frames are the same, both
 TNCs send a UA response at the earliest opportunity, and both devices
@@ -2473,9 +1887,7 @@ If sent and received SABM(E) or DISC commands are different, both TNCs
 enter the disconnected state and transmit a DM frame at the earliest
 opportunity.
 
-> 43
-
-*6.3.6.3 Collision of a DM with a SABM(E) or DISC*
+#### 6.3.6.3 Collision of a DM with a SABM(E) or DISC
 
 When an unsolicited DM response frame is sent, a collision between it
 and a SABM(E) or DISC may occur. In order to prevent this DM from being
@@ -2483,7 +1895,7 @@ misinterpreted, all unsolicited DM frames are transmitted with the F bit
 set to “0”. All SABM(E) and DISC frames are sent with the P bit set to
 “1”. This prevents confusion when a DM frame is received.
 
-6.3.7 Connectionless Operation
+### 6.3.7 Connectionless Operation
 
 An additional type of operation exists in amateur radio that is not
 feasible using Layer 2 connections. This is the “roundtable” operation,
@@ -2511,12 +1923,12 @@ retransmissions of bad frames. Without the handshaking activity of a
 point-to-point connection, collisions may also occur, with the potential
 of losing the frames that collided.
 
-6.4 Procedures for Information Transfer
+## 6.4 Procedures for Information Transfer
 
-> Once aconnection has been established as outlined above, both TNCs can
-> accept I, S and U frames.
+Once aconnection has been established as outlined above, both TNCs can
+accept I, S and U frames.
 
-6.4.1 Sending I Frames
+### 6.4.1 Sending I Frames
 
 Whenever a TNC has an I frame to transmit, it sends the I frame with the
 N(S) of the control field equal to its current send state variable V(S).
@@ -2527,36 +1939,32 @@ send state variable equals the last received N(R) from the other side of
 the link plus k. If the TNC sent more I frames, the flow control window
 would be exceeded, and errors could result.
 
-> If a TNC is in a busy condition, it may still send I frames as long as
-> the distant TNC is not also busy.
+If a TNC is in a busy condition, it may still send I frames as long as
+the distant TNC is not also busy.
 
-6.4.2 Receiving I Frames
+### 6.4.2 Receiving I Frames
 
 The reception of I frames that contain zero-length information fields is
 reported to the next layer; no information field will be transferred.
 
-*6.4.2.1 Not Busy*
+#### 6.4.2.1 Not Busy
 
 If a TNC receives a valid I frame (one with a correct FCS and whose send
 sequence number equals the receiver’s receive state variable) and is not
 in a busy condition, it accepts the received I frame, increments it’s
 receive state variable, and acts in one of the following manners:
 
-> • If it has an I frame to send, that I frame may be sent with the
-> transmitted N(R) equal to its
->
-> 44
->
-> receive state variable V(R) (thus acknowledging the received frame).
-> Alternately, the TNC may send an RR frame with N(R) equal to V(R) and
-> then send the I frame.
->
-> •  If there are no outstanding I frames, the receiving TNC sends an RR
-> frame with N(R) equal to V(R). The receiving TNC may wait a small
-> period of time before sending the RR frame to be sure additional I
-> frames are not being transmitted.
+- If it has an I frame to send, that I frame may be sent with the
+transmitted N(R) equal to its receive state variable V(R) (thus acknowledging the received frame).
+Alternately, the TNC may send an RR frame with N(R) equal to V(R) and
+then send the I frame.
 
-*6.4.2.2 Busy*
+- If there are no outstanding I frames, the receiving TNC sends an RR
+frame with N(R) equal to V(R). The receiving TNC may wait a small
+period of time before sending the RR frame to be sure additional I
+frames are not being transmitted.
+
+#### 6.4.2.2 Busy
 
 If the TNC is in a busy condition, it ignores any received I frames
 without reporting this condition, other than repeating the indication of
@@ -2566,17 +1974,18 @@ If a busy condition exists, the TNC receiving the busy condition
 indication polls the sending TNC periodically until the busy condition
 disappears.
 
-> A TNC may poll the busy TNC periodically with RR or RNR frames with
-> the P bit set to “1”.
+A TNC may poll the busy TNC periodically with RR or RNR frames with
+the P bit set to “1”.
 
-6.4.3 Priority Acknowledge
+### 6.4.3 Priority Acknowledge
 
 This version of AX.25 implements the priority acknowledgement procedure.
 This feature precludes a non-priority frame from being transmitted
 during slot 0, the time when the TNC receiving the previous frame would
 be expected to send an acknowledgement.
 
-6.4.4 Reception of Out-of-Sequence Frames *6.4.4.1 Implicit Reject
+### 6.4.4 Reception of Out-of-Sequence Frames
+#### 6.4.4.1 Implicit Reject (REJ) Recovery
 (REJ)*
 
 When an I frame is received with a correct FCS, but it’s send sequence
@@ -2592,7 +2001,7 @@ be in error, its throughput is not as high as selective reject. This
 mode is ineffective on systems with long round-trip delays and high data
 rates.
 
-*6.4.4.2 Selective Reject (SREJ)*
+#### 6.4.4.2 Selective Reject (SREJ) Recovery
 
 When an I frame is received with a correct FCS, but it’s send sequence
 number N(S) does not match the current receiver’s receive state
@@ -2608,14 +2017,12 @@ The holding of frames can consume precious buffer space, especially if
 the user device has limited memory available and several active links
 are operational.
 
-6.4.5 Reception of Incorrect Frames
+### 6.4.5 Reception of Incorrect Frames
 
 When a TNC receives a frame with an incorrect FCS, an invalid frame, or
 a frame with an improper address, that frame is discarded.
 
-> 45
-
-6.4.6 Receiving Acknowledgement
+### 6.4.6 Receiving Acknowledgement
 
 Whenever an I or S frame is correctly received, even in a busy
 condition, the N(R) of the received frame is checked to see if it
@@ -2627,7 +2034,7 @@ is started again. If the T1 timer expires before an acknowledgement is
 received, the TNC proceeds with the retransmission procedure outlined in
 Section 6.4.11.
 
-6.4.7 Receiving REJ
+### 6.4.7 Receiving REJ
 
 After receiving a REJ frame, the transmitting TNC sets it’s send state
 variable to the same value as the REJ frame’s received sequence number
@@ -2656,7 +2063,7 @@ If the TNC receives a REJ frame with the poll bit set, it responds with
 either an RR or RNR frame with the final bit set before retransmitting
 the outstanding I frame(s).
 
-6.4.8 Receiving an SREJ
+### 6.4.8 Receiving an SREJ
 
 After receiving a SREJ frame, the transmitting TNC retransmits the
 individual I frame indicated by the N(R) contained in the SREJ at the
@@ -2664,7 +2071,7 @@ next available opportunity. After retransmitting the frame above, new I
 frames may be retransmitted subsequently if they become available. If
 the P bit was set, then all frames up to N(R)-1 are acknowledged.
 
-6.4.9 Receiving an RNR Frame
+### 6.4.9 Receiving an RNR Frame
 
 Whenever a TNC receives an RNR frame, it stops transmitting I frames
 until the busy condition is cleared. If timer T3 expires after the RNR
@@ -2676,21 +2083,17 @@ acknowledgment procedure (Section 6.4.11) is performed. If an RR frame
 is received in response to the poll, then T1 is stopped and the busy
 condition cleared.
 
-6.4.10 Sending a Busy Indication
+### 6.4.10 Sending a Busy Indication
 
 Whenever a TNC enters a busy condition, it indicates this by sending an
 RNR response at the next opportunity. While the TNC is in a busy
 condition, it may receive and process S frames. If a received S frame
 has the P bit set to “1”, the TNC sends an RNR frame with the F bit set
 to “1” at the next possible opportunity. To clear the busy condition,
-the TNC sends either an RR or REJ frame with the received
-
-> 46
-
-sequence number equal to the current receive state variable, depending
+the TNC sends either an RR or REJ frame with the received sequence number equal to the current receive state variable, depending
 on whether the last received I frame was properly received or not.
 
-6.4.11 Waiting Acknowledgement
+### 6.4.11 Waiting Acknowledgement
 
 If the originating TNC’s timer T1 expires while awaiting the distant
 TNC’s acknowledgement of an I frame transmitted, the originating TNC
@@ -2716,7 +2119,7 @@ supervisory response frame with the F bit set from the distant TNC, the
 originating TNC initiates a link resetting procedure as described in
 Section 6.5.
 
-6.5 Resetting Procedure
+## 6.5 Resetting Procedure
 
 The link resetting procedure initializes both directions of data flow
 after a unrecoverable error has occurred. This resetting procedure is
@@ -2748,17 +2151,13 @@ One TNC may request that the other TNC reset the link by sending a DM
 response frame. After the DM frame is sent, the sending TNC then enters
 the disconnected state.
 
-6.6 Disassembler/Reassembler
+## 6.6 Disassembler/Reassembler
 
 The segmenter/reassembler procedure is only enabled if both stations on
 the link are using AX.25 version 2.2 or higher. The use of the
 segmenter/reassembler allows the transmission of packets longer than N1
 in a simple and clean manner. This adds less than one percent overhead
-for the standard N1
-
-> 47
-
-of 256 bytes. It also adds the ability to send large Level 3 data
+for the standard N1 of 256 bytes. It also adds the ability to send large Level 3 data
 entities such as IP datagrams as single entities over AX.25.
 
 The segmenter is a simple process that divides long data units into
@@ -2769,21 +2168,9 @@ taken to prevent deadlock situations from arising in the buffer
 management of both stations on the link. The header is illustrated in
 Figure 6.2.
 
-> **Bit Position** **Hex** **Description**
->
-> **7 6 5 4 3 2 1 0 0 0 0 0 1 0 0 0**
->
-> **F X X X X X X X**
->
-> **0x08**
+<img src="media/fig6.2.png" />
 
-**F\*128+X**
-
-> **PID for segmented frame F=1 if first segmented frame,**
-
-**F=0 for all other frames; X=number of segments remaining**
-
-> **Figure 6.2 Segment Header Format.**
+**Figure 6.2 Segment Header Format.**
 
 The reassembler can tell when a segmented frame is received by the PID.
 If the first segment flag is set, then the amount of buffer space
@@ -2792,12 +2179,14 @@ the segmenter over connectionless service and a segment is lost, error
 recovery is not done by the reassembler. An error is passed to Layer 3;
 it is up to Layer 3 to recover.
 
-6.7 List of System Defined Parameters 6.7.1 Timers
+## 6.7 List of System Defined Parameters
+
+### 6.7.1 Timers
 
 Thirteen timers maintain the integrity of the AX.25 Layer 2 connection
 and are discussed in the following subsections.
 
-*6.7.1.1 Acknowledgment Timer T1*
+#### 6.7.1.1 Acknowledgment Timer T1
 
 T1, the Acknowledgement Timer, ensures that a TNC does not wait
 indefinitely for a response to a frame it sends. This timer cannot be
@@ -2812,7 +2201,7 @@ If Layer 2 repeaters are used, the value of T1 should be adjusted
 according to the number of repeaters through which the frame is being
 transferred.
 
-*6.7.1.2 Response Delay Timer T2*
+#### 6.7.1.2 Response Delay Timer T2
 
 T2, the Response Delay Timer, may optionally be implemented by the TNC
 to specify a maximum amount of delay to be introduced between the time
@@ -2825,13 +2214,9 @@ of timer T2 is not required; it is simply recommended to improve channel
 efficiency.
 
 Note that to achieve maximum throughput on full-duplex channels,
-acknowledgments should not be delayed beyond k/2
+acknowledgments should not be delayed beyond k/2 frames. The k parameter is defined in Section 6.8.2.3.
 
-> 48
-
-frames. The k parameter is defined in Section 6.8.2.3.
-
-*6.7.1.3 Inactive Link Timer T3*
+#### 6.7.1.3 Inactive Link Timer T3
 
 T3, the Inactive Link Timer, maintains link integrity whenever T1 is not
 running. It is recommended that whenever there are no outstanding
@@ -2841,7 +2226,7 @@ time units to query the status of the other TNC. The period of T3 is
 locally defined and depends greatly on Layer 1 operation. T3 should be
 greater than T1; it may be very large on channels of high integrity.
 
-*6.7.1.4 Repeater Hang Timer T100 (AXHANG)*
+#### 6.7.1.4 Repeater Hang Timer T100 (AXHANG)
 
 T100, the Repeater Hang Timer, tracks the amount of time an audio
 repeater will keep its transmitter keyed after it stops receiving. This
@@ -2849,140 +2234,144 @@ timer can increase channelefficiencywhen an audio repeater is used. If
 the repeater’s transmitter remains keyed, it is not necessary to add
 AXDELAY to the transmitter key-up time.
 
-*6.7.1.5 Priority Window Timer T101 (PRIACK)*
+#### 6.7.1.5 Priority Window Timer T101 (PRIACK)
 
 T101, the Priority Window Timer, prevents stations from transmitting
 non-priority frames during the first available transmission time slot.
 The first transmission time slot is reserved for priority frames
 (acknowledgments and digipeat frames).
 
-*6.7.1.6 Slot Time Timer T102 (p-persistence)*
+#### 6.7.1.6 Slot Time Timer T102 (p-persistence)
 
 T102, the Slot Time Timer, randomly delays stations beforethey begin
 transmitting immediatelyafter the channel becomes clear. This helps
 prevent several stations from beginning to transmit at the same time and
 causing collisions.
 
-*6.7.1.7 Transmitter Startup Timer T103 (TXDELAY)*
+#### 6.7.1.7 Transmitter Startup Timer T103 (TXDELAY)
 
 T103, the Transmitter Startup Timer, allows time to be reasonably
 certain that the transmitter has properly ramped up and is ready to
 transmit after being keyed, before any frames are sent.
 
-*6.7.1.8 Repeater Startup Timer T104 (AXDELAY)*
+#### 6.7.1.8 Repeater Startup Timer T104 (AXDELAY)
 
 T104, the Repeater Startup Timer, allows time to be reasonably certain
 that audio repeaters have had time to start their transmitters before
 frames are sent.
 
-*6.7.1.9 Remote Receiver Sync Timer T105*
+#### 6.7.1.9 Remote Receiver Sync Timer T105
 
 T105, the Remote Receiver Sync Timer, introduces additional delay time
 after TXDELAY, if needed, to allow a remote receiver to sync up before
 transmitting frames.
 
-*6.7.1.10 Ten-Minute Transmission Limit Timer T106*
+#### 6.7.1.10 Ten-Minute Transmission Limit Timer T106
 
 T106, the Ten-Minute Transmission Limit Timer, ensures that the
 transmitter is not keyed for more than ten minutes.
 
-*6.7.1.11 Anti-Hogging Limit Timer T107*
+#### 6.7.1.11 Anti-Hogging Limit Timer T107
 
-> T107, the Anti-Hogging Limit Timer, prevents a station from
-> monopolizing the channel.
->
-> 49
+T107, the Anti-Hogging Limit Timer, prevents a station from
+monopolizing the channel.
 
-*6.7.1.12 Receiver Startup Timer T108*
+#### 6.7.1.12 Receiver Startup Timer T108
 
 T108, the Receiver Startup Timer, allows sufficient time to be
 reasonably certain that the receiver is monitoring the status of the
 channel (busy or not) after unkeying the transmitter, before attempting
 to start transmitting again.
 
-*6.7.1.13 Next Segment Timer TR210*
+#### 6.7.1.13 Next Segment Timer TR210
 
 TR210, the Next Segment Timer, ensures that the reassembler doesn’t wait
 forever for the next segment of a segmented frame.
 
-6.7.2 Parameters
+### 6.7.2 Parameters
 
-*6.7.2.1 Maximum Number of Octets in an I Field (N1)*
+#### 6.7.2.1 Maximum Number of Octets in an I Field (N1)
 
 The default maximum number of octets allowed in the I field is 256. This
 variable is negotiable between end stations. The I field is an integral
 number of octets.
 
-*6.7.2.2 Maximum Number of Retries (N2)*
+#### 6.7.2.2 Maximum Number of Retries (N2)
 
-> The maximum number of retries is used in conjunction with the T1
-> timer.
+The maximum number of retries is used in conjunction with the T1
+timer.
 
-*6.7.2.3 Maximum Number of I Frames Outstanding (k)*
+#### 6.7.2.3 Maximum Number of I Frames Outstanding (k)
 
-> The maximum number of I frames outstanding at a time is seven (modulo
-> 8) or 127 (modulo 128).
->
-> 50
->
-> Appendix A - Glossary (Note: This appendix is not part of the
-> protocol.)
+The maximum number of I frames outstanding at a time is seven (modulo
+8) or 127 (modulo 128).
 
-ARRL -American Radio Relay League AX.25 - Link Access Protocol - Amateur
-C/R - Command/Response Bits
+# Appendix A - Glossary
+Note: This appendix is not part of the protocol.
 
-CSMA - Carrier Sense Multiple Access COP – Classes of Procedures
+- ARRL - American Radio Relay League
+- AX.25 - Link Access Protocol - Amateur
+- C/R - Command/Response Bits
 
-DISC -Disconnect Frame
+- CSMA - Carrier Sense Multiple Access
+- COP – Classes of Procedures
 
-DL - Communications between Layer 3 entity and data link layer DLSAP –
-Data Link Service Access Point
+- DISC - Disconnect Frame
 
-DM - Disconnect Mode Frame FCS - Frame Check Sequence
+- DL - Communications between Layer 3 entity and data link layer DLSAP
+- DLSAP – Data Link Service Access Point
 
-HDLC - High Level Data Link Control I - Information Frame
+- DM - Disconnect Mode Frame
+- FCS - Frame Check Sequence
 
-ISO - International Standards Organization
+- HDLC - High Level Data Link Control
+- I - Information Frame
 
-LM - Communications between link multiplexer and data-link Layer
+- ISO - International Standards Organization
 
-MDL - Communications between management entity and data-link Layer
-N(r) - Receive Sequence Number
+- LM - Communications between link multiplexer and data-link Layer
 
-N(s) - Send Sequence Number OF – Optional Functions
+- MDL - Communications between management entity and data-link Layer
+- N(r) - Receive Sequence Number
 
-OSI - Open Systems Interconnect P/F - Poll/Final bit
+- N(s) - Send Sequence Number
+- OF – Optional Functions
 
-PH - Communications between physical Layer and link multiplexer PID -
-Protocol Identifier
+- OSI - Open Systems Interconnect
+- P/F - Poll/Final bit
 
-REJ - Reject Frame
+- PH - Communications between physical Layer and link multiplexer
+- PID - Protocol Identifier
 
-RNR - Receiver Not Ready Frame RR - Receiver Ready Frame
+- REJ - Reject Frame
 
-SABM - Set Asynchronous Balanced Mode Frame
+- RNR - Receiver Not Ready Frame
+- RR - Receiver Ready Frame
 
-SABME - Set Asynchronous Balanced Mode Extended Frame SREJ - Selective
-Reject Frame
+- SABM - Set Asynchronous Balanced Mode Frame
 
-SSID - Secondary Station Identifier TAPR - Tucson Amateur Packet Radio
-TEST - Test Frame
+- SABME - Set Asynchronous Balanced Mode Extended Frame
+- SREJ - Selective Reject Frame
 
-TNC - Terminal Node Controller
+- SSID - Secondary Station Identifier
+- TAPR - Tucson Amateur Packet Radio
+- TEST - Test Frame
 
-UA - Unnumbered Acknowledge Frame UI - Unnumbered Information Frame
-V(a) - Acknowledge State Variable
+- TNC - Terminal Node Controller
 
-V(r) - Receive State Variable V(s) - Send State Variable
+- UA - Unnumbered Acknowledge Frame
+- UI - Unnumbered Information Frame
+- V(a) - Acknowledge State Variable
 
-XID - Exchange Identification Frame
+- V(r) - Receive State Variable
+- V(s) - Send State Variable
 
-> 51
->
-> Appendix B - References (Note: This appendix is not part of the
-> protocol.)
->
-> Black, Uyless D., 1993, “Data-Link Protocols.”
+- XID - Exchange Identification Frame
+
+# Appendix B - References
+Note: This appendix is not part of the protocol.
+
+Black, Uyless D., 1993, “Data-Link Protocols.”
 
 CCITT Recommendation X.25, “Interface Between DataTerminal Equipment
 (DTE) andData-Circuit Terminating Equipment (DCE) for Terminals
@@ -2991,15 +2380,15 @@ Operating in the Packet Mode on Public Data Networks.”
 CCITT Recommendation Q.920/Q.921, Blue Book, 1989, “Digital Subscriber
 Signaling System No. 1 (DSS 1), Data link Layer.”
 
-> Fox, Terry L., October 1984, “AX.25 Amateur Packet-Radio Link-Layer
-> Protocol.”
+Fox, Terry L., October 1984, “AX.25 Amateur Packet-Radio Link-Layer
+Protocol.”
 
 ISO 3309, 4th edition, 1 June 91, “Information Technology -
 Telecommunications and Information Exchange between Systems — High-level
 Data-Link Control (HDLC) Procedures - Frame Structure.”
 
-> ISO 4335, 4th edition, 15 September 91 (with Amendment 4),
-> “Information Technology
+ISO 4335, 4th edition, 15 September 91 (with Amendment 4),
+“Information Technology
 
 — Telecommunications and Information Exchange between Systems —
 High-level Data-Link Control (HDLC) Procedures Elements of Procedures.”
@@ -3025,10 +2414,8 @@ Service Definition for Open Systems Interconnection.”
 Scace, Eric L., K3NA, “Various AX.25 State Machines — 7th Computer
 Networking Conference — LAPA Link Access Protocol Specification.”
 
-> 52
-
-Appendix C1 - Introduction to System Description Language C1.1
-Principles of Extended Finite State Machines
+# Appendix C1 - Introduction to System Description Language
+## C1.1 Principles of Extended Finite State Machines
 
 An extended finite state machine models the operation of one party on a
 communications channel. The condition of the machine is described by its
@@ -3056,18 +2443,18 @@ These signals are often called “primitives.”
 Extended finite state machines differ from their cousins, finite state
 machines, in three respects relevant to AX.25:
 
-> • They can maintain internal variables, such as flags, sequence
-> counters, and lists.
->
-> •  Timers may be set. The expiration of a timer at a later time
-> generates an input signal to trigger the machine to execute a specific
-> series of operations. Timers may be stopped before they expire.
->
-> •  Internal queues may be maintained. The queues are used to retain
-> input signals (or other information) for processing at a later, more
-> appropriate time.
+- They can maintain internal variables, such as flags, sequence
+counters, and lists.
 
-C1.2 SDL Symbol Definition
+- Timers may be set. The expiration of a timer at a later time
+generates an input signal to trigger the machine to execute a specific
+series of operations. Timers may be stopped before they expire.
+
+- Internal queues may be maintained. The queues are used to retain
+input signals (or other information) for processing at a later, more
+appropriate time.
+
+## C1.2 SDL Symbol Definition
 
 Figure C1.1 defines the symbols used in all of the SDL graphic
 descriptions. The reader may find it helpful to review the text below
@@ -3090,8 +2477,6 @@ from higher or equal layer state machines; inputs with the notch on the
 right are from the lower layer state machine. The name of the input
 primitive is labeled within the symbol. The SDL machine summary page
 lists all of the input primitives by name and source.
-
-> 53
 
 In addition, the left-notch input signal symbol is used for timer
 expiration. The number of the expired timer is written inside the
@@ -3141,126 +2526,120 @@ with the return-from-subroutine symbol. Note that subroutines are not
 permitted to contain states, nor are they permitted to branch into
 different return legs. Each subroutine has a single point of return.
 
-> 54
-
 <img src="media/image9.png" style="width:5.46917in;height:5.85in" />
 
-> **Figure C1.1 SDL Symbol Definitions**
->
-> 55
+**Figure C1.1 SDL Symbol Definitions**
 
-Appendix C2a - Simplex Physical Layer State Machines C2a.1 Interaction
-with the Link Multiplexer
+# Appendix C2a - Simplex Physical Layer State Machines
+## C2a.1 Interaction with the Link Multiplexer
 
 The Link Multiplexer State Machine directs the operation of the simplex
 Physical State Machine through the following physical (PH) primitives:
 
-> • **PH-SEIZE Request**. This primitive requests the simplex state
-> machine to begin transmitting at the next available opportunity. When
-> that opportunity has been identified (according to the
-> CSMA/p-persistence algorithm included within), the transmitter
-> started, a parameterized window providedforthe startup of
-> aconventional repeater (if required), and a parameterizedtime allowed
-> for the synchronization of the remote station’s receiver (known as
-> TXDELAY in most implementations), then a PH-SEIZE Confirm primitive is
-> returned to the link multiplexer.
->
-> •  **PH-DATA Request**. This primitive from the Link Multiplexer State
-> Machine provides an AX.25 frame of any type (UI, SABM, I, etc.) that
-> is to be transmitted. An unlimited number of frames may be provided.
-> If the transmission exceeds the 10-minute limit or the anti-hogging
-> time limit, the half-duplex Physical State Machine automatically
-> relinquishes the channel for use by the other stations. The
-> transmission is automatically resumed at the next transmission
-> opportunity indicated by the CSMA/p-persistence contention algorithm.
->
-> •  **PH-RELEASE Request**. The Link Multiplexer State Machine provides
-> this primitive when a submitted sequence of frames to be transmitted
-> on behalf of a particular AX.25 connection has been completed. The
-> simplex Physical State Machine will piggyback any straggling digipeat
-> frames (if time permits) and then relinquish the channel.
->
-> •  **PH-EXPEDITED-DATA Request**. This primitive from the Link
-> Multiplexer State Machine provides the AX.25 frame that is to be
-> transmitted immediately. The simplex Physical State Machine gives
-> preference to priority frames over normal frames and will take
-> advantage of the PRIACK window. Priority frames can be provided by the
-> link multiplexer at any time; a PH-SEIZE Request and subsequent PH
-> Release Request are not employed for priority frames.
->
-> • **PH-DATA Indication**. During reception, the simplex Physical State
-> Machine provides each AX.25 frame to the link multiplexer in a Frame
-> primitive (Section C2a.2). No analysis is done on the frame by the
-> simplex Physical State Machine; it does not examine lengths, the frame
-> check sequence, the need for digipeating, or any other content of the
-> frame; these responsibilities are carried out by the higher-level
-> state machines.
->
-> • **PH-BUSY Indication**. The simplex Physical State Machine provides
-> this primitive whenever the channel becomes busy. “Busy” here means
-> the detection of a valid modem synchronization sequence, HDLC Flags or
-> HDLC frames — not the detection of an FM carrier on a two-meter radio.
-> An indication of busy is provided to the higher layer state machines
-> so that various timers that supervise the AX.25 connection can be
-> suspended. This avoids the undesirable situation on a busy channel
-> where AX.25, having sent data and expecting and acknowledgement, times
-> out and attempts retransmissions — and the only reasonan
-> acknowledgement was not received was because the remote station did
-> not yet have a chance to make a transmission. Since the channel is
-> simplex, this primitive is also provided when the simplex Physical
-> State Machine starts transmitting.
->
-> •  **PH-QUIET Indication**. The simplex Physical State Machine
-> provides this primitive whenever the channel becomes quiet. Since the
-> channel is simplex, this primitive is also provided when the simplex
-> Physical State Machine finishes transmitting.
->
-> 56
+- **PH-SEIZE Request**. This primitive requests the simplex state
+machine to begin transmitting at the next available opportunity. When
+that opportunity has been identified (according to the
+CSMA/p-persistence algorithm included within), the transmitter
+started, a parameterized window providedforthe startup of
+aconventional repeater (if required), and a parameterizedtime allowed
+for the synchronization of the remote station’s receiver (known as
+TXDELAY in most implementations), then a PH-SEIZE Confirm primitive is
+returned to the link multiplexer.
 
-C2a.2 Interface to the Hardware
+- **PH-DATA Request**. This primitive from the Link Multiplexer State
+Machine provides an AX.25 frame of any type (UI, SABM, I, etc.) that
+is to be transmitted. An unlimited number of frames may be provided.
+If the transmission exceeds the 10-minute limit or the anti-hogging
+time limit, the half-duplex Physical State Machine automatically
+relinquishes the channel for use by the other stations. The
+transmission is automatically resumed at the next transmission
+opportunity indicated by the CSMA/p-persistence contention algorithm.
+
+- **PH-RELEASE Request**. The Link Multiplexer State Machine provides
+this primitive when a submitted sequence of frames to be transmitted
+on behalf of a particular AX.25 connection has been completed. The
+simplex Physical State Machine will piggyback any straggling digipeat
+frames (if time permits) and then relinquish the channel.
+
+- **PH-EXPEDITED-DATA Request**. This primitive from the Link
+Multiplexer State Machine provides the AX.25 frame that is to be
+transmitted immediately. The simplex Physical State Machine gives
+preference to priority frames over normal frames and will take
+advantage of the PRIACK window. Priority frames can be provided by the
+link multiplexer at any time; a PH-SEIZE Request and subsequent PH
+Release Request are not employed for priority frames.
+
+- **PH-DATA Indication**. During reception, the simplex Physical State
+Machine provides each AX.25 frame to the link multiplexer in a Frame
+primitive (Section C2a.2). No analysis is done on the frame by the
+simplex Physical State Machine; it does not examine lengths, the frame
+check sequence, the need for digipeating, or any other content of the
+frame; these responsibilities are carried out by the higher-level
+state machines.
+
+- **PH-BUSY Indication**. The simplex Physical State Machine provides
+this primitive whenever the channel becomes busy. “Busy” here means
+the detection of a valid modem synchronization sequence, HDLC Flags or
+HDLC frames — not the detection of an FM carrier on a two-meter radio.
+An indication of busy is provided to the higher layer state machines
+so that various timers that supervise the AX.25 connection can be
+suspended. This avoids the undesirable situation on a busy channel
+where AX.25, having sent data and expecting and acknowledgement, times
+out and attempts retransmissions — and the only reasonan
+acknowledgement was not received was because the remote station did
+not yet have a chance to make a transmission. Since the channel is
+simplex, this primitive is also provided when the simplex Physical
+State Machine starts transmitting.
+
+- **PH-QUIET Indication**. The simplex Physical State Machine
+provides this primitive whenever the channel becomes quiet. Since the
+channel is simplex, this primitive is also provided when the simplex
+Physical State Machine finishes transmitting.
+
+## C2a.2 Interface to the Hardware
 
 As the lowest layer state machine in the standard, the physical layer
 state machine is envisioned to manipulate a typical radio transceiver
 and modem. It employs a number of primitives, described below:
 
-> • **HW-TON Request**. This primitive keys the transceiver’s PTT line.
->
-> • **HW-TOFF Request**. This primitive unkeys the transceiver’s PTT
-> line.
->
-> •  **HW-DATA Request**. This primitive passes data for actual
-> transmission of a frame from the physical layer to the hardware.
-> Although SDL representation of bit-by-bit transmission of the contents
-> of a frame is possible, it is not used here because the additional
-> complexity was not required. The hardware is envisioned to utilize an
-> integrated circuit (Z8530, I8274, I82530, etc.) to provide the
-> conversion to/from a bit stream to bytes of data, handle bit-stuffing,
-> etc. Frame -Differs from all other primitives used in the state
-> machines in one respect: it is not atomic. Under this model, the Frame
-> primitive occupies time; this allows the duplex Physical State Machine
-> to consume time associated with transmission, and to trigger the
-> ten-minute transmitter protection and anti-hogging timers.
->
-> • **HW-DATA Indication**. This primitivepasses data from actual
-> reception of aframefrom hardware to the physical layer. Although SDL
-> representation of bit-by-bit transmission of the contents of a frame
-> is possible, it is not used here because the additional complexity was
-> not required. The hardware is envisioned to utilize an integrated
-> circuit (Z8530, I8274, I82530, etc.) to provide the conversion to/from
-> a bit stream to bytes of data, handle bit-stuffing, etc. Frame -
-> Differs from all other primitives used in the state machines in one
-> respect: it is not atomic. Under this model, the Frame primitive
-> occupies time; this allows the duplex Physical State Machine to
-> consume time associated with transmission, and to trigger the
-> ten-minute transmitter protection and anti-hogging timers.
->
-> • **HW-AOS Indication**. This primitive indicates the presence of
-> modem synchronization, flag fill or frame structure.
->
-> • **HW-LOS Indication**. This primitive indicates the loss of modem
-> synchronization, flag fill and frame structure.
+- **HW-TON Request**. This primitive keys the transceiver’s PTT line.
 
-C2a.3 Internal Operation of the Machine
+- **HW-TOFF Request**. This primitive unkeys the transceiver’s PTT
+line.
+
+- **HW-DATA Request**. This primitive passes data for actual
+transmission of a frame from the physical layer to the hardware.
+Although SDL representation of bit-by-bit transmission of the contents
+of a frame is possible, it is not used here because the additional
+complexity was not required. The hardware is envisioned to utilize an
+integrated circuit (Z8530, I8274, I82530, etc.) to provide the
+conversion to/from a bit stream to bytes of data, handle bit-stuffing,
+etc. Frame -Differs from all other primitives used in the state
+machines in one respect: it is not atomic. Under this model, the Frame
+primitive occupies time; this allows the duplex Physical State Machine
+to consume time associated with transmission, and to trigger the
+ten-minute transmitter protection and anti-hogging timers.
+
+- **HW-DATA Indication**. This primitivepasses data from actual
+reception of aframefrom hardware to the physical layer. Although SDL
+representation of bit-by-bit transmission of the contents of a frame
+is possible, it is not used here because the additional complexity was
+not required. The hardware is envisioned to utilize an integrated
+circuit (Z8530, I8274, I82530, etc.) to provide the conversion to/from
+a bit stream to bytes of data, handle bit-stuffing, etc. Frame -
+Differs from all other primitives used in the state machines in one
+respect: it is not atomic. Under this model, the Frame primitive
+occupies time; this allows the duplex Physical State Machine to
+consume time associated with transmission, and to trigger the
+ten-minute transmitter protection and anti-hogging timers.
+
+- **HW-AOS Indication**. This primitive indicates the presence of
+modem synchronization, flag fill or frame structure.
+
+- **HW-LOS Indication**. This primitive indicates the loss of modem
+synchronization, flag fill and frame structure.
+
+## C2a.3 Internal Operation of the Machine
 
 All queues are first-in, first-out. These items are used in a
 straightforward manner; no further explanation is deemed necessary here.
@@ -3279,218 +2658,207 @@ completeness, it seems unlikely that it will ever be used.
 Below is a summary of primitives, states, queues, flags, errors, and
 timers used in the physical layer state machines:
 
-PH Primitives (Received from the Link Multiplexer): • PH-SEIZE Request
+- PH Primitives (Received from the Link Multiplexer):
+- PH-SEIZE Request
 
-> • PH-RELEASE Request
->
-> 57
->
-> • PH-EXPEDITED-DATA Request • PH-DATA Request
+- PH-RELEASE Request
 
-PH Primitives (Sent to the Link Multiplexer): • PH-SEIZE Confirm
+- PH-EXPEDITED-DATA Request
+- PH-DATA Request
 
-> • PH-BUSY Indication • PH-QUIET Indication • PH-DATA Indication
+- PH Primitives (Sent to the Link Multiplexer):
+- PH-SEIZE Confirm
 
-PH Primitives (Received from the Radio): • HW-AOS Indication
+- PH-BUSY Indication
+- PH-QUIET Indication
+- PH-DATA Indication
 
-> • HW-LOS Indication • HW-DATA Indication
+- PH Primitives (Received from the Radio):
+- HW-AOS Indication
 
-PH Primitives (Sent to the Radio): • HW-TON Request
+- HW-LOS Indication
+- HW-DATA Indication
 
-> •     HW-TOFF Request •     HW-DATA Request
+- PH Primitives (Sent to the Radio):
+- HW-TON Request
+
+- HW-TOFF Request
+- HW-DATA Request
 
 States:
 
-> • 0 — Ready
->
-> • 1 — Receiving
->
-> • 2 — Transmitter Suppression • 3 — Transmitter Start
->
-> • 4 — Transmitting • 5 — Digipeating
->
-> • 6 — Receiver Start
+- 0 — Ready
+
+- 1 — Receiving
+
+- 2 — Transmitter Suppression
+- 3 — Transmitter Start
+
+- 4 — Transmitting
+- 5 — Digipeating
+
+- 6 — Receiver Start
 
 Error Codes:
 
-> • No Error Codes Used.
+- No Error Codes Used.
 
 Queues:
 
-> •  Priority Queue — holds all expedited data frames to be transmitted
-> in the order in which they arrived from the higher layer.
->
-> •  Normal Queue — holds all normal frames, plus Seize and Release
-> Requests, in the order in which they arrived from the higher level.
+- Priority Queue — holds all expedited data frames to be transmitted
+in the order in which they arrived from the higher layer.
+
+- Normal Queue — holds all normal frames, plus Seize and Release
+Requests, in the order in which they arrived from the higher level.
 
 Flags and Parameters:
 
-> •  Digipeating — set when this transmission is for digipeating frames.
-> Cleared when this transmission is for normal frames.
->
-> •  Repeater Up — set when repeater is expected to still be
-> transmitting. Cleared when repeater carrier is expected to have
-> dropped.
->
-> •  Interrupted — set when anti-hogging or 10-minute transmitter limits
-> have interrupted the transmission of normal frames.
->
-> • p — p-persistence value, in the range 0-255.
+- Digipeating — set when this transmission is for digipeating frames.
+Cleared when this transmission is for normal frames.
+
+- Repeater Up — set when repeater is expected to still be
+transmitting. Cleared when repeater carrier is expected to have
+dropped.
+
+- Interrupted — set when anti-hogging or 10-minute transmitter limits
+have interrupted the transmission of normal frames.
+
+- p — p-persistence value, in the range 0-255.
 
 Timers:
 
-> 58
-
-• T100 — Repeater Hang (AXHANG) • T101 — Priority Window (PRIACK) • T102
+- T100 — Repeater Hang (AXHANG)
+- T101 — Priority Window (PRIACK)
+- T102
 — Slot Time (p-persistence)
 
-• T103 — Transmitter Startup (TXDELAY) • T104 — Repeater Startup
+- T103 — Transmitter Startup (TXDELAY)
+- T104 — Repeater Startup
 (AXDELAY)
 
-• T105 — Remote Receiver Sync
+- T105 — Remote Receiver Sync
 
-• T106 — Ten Minute Transmission Limit • T107 — Anti-Hogging Limit
+- T106 — Ten Minute Transmission Limit
+- T107 — Anti-Hogging Limit
 
-• T108 — Receiver Startup
-
-> 59
+- T108 — Receiver Startup
 
 <img src="media/image10.png" style="width:8.00916in;height:5.89in" />
 
-> **Figure C2a.1 Simplex Physical Ready State.**
->
-> 60
+**Figure C2a.1 Simplex Physical Ready State.**
 
 <img src="media/image11.png" style="width:4.8in;height:5.95in" />
 
-> **Figure C2a.2 Simplex Physical Receiving State.**
->
-> 61
+**Figure C2a.2 Simplex Physical Receiving State.**
 
 <img src="media/image12.png" style="width:8.65in;height:5.66167in" />
 
-> **Figure C2a.3 Simplex Physical Transmitter Suppression State.**
->
-> 62
+**Figure C2a.3 Simplex Physical Transmitter Suppression State.**
 
 <img src="media/image13.png" style="width:8.9925in;height:5.67833in" />
 
-> **Figure C2a.4 Simplex Physical Transmitter Start State.**
->
-> 63
+**Figure C2a.4 Simplex Physical Transmitter Start State.**
 
 <img src="media/image14.png" style="width:7.37917in;height:5.91in" />
 
-> **Figure C2a.5 Simplex Physical Transmitting State.**
->
-> 64
+**Figure C2a.5 Simplex Physical Transmitting State.**
 
 <img src="media/image15.png" style="width:7.55in;height:5.88917in" />
 
-> **Figure C2a.6. Simplex Physical Digipeating State.**
->
-> 65
+**Figure C2a.6. Simplex Physical Digipeating State.**
 
 <img src="media/image16.png" style="width:7in;height:5.95in" />
 
-> **Figure C2a.7 Simplex Physical Receiver Start State.**
->
-> 66
+**Figure C2a.7 Simplex Physical Receiver Start State.**
 
 <img src="media/image17.png" style="width:3.45in;height:5.26917in" />
 
-> **Figure C2a.s Simplex Physical Subroutines.**
->
-> 67
+**Figure C2a.s Simplex Physical Subroutines.**
 
-Appendix C2b - Duplex Physical Layer State Machines C2b.1 Interaction
-with the Link Multiplexer
+# Appendix C2b - Duplex Physical Layer State Machines
+## C2b.1 Interaction with the Link Multiplexer
 
 The Link Multiplexer State Machine directs the operation of the duplex
 Physical State Machine through the physical (PH) primitives described
 below.
 
-> • **PH-SEIZE Request**. This primitive requests the duplex state
-> machine to begin transmitting. When that opportunity has been
-> identified, the transmitter is started and a parameterized time is
-> allowed for the synchronization of the remote station’s receiver
-> (known as TXDELAY in most implementations), then a PH-SEIZE Confirm
-> primitive is returned to the link multiplexer.
->
-> • **PH-DATA Request**. This primitive from the Link Multiplexer State
-> Machine provides a AX.25 frame of any type (UI, SABM, I, etc.) that is
-> to be transmitted. An unlimited number of frames may be provided. If
-> the transmission exceeds the 10-minute limit or the anti-hogging time
-> limit, the duplex Physical State Machine shuts down the transmitter.
->
-> • **PH-RELEASE Request**. The Link Multiplexer State Machine provides
-> this primitive when the submission of a sequence of frames to be
-> transmitted on behalf of a particular AX.25 connection has been
-> completed.
->
-> •  **PH-EXPEDITED-DATA Request**. This primitive from the Link
-> Multiplexer State Machine provides the AX.25 frame that is to be
-> transmitted immediately. The duplex Physical State Machine gives
-> preference to priority frames over normal frames. Priority frames can
-> be provided by the link multiplexer at any time.
->
-> • **PH-DATA Indication**. During reception, the duplex Physical State
-> Machine provides each AX.25 frame to the link multiplexer in a Frame
-> primitive. No analysis is done on the frame by the duplex Physical
-> State Machine; it does not examine lengths, the frame check sequence,
-> or any other content of the frame; these responsibilities are carried
-> out by the higher-level state machines.
->
-> •  **PH-BUSY Indication**. The duplex Physical State Machine provides
-> this primitive whenever the channel becomes busy. “Busy” here means
-> the detection of a valid modem synchronization sequence, HDLC Flags or
-> HDLC frames — not the detection of an FM carrier on a two-meter radio.
-> An indication of busy is provided to the higher layer state machines
-> so that various timers which are supervise the AX.25 connection can be
-> suspended. This avoids the undesirable situation on a busy channel
-> where AX.25, having sent data and expecting an acknowledgment, times
-> out and attempts retransmissions — and the only reason an
-> acknowledgment was not received was because the remote station did not
-> yet have a chance to make a transmission.
->
-> •  **PH-QUIET Indication**. The duplex Physical State Machine provides
-> this primitive whenever the channel becomes quiet.
+- **PH-SEIZE Request**. This primitive requests the duplex state
+machine to begin transmitting. When that opportunity has been
+identified, the transmitter is started and a parameterized time is
+allowed for the synchronization of the remote station’s receiver
+(known as TXDELAY in most implementations), then a PH-SEIZE Confirm
+primitive is returned to the link multiplexer.
 
-C2b.2 Interface to the Hardware
+- **PH-DATA Request**. This primitive from the Link Multiplexer State
+Machine provides a AX.25 frame of any type (UI, SABM, I, etc.) that is
+to be transmitted. An unlimited number of frames may be provided. If
+the transmission exceeds the 10-minute limit or the anti-hogging time
+limit, the duplex Physical State Machine shuts down the transmitter.
+
+- **PH-RELEASE Request**. The Link Multiplexer State Machine provides
+this primitive when the submission of a sequence of frames to be
+transmitted on behalf of a particular AX.25 connection has been
+completed.
+
+- **PH-EXPEDITED-DATA Request**. This primitive from the Link
+Multiplexer State Machine provides the AX.25 frame that is to be
+transmitted immediately. The duplex Physical State Machine gives
+preference to priority frames over normal frames. Priority frames can
+be provided by the link multiplexer at any time.
+
+- **PH-DATA Indication**. During reception, the duplex Physical State
+Machine provides each AX.25 frame to the link multiplexer in a Frame
+primitive. No analysis is done on the frame by the duplex Physical
+State Machine; it does not examine lengths, the frame check sequence,
+or any other content of the frame; these responsibilities are carried
+out by the higher-level state machines.
+
+- **PH-BUSY Indication**. The duplex Physical State Machine provides
+this primitive whenever the channel becomes busy. “Busy” here means
+the detection of a valid modem synchronization sequence, HDLC Flags or
+HDLC frames — not the detection of an FM carrier on a two-meter radio.
+An indication of busy is provided to the higher layer state machines
+so that various timers which are supervise the AX.25 connection can be
+suspended. This avoids the undesirable situation on a busy channel
+where AX.25, having sent data and expecting an acknowledgment, times
+out and attempts retransmissions — and the only reason an
+acknowledgment was not received was because the remote station did not
+yet have a chance to make a transmission.
+
+- **PH-QUIET Indication**. The duplex Physical State Machine provides
+this primitive whenever the channel becomes quiet.
+
+## C2b.2 Interface to the Hardware
 
 As the lowest layer state machine in the standard, this machine
 manipulates a typical radio transceiver. The following primitives are
 used:
 
-> • **HW-TON Request**. This primitive keys the transceiver’s PTT line.
->
-> • **HW-TOFF Request**. This primitive unkeys the transceiver’s PTT
-> line.
->
-> •  **HW-DATA Request**. This primitive passes data for actual
-> transmission of a frame from the physical layer to the hardware.
-> Although SDL representation of bit-by-bit transmission of the contents
-> of a frame is possible, it is not used here because the additional
-> complexity was not required. The Frame primitive, however, differs
-> from all other primitives used in the state
->
-> 68
->
-> machines in one respect: it is not atomic. Under this model, the Frame
-> primitive occupies time; this allows the duplex Physical State Machine
-> to consume time associated with transmission, and to trigger the
-> ten-minute transmitter protection and anti-hogging timers.
->
-> • **HW-DATA Indication**. This primitivepasses data from actual
-> reception of aframefrom hardware to the physical layer.
->
-> • **HW-AOS Indicate**. This primitive indicates the presence of modem
-> synchronization, flag fill or frame structure.
->
-> •  **HW-LOS Indicate**. This primitive indicates the loss of modem
-> synchronization, flag fill or frame structure.
+- **HW-TON Request**. This primitive keys the transceiver’s PTT line.
 
-C2b.3 Internal Operation of the Machine
+- **HW-TOFF Request**. This primitive unkeys the transceiver’s PTT
+line.
+
+- **HW-DATA Request**. This primitive passes data for actual
+transmission of a frame from the physical layer to the hardware.
+Although SDL representation of bit-by-bit transmission of the contents
+of a frame is possible, it is not used here because the additional
+complexity was not required. The Frame primitive, however, differs
+from all other primitives used in the state machines in one respect: it is not atomic. Under this model, the Frame
+primitive occupies time; this allows the duplex Physical State Machine
+to consume time associated with transmission, and to trigger the
+ten-minute transmitter protection and anti-hogging timers.
+
+- **HW-DATA Indication**. This primitivepasses data from actual
+reception of aframefrom hardware to the physical layer.
+
+- **HW-AOS Indicate**. This primitive indicates the presence of modem
+synchronization, flag fill or frame structure.
+
+- **HW-LOS Indicate**. This primitive indicates the loss of modem
+synchronization, flag fill or frame structure.
+
+## C2b.3 Internal Operation of the Machine
 
 All queues are first-in, first-out. These items are used in a
 straightforward manner; no further explanation is deemed necessary here.
@@ -3498,112 +2866,113 @@ straightforward manner; no further explanation is deemed necessary here.
 Below is a summary of primitives, states, queues, flags, errors, and
 timers used in the physical layer state machines:
 
-PH Primitives (Received from the Link Multiplexer): • PH-SEIZE Request
+- PH Primitives (Received from the Link Multiplexer):
+- PH-SEIZE Request
 
-> • PH-RELEASE Request
->
-> • PH-EXPEDITED-DATA Request • PH-DATA Request
+- PH-RELEASE Request
 
-PH Primitives (Sent to the Link Multiplexer): • PH-SEIZE Confirm
+- PH-EXPEDITED-DATA Request
+- PH-DATA Request
 
-> • PH-BUSY Indication • PH-QUIET Indication • PH-DATA Indication
+- PH Primitives (Sent to the Link Multiplexer):
+- PH-SEIZE Confirm
 
-PH Primitives (Received from the Radio): • HW-AOS Indication
+- PH-BUSY Indication
+- PH-QUIET Indication
+- PH-DATA Indication
 
-> • HW-LOS Indication • HW-DATA Indication
+- PH Primitives (Received from the Radio):
+- HW-AOS Indication
 
-PH Primitives (Sent to the Radio): • HW-TON Request
+- HW-LOS Indication
+- HW-DATA Indication
 
-> •     HW-TOFF Request •     HW-DATA Request
+- PH Primitives (Sent to the Radio):
+- HW-TON Request
+
+- HW-TOFF Request
+- HW-DATA Request
 
 States:
 
-> • 0 — Receiver Ready • 1 — Receiving
->
-> • 2 — Transmitter Ready • 3 — Transmitter Start
->
-> • 4 — Transmitting
->
-> 69
+- 0 — Receiver Ready
+- 1 — Receiving
+
+- 2 — Transmitter Ready
+- 3 — Transmitter Start
+
+- 4 — Transmitting
 
 Error Codes:
 
-> • No Error Codes Used.
+- No Error Codes Used.
 
 Queues:
 
-> •  Normal Queue — holds all normal frames, plus Seize and Release
-> Requests, in the order that they arrived from the higher level.
+- Normal Queue — holds all normal frames, plus Seize and Release
+Requests, in the order that they arrived from the higher level.
 
 Flags and Parameters:
 
-> •  Interrupted — set when anti-hogging or 10-minute transmitter limits
-> have interrupted the transmission of normal frames.
+- Interrupted — set when anti-hogging or 10-minute transmitter limits
+have interrupted the transmission of normal frames.
 
 Timers:
 
-> • T105 — remote receiver sync
->
-> • T106 — 10-minute transmission limit • T107 — anti-hogging limit
->
-> 70
+- T105 — remote receiver sync
+
+- T106 — 10-minute transmission limit
+- T107 — anti-hogging limit
 
 <img src="media/image18.png" style="width:5.16917in;height:5.94917in" />
 
-> **Figure C2b.1 Duplex Physical Receiver Ready State.**
->
-> 71
->
-> <img src="media/image19.png" style="width:4.7in;height:5.87917in" />**Figure
-> C2b.2 Duplex Physical Receiving State.**
->
-> 72
->
-> <img src="media/image20.png" style="width:5.58917in;height:5.88in" />**Figure
-> C2b.3 Duplex Physical Transmitter Ready State.**
->
-> 73
+**Figure C2b.1 Duplex Physical Receiver Ready State.**
+
+<img src="media/image19.png" style="width:4.7in;height:5.87917in" />
+
+**Figure C2b.2 Duplex Physical Receiving State.**
+
+<img src="media/image20.png" style="width:5.58917in;height:5.88in" />
+
+**Figure C2b.3 Duplex Physical Transmitter Ready State.**
 
 <img src="media/image21.png" style="width:5.31in;height:5.95in" />
 
-> **Figure C2b.4 Duplex Physical Transmitter Start State.**
->
-> 74
->
-> <img src="media/image22.png" style="width:5.76917in;height:5.88in" />**Figure
-> C2b.5 Duplex Physical Transmitting State.**
->
-> 75
+**Figure C2b.4 Duplex Physical Transmitter Start State.**
 
-Appendix C3 - Link Multiplexer State Machine C3.1 Interaction with the
-Data-Link State Machine
+<img src="media/image22.png" style="width:5.76917in;height:5.88in" />
+
+**Figure C2b.5 Duplex Physical Transmitting State.**
+
+# Appendix C3 - Link Multiplexer State Machine
+## C3.1 Interaction with the Data-Link State Machine
 
 The Data-link State Machine directs the operation of the Link
 Multiplexer State Machine through the link multiplexer (LM) primitives
 described below.
 
-> •  **LM-SEIZE Request**. This primitive requests the Link Multiplexer
-> State Machine to arrange for transmission at the next available
-> opportunity. The Data-link State Machine uses this primitive when an
-> acknowledgment must be made, but the exact frame in which the
-> acknowledgment will be sent will be chosen when the actual time for
-> transmission arrives. The Link Multiplexer State Machine uses the
-> LMSEIZE Confirm primitive to indicate that the transmission
-> opportunity has arrived. After the Data-link State Machine has
-> provided the acknowledgment, the Data-link State Machine gives
-> permission to stop transmission with the LM Release Request primitive.
->
-> •  **LM-DATA Request**. This primitive from the Data-link State
-> Machine provides an AX.25 frame of any type (UI, SABM, I, etc.) that
-> is to be transmitted. An unlimited number of frames may be provided.
-> The Link Multiplexer State Machine accumulates the frames in a
-> first-in, first-out queue until it is time to transmit them.
->
-> • **LM-DATA Indication**. This primitive from the Link Multiplexer
-> State Machine provides an AX.25 frame of any type (UI, SABM, I, etc.)
-> that has been received. An unlimited number of frames may be provided.
+- **LM-SEIZE Request**. This primitive requests the Link Multiplexer
+State Machine to arrange for transmission at the next available
+opportunity. The Data-link State Machine uses this primitive when an
+acknowledgment must be made, but the exact frame in which the
+acknowledgment will be sent will be chosen when the actual time for
+transmission arrives. The Link Multiplexer State Machine uses the
+LMSEIZE Confirm primitive to indicate that the transmission
+opportunity has arrived. After the Data-link State Machine has
+provided the acknowledgment, the Data-link State Machine gives
+permission to stop transmission with the LM Release Request primitive.
 
-C3.2 Interaction with the Physical Layer State Machine
+- **LM-DATA Request**. This primitive from the Data-link State
+Machine provides an AX.25 frame of any type (UI, SABM, I, etc.) that
+is to be transmitted. An unlimited number of frames may be provided.
+The Link Multiplexer State Machine accumulates the frames in a
+first-in, first-out queue until it is time to transmit them.
+
+- **LM-DATA Indication**. This primitive from the Link Multiplexer
+State Machine provides an AX.25 frame of any type (UI, SABM, I, etc.)
+that has been received. An unlimited number of frames may be provided.
+
+## C3.2 Interaction with the Physical Layer State Machine
 
 The Link Multiplexer State Machine works with the physical layer state
 machine. It is important to note that variations in the operating
@@ -3612,63 +2981,61 @@ Multiplexer State Machine. The Link Multiplexer State Machine uses the
 same primitives to communicate with the physical layer state machine,
 regardless of the latter’s type.
 
-> • **PH-SEIZE Request**. This primitive is used by the Link Multiplexer
-> State Machine before each transmission to request access to the radio
-> channel.
->
-> • **PH-SEIZE Confirm**. This primitive notifies the Link Multiplexer
-> State Machine when access has been obtained (i.e., the transmitter is
-> operating, any intervening repeater has had an opportunity to be
-> activated, the remote station’s receiver has had an opportunity to
-> become synchronized, and the channel is considered ready to send
-> traffic).
->
-> • **PH-DATA Request**. This primitive is used by the Link Multiplexer
-> State Machine to deliver each frame to the physical layer state
-> machine.
->
-> • **PH-RELEASE Request**. This primitive is used when all frames that
-> have been awaiting transmission for a given link have been submitted
-> for transmission. The intention here is that a single transmission
-> will contain frames for only one remote station. The PH-RELEASE
-> Request primitive permits the physical layer state machine to release
-> the channel for use by others, for digipeating, and for receipt of
-> acknowledgments in a contention environment (such as shared simplex
-> channels).
->
-> • **PH-DATA Indication**. This primitive is used by the physical layer
-> state machine to provide incoming frames to the Link Multiplexer State
-> Machine. The Link Multiplexer State Machine checks each incoming frame
-> for FCS errors. Correctly received frames are checked to see if
-> digipeating by the station has been requested and if the digipeat
-> function is enabled (a user specified parameter); if so, the frame is
-> resubmitted to the physical layer state machine in a
->
-> 76
->
-> Digipeat Frame primitive. Correctly received frames addressed to this
-> station are delivered to the indicated higher-layer Data-link State
-> Machine (see Section 5.3.1).
->
-> •  **PH-EXPEDITE-DATA Request**. This primitive is used by the Link
-> Multiplexer State Machine to submit a frame to the physical layer
-> state machine to be transmitted immediately. (PH-SEIZE Request and
-> PH-RELEASE Request are not used for digipeat operation.)
->
-> •  **PH-BUSY Indication**. This primitive is used by the Link
-> Multiplexer State Machine to suspend all AX.25 data-link timers.
->
-> •  **PH-QUIET Indication**. This primitive is used by the Link
-> Multiplexer State Machine to resume timing on all AX.25 data- link
-> timers. The suspension of timers overcomes a problem noted in some
-> implementations on busy channels. This problem occurs when frames are
-> transmitted, and a response is expected. If the channel is busy, it is
-> possible for the retry timers (AX.25 timer T1) to expire before the
-> remote station has had an opportunity to send any acknowledgment. This
-> premature expiration causes needless retries and polling, which
-> further clutters an already busy frequency.
+- **PH-SEIZE Request**. This primitive is used by the Link Multiplexer
+State Machine before each transmission to request access to the radio
+channel.
 
-C3.3 Internal Operation of the Machine
+- **PH-SEIZE Confirm**. This primitive notifies the Link Multiplexer
+State Machine when access has been obtained (i.e., the transmitter is
+operating, any intervening repeater has had an opportunity to be
+activated, the remote station’s receiver has had an opportunity to
+become synchronized, and the channel is considered ready to send
+traffic).
+
+- **PH-DATA Request**. This primitive is used by the Link Multiplexer
+State Machine to deliver each frame to the physical layer state
+machine.
+
+- **PH-RELEASE Request**. This primitive is used when all frames that
+have been awaiting transmission for a given link have been submitted
+for transmission. The intention here is that a single transmission
+will contain frames for only one remote station. The PH-RELEASE
+Request primitive permits the physical layer state machine to release
+the channel for use by others, for digipeating, and for receipt of
+acknowledgments in a contention environment (such as shared simplex
+channels).
+
+- **PH-DATA Indication**. This primitive is used by the physical layer
+state machine to provide incoming frames to the Link Multiplexer State
+Machine. The Link Multiplexer State Machine checks each incoming frame
+for FCS errors. Correctly received frames are checked to see if
+digipeating by the station has been requested and if the digipeat
+function is enabled (a user specified parameter); if so, the frame is
+resubmitted to the physical layer state machine in a
+
+Digipeat Frame primitive. Correctly received frames addressed to this
+station are delivered to the indicated higher-layer Data-link State
+Machine (see Section 5.3.1).
+
+- **PH-EXPEDITE-DATA Request**. This primitive is used by the Link
+Multiplexer State Machine to submit a frame to the physical layer
+state machine to be transmitted immediately. (PH-SEIZE Request and
+PH-RELEASE Request are not used for digipeat operation.)
+
+- **PH-BUSY Indication**. This primitive is used by the Link
+Multiplexer State Machine to suspend all AX.25 data-link timers.
+
+- **PH-QUIET Indication**. This primitive is used by the Link
+Multiplexer State Machine to resume timing on all AX.25 data- link
+timers. The suspension of timers overcomes a problem noted in some
+implementations on busy channels. This problem occurs when frames are
+transmitted, and a response is expected. If the channel is busy, it is
+possible for the retry timers (AX.25 timer T1) to expire before the
+remote station has had an opportunity to send any acknowledgment. This
+premature expiration causes needless retries and polling, which
+further clutters an already busy frequency.
+
+## C3.3 Internal Operation of the Machine
 
 All queues are first-in, first-out. Three queues are used in conjunction
 with two flags to implement round-robin rotation among the various
@@ -3704,95 +3071,93 @@ served. The queue system is reset by converting the Served Queue into
 the new Awaiting Queue, and by purging all identifiers from the Served
 List.
 
-> 77
-
 Below is asummary of primitives, states, queues, flags, errors, and
 timers used in the link multiplexer state machines:
 
-LM Primitives (Received from LM): • LM-SEIZE Request
+- LM Primitives (Received from LM):
+- LM-SEIZE Request
 
-> • LM-RELEASE Request • LM-DATA Request LM
+- LM-RELEASE Request
+- LM-DATA Request LM
 
 Primitives (Sent to LM):
 
-> •     LM-SEIZE Confirm •     LM-DATA Indicate
+- LM-SEIZE Confirm
+- LM-DATA Indicate
 
-PH Primitives (Received from PH): • PH-SEIZE Confirm
+- PH Primitives (Received from PH):
+- PH-SEIZE Confirm
 
-> • PH-QUIET Indication • PH-BUSY Indication • PH-DATA Indication
+- PH-QUIET Indication
+- PH-BUSY Indication
+- PH-DATA Indication
 
-PH Primitives (Sent to PH): • PH-SEIZE Request
+- PH Primitives (Sent to PH):
+- PH-SEIZE Request
 
-> • PH-RELEASE Request
->
-> • PH-EXPEDITED-DATA Request • PH-DATA Request
+- PH-RELEASE Request
+
+- PH-EXPEDITED-DATA Request
+- PH-DATA Request
 
 States:
 
-> • 0 — Idle
->
-> • 1 — Seize Pending • 2 — Seized
+- 0 — Idle
+
+- 1 — Seize Pending
+- 2 — Seized
 
 Error Codes:
 
-> • No error codes used.
+- No error codes used.
 
 Queues:
 
-> •  Awaiting Queue — queue of primitives received from Data-link State
-> Machines that are not presently using the transmitter.
->
-> •  Current Queue — queue of primitives received from the Data-link
-> State Machine that is presently using the transmitter.
->
-> •  Served Queue — queue of primitives received from Data-link State
-> Machines that already have used the transmitter.
+- Awaiting Queue — queue of primitives received from Data-link State
+Machines that are not presently using the transmitter.
+
+- Current Queue — queue of primitives received from the Data-link
+State Machine that is presently using the transmitter.
+
+- Served Queue — queue of primitives received from Data-link State
+Machines that already have used the transmitter.
 
 Note: After all Data-link State Machines have had an opportunity to be
 served, then the Served Queue is converted to the Awaiting Queue.
 
 Variables:
 
-> • Current DL — Identifies the Data-link State Machine currently using
-> the transmitter.
->
-> • Served List — Identifies the Data-link State Machines that have
-> already used the transmitter.
->
-> 78
->
-> This list is cleared when all Data-link State Machines with frames to
-> send have been served.
+- Current DL — Identifies the Data-link State Machine currently using
+the transmitter.
+
+- Served List — Identifies the Data-link State Machines that have
+already used the transmitter.
+
+This list is cleared when all Data-link State Machines with frames to
+send have been served.
 
 Timers:
 
-> • No timers used.
->
-> 79
+- No timers used.
 
 <img src="media/image23.png" style="width:8.65in;height:5.20417in" />
 
-> **Figure C3.1 Link Multiplexer Idle State.**
->
-> 80
->
-> <img src="media/image24.png" style="width:8.9925in;height:5.41667in" />**Figure
-> C3.2 Link Multiplexer Seize Pending State.**
->
-> 81
->
-> <img src="media/image25.png" style="width:8.9925in;height:5.41667in" />**Figure
-> C3.3 Link Multiplexer Seized State.**
->
-> 82
->
-> <img src="media/image26.png" style="width:5.54in;height:5.70917in" />**Figure
-> C3.4 Link Multiplexer Subroutines.**
->
-> 83
+**Figure C3.1 Link Multiplexer Idle State.**
 
-Appendix C4 - Data-Link State Machine C4.1 Interaction with the
-Data-Link Service Access Point
+<img src="media/image24.png" style="width:8.9925in;height:5.41667in" />
+
+**Figure C3.2 Link Multiplexer Seize Pending State.**
+
+<img src="media/image25.png" style="width:8.9925in;height:5.41667in" />
+
+**Figure C3.3 Link Multiplexer Seized State.**
+
+<img src="media/image26.png" style="width:5.54in;height:5.70917in" />
+
+**Figure C3.4 Link Multiplexer Subroutines.**
+
+# Appendix C4 - Data-Link State Machine
+## C4.1 Interaction with the Data-Link Service Access Point
 
 The data link service access point directs the operation of the Data
 link State Machine through the data link (DL) primitives described
@@ -3800,574 +3165,565 @@ below. The segmenter state machine is between the Data-link State
 Machine and the data link service access point. It passes all DL
 primitives except DL-DATA and DL-UNIT-DATA through transparently.
 
-> • **DL-CONNECT Request**. This primitive is used by the Layer 3 entity
-> to request the establishment of an AX.25 connection.
->
-> •  **DL-CONNECT Indication**. This primitive is used by the Data link
-> State Machine to indicate an AX.25 connection has been requested.
->
-> •  **DL-CONNECT Confirm**. This primitive is used by the Data link
-> State Machine to indicate an AX.25 connection has been made.
->
-> •  **DL-DISCONNECT Request**. This primitive is used by the Layer 3
-> entity to request the release of an AX.25 connection.
->
-> •  **DL-DISCONNECT Indication**. This primitive is used by the Data
-> link State Machine to indicate an AX.25 connection has been released.
->
-> • **DL-DISCONNECT Confirm**. This primitive is used by the Data link
-> State Machine to indicate an AX.25 connection has been released and
-> confirmed.
->
-> •  **DL-DATA Request**. This primitive is used by the Layer 3 entity
-> to request the transmission of data using connection-oriented
-> protocol. This frame is examined and acted upon by the segmenter, if
-> necessary.
->
-> • **DL-DATA Indication**. This primitive is used by the reassembler to
-> indicate reception of Layer 3 data using connection-oriented protocol.
->
-> •  **DL-UNIT-DATA Request**. This primitive is used by the Layer 3
-> entity to request the transmission of data using connectionless
-> protocol. This frame is examined and acted upon by the segmenter, if
-> necessary.
->
-> • **DL-UNIT-DATA Indication**. This primitive is used by the
-> reassembler to indicate reception of Layer 3 data using connectionless
-> protocol.
->
-> • **DL-ERROR Indication**. This primitive is used by the Data-link
-> State Machine to indicate when frames have been received that are
-> inconsistent with this protocol definition. This includes short
-> frames, frames with inconsistent parameter values, etc.
->
-> •  **DL-FLOW-OFF request**. This primitive is used by the Layer 3
-> entity to temporarily suspend the flow of incoming information.
->
-> •  **DL-FLOW-ON Request**. This primitive is used by the Layer 3
-> entity to resume the flow of incoming information.
+- **DL-CONNECT Request**. This primitive is used by the Layer 3 entity
+to request the establishment of an AX.25 connection.
 
-C4.2 Interaction with the Link Multiplexer State Machine
+- **DL-CONNECT Indication**. This primitive is used by the Data link
+State Machine to indicate an AX.25 connection has been requested.
+
+- **DL-CONNECT Confirm**. This primitive is used by the Data link
+State Machine to indicate an AX.25 connection has been made.
+
+- **DL-DISCONNECT Request**. This primitive is used by the Layer 3
+entity to request the release of an AX.25 connection.
+
+- **DL-DISCONNECT Indication**. This primitive is used by the Data
+link State Machine to indicate an AX.25 connection has been released.
+
+- **DL-DISCONNECT Confirm**. This primitive is used by the Data link
+State Machine to indicate an AX.25 connection has been released and
+confirmed.
+
+- **DL-DATA Request**. This primitive is used by the Layer 3 entity
+to request the transmission of data using connection-oriented
+protocol. This frame is examined and acted upon by the segmenter, if
+necessary.
+
+- **DL-DATA Indication**. This primitive is used by the reassembler to
+indicate reception of Layer 3 data using connection-oriented protocol.
+
+- **DL-UNIT-DATA Request**. This primitive is used by the Layer 3
+entity to request the transmission of data using connectionless
+protocol. This frame is examined and acted upon by the segmenter, if
+necessary.
+
+- **DL-UNIT-DATA Indication**. This primitive is used by the
+reassembler to indicate reception of Layer 3 data using connectionless
+protocol.
+
+- **DL-ERROR Indication**. This primitive is used by the Data-link
+State Machine to indicate when frames have been received that are
+inconsistent with this protocol definition. This includes short
+frames, frames with inconsistent parameter values, etc.
+
+- **DL-FLOW-OFF request**. This primitive is used by the Layer 3
+entity to temporarily suspend the flow of incoming information.
+
+- **DL-FLOW-ON Request**. This primitive is used by the Layer 3
+entity to resume the flow of incoming information.
+
+## C4.2 Interaction with the Link Multiplexer State Machine
 
 The Data link State Machine directs the operation of the Link
 Multiplexer State Machine through the data link (LM) primitives
 described below:
 
-> •  **LM-SEIZE Request**. This primitive is used by the Data link State
-> Machine to request the Link Multiplexer State Machine to arrange for
-> transmission at the next available opportunity. The Data link State
-> Machine uses this primitive when an acknowledgment must be made, but
-> the exact frame in which the acknowledgment is sent will be chosen
-> when the actual time for transmission
->
-> 84
->
-> arrives.
->
-> •  **LM-SEIZE Confirm**. This primitive indicates to the Data link
-> State Machine that the transmission opportunity has arrived.
->
-> • **LM-RELEASE Request**. This primitive is used by the Link
-> Multiplexer State Machine to stop transmission.
->
-> •  **LM-EXPEDITED-DATA Request**. This primitive is used by the Data
-> link State Machine to pass expedited data to the link multiplexer.
->
-> • **LM-DATA Request**. This primitive is used by the Data link State
-> Machines to pass frames of any type (SABM, RR, UI, etc.) to the Link
-> Multiplexer State Machine.
->
-> • **LM-DATA Indication**. This primitive is used by the Link
-> Multiplexer State Machines to pass frames of any type (SABM, RR, UI,
-> etc.) to the Data link State Machine.
+- **LM-SEIZE Request**. This primitive is used by the Data link State
+Machine to request the Link Multiplexer State Machine to arrange for
+transmission at the next available opportunity. The Data link State
+Machine uses this primitive when an acknowledgment must be made, but
+the exact frame in which the acknowledgment is sent will be chosen
+when the actual time for transmission arrives.
 
-C4.3 Internal Operation of the Machine
+- **LM-SEIZE Confirm**. This primitive indicates to the Data link
+State Machine that the transmission opportunity has arrived.
+
+- **LM-RELEASE Request**. This primitive is used by the Link
+Multiplexer State Machine to stop transmission.
+
+- **LM-EXPEDITED-DATA Request**. This primitive is used by the Data
+link State Machine to pass expedited data to the link multiplexer.
+
+- **LM-DATA Request**. This primitive is used by the Data link State
+Machines to pass frames of any type (SABM, RR, UI, etc.) to the Link
+Multiplexer State Machine.
+
+- **LM-DATA Indication**. This primitive is used by the Link
+Multiplexer State Machines to pass frames of any type (SABM, RR, UI,
+etc.) to the Data link State Machine.
+
+## C4.3 Internal Operation of the Machine
 
 All queues are first-in, first-out. Below is a summary of primitives,
 states, queues, flags, errors, and timers used in the data link state
 machines:
 
-DL Primitives (Received from DL): •     DL-CONNECT Confirm
-•     DL-CONNECT Indicate
+### DL Primitives (Received from DL)
+- DL-CONNECT Confirm
+- DL-CONNECT Indicate
 
-> • DL-DISCONNECT Confirm • DL-DISCONNECT Indicate • DL-DATA Indicate
->
-> • DL-UNIT-DATA Indicate • DL-ERROR Indicate
+- DL-DISCONNECT Confirm
+- DL-DISCONNECT Indicate
+- DL-DATA Indicate
 
-DL Primitives (Sent to DL):
+- DL-UNIT-DATA Indicate
+- DL-ERROR Indicate
 
-> • DL-CONNECT Request
->
-> • DL-DISCONNECT Request • DL-DATA Request
->
-> • DL-UNIT-DATA Request • DL-FLOW-OFF Request • DL-FLOW-ON Request
+### DL Primitives (Sent to DL)
 
-LM Primitives (Sent to LM): • LM-SEIZE Request
+- DL-CONNECT Request
 
-> • LM-RELEASE Request • LM-DATA Request
->
-> • LM-EXPEDITED-DATA Request
+- DL-DISCONNECT Request
+- DL-DATA Request
 
-LM Primitives (Received from LM): • LM-SEIZE Confirm
+- DL-UNIT-DATA Request
+- DL-FLOW-OFF Request
+- DL-FLOW-ON Request
 
-> • LM-DATA Indicate
+- LM Primitives (Sent to LM):
+- LM-SEIZE Request
+
+- LM-RELEASE Request
+- LM-DATA Request
+
+- LM-EXPEDITED-DATA Request
+
+- LM Primitives (Received from LM):
+- LM-SEIZE Confirm
+
+- LM-DATA Indicate
 
 States:
 
-> • 0 — Disconnected
->
-> 85
->
-> • 1 — Awaiting Connection • 2 — Awaiting Release
->
-> • 3 — Connected
->
-> • 4 — Timer Recovery
->
-> • 5 --- Awaiting V2.2 Connection
+- 0 — Disconnected
+
+- 1 — Awaiting Connection
+- 2 — Awaiting Release
+
+- 3 — Connected
+
+- 4 — Timer Recovery
+
+- 5 --
+- Awaiting V2.2 Connection
 
 Error Codes:
 
-> • A — F=1 received but P=1 not outstanding.
->
-> • B — Unexpected DM with F=1 in states 3, 4 or 5. • C — Unexpected UA
-> in states 3, 4 or 5.
->
-> • D — UA received without F=1 when SABM or DISC was sent P=1. • E — DM
-> received in states 3, 4 or 5.
->
-> • F — Data link reset; i.e., SABM received in state 3, 4 or 5.
+- A — F=1 received but P=1 not outstanding.
 
-- G --- Connection timed out.
+- B — Unexpected DM with F=1 in states 3, 4 or 5.
+- C — Unexpected UA
+in states 3, 4 or 5.
+
+- D — UA received without F=1 when SABM or DISC was sent P=1.
+- E — DM
+received in states 3, 4 or 5.
+
+- F — Data link reset; i.e., SABM received in state 3, 4 or 5.
+
+- G --
+- Connection timed out.
 
 <!-- -->
 
-- H --- Connection timed out while disconnecting.
+- H --
+- Connection timed out while disconnecting.
 
 - I — N2 timeouts: unacknowledged data.
 
 - J — N(r) sequence error.
 
-- K --- Unexpected frame received.
+- K --
+- Unexpected frame received.
 
 <!-- -->
 
 - L — Control field invalid or not implemented.
 
-> • M — Information field was received in a U- or S-type frame. • N —
-> Length of frame incorrect for frame type.
->
-> • O — I frame exceeded maximum allowed length. • P — N(s) out of the
-> window.
->
-> • Q — UI response received, or UI command with P=1 received. • R — UI
-> frame exceeded maximum allowed length.
->
-> • S — I response received.
->
-> • T — N2 timeouts: no response to enquiry.
->
-> • U — N2 timeouts: extended peer busy condition.
->
-> • V — No DL machines available to establish connection.
+- M — Information field was received in a U
+- or S-type frame.
+- N —
+Length of frame incorrect for frame type.
+
+- O — I frame exceeded maximum allowed length.
+- P — N(s) out of the
+window.
+
+- Q — UI response received, or UI command with P=1 received.
+- R — UI
+frame exceeded maximum allowed length.
+
+- S — I response received.
+
+- T — N2 timeouts: no response to enquiry.
+
+- U — N2 timeouts: extended peer busy condition.
+
+- V — No DL machines available to establish connection.
 
 Flags:
 
-> • Layer 3 Initiated — SABM was sent by request of Layer 3; i.e.,
-> DL-CONNECT Request primitive. • Peer Receiver Busy — Remote station is
-> busy and cannot receive I frames.
->
-> • Own Receiver Busy — Layer 3 is busy and cannot receive I frames.
->
-> • Reject Exception — A REJ frame has been sent to the remote station.
->
-> • Selective Reject Exception — A SREJ frame has been sent to the
-> remote station.
->
-> •  Acknowledge Pending — I frames have been successfully received but
-> not yet acknowledged to the remote station.
+- Layer 3 Initiated — SABM was sent by request of Layer 3; i.e.,
+- DL-CONNECT Request primitive.
+- Peer Receiver Busy — Remote station is
+busy and cannot receive I frames.
+
+- Own Receiver Busy — Layer 3 is busy and cannot receive I frames.
+
+- Reject Exception — A REJ frame has been sent to the remote station.
+
+- Selective Reject Exception — A SREJ frame has been sent to the
+remote station.
+
+- Acknowledge Pending — I frames have been successfully received but
+not yet acknowledged to the remote station.
 
 Variables:
 
-> • SRT — Smoothed round trip time.
->
-> • T1V — Next value for T1; default initial value is initial value of
-> SRT.
->
-> • N1 — Maximum number of octets in the information field of a frame,
-> excluding inserted 0-bits. • N2 — Maximum number of retries permitted.
+- SRT — Smoothed round trip time.
+
+- T1V — Next value for T1; default initial value is initial value of
+SRT.
+
+- N1 — Maximum number of octets in the information field of a frame,
+- excluding inserted 0-bits.
+- N2 — Maximum number of retries permitted.
 
 Timers:
 
-•     T1 — Outstanding I frame or P-bit.
+- T1 — Outstanding I frame or P-bit.
 
-•     T3 — Idle supervision (keep alive).
-
-> 86
+- T3 — Idle supervision (keep alive).
 
 Queues:
 
-> • I Frame Queue — queue of information to be transmitted in I frames.
->
-> 87
->
-> **Figure C4.1 Data Link Disconnected State.**
->
-> 88
->
-> <img src="media/image31.jpeg" style="width:8.645in;height:5.65892in" />**Figure
-> C4.2 Data Link Awaiting Connection State.**
->
-> 89
+- I Frame Queue — queue of information to be transmitted in I frames.
+
+<img src="media/figc4.1.png" />
+
+**Figure C4.1 Data Link Disconnected State.**
+
+<img src="media/image31.jpeg" style="width:8.645in;height:5.65892in" />
+
+**Figure C4.2 Data Link Awaiting Connection State.**
 
 <img src="media/image32.png" style="width:8.64583in;height:5.64725in" />
 
-> **Figure C4.3 Data Link Awaiting Release State.**
->
-> 90
->
-> **Figure C4.4a Data Link Connected State.**
->
-> 91
->
-> **Figure C4.4b Data Link Connected State. (Continued)**
->
-> 92
->
-> <img src="media/image41.png" style="width:8.64583in;height:5.64667in" />**Figure
-> C4.4c Data Link Connected State. (Continued)**
->
-> 93
->
-> **Figure C4.5a Data Link Timer Recovery State.**
->
-> 94
->
-> <img src="media/image46.png" style="width:8.64583in;height:5.465in" />**Figure
-> C4.5b Data Link Timer Recovery State. (Continued)**
->
-> 95
->
-> <img src="media/image47.png" style="width:8.64583in;height:5.50879in" />**Figure
-> C4.5c Data Link Timer Recovery State. (Continued)**
->
-> 96
->
-> <img src="media/image48.png" style="width:7.86917in;height:6.00917in" />**Figure
-> C4.5d Data Link Timer Recovery State. (Continued)**
->
-> 97
->
-> <img src="media/image49.png" style="width:6.53917in;height:6.20917in" />**Figure
-> C4.5e Data Link Timer Recovery State. (Continued)**
->
-> 98
->
-> <img src="media/image50.jpeg" style="width:8.645in;height:3.56667in" />**Figure
-> C4.6a Data Link Awaiting V2.2 Connection State.**
->
-> 99
->
-> **Figure C4.6b Data Link Awaiting V2.2 Connection State (Continued)**
->
-> 100
->
-> **Figure C4.7a Data Link Subroutines.**
->
-> 101
+**Figure C4.3 Data Link Awaiting Release State.**
+
+<img src="media/figc4.4a.png" />
+
+**Figure C4.4a Data Link Connected State.**
+
+<img src="media/figc4.4b.png" />
+
+**Figure C4.4b Data Link Connected State. (Continued)**
+
+<img src="media/image41.png" style="width:8.64583in;height:5.64667in" />
+
+**Figure C4.4c Data Link Connected State. (Continued)**
+
+<img src="media/figc4.5a.png" />
+
+**Figure C4.5a Data Link Timer Recovery State.**
+
+<img src="media/image46.png" style="width:8.64583in;height:5.465in" />
+
+**Figure C4.5b Data Link Timer Recovery State. (Continued)**
+
+<img src="media/image47.png" style="width:8.64583in;height:5.50879in" />
+
+**Figure C4.5c Data Link Timer Recovery State. (Continued)**
+
+<img src="media/image48.png" style="width:7.86917in;height:6.00917in" />
+
+**Figure C4.5d Data Link Timer Recovery State. (Continued)**
+
+<img src="media/image49.png" style="width:6.53917in;height:6.20917in" />
+
+**Figure C4.5e Data Link Timer Recovery State. (Continued)**
+
+<img src="media/image50.jpeg" style="width:8.645in;height:3.56667in" />
+
+**Figure C4.6a Data Link Awaiting V2.2 Connection State.**
+
+<img src="media/figc4.6b.png" />
+
+**Figure C4.6b Data Link Awaiting V2.2 Connection State (Continued)**
+
+<img src="media/figc4.7a.png" />
+
+**Figure C4.7a Data Link Subroutines.**
 
 <img src="media/image59.png" style="width:8.645in;height:4.26667in" />
 
-> **Figure C4.7b Data Link Subroutines. (Continued)**
->
-> 102
->
-> Appendix C5 - Management Data Link State Machine C5.1 Interaction with
-> the Data Link Service Access Point
->
-> The Data-Link Service Access Point directs the operation of the
-> Management Data link State Machine through the management data link
-> (MDL) primitives described below:
->
-> • **MDL-NEGOTIATE Request**. This primitive is used by the Layer 3
-> entity to request the Data-link State Machine to notify/negotiate.
->
-> • **MDL-NEGOTIATE Confirm**. This primitive is used by the Management
-> Data link State Machine to notify the Layer 3 entity
-> notification/negotiation is complete.
->
-> • **MDL-ERROR Indicate**. This primitive is used by the Management
-> Data link State Machine to notify the Layer 3 entity
-> notification/negotiation has failed.
->
-> C5.2 Interaction with the Link Multiplexer State Machine
->
-> The Management Data link State Machine directs the operation of the
-> Link Multiplexer State Machine through the link multiplexer (LM)
-> primitives described below:
->
-> • **LM-DATA Request**. This primitive is used by the Data link State
-> Machines to pass frames of any type (SABM, RR, UI, etc.) to the Link
-> Multiplexer State Machine.
->
-> • **LM-DATA Indication**. This primitive is used by the Link
-> Multiplexer State Machines to pass frames of any type (SABM, RR, UI,
-> etc.) to the Data-link State Machine.
->
-> C5.3 Internal Operation of the Machine
->
-> The Management Data link State Machine handles the
-> negotiation/notification of operational parameters. It uses a single
-> command/response exchange to negotiate the final values of negotiable
-> parameters.
->
-> The station initiating the AX.25 connection will send an XID command
-> after it receives the UA frame. If the other station is using a
-> version of AX.25 earlier than 2.2, it will respond with an FRMR of the
-> XID command, and the default version 2.0 parameters will be used. If
-> the other station is using version 2.2 or better, it will respond with
-> an XID response.
->
-> Below is a summary of primitives, states, queues, flags, errors, and
-> timers used in the management data link state machines:
->
-> MDL Primitives (Received from MDL): •     MDL-NEGOTIATE Confirm
->
-> • MDL-ERROR Indicate
->
-> • MDL-NEGOTIATE Request
->
-> 103
->
-> •     LM-DATA Request •     LM-DATA Indicate
->
-> States:
->
-> • 0 — Ready
->
-> • 1 — Negotiating
->
-> Error Codes:
->
-> •     A — XID command without P=1. •     B — Unexpected XID response.
->
-> • C — Management retry limit exceeded. • D — XID response without F=1.
->
-> Queues:
->
-> • None used.
->
-> Variables:
->
-> • RC — Retry count.
->
-> • NM201 — Maximum number of retries of the XID command.
->
-> MDL Primitives (Sent to MDL):
->
-> LM Primitives (Sent to LM):
->
-> LM Primitives (Received from LM):
->
-> Timers:
->
-> • TM201 — Retry timer for management functions.
->
-> 104
+**Figure C4.7b Data Link Subroutines. (Continued)**
+
+# Appendix C5 - Management Data Link State Machine
+## C5.1 Interaction with the Data Link Service Access Point
+
+The Data-Link Service Access Point directs the operation of the
+Management Data link State Machine through the management data link
+(MDL) primitives described below:
+
+- **MDL-NEGOTIATE Request**. This primitive is used by the Layer 3
+entity to request the Data-link State Machine to notify/negotiate.
+
+- **MDL-NEGOTIATE Confirm**. This primitive is used by the Management
+Data link State Machine to notify the Layer 3 entity
+notification/negotiation is complete.
+
+- **MDL-ERROR Indicate**. This primitive is used by the Management
+Data link State Machine to notify the Layer 3 entity
+notification/negotiation has failed.
+
+## C5.2 Interaction with the Link Multiplexer State Machine
+
+The Management Data link State Machine directs the operation of the
+Link Multiplexer State Machine through the link multiplexer (LM)
+primitives described below:
+
+- **LM-DATA Request**. This primitive is used by the Data link State
+Machines to pass frames of any type (SABM, RR, UI, etc.) to the Link
+Multiplexer State Machine.
+
+- **LM-DATA Indication**. This primitive is used by the Link
+Multiplexer State Machines to pass frames of any type (SABM, RR, UI,
+etc.) to the Data-link State Machine.
+
+## C5.3 Internal Operation of the Machine
+
+The Management Data link State Machine handles the
+negotiation/notification of operational parameters. It uses a single
+command/response exchange to negotiate the final values of negotiable
+parameters.
+
+The station initiating the AX.25 connection will send an XID command
+after it receives the UA frame. If the other station is using a
+version of AX.25 earlier than 2.2, it will respond with an FRMR of the
+XID command, and the default version 2.0 parameters will be used. If
+the other station is using version 2.2 or better, it will respond with
+an XID response.
+
+Below is a summary of primitives, states, queues, flags, errors, and
+timers used in the management data link state machines:
+
+- MDL Primitives (Received from MDL):
+- MDL-NEGOTIATE Confirm
+
+- MDL-ERROR Indicate
+
+- MDL-NEGOTIATE Request
+
+- LM-DATA Request
+- LM-DATA Indicate
+
+States:
+
+- 0 — Ready
+
+- 1 — Negotiating
+
+Error Codes:
+
+- A — XID command without P=1.
+- B — Unexpected XID response.
+
+- C — Management retry limit exceeded.
+- D — XID response without F=1.
+
+Queues:
+
+- None used.
+
+Variables:
+
+- RC — Retry count.
+
+- NM201 — Maximum number of retries of the XID command.
+
+MDL Primitives (Sent to MDL):
+
+LM Primitives (Sent to LM):
+
+LM Primitives (Received from LM):
+
+Timers:
+
+- TM201 — Retry timer for management functions.
 
 <img src="media/image60.png" style="width:5.51917in;height:5.66917in" />
 
-> **Figure C5.1 Management Data Link Ready State.**
->
-> 105
+**Figure C5.1 Management Data Link Ready State.**
 
 <img src="media/image61.png" style="width:7.2475in;height:6.1975in" />
 
-> **Figure C5.2 Management Data Link Negotiating State.**
->
-> 106
+**Figure C5.2 Management Data Link Negotiating State.**
 
 <img src="media/image62.png" style="width:7.6in;height:5.92917in" />
 
-> **Figure C5.3 MDL Classes of Procedures Negotiation Subroutines.**
->
-> 107
->
-> <img src="media/image63.png" style="width:8.61in;height:4.79917in" />**Figure
-> C5.4 MDL Optional Functions Subroutines.**
->
-> 108
+**Figure C5.3 MDL Classes of Procedures Negotiation Subroutines.**
+
+<img src="media/image63.png" style="width:8.61in;height:4.79917in" />
+
+**Figure C5.4 MDL Optional Functions Subroutines.**
 
 <img src="media/image64.png" style="width:5.87917in;height:5.93in" />
 
-> **Figure C5.5 MDL N1 Negotiation Subroutines.**
->
-> 109
+**Figure C5.5 MDL N1 Negotiation Subroutines.**
 
 <img src="media/image65.png" style="width:5.85917in;height:5.92917in" />
 
-> **Figure C5.6 MDL Window Negotiation Subroutines.**
->
-> 110
+**Figure C5.6 MDL Window Negotiation Subroutines.**
 
 <img src="media/image66.png" style="width:6.06in;height:5.92917in" />
 
-> **Figure C5.7 MDL Retry Notification Subroutines**
->
-> 111
+**Figure C5.7 MDL Retry Notification Subroutines**
 
 <img src="media/image67.png" style="width:5.86917in;height:5.92917in" />
 
-> **Figure C5.8 MDL T1 Negotiation Subroutines.**
->
-> 112
+**Figure C5.8 MDL T1 Negotiation Subroutines.**
 
-Appendix C6 - Segmenter/Reassembler C6.1 Segmenter State Machine
+# Appendix C6 - Segmenter/Reassembler
+## C6.1 Segmenter State Machine
 
-> Only the following DL primitives will be candidates for modification
-> by the segmented state machine: •     **DL-DATA Request**. The user
-> employs this primitive to provide information to be transmitted using
-> connection-oriented procedures; i.e., using I frames. The segmenter
-> state machine examines the quantity of data to be transmitted. If the
-> quantity of data to be transmitted is less than or equal to the data
-> link parameter N1, the segmenter state machine passes the primitive
-> through transparently. If the quantity of data to be transmitted
-> exceeds the data link parameter N1, the segmenter chops up the data
-> into segments of length N1-2 octets. Each segment is prepended with a
-> two-octet header. (See Figures 3.1 and 3.2.) The segments are then
-> turned over to the Data-link State Machine for transmission, using
-> multiple DL Data Request primitives.
->
-> All segments are turned over immediately; therefore, the Data-link
-> State Machine will transmit them consecutively on the data link.
->
-> • **DL-UNIT-DATA Request**. The user employs this primitive to provide
-> information to be transmitted using connectionless procedures; i.e.
-> using UI frames. The segmenter state machine examines the quantity of
-> data to be transmitted. If the quantity of data to be transmitted is
-> less than or equal to the data link parameter N1, the segmenter state
-> machine passes the primitive through transparently. If the quantity of
-> data to be transmitted exceeds the data link parameter N1, the
-> segmenter chops up the data into segments of length N1-2 octets. Each
-> segment is prepended with a two-octet header. (See Figures 3.1 and
-> 3.2.) The segments are then turned over to the Data-link State Machine
-> for transmission, using multiple DL Data Request primitives. All
-> segments are turned over immediately; therefore, the Data-link State
-> Machine will transmit them consecutively on the data link.
->
-> • **All Other DL Primitives**. All other DL primitives are passed
-> through the segmenter state machine unchanged.
+Only the following DL primitives will be candidates for modification
+- by the segmented state machine:
+- **DL-DATA Request**. The user
+employs this primitive to provide information to be transmitted using
+connection-oriented procedures; i.e., using I frames. The segmenter
+state machine examines the quantity of data to be transmitted. If the
+quantity of data to be transmitted is less than or equal to the data
+link parameter N1, the segmenter state machine passes the primitive
+through transparently. If the quantity of data to be transmitted
+exceeds the data link parameter N1, the segmenter chops up the data
+into segments of length N1-2 octets. Each segment is prepended with a
+two-octet header. (See Figures 3.1 and 3.2.) The segments are then
+turned over to the Data-link State Machine for transmission, using
+multiple DL Data Request primitives.
 
-C6.2 Reassembler State Machine
+All segments are turned over immediately; therefore, the Data-link
+State Machine will transmit them consecutively on the data link.
 
-> All primitives from the Data-link State Machine are delivered
-> transparently, except the following:
->
-> •  **DL-DATA Indication**. This primitive is examined by the
-> reassembler state machine. If the accompanying received data begins
-> with an octet other than 0x08, it is assumed it has not been segmented
-> and is passed up transparently. If the data begins with 0x08, the
-> reassembler state machine allocates buffers and switches to state 1.
-> After various checks for errors, this segment and all remaining
-> segments received in subsequent DL Data Indication primitives are
-> assembled together to recreate the original larger data unit. If a
-> segment is received without the proper PID or out of sequence, the
-> accumulated packets are discarded, buffers are freed, a DL Error
-> Indication is delivered, and the state machine returns to state 0. The
-> larger data unit is delivered with one DL Data Indication primitive.
->
-> • **DL-UNIT-DATA Indication**. This primitive is examined by the
-> reassembler state machine. If the accompanying received data begins
-> with an octet other than 0x08, it is assumed it has not been segmented
-> and is passed up transparently. If the data begins with 0x08, the
-> reassembler state machine allocates buffers and switches to state 2.
-> After various checks for errors, this segment and all remaining
-> segments received in subsequent DL Unit Data Indication primitives are
-> assembled together to recreate the original larger data unit. If a
-> segment is received without the proper PID or out of sequence, the
-> accumulated packets are discarded, buffers are freed, a DL
->
-> 113
->
-> Error Indication is delivered, and the state machine returns to state
-> 0. The larger data unit is delivered with one DL Unit Data Indication
-> primitive.
->
-> • **Timer TR210 Expiry**. This primitive occurs when a segment is not
-> received before timer TR210 times out. When this primitive is
-> received, the accumulated packets are discarded, buffers are freed,
-> and the state machine returns to state 0. A DL Error Indication is
-> passed to the higher level.
->
-> • **All Other DL Primitives**. All other DL primitives are passed
-> through the reassembler state machine unchanged. If the statemachine
-> is in states 1or 2when another DL primitiveis received, the
-> accumulated packets are discarded, buffers are freed, and the state
-> machine returns to state 0. A DL Error Indication is passed to the
-> higher level.
+- **DL-UNIT-DATA Request**. The user employs this primitive to provide
+information to be transmitted using connectionless procedures; i.e.
+using UI frames. The segmenter state machine examines the quantity of
+data to be transmitted. If the quantity of data to be transmitted is
+less than or equal to the data link parameter N1, the segmenter state
+machine passes the primitive through transparently. If the quantity of
+data to be transmitted exceeds the data link parameter N1, the
+segmenter chops up the data into segments of length N1-2 octets. Each
+segment is prepended with a two-octet header. (See Figures 3.1 and
+3.2.) The segments are then turned over to the Data-link State Machine
+for transmission, using multiple DL Data Request primitives. All
+segments are turned over immediately; therefore, the Data-link State
+Machine will transmit them consecutively on the data link.
 
-C6.3 Internal Operation of the Machine
+- **All Other DL Primitives**. All other DL primitives are passed
+through the segmenter state machine unchanged.
+
+## C6.2 Reassembler State Machine
+
+All primitives from the Data-link State Machine are delivered
+transparently, except the following:
+
+- **DL-DATA Indication**. This primitive is examined by the
+reassembler state machine. If the accompanying received data begins
+with an octet other than 0x08, it is assumed it has not been segmented
+and is passed up transparently. If the data begins with 0x08, the
+reassembler state machine allocates buffers and switches to state 1.
+After various checks for errors, this segment and all remaining
+segments received in subsequent DL Data Indication primitives are
+assembled together to recreate the original larger data unit. If a
+segment is received without the proper PID or out of sequence, the
+accumulated packets are discarded, buffers are freed, a DL Error
+Indication is delivered, and the state machine returns to state 0. The
+larger data unit is delivered with one DL Data Indication primitive.
+
+- **DL-UNIT-DATA Indication**. This primitive is examined by the
+reassembler state machine. If the accompanying received data begins
+with an octet other than 0x08, it is assumed it has not been segmented
+and is passed up transparently. If the data begins with 0x08, the
+reassembler state machine allocates buffers and switches to state 2.
+After various checks for errors, this segment and all remaining
+segments received in subsequent DL Unit Data Indication primitives are
+assembled together to recreate the original larger data unit. If a
+segment is received without the proper PID or out of sequence, the
+accumulated packets are discarded, buffers are freed, a DL
+
+Error Indication is delivered, and the state machine returns to state
+0. The larger data unit is delivered with one DL Unit Data Indication
+primitive.
+
+- **Timer TR210 Expiry**. This primitive occurs when a segment is not
+received before timer TR210 times out. When this primitive is
+received, the accumulated packets are discarded, buffers are freed,
+and the state machine returns to state 0. A DL Error Indication is
+passed to the higher level.
+
+- **All Other DL Primitives**. All other DL primitives are passed
+through the reassembler state machine unchanged. If the statemachine
+is in states 1or 2when another DL primitiveis received, the
+accumulated packets are discarded, buffers are freed, and the state
+machine returns to state 0. A DL Error Indication is passed to the
+higher level.
+
+## C6.3 Internal Operation of the Machine
 
 Below is a summary of primitives, states, queues, flags, errors, and
 timers used in the segmenter/reassembler link state machines:
 
-DL Primitives (Received from DLSAP} • DL-DATA Request
+- DL Primitives (Received from DLSAP}
+- DL-DATA Request
 
-> • DL-UNIT-DATA Request
->
-> • NOTE: All other primitives are passed transparently.
+- DL-UNIT-DATA Request
 
-DL Primitives (Sent to DLSAP) •     DL-DATA Indication
+- NOTE: All other primitives are passed transparently.
 
-> • DL-UNIT-DATA Indication • DL-ERROR Indication
->
-> • NOTE: All other primitives are passed transparently.
+- DL Primitives (Sent to DLSAP)
+- DL-DATA Indication
 
-DL Primitives (Received from the Data Link State Machine) • DL-DATA
+- DL-UNIT-DATA Indication
+- DL-ERROR Indication
+
+- NOTE: All other primitives are passed transparently.
+
+- DL Primitives (Received from the Data Link State Machine)
+- DL-DATA
 Indication
 
-> • DL-UNIT-DATA Indication
->
-> • NOTE: All other primitives are passed transparently.
+- DL-UNIT-DATA Indication
 
-DL Primitives (Sent to the Data Link State Machine) • DL-DATA Request
+- NOTE: All other primitives are passed transparently.
 
-> • DL-UNIT-DATA Request
->
-> • NOTE: All other primitives are passed transparently.
+- DL Primitives (Sent to the Data Link State Machine)
+- DL-DATA Request
 
-Segmenter States: •     0 — Null
+- DL-UNIT-DATA Request
 
-> • 1 — Reassembling Data
->
-> • 2 — Reassembling Unit Data
+- NOTE: All other primitives are passed transparently.
+
+- Segmenter States:
+- 0 — Null
+
+- 1 — Reassembling Data
+
+- 2 — Reassembling Unit Data
 
 Queues:
 
-> • None.
+- None.
 
 Error Codes:
 
-> • Y — data too long to segment
->
-> 114
->
-> • Z — reassembly error.
+- Y — data too long to segment
+
+- Z — reassembly error.
 
 Variables:
 
-> • N — number of segments remaining to be reassembled.
+- N — number of segments remaining to be reassembled.
 
 Timers:
 
-> • TR210 — time limit for receipt of next segment.
+- TR210 — time limit for receipt of next segment.
 
-C6.3.1 Internal Operation of the Segmenter State Machine
+### C6.3.1 Internal Operation of the Segmenter State Machine
 
 The segmenter state machine operation is quite straightforward. Only one
 state exists for this machine.
 
-C6.3.2 Internal Operation of the Reassembler State Machine
+### C6.3.2 Internal Operation of the Reassembler State Machine
 
 The reassembler state machine resides in the Null state until the start
 of a segmented data stream is detected. At this point, a check is made
@@ -4406,16 +3762,14 @@ transmitted until the complete large data unit has been transferred. No
 other event is permitted to occur over the data link. This constraint is
 imposed for two reasons:
 
-> •     To ensure that stations with multiple data links minimize the
-> amount of buffer capacity tied up in partially received or transmitted
-> large data units (which in turn reduces connectionless links); and
->
-> •  To minimize the delay in transmission of large data units, once the
-> large data unit has reached the top of the queue.
->
-> 115
+- To ensure that stations with multiple data links minimize the
+amount of buffer capacity tied up in partially received or transmitted
+large data units (which in turn reduces connectionless links); and
 
-C6.4 Final Observations
+- To minimize the delay in transmission of large data units, once the
+large data unit has reached the top of the queue.
+
+## C6.4 Final Observations
 
 As mentioned above, the use of connection-oriented data link procedures
 is recommended when segmentation is anticipated on data links with even
@@ -4425,34 +3779,24 @@ will result in the loss of the entire segmented large data unit; higher
 level attempts at recovery will significantly increase congestion on the
 physical channel.
 
-> 116
-
 <img src="media/image68.png" style="width:5.91917in;height:6.03917in" />
 
-> **Figure C-6.1 Segmenter Ready State.**
->
-> 117
+**Figure C-6.1 Segmenter Ready State.**
 
 <img src="media/image69.png" style="width:5.52917in;height:5.63917in" />
 
-> **Figure C-6.2 Reassembler Ready State.**
->
-> 118
+**Figure C-6.2 Reassembler Ready State.**
 
 <img src="media/image70.png" style="width:4.87917in;height:6.04in" />
 
-> **Figure C-6.3 Reassembler Assembling Data State.**
->
-> 119
+**Figure C-6.3 Reassembler Assembling Data State.**
 
 <img src="media/image71.png" style="width:4.87917in;height:6.03917in" />
 
-> **Figure C-6.4 Reassembler Assembling Unit Data State.**
->
-> 120
+**Figure C-6.4 Reassembler Assembling Unit Data State.**
 
-Appendix D - Data Link Service Access Point and Primitives D.1 Model of
-a Data-Link Connection
+# Appendix D - Data Link Service Access Point and Primitives
+## D.1 Model of a Data-Link Connection
 
 A Data Link Service Access Point (DLSAP) is the point at which the
 data-link layer provides services to Layer 3. It provides a uniform
@@ -4461,74 +3805,72 @@ specifies this interface but does not specify the upper layer entities.
 In a basic user TNC, the upper layer entity may consist only of a Layer
 7 user application with Layers 3-6 being null.
 
-> The following primitives are used to pass commands and receive
-> responses from the DLSAP:
->
-> • **DL-CONNECT Request.** (Called Call sign). This primitive is used
-> by the Layer 3 entity to request the establishment of an AX.25
-> connection.
->
-> • **DL-CONNECT Indication.** (Calling Call sign). This primitive is
-> used by the Data-link State Machine to indicate an AX.25 connection
-> has been requested.
->
-> •  **DL-CONNECT Confirm.**(VOID). This primitive is used bythe
-> Data-link State Machine to indicate an AX.25 connection has been made.
->
-> • **DL-DISCONNECT Request.** This primitive is used by the Layer 3
-> entity to request the release of an AX.25 connection.
->
-> • **DL-DISCONNECT Indication.** This primitive is used by the
-> Data-link State Machine to indicate an AX.25 connection has been
-> released.
->
-> •  **DL-DISCONNECT Confirm.** This primitive is used by the Data-link
-> State Machine to indicate an AX.25 connection has been released and
-> confirmed.
->
-> • **DL-DATA Request.** This primitive is used by the Layer 3 entity to
-> request the transmission of data using connection-oriented protocol.
-> This frame is examined and acted upon by the segmenter, if necessary.
->
-> •  **DL-DATA Indication.** This primitive is used by the reassembler
-> to indicate reception of Layer 3 data using connection-oriented
-> protocol.
->
-> • **DL-UNIT-DATA Request.** This primitive is used by the Layer 3
-> entity to request the transmission of data using connectionless
-> protocol. This frame is examined and acted upon by the segmenter, if
-> necessary.
->
-> •  **DL-UNIT-DATA Indication.** This primitive is used by the
-> reassembler to indicate reception of Layer 3 data using connectionless
-> protocol.
->
-> •  **DL-ERROR Indication.** This primitive is used by the Data-link
-> State Machine to indicate when frames have been received that are
-> inconsistent with this protocol definition. This includes short
-> frames, frames with inconsistent parameter values, etc. The error
-> indications are discussed in the SDL appendices.
->
-> •  **DL-FLOW-OFF Request.** This primitive is used by the Layer 3
-> entity to temporarily suspend the flow of incoming information.
->
-> • **DL-FLOW-ON Request.** This primitive is used by the Layer 3 entity
-> to resume the flow of incoming information.
->
-> • **MDL-NEGOTIATE Request.** This primitive is used by the Layer 3
-> entity to request the Data-link State Machine to notify/negotiate.
->
-> • **MDL-NEGOTIATE Confirm.** This primitive is used by the Management
-> Data-link State Machine to notify the Layer 3 entity that
-> notification/negotiation is complete.
->
-> •  **MDL-ERROR Indicate.** This primitive is used by the Management
-> Data-link State Machine to notify the Layer 3 entity that
-> notification/negotiation has failed.
->
-> 121
+The following primitives are used to pass commands and receive
+responses from the DLSAP:
 
-D.2 Queue Model Concepts
+- **DL-CONNECT Request.** (Called Call sign). This primitive is used
+by the Layer 3 entity to request the establishment of an AX.25
+connection.
+
+- **DL-CONNECT Indication.** (Calling Call sign). This primitive is
+used by the Data-link State Machine to indicate an AX.25 connection
+has been requested.
+
+- **DL-CONNECT Confirm.**(VOID). This primitive is used bythe
+Data-link State Machine to indicate an AX.25 connection has been made.
+
+- **DL-DISCONNECT Request.** This primitive is used by the Layer 3
+entity to request the release of an AX.25 connection.
+
+- **DL-DISCONNECT Indication.** This primitive is used by the
+Data-link State Machine to indicate an AX.25 connection has been
+released.
+
+- **DL-DISCONNECT Confirm.** This primitive is used by the Data-link
+State Machine to indicate an AX.25 connection has been released and
+confirmed.
+
+- **DL-DATA Request.** This primitive is used by the Layer 3 entity to
+request the transmission of data using connection-oriented protocol.
+This frame is examined and acted upon by the segmenter, if necessary.
+
+- **DL-DATA Indication.** This primitive is used by the reassembler
+to indicate reception of Layer 3 data using connection-oriented
+protocol.
+
+- **DL-UNIT-DATA Request.** This primitive is used by the Layer 3
+entity to request the transmission of data using connectionless
+protocol. This frame is examined and acted upon by the segmenter, if
+necessary.
+
+- **DL-UNIT-DATA Indication.** This primitive is used by the
+reassembler to indicate reception of Layer 3 data using connectionless
+protocol.
+
+- **DL-ERROR Indication.** This primitive is used by the Data-link
+State Machine to indicate when frames have been received that are
+inconsistent with this protocol definition. This includes short
+frames, frames with inconsistent parameter values, etc. The error
+indications are discussed in the SDL appendices.
+
+- **DL-FLOW-OFF Request.** This primitive is used by the Layer 3
+entity to temporarily suspend the flow of incoming information.
+
+- **DL-FLOW-ON Request.** This primitive is used by the Layer 3 entity
+to resume the flow of incoming information.
+
+- **MDL-NEGOTIATE Request.** This primitive is used by the Layer 3
+entity to request the Data-link State Machine to notify/negotiate.
+
+- **MDL-NEGOTIATE Confirm.** This primitive is used by the Management
+Data-link State Machine to notify the Layer 3 entity that
+notification/negotiation is complete.
+
+- **MDL-ERROR Indicate.** This primitive is used by the Management
+Data-link State Machine to notify the Layer 3 entity that
+notification/negotiation has failed.
+
+## D.2 Queue Model Concepts
 
 The queue model represents the operation of the Data-Link Connection
 (DLC) in the abstract by a pair of queues linking the two DLSAPs. There
@@ -4544,20 +3886,20 @@ removing objects from the queue and by the state of the queue. Objects
 are entered or removed from the queue as a result of interactions at the
 two DLSAPs.
 
-> The following objects may be placed in a queue by a DLS user:
->
-> A connect object, representing a DL-CONNECT primitive and its
-> parameters. A data object, representing a DL-DATA primitive and its
-> parameters.
->
-> A disconnect object, representing a DL-DISCONNECT primitive and its
-> parameters.
->
-> The following object may be placed in a queue by the DLS provider:
->
-> A disconnect object, representing a DL-DISCONNECT primitive and its
-> parameters. The queues are defined to have the following general
-> properties:
+The following objects may be placed in a queue by a DLS user:
+
+A connect object, representing a DL-CONNECT primitive and its
+parameters. A data object, representing a DL-DATA primitive and its
+parameters.
+
+A disconnect object, representing a DL-DISCONNECT primitive and its
+parameters.
+
+The following object may be placed in a queue by the DLS provider:
+
+A disconnect object, representing a DL-DISCONNECT primitive and its
+parameters. The queues are defined to have the following general
+properties:
 
 A queue is empty before a connect object has been entered and can be
 returned to this state, with loss of its contents, by the DLS provider.
@@ -4566,14 +3908,14 @@ Objects are entered into a queue by the sending DLS user, subject to
 control by the DLS provider. Objects may also be entered by the DLS
 provider.
 
-> Objects are removed from the queue, under the control of the receiving
-> DLS user. Objects are normally removed in the same order that they
-> were entered.
->
-> A queue has a limited capacity, but this capacity is not necessarily
-> either fixed or determinable.
+Objects are removed from the queue, under the control of the receiving
+DLS user. Objects are normally removed in the same order that they
+were entered.
 
-D.3 DLC Establishment
+A queue has a limited capacity, but this capacity is not necessarily
+either fixed or determinable.
+
+## D.3 DLC Establishment
 
 A pair of queues is associated with a DLC between two DLSAPs when the
 DLS provider receives a DLCONNECT request primitive at one of the
@@ -4591,15 +3933,13 @@ from the DLS user B to DLS user A queue. In the queue from DLS user B to
 DLS user A, objects can be entered only after DLS user B has entered a
 connect object representing a DL-CONNECT response primitive.
 
-> 122
-
 <img src="media/image72.png" style="width:4.54167in;height:2.65667in" />
 
 The properties exhibited by the queues while the DLC exists represent
 the agreements reached among the DLS users and the DLS provider during
 this connection establishment procedure.
 
-D.4. Data Transfer
+## D.4. Data Transfer
 
 Flow control on the DLC is represented in this queue model by the
 management of the queue capacity, allowing objects to be added to the
@@ -4617,14 +3957,16 @@ are defined to be destructive with respect to all objects.
 The relationship between objects that may be manipulated in the above
 fashion are summarized in Figure D.1.
 
-> **Figure D.1 Relationships between Queue Model Objects.**
+<img src="media/figd1.png" />
+
+**Figure D.1 Relationships between Queue Model Objects.**
 
 Whether the DLS provider performs actions resulting in deletion or not
 will depend upon the behavior of the DLC users. In general, if a DLS
 user does not remove objects from a queue, the DLS provider shall, after
 some unspecified period of time, perform all the permitted deletions.
 
-D.5 DLC Release
+## D.5 DLC Release
 
 The insertion into a queue of a disconnect object, which may occur at
 any time, represents the initiation of the DLC release procedure. The
@@ -4634,35 +3976,31 @@ the dissociation of the queues with the DLC.
 
 The insertion of a disconnect object may also represent the rejection of
 a DLC establishment attempt or the failure to complete DLC
-establishment. In such cases, if a connect object representing a DL-
-
-> 123
-
-CONNECT request primitive is deleted byadisconnect object, then the
-disconnect object is also deleted. The disconnect object representing
-the DL-CONNECT response.
+establishment. In such cases, if a connect object representing a DL-CONNECT request primitive
+is deleted by a disconnect object, then the disconnect object is also deleted.
+The disconnect object representing the DL-CONNECT response.
 
 Where: N/A – Not a valid state of queue ---- Not to be destructive nor
 to be able to advance ahead DES – To be destructive to the preceding
 object
 
-> **Following Object**
->
-> **Preceding Object**
->
-> **Connect Data Sync**
+**Following Object**
+
+**Preceding Object**
+
+**Connect Data Sync**
 
 **Disconnect**
 
 **Connect** **Data N/A --N/A --N/A --**
 
-> **N/A** **N/A**
+**N/A** **N/A**
 
 **Sync** **Disconnect N/A DES N/A DES N/A DES**
 
-> **N/A** **DES**
->
-> **D.2 Relationship of Primitives at the Two DLC Endpoints**
+**N/A** **DES**
+
+**D.2 Relationship of Primitives at the Two DLC Endpoints**
 
 A primitive issued at one DLC endpoint will, in general, have
 consequences at the other DLC endpoint. The relationship of primitives
@@ -4678,10 +4016,6 @@ The other primitives work in groups of four with the Request from the
 station A causing an Indicate in the station B, and a Response in
 station B causing a Confirm in the station A.
 
-> 124
-
 <img src="media/image73.png" style="width:6in;height:7.62in" />
 
-> **Figure D.3 Example of a Connection-Oriented Data Exchange.**
->
-> 125
+**Figure D.3 Example of a Connection-Oriented Data Exchange.**
