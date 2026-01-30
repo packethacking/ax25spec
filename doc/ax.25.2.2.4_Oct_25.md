@@ -1268,16 +1268,7 @@ versions, or the receiving station wants to use the defaults for version
 
 A typical XID frame is shown in Figure 4.6.
 
-**0x22 0x00**
 
-**0x03 0x03**
-
-**0x82 0xA8 0x22**
-
-**0x06 0x02 0x04 0x00 0x08 0x01 0x02 0x09 0x02 0x10 0x00 0x0A 0x01
-0x03**
-
-**0xXX 0xXX**
 
 <img src="media/fig4.6.png" />
 
@@ -2388,9 +2379,7 @@ Telecommunications and Information Exchange between Systems — High-level
 Data-Link Control (HDLC) Procedures - Frame Structure.”
 
 ISO 4335, 4th edition, 15 September 91 (with Amendment 4),
-“Information Technology
-
-— Telecommunications and Information Exchange between Systems —
+“Information Technology — Telecommunications and Information Exchange between Systems —
 High-level Data-Link Control (HDLC) Procedures Elements of Procedures.”
 
 ISO 7776, 1st edition, 15 December 86, “Information Processing Systems —
@@ -2658,120 +2647,96 @@ completeness, it seems unlikely that it will ever be used.
 Below is a summary of primitives, states, queues, flags, errors, and
 timers used in the physical layer state machines:
 
-- PH Primitives (Received from the Link Multiplexer):
+PH Primitives (Received from the Link Multiplexer):
 - PH-SEIZE Request
-
 - PH-RELEASE Request
-
 - PH-EXPEDITED-DATA Request
 - PH-DATA Request
 
-- PH Primitives (Sent to the Link Multiplexer):
+PH Primitives (Sent to the Link Multiplexer):
 - PH-SEIZE Confirm
-
 - PH-BUSY Indication
 - PH-QUIET Indication
 - PH-DATA Indication
 
-- PH Primitives (Received from the Radio):
+PH Primitives (Received from the Radio):
 - HW-AOS Indication
-
 - HW-LOS Indication
 - HW-DATA Indication
 
-- PH Primitives (Sent to the Radio):
+PH Primitives (Sent to the Radio):
 - HW-TON Request
-
 - HW-TOFF Request
 - HW-DATA Request
 
 States:
-
 - 0 — Ready
-
 - 1 — Receiving
-
 - 2 — Transmitter Suppression
 - 3 — Transmitter Start
-
 - 4 — Transmitting
 - 5 — Digipeating
-
 - 6 — Receiver Start
 
 Error Codes:
-
 - No Error Codes Used.
 
 Queues:
-
 - Priority Queue — holds all expedited data frames to be transmitted
 in the order in which they arrived from the higher layer.
-
 - Normal Queue — holds all normal frames, plus Seize and Release
 Requests, in the order in which they arrived from the higher level.
 
 Flags and Parameters:
-
 - Digipeating — set when this transmission is for digipeating frames.
 Cleared when this transmission is for normal frames.
-
 - Repeater Up — set when repeater is expected to still be
 transmitting. Cleared when repeater carrier is expected to have
 dropped.
-
 - Interrupted — set when anti-hogging or 10-minute transmitter limits
 have interrupted the transmission of normal frames.
-
 - p — p-persistence value, in the range 0-255.
 
 Timers:
-
 - T100 — Repeater Hang (AXHANG)
 - T101 — Priority Window (PRIACK)
-- T102
-— Slot Time (p-persistence)
-
+- T102 — Slot Time (p-persistence)
 - T103 — Transmitter Startup (TXDELAY)
-- T104 — Repeater Startup
-(AXDELAY)
-
+- T104 — Repeater Startup (AXDELAY)
 - T105 — Remote Receiver Sync
-
 - T106 — Ten Minute Transmission Limit
 - T107 — Anti-Hogging Limit
-
 - T108 — Receiver Startup
 
-<img src="media/image10.png" style="width:8.00916in;height:5.89in" />
+<img src="media/image10.png" />
 
 **Figure C2a.1 Simplex Physical Ready State.**
 
-<img src="media/image11.png" style="width:4.8in;height:5.95in" />
+<img src="media/image11.png" />
 
 **Figure C2a.2 Simplex Physical Receiving State.**
 
-<img src="media/image12.png" style="width:8.65in;height:5.66167in" />
+<img src="media/image12.png" />
 
 **Figure C2a.3 Simplex Physical Transmitter Suppression State.**
 
-<img src="media/image13.png" style="width:8.9925in;height:5.67833in" />
+<img src="media/image13.png" />
 
 **Figure C2a.4 Simplex Physical Transmitter Start State.**
 
-<img src="media/image14.png" style="width:7.37917in;height:5.91in" />
+<img src="media/image14.png" />
 
 **Figure C2a.5 Simplex Physical Transmitting State.**
 
-<img src="media/image15.png" style="width:7.55in;height:5.88917in" />
+<img src="media/image15.png" />
 
 **Figure C2a.6. Simplex Physical Digipeating State.**
 
-<img src="media/image16.png" style="width:7in;height:5.95in" />
+<img src="media/image16.png" />
 
 **Figure C2a.7 Simplex Physical Receiver Start State.**
 
-<img src="media/image17.png" style="width:3.45in;height:5.26917in" />
+<img src="media/image17.png" />
 
 **Figure C2a.s Simplex Physical Subroutines.**
 
@@ -3140,19 +3105,19 @@ Timers:
 
 - No timers used.
 
-<img src="media/image23.png" style="width:8.65in;height:5.20417in" />
+<img src="media/image23.png" />
 
 **Figure C3.1 Link Multiplexer Idle State.**
 
-<img src="media/image24.png" style="width:8.9925in;height:5.41667in" />
+<img src="media/image24.png" />
 
 **Figure C3.2 Link Multiplexer Seize Pending State.**
 
-<img src="media/image25.png" style="width:8.9925in;height:5.41667in" />
+<img src="media/image25.png" />
 
 **Figure C3.3 Link Multiplexer Seized State.**
 
-<img src="media/image26.png" style="width:5.54in;height:5.70917in" />
+<img src="media/image26.png" />
 
 **Figure C3.4 Link Multiplexer Subroutines.**
 
@@ -3933,8 +3898,6 @@ from the DLS user B to DLS user A queue. In the queue from DLS user B to
 DLS user A, objects can be entered only after DLS user B has entered a
 connect object representing a DL-CONNECT response primitive.
 
-<img src="media/image72.png" style="width:4.54167in;height:2.65667in" />
-
 The properties exhibited by the queues while the DLC exists represent
 the agreements reached among the DLS users and the DLS provider during
 this connection establishment procedure.
@@ -3984,21 +3947,7 @@ Where: N/A – Not a valid state of queue ---- Not to be destructive nor
 to be able to advance ahead DES – To be destructive to the preceding
 object
 
-**Following Object**
-
-**Preceding Object**
-
-**Connect Data Sync**
-
-**Disconnect**
-
-**Connect** **Data N/A --N/A --N/A --**
-
-**N/A** **N/A**
-
-**Sync** **Disconnect N/A DES N/A DES N/A DES**
-
-**N/A** **DES**
+<img src="media/figd2.png" />
 
 **D.2 Relationship of Primitives at the Two DLC Endpoints**
 
