@@ -6,6 +6,12 @@
 
 Copyright (c) 1997 by Tucson Amateur Packet Radio Corporation. Portions Copyright (c) 1984, 1993 by The American Radio Relay League, Inc.
 
+## Previous Versions
+
+- [AX.25 Amateur Packet-Radio Link-Layer Protocol, v2.0, October 1984](https://wiki.oarc.uk/_media/packet:ax25v20.pdf)
+- [AX.25 Link Access Protocol for Amateur Packet Radio v2.2, revision July 1998](https://wiki.oarc.uk/_media/packet:ax25.2.2.pdf)
+- [AX.25 Link Access Protocol for Amateur Packet Radio v2.2, revision 10 September 2017](https://wiki.oarc.uk/_media/packet:ax25.2.2.10.pdf)
+
 Original: 1993 Version 1
 
 Authors: William A. Beech, NJ7P, nj7p@nj7p.org, Douglas E. Nielsen, N7LEM, n7lem@n7lem.net, Jack Taylor, N7OO, n7oo@outlook.com.
