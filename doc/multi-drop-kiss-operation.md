@@ -2,6 +2,8 @@
 
 *By Karl Medcalf, WK5M*
 
+> *This markdown document was adapted from the original PDF. The source PDF is available in the [src folder](../src/multi-kiss.pdf).*
+
 John Wiseman (G8BPQ) has developed a multi-drop KISS protocol, allowing several TNCs to be connected to a single serial I/O port while operating in KISS mode.
 
 To prevent all TNCs from responding to all data from the serial I/O port (called the master), each TNC must have a specific address. This address is contained in the high nibble of the command byte in each KISS frame.

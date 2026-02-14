@@ -6,6 +6,8 @@
 
 1987
 
+> *This markdown document was adapted from the original PDF. The source PDF is available in the [src folder](../src/cnc1987-kiss-tnc-k3mc-ka9q.pdf).*
+
 ## Abstract
 
 The KISS ("Keep It Simple, Stupid") TNC provides direct computer to TNC communication using a simple protocol described here. Many TNCs now implement it, including the TAPR TNC-1 and TNC-2 (and their clones), the venerable VADCG TNC, the AEA PK-232/PK-87 and all TNCs in the Kantronics line. KISS has quickly become the protocol of choice for TCP/IP operation and multi-connect BBS software.

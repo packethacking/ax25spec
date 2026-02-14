@@ -4,6 +4,8 @@
 
 **Version 2.2 Revision 4: 27 October 2025**
 
+> *This markdown document was adapted from the original PDF. The source PDF is available in the [src folder](../src/ax.25.2.2.4_Oct_25.pdf).*
+
 Copyright (c) 1997 by Tucson Amateur Packet Radio Corporation. Portions Copyright (c) 1984, 1993 by The American Radio Relay League, Inc.
 
 ## Previous Versions
