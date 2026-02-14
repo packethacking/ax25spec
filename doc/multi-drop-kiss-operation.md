@@ -2,6 +2,8 @@
 
 *By Karl Medcalf, WK5M*
 
+1991
+
 > *This markdown document was adapted from the original PDF. The source PDF is available in the [src folder](../src/multi-kiss.pdf).*
 
 John Wiseman (G8BPQ) has developed a multi-drop KISS protocol, allowing several TNCs to be connected to a single serial I/O port while operating in KISS mode.
