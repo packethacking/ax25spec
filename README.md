@@ -4,7 +4,7 @@
 
 [doc/kiss-tnc-protocol.md](doc/kiss-tnc-protocol.md) is a Markdown version of the KISS TNC protocol specification.
 
-[doc/multi-drop-kiss-operation.md](doc/multi-drop-kiss-operation.md) is a Markdown version of the Multi-Drop KISS operation specification.
+[doc/multi-drop-kiss-operation.md](doc/multi-drop-kiss-operation.md) is a Markdown version of the Multi-Drop KISS operation specification. This document also describes G8BPQ's Acknowledgement Mode, better known as ACKMODE.
 
 The source documents are in [/src](src).
 
