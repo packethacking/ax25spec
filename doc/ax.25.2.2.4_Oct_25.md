@@ -1103,7 +1103,46 @@ A typical XID frame is shown in Figure 4.6.
 
 
 
-![Figure 4.6 Typical XID Frame](media/fig4.6.png)
+| Octet ID | Hex Value | Meaning |
+|----------|-----------|---------|
+| Flag | 0x7E | Start of frame flag |
+| A1 | 0x9C | From Address (NJ7P-0) |
+| A2 | 0x94 | |
+| A3 | 0x6E | |
+| A4 | 0xA0 |  |
+| A5 | 0x40 | |
+| A6 | 0x40 | |
+| A7 (SSID) | 0xE0 | |
+| A8 | 0x9C | To Address (N7LEM-0) |
+| A9 | 0x6E | |
+| A10 | 0x98 | |
+| A11 | 0x8A |  |
+| A12 | 0x9A | |
+| A13 | 0x40 | |
+| A14 (SSID) | 0x61 | |
+| Control | 0xAF | XID |
+| FI | 0x82 | Format Indicator |
+| GI | 0x80 | Group Identifier - Parameter Negotiation |
+| GL | 0x00 0x17 | Group Length - All of the PI/PL/PV Fields (2 octets) |
+| PI | 0x02 | Parameter Indicator - Classes of Procedures |
+| PL | 0x02 | Parameter Length |
+| PV | 0x22 0x00 | Parameter Variable - Half Duplex, Asynchronous Balanced Mode |
+| PI | 0x03 | Parameter Indicator - Optional Functions |
+| PL | 0x03 | Parameter Length |
+| PV | 0x82 0xA8 0x22 | Parameter Variable - SREJ/REJ, Extended Address, 16-bit FCS, TEST command/response, Modulo 128, Synchronous Transmit, No Segmenter/Reassembler |
+| PI | 0x06 | Parameter Indicator - Rx I Field Length (bits) |
+| PL | 0x02 | Parameter Length |
+| PV | 0x04 0x00 | Parameter Variable - 1024 bits (128 octets) |
+| PI | 0x08 | Parameter Indicator - Rx Window Size |
+| PL | 0x01 | Parameter Length |
+| PV | 0x02 | Parameter Variable - 2 frames |
+| PI | 0x09 | Parameter Indicator - Timer T1 |
+| PL | 0x02 | Parameter Length |
+| PV | 0x10 0x00 | Parameter Variable - 4096 milliseconds |
+| PI | 0x0A | Parameter Indicator - Retries (N2) |
+| PL | 0x01 | Parameter Length |
+| PV | 0x03 | Parameter Variable - 3 Retries |
+| FCS | 0xXX 0xXX | Frame Check Sequence (2 octets) |
 
 **Figure 4.6 Typical XID Frame.**
 
