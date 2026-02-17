@@ -262,13 +262,57 @@ ISO has developed a reference model for Open Systems Interconnection (OSI) to be
 
 The two lower layers, data link and physical, can be further subdivided into several distinct finite state machines as shown in Figure 2.2. This example shows a single link to the radio port.
 
-![Figure 2.2 AX.25 Finite State Machine Model (Single Link)](media/fig2.2.png)
+```
+                          ┌─────────────────────────────────────────────┐
+                          │              (Data Link SAP)                │
+              ┌───────────┼─────────────────────────────────────────────┤
+              │           │  ┌─────────────────┐  ┌───────────────────┐ │
+              │           │  │   Segmenter/    │  │                   │ │
+              │           │  │   Reassembler   │  │    Management     │ │
+ Data Link    │           │  └─────────────────┘  │    Data Link      │ │
+    (2)       │           │  ┌─────────────────┐  │                   │ │
+              │           │  │    Data Link    │  │                   │ │
+              │           │  └─────────────────┘  └───────────────────┘ │
+              │           ├─────────────────────────────────────────────┤
+              │           │            Link Multiplexer                 │
+              └───────────┼─────────────────────────────────────────────┤
+                          │              (Physical SAP)                 │
+              ┌───────────┼─────────────────────────────────────────────┤
+              │           │                Physical                     │
+ Physical (1) │           ├─────────────────────────────────────────────┤
+              │           │             Silicon/Radio                   │
+              └───────────┼─────────────────────────────────────────────┤
+                          │               (Radio SAP)                   │
+                          └─────────────────────────────────────────────┘
+```
 
 **Figure 2.2 AX.25 Finite State Machine Model (Single Link).**
 
 Figure 2.3 shows an example of multiple links to the radio port. The link multiplexer described in this standard multiplexes multiple data-link connections into one physical connection. A separate data-link machine must be provided for each connection allowed by the implementation.
 
-![Figure 2.3 AX.25 Finite State Machine Model (Multiple Stream)](media/fig2.3.png)
+```
+                 ┌──────────────────────────────────────────────────────────────────────────┐
+                 │          (Data Link SAP)             │          (Data Link SAP)          │
+     ┌───────────┼──────────────────────────────────────────────────────────────────────────┤
+     │           │  ┌────────────┐  ┌────────────────┐  │  ┌────────────┐  ┌─────────────┐  │
+     │           │  │ Segmenter/ │  │                │  │  │ Segmenter/ │  │             │  │
+     │           │  │ Reassembler│  │  Management    │  │  │ Reassembler│  │ Management  │  │
+ Data Link (2)   │  └────────────┘  │  Data Link     │  │  └────────────┘  │ Data Link   │  │
+     │           │  ┌────────────┐  │                │  │  ┌────────────┐  │             │  │
+     │           │  │ Data Link  │  │                │  │  │ Data Link  │  │             │  │
+     │           │  └────────────┘  └────────────────┘  │  └────────────┘  └─────────────┘  │
+     │           ├──────────────────────────────────────────────────────────────────────────┤
+     │           │                           Link Multiplexer                               │
+     └───────────┼──────────────────────────────────────────────────────────────────────────┤
+                 │                            (Physical SAP)                                │
+     ┌───────────┼──────────────────────────────────────────────────────────────────────────┤
+     │           │                               Physical                                   │
+ Physical (1)    ├──────────────────────────────────────────────────────────────────────────┤
+     │           │                            Silicon/Radio                                 │
+     └───────────┼──────────────────────────────────────────────────────────────────────────┤
+                 │                             (Radio SAP)                                  │
+                 └──────────────────────────────────────────────────────────────────────────┘
+```
 
 **Figure 2.3 AX.25 Finite State Machine Model (Multiple Stream).**
 
@@ -282,7 +326,27 @@ Cooperation between data-link layer entities is governed by a peer-to-peer proto
 
 Layer 3 requests services from the data-link layer via command/response interactions known as service "primitives." (Similarly, the interaction between the data-link layer and the physical layer also occurs via service primitives.) Primitives are discussed in greater detail in Section 5.
 
-![Figure 2.4 Example Use Of AX.25 Primitive Types](media/fig2.4.png)
+```
+  Station A           DLSAP                     DLSAP           Station A
+      │                 │                         │                 │
+      │  DL-CONNECT     │                         │                 │
+      │    .Request     │                         │                 │
+      │────────────────>│                         │                 │
+      │                 │       SABM Frame        │                 │
+      │                 │ ·······················>│                 │
+      │                 │                         │   DL-CONNECT    │
+      │                 │                         │     .Indication │
+      │                 │                         │────────────────>│
+      │                 │                         │                 │
+      │                 │                         │       UA        │
+      │                 │                         │<────────────────│
+      │                 │       UA Frame          │                 │
+      │                 │<······················· │                 │
+      │  DL-CONNECT     │                         │                 │
+      │    .Confirm     │                         │                 │
+      │<────────────────│                         │                 │
+      │                 │                         │                 │
+```
 
 **Figure 2.4 Example Use Of AX.25 Primitive Types.**
 
@@ -659,11 +723,33 @@ The three formats of control fields used in AX.25 are the:
 
 Figures 4.1a and 4.1b illustrate the basic format of the control field associated with each of these three types of frames. The control field can be one or two octets long and may use sequence numbers to maintain link integrity. These sequence numbers may be three-bit (modulo 8) or seven-bit (modulo 128) integers.
 
-![Figure 4.1a Control-Field Formats (Modulo 8)](media/fig4.1a.png)
+```
+┌───────────────┬───────────────────────────────┐
+│ Control Field │       Control-Field Bits      │
+│     Type      ├───────┬───────┬───────┬───────┤
+│               │ 7 6 5 │   4   │ 3 2 1 │   0   │
+├───────────────┼───────┼───────┼───────┼───────┤
+│    I Frame    │  N(R) │   P   │  N(S) │   0   │
+├───────────────┼───────┼───────┼───────┼───────┤
+│    S Frame    │  N(R) │  P/F  │ S S 0 │   1   │
+├───────────────┼───────┼───────┼───────┼───────┤
+│    U Frame    │ M M M │  P/F  │ M M 1 │   1   │
+└───────────────┴───────┴───────┴───────┴───────┘
+```
 
 **Figure 4.1a Control-Field Formats (Modulo 8).**
 
-![Figure 4.1b Control-Field Formats (Modulo 128)](media/fig4.1b.png)
+```
+┌───────────────┬───────────────────────────────────────────────────────┐
+│ Control Field │                 Control-Field Bits                    │
+│     Type      ├──────────────────────┬─────┬──────────────────────┬───┤
+│               │ 15 14 13 12 11 10  9 │  8  │  7  6  5  4  3  2  1 │ 0 │
+├───────────────┼──────────────────────┼─────┼──────────────────────┼───┤
+│    I Frame    │         N(R)         │  P  │        N(S)          │ 0 │
+├───────────────┼──────────────────────┼─────┼──────────────────────┼───┤
+│    S Frame    │         N(R)         │ P/F │  0  0  0  0  S  S  0 │ 1 │
+└───────────────┴──────────────────────┴─────┴──────────────────────┴───┘
+```
 
 **Figure 4.1b Control-Field Formats (Modulo 128).**
 
@@ -733,11 +819,27 @@ The information (I) command transfers sequentially numbered frames containing an
 
 The information-frame control field is encoded as shown in Figures 4.2a and 4.2b. These frames are sequentially numbered by the N(S) subfield to maintain control of their passage over the link-layer connection.
 
-![Figure 4.2a I Frame Control Field (Modulo 8)](media/fig4.2a.png)
+```
+┌───────────────────┬───────────────────────────────┐
+│ Control Field     │       Control-Field Bits      │
+│      Type         ├───────┬───────┬───────┬───────┤
+│                   │ 7 6 5 │   4   │ 3 2 1 │   0   │
+├───────────────────┼───────┼───────┼───────┼───────┤
+│      I Frame      │  N(R) │   P   │  N(S) │   0   │
+└───────────────────┴───────┴───────┴───────┴───────┘
+```
 
 **Figure 4.2a I Frame Control Field (Modulo 8).**
 
-![Figure 4.2b I Frame Control Field (Modulo 128)](media/fig4.2b.png)
+```
+┌───────────────────┬───────────────────────────────────────────────────────┐
+│ Control Field     │                 Control-Field Bits                    │
+│      Type         ├──────────────────────┬─────┬──────────────────────┬───┤
+│                   │ 15 14 13 12 11 10  9 │  8  │  7  6  5  4  3  2  1 │ 0 │
+├───────────────────┼──────────────────────┼─────┼──────────────────────┼───┤
+│      I Frame      │         N(R)         │  P  │        N(S)          │ 0 │
+└───────────────────┴──────────────────────┴─────┴──────────────────────┴───┘
+```
 
 **Figure 4.2b I Frame Control Field (Modulo 128).**
 
@@ -746,11 +848,39 @@ The information-frame control field is encoded as shown in Figures 4.2a and 4.2b
 The supervisory frame control fields are encoded as shown in Figures
 4.3a and 4.3b.
 
-![Figure 4.3a S Frame Control Fields (Modulo 8)](media/fig4.3a.png)
+```
+┌────────────────────────┬───────────────────────────────┐
+│   Control-Field Type   │       Control-Field Bits      │
+│                        ├───────┬───────┬───────┬───────┤
+│                        │ 7 6 5 │   4   │  3 2  │  1 0  │
+├────────────────────────┼───────┼───────┼───────┼───────┤
+│   Receive Ready (RR)   │  N(R) │  P/F  │  0 0  │  0 1  │
+├────────────────────────┼───────┼───────┼───────┼───────┤
+│ Receive Not Ready (RNR)│  N(R) │  P/F  │  0 1  │  0 1  │
+├────────────────────────┼───────┼───────┼───────┼───────┤
+│  Implicit Reject (REJ) │  N(R) │  P/F  │  1 0  │  0 1  │
+├────────────────────────┼───────┼───────┼───────┼───────┤
+│ Selective Reject (SREJ)│  N(R) │  P/F  │  1 1  │  0 1  │
+└────────────────────────┴───────┴───────┴───────┴───────┘
+```
 
 **Figure 4.3a S Frame Control Fields (Modulo 8).**
 
-![Figure 4.3b S Frame Control Fields (Modulo 128)](media/fig4.3b.png)
+```
+┌────────────────────────┬───────────────────────────────────────────────────────┐
+│   Control-Field Type   │                  Control-Field Bits                   │
+│                        ├──────────────────────┬─────┬──────────────────────────┤
+│                        │ 15 14 13 12 11 10  9 │  8  │  7  6  5  4  3  2  1  0  │
+├────────────────────────┼──────────────────────┼─────┼──────────────────────────┤
+│   Receive Ready (RR)   │         N(R)         │ P/F │  0  0  0  0  0  0  0  1  │
+├────────────────────────┼──────────────────────┼─────┼──────────────────────────┤
+│ Receive Not Ready (RNR)│         N(R)         │ P/F │  0  0  0  0  0  1  0  1  │
+├────────────────────────┼──────────────────────┼─────┼──────────────────────────┤
+│  Implicit Reject (REJ) │         N(R)         │ P/F │  0  0  0  0  1  0  0  1  │
+├────────────────────────┼──────────────────────┼─────┼──────────────────────────┤
+│ Selective Reject (SREJ)│         N(R)         │ P/F │  0  0  0  0  1  1  0  1  │
+└────────────────────────┴──────────────────────┴─────┴──────────────────────────┘
+```
 
 **Figure 4.3b S Frame Control Fields (Modulo 128).**
 
@@ -798,7 +928,33 @@ Additional I frames awaiting initial transmission may be transmitted following t
 Unnumbered frame control fields are either commands or responses. Figure
 4.4 shows the layout of U frames implemented within this protocol.
 
-![Figure 4.4 U Frame Control Fields](media/fig4.4.png)
+```
+┌─────────────────────────────────────┬──────────┬─────────────────────────────┐
+│        Control Field Type           │   Type   │      Control-Field Bits     │
+│                                     │          ├───────┬─────┬───────┬───────┤
+│                                     │          │ 7 6 5 │  4  │  3 2  │  1 0  │
+├─────────────────────────────────────┼──────────┼───────┼─────┼───────┼───────┤
+│ Set Asynchronous Balanced           │ Command  │ 0 1 1 │  P  │  1 1  │  1 1  │
+│ Mode Extended (SABME)               │          │       │     │       │       │
+├─────────────────────────────────────┼──────────┼───────┼─────┼───────┼───────┤
+│ Set Asynchronous Balanced           │ Command  │ 0 0 1 │  P  │  1 1  │  1 1  │
+│ Mode (SABM)                         │          │       │     │       │       │
+├─────────────────────────────────────┼──────────┼───────┼─────┼───────┼───────┤
+│ Disconnect (DISC)                   │ Command  │ 0 1 0 │  P  │  0 0  │  1 1  │
+├─────────────────────────────────────┼──────────┼───────┼─────┼───────┼───────┤
+│ Disconnect Mode (DM)                │ Response │ 0 0 0 │  F  │  1 1  │  1 1  │
+├─────────────────────────────────────┼──────────┼───────┼─────┼───────┼───────┤
+│ Unnumbered Acknowledge (UA)         │ Response │ 0 1 1 │  F  │  0 0  │  1 1  │
+├─────────────────────────────────────┼──────────┼───────┼─────┼───────┼───────┤
+│ Frame Reject (FRMR)                 │ Response │ 1 0 0 │  F  │  0 1  │  1 1  │
+├─────────────────────────────────────┼──────────┼───────┼─────┼───────┼───────┤
+│ Unnumbered Information (UI)         │  Either  │ 0 0 0 │ P/F │  0 0  │  1 1  │
+├─────────────────────────────────────┼──────────┼───────┼─────┼───────┼───────┤
+│ Exchange Identification (XID)       │  Either  │ 1 0 1 │ P/F │  1 1  │  1 1  │
+├─────────────────────────────────────┼──────────┼───────┼─────┼───────┼───────┤
+│ Test (TEST)                         │  Either  │ 1 1 1 │ P/F │  0 0  │  1 1  │
+└─────────────────────────────────────┴──────────┴───────┴─────┴───────┴───────┘
+```
 
 **Figure 4.4 U Frame Control Fields.**
 
@@ -871,7 +1027,45 @@ The parameter fields described below represent the minimum implementation and do
 
 The encoding of each PI/PL/PV applicable to AX.25 is detailed in Figure 4.5. Some of the fields are defined in this standard. Only the fields discussed below are required in an implementation that complies with this version of AX.25.
 
-![Figure 4.5 Parameter Negotiation - Parameter Field Elements](media/fig4.5.png)
+| Name | PI | PL | Parameter Field Element | Type | Bit | Value |
+|------|----|----|-------------------------|------|-----|-------|
+| Classes of Procedures | 2 | 2 | Balanced-ABM | E | 0 | 1 |
+| | | | Unbalanced-NRM-Primary \* | E | 1 | 0 |
+| | | | Unbalanced-NRM-Secondary \* | E | 2 | 0 |
+| | | | Unbalanced-ARM-Primary \* | E | 3 | 0 |
+| | | | Unbalanced-ARM-Secondary \* | E | 4 | 0 |
+| | | | Half Duplex | E | 5 | 0/1 |
+| | | | Full Duplex | E | 6 | 0/1 |
+| | | | Reserved \* |   | 7-15 | 0 |
+| HDLC Optional Functions | 3 | 3 | 1 Reserved \* | E | 0 | 0 |
+| | | | 2 REJ command/response | E | 1 | 0/1 |
+| | | | 3A SREJ command/response \* | E | 2 | 0/1 |
+| | | | 4 UI command/response \* | E | 3 | 0 |
+| | | | 5 SIM command/RIM response \* | E | 4 | 0 |
+| | | | 6 UP command \* | E | 5 | 0 |
+| | | | 7A Basic address | E | 6 | 0 |
+| | | | 7B Extended address | E | 7 | 1 |
+| | | | 8 Delete I response \* | E | 8 | 0 |
+| | | | 9 Delete I command \* | E | 9 | 0 |
+| | | | 10A Modulo 8 | E | 10 | 0/1 |
+| | | | 10B Modulo 128 | E | 11 | 0/1 |
+| | | | 11 RSET command \* | E | 12 | 0 |
+| | | | 12 TEST command/response | E | 13 | 1 |
+| | | | 13 RD response \* | E | 14 | 0 |
+| | | | 14A 16-bit FCS | E | 15 | 1 |
+| | | | 14B 32-bit FCS \* | E | 16 | 0 |
+| | | | 15A Synchronous Tx | E | 17 | 1 |
+| | | | 15B Start/stop Tx \* | E | 18 | 0 |
+| | | | 15C Start/stop (async) Basic Flow Ctl | E | 19 | 0 |
+| | | | 15D Start/stop Octet Transparent \* | E | 20 | 0 |
+| | | | 3B SREJ Multiframe | E | 21 | 0/1 |
+| | | | 16 segmenter/reassembler | E | 22 | 0/1 |
+| | | | Reserved | E | 23 | 0 |
+| I Field Length Tx | 5 | N | Max I fields length Tx (bits)N1\*8 \* | B | NA | B |
+| I Field Length Rx | 6 | N | Max I fields length Rx (bits)N1\*8 \* | B | NA | B |
+| Window Size Tx | 7 | 1 | Window Size k (frames) Tx \* | B B | 0-6 <br /> 7 | 0-127 <br /> 0 |
+| Window Size Rx | 8 | 1 | Window Size k (frames) Rx \* | B B | 0-6 <br /> 7 | 0-127 <br /> 0 |
+| Ack Timer | 9 | N | Wait for Ack T1 (msec) | B | NA | B |
 
 **Figure 4.5 Parameter Negotiation - Parameter Field Elements.**
 
