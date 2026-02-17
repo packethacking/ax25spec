@@ -2760,15 +2760,62 @@ The disconnect object representing the DL-CONNECT response.
 
 Where: N/A – Not a valid state of queue ---- Not to be destructive nor to be able to advance ahead DES – To be destructive to the preceding object
 
-![Figure D.2 Relationship of Primitives at the Two DLC Endpoints](media/figd2.png)
+**Figure D.2 Relationship of Primitives at the Two DLC Endpoints**
 
-**D.2 Relationship of Primitives at the Two DLC Endpoints**
+|                     |         | Following Object |      |      |            |
+|---------------------|---------|------------------|------|------|------------|
+|                     |         | Connect          | Data | Sync | Disconnect |
+| **Preceding Object**| Connect | N/A              | --   | N/A  | DES        |
+|                     | Data    | N/A              | --   | N/A  | DES        |
+|                     | Sync    | N/A              | --   | N/A  | DES        |
+|                     | Disconnect | N/A           | N/A  | N/A  | DES        |
 
 A primitive issued at one DLC endpoint will, in general, have consequences at the other DLC endpoint. The relationship of primitives of each type at one DLC endpoint to primitives at the other DLC endpoint are defined in the appropriate sub clauses discussed in Section 5.
 
 A simple connection-oriented transmission of data would be handled by the following primitives at the DLSAPs as shown in Figure D.3. Notice that the MDLprimitives do not generate an Indicate primitive nor require a Response primitive from the Layer 3 entity in the station B. The MDL entities in the stations A and B work on a peer-to-peer relationship.
 The other primitives work in groups of four with the Request from the station A causing an Indicate in the station B, and a Response in station B causing a Confirm in the station A.
 
-![Figure D.3 Example of a Connection-Oriented Data Exchange](media/figd.3.png)
-
 **Figure D.3 Example of a Connection-Oriented Data Exchange.**
+
+```
+    Station A          DLSAP                 DLSAP          Station A
+        |                |                     |                |
+        | DL-CONNECT     |    SABM Command     |                |
+        |   .Request     |-------------------->| DL-CONNECT     |
+        |                |                     |   .Indication  |
+        |                |                     |                |
+        |                |    UA Response      |                |
+        | DL-CONNECT     |<--------------------|                |
+        |   .Confirm     |                     |                |
+        |                |                     |                |
+    - - + - - - - - - - -+- - - - - - - - - - -+- - - - - - - - + - -
+        |                |                     |                |
+        | MDL-NEGOTIATE  |    XID Command      |                |
+        |   .Request     |-------------------->| MDL-NEGOTIATE  |
+        |                |                     |   .Indication  |
+        |                |                     |                |
+        |                |    XID Response     |                |
+        | MDL-NEGOTIATE  |<--------------------|                |
+        |   .Confirm     |                     |                |
+        |                |                     |                |
+    - - + - - - - - - - -+- - - - - - - - - - -+- - - - - - - - + - -
+        |                |                     |                |
+        | DL-DATA        |    I Frame(s)       |                |
+        |   .Request     |-------------------->| DL-DATA        |
+        |                |                     |   .Indication  |
+        |                |                     |                |
+        |                |    RR               |                |
+        | DL-DATA        |<--------------------|                |
+        |   .Confirm     |                     |                |
+        |                |                     |                |
+    - - + - - - - - - - -+- - - - - - - - - - -+- - - - - - - - + - -
+        |                |                     |                |
+        | DL-DISCONNECT  |    DISC Command     |                |
+        |   .Request     |-------------------->| DL-DISCONNECT  |
+        |                |                     |   .Indication  |
+        |                |                     |                |
+        |                |    DM Response      |                |
+        | DL-DISCONNECT  |<--------------------|                |
+        |   .Confirm     |                     |                |
+        |                |                     |                |
+```
