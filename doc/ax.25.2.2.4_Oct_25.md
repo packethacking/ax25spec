@@ -246,7 +246,15 @@ In this protocol specification, the phrase Terminal Node Controller (TNC) refers
 
 ISO has developed a reference model for Open Systems Interconnection (OSI) to better facilitate the interconnection of different types of computing systems. The basic structuring technique in this reference model is known as layering. According to this technique, communication among application processes is viewed as being logically partitioned into an ordered set of layers represented in a vertical sequence as shown in Figure 2.1. Each layer provides a Service Access Point (SAP) for interface to the next higher layer. Note that any layer may be a null, where no function or code is provided. Such is the case with the current TAPR TNC-2 equipment, where only Layers 1, 2 and 7 are provided; these comprise the minimum configuration for reliable communications.
 
-![Figure 2.1 Seven Layer OSI Reference Model](media/fig2.1.png)
+| Layer   | Name                |
+|---------|---------------------|
+| Layer 7 | Application Layer   |
+| Layer 6 | Presentation Layer  |
+| Layer 5 | Session Layer       |
+| Layer 4 | Transport Layer     |
+| Layer 3 | Network Layer       |
+| Layer 2 | Data Link Layer     |
+| Layer 1 | Physical Layer      |
 
 **Figure 2.1 Seven Layer OSI Reference Model.**
 
@@ -370,7 +378,24 @@ The control field identifies the type of frame being passed and controls several
 
 The Protocol Identifier (PID) field appears in information frames (I and UI) only. It identifies which kind of Layer 3 protocol, if any, is in use.
 
-![Figure 3.2 PID Definitions](media/fig3.2.png)
+| HEX  | Binary   | Layer 3 Type                                                             |
+|------|----------|--------------------------------------------------------------------------|
+| \*\* | XX01XXXX | AX.25 Layer 3 Implemented                                                |
+| \*\* | XX10XXXX | AX.25 Layer 3 Implemented                                                |
+| 0x01 | 00000001 | ISO 8208/CCITT X.25 PLP                                                  |
+| 0x06 | 00000110 | Compressed TCP/IP Packet Van Jacobson (RFC 1144)                         |
+| 0x07 | 00000111 | Uncompressed TCP/IP Packet Van Jacobson (RFC 1144)                       |
+| 0x08 | 00001000 | Segmentation Fragment                                                    |
+| 0xC3 | 11000011 | TEXNET Datagram Protocol                                                 |
+| 0xC4 | 11000100 | Link Quality Protocol                                                    |
+| 0xCA | 11001010 | Appletalk                                                                |
+| 0xCB | 11001011 | Appletalk ARP                                                            |
+| 0xCC | 11001100 | ARPA Internet Protocol                                                   |
+| 0xCD | 11001101 | ARPA Address Resolution Protocol                                         |
+| 0xCE | 11001110 | FlexNet                                                                  |
+| 0xCF | 11001111 | NET/ROM                                                                  |
+| 0xF0 | 11110000 | No Layer 3 Protocol                                                      |
+| 0xFF | 11111111 | Escape Character - Next octet contains more Layer 3 protocol information |
 
 **Figure 3.2 PID Definitions.**
 
@@ -433,7 +458,15 @@ The HDLC address field is extended beyond one octet by assigning the least-signi
 
 If Layer 2 repeaters are not being used, the address field is encoded as shown in Figure 3.3. The destination address is the call sign and SSID of the amateur radio station to which the frame is addressed. The source address contains the amateur call sign and SSID of the station that sent the frame. These call signs are the call signs of the two ends of a Layer 2 AX.25 link only.
 
-![Figure 3.3 Non-Repeater Address-Field Encoding](media/fig3.3.png)
+```text
+┌─────────────────────────────────────────────────────────────┐
+│                    Address Field of Frame                   │
+├────────────────────────────────┬────────────────────────────┤
+│  Destination Address Subfield  │  Source Address Subfield   │
+├────────────────────────────────┼────────────────────────────┤
+│  A1 A2 A3 A4 A5 A6 A7          │  A8 A9 A10 A11 A12 A13 A14 │
+└────────────────────────────────┴────────────────────────────┘
+```
 
 **Figure 3.3 Non-Repeater Address-Field Encoding.**
 
@@ -443,7 +476,29 @@ The SSID octet at the end of each address subfield (A7 and A14) contains the SSI
 
 Figure 3.4 shows a typical AX.25 frame in the non-repeater mode of operation.
 
-![Figure 3.4 Non-Repeater AX.25 Frame](media/fig3.4.png)
+| Octet        | ASCII | Binary     | Hex   |
+|--------------|-------|------------|-------|
+| Flag         | none  | `01111110` | 0x7E  |
+| A1           | N     | `10011100` | 0x9C  |
+| A2           | J     | `10010100` | 0x94  |
+| A3           | 7     | `01101110` | 0x6E  |
+| A4           | P     | `10100000` | 0xA0  |
+| A5           | space | `01000000` | 0x40  |
+| A6           | space | `01000000` | 0x40  |
+| A7 (SSID)    | none  | `11100000` | 0xE0  |
+| A8           | N     | `10011100` | 0x9C  |
+| A9           | 7     | `01101110` | 0x6E  |
+| A10          | L     | `10011000` | 0x98  |
+| A11          | E     | `10001010` | 0x8A  |
+| A12          | M     | `10011010` | 0x9A  |
+| A13          | space | `01000000` | 0x40  |
+| A14 (SSID)   | none  | `01100001` | 0x61  |
+| Control      | none  | `00111110` | 0x3E  |
+| PID          | none  | `11110000` | 0xF0  |
+| FCS          | none  | `XXXXXXXX` | 0xHH  |
+| FCS          | none  | `XXXXXXXX` | 0xHH  |
+| Flag         | none  | `01111110` | 0x7E  |
+| Bit Position |       | `76543210` |       |
 
 **Figure 3.4 Non-Repeater AX.25 Frame.**
 
@@ -453,7 +508,17 @@ The frame shown is an I frame, not going through a Layer 2 repeater, from N7LEM(
 
 Figure 3.5 shows how an amateur call sign is placed in the destination address subfield, occupying octets A1 through A7.
 
-![Figure 3.5 Destination Field Encoding](media/fig3.5.png)
+| Octet         | ASCII | Binary       | Hex  |
+|---------------|-------|--------------|------|
+| A1            | N     | `10011100`   | 0x9C |
+| A2            | J     | `10010100`   | 0x94 |
+| A3            | 7     | `01101110`   | 0x6E |
+| A4            | P     | `10100000`   | 0xA0 |
+| A5            | space | `01000000`   | 0x40 |
+| A6            | space | `01000000`   | 0x40 |
+| A7 (SSID)     | none  | `11100000`   | 0xE0 |
+| SSID Encoding |       | `CRRSSSS0`   | 0x98 |
+| Bit Position  |       | `76543210`   |      |
 
 **Figure 3.5 Destination Field Encoding.**
 
@@ -474,7 +539,19 @@ Where:
 
 Figure 3.6 shows how an amateur call sign is placed in the destination address subfield, occupying octets A8 through A14.
 
-![Figure 3.6 Source Field Encoding](media/fig3.6.png)
+| Octet         | ASCII | Binary       | Hex  |
+|---------------|-------|--------------|------|
+| A8            | N     | `10011100`   | 0x9C |
+| A9            | 7     | `01101110`   | 0x6E |
+| A10           | L     | `10011000`   | 0x98 |
+| A11           | E     | `10001010`   | 0x8A |
+| A12           | M     | `10011010`   | 0x9A |
+| A13           | space | `01000000`   | 0x40 |
+| A14 (SSID)    | none  | `00000000`   | 0x00 |
+| SSID Encoding |       | `CRRSSSS0`   |      |
+| Bit Position  |       | `76543210`   |      |
+
+>*Document conversion note: the binary values in Figure 3.6 in the original document appear to be incorrect and have been corrected as per the hex values in the table*
 
 **Figure 3.6 Source Field Encoding.**
 
@@ -499,7 +576,17 @@ The H bit is set to "0" on frames going to a repeater. The repeater changes the 
 
 Figure 3.7 shows how the repeater address subfield is encoded. Figure 3.8 is an example of a complete frame after being repeated.
 
-![Figure 3.7 Repeater Address Encoding](media/fig3.7.png)
+| Octet         | ASCII | Binary       | Hex  |
+|---------------|-------|--------------|------|
+| A15           | N     | `10011100`   | 0x9C |
+| A16           | 7     | `01101110`   | 0x6E |
+| A17           | O     | `10011110`   | 0x9E |
+| A18           | O     | `10011110`   | 0x9E |
+| A19           | space | `01000000`   | 0x40 |
+| A20           | space | `01000000`   | 0x40 |
+| A21 (SSID)    | none  | `11100011`   | 0xE3 |
+| SSID Encoding |       | `HRRSSSS1`   |      |
+| Bit Position  |       | `76543210`   |      |
 
 **Figure 3.7 Repeater Address Encoding.**
 
@@ -509,7 +596,36 @@ Where:
 
 - The "H" bit is the has-been-repeated bit. It is set to "0" when a frame has not been repeated and set to "1" by the repeating station when repeated.
 
-![Figure 3.8 AX.25 Frame In Repeater Mode](media/fig3.8.png)
+| Octet         | ASCII | Binary       | Hex  |
+|---------------|-------|--------------|------|
+| Flag          | none  | `01111110`   | 0x7E |
+| A1            | N     | `10011100`   | 0x9C |
+| A2            | J     | `10010100`   | 0x94 |
+| A3            | 7     | `01101110`   | 0x6E |
+| A4            | P     | `10100000`   | 0xA0 |
+| A5            | space | `01000000`   | 0x40 |
+| A6            | space | `01000000`   | 0x40 |
+| A7 (SSID)     | none  | `11100000`   | 0xE0 |
+| A8            | N     | `10011100`   | 0x9C |
+| A9            | 7     | `01101110`   | 0x6E |
+| A10           | L     | `10011000`   | 0x98 |
+| A11           | E     | `10001010`   | 0x8A |
+| A12           | M     | `10011010`   | 0x9A |
+| A13           | space | `01000000`   | 0x40 |
+| A14 (SSID)    | none  | `01100000`   | 0x60 |
+| A15           | N     | `10011100`   | 0x9C |
+| A16           | 7     | `01101110`   | 0x6E |
+| A17           | O     | `10011110`   | 0x9E |
+| A18           | O     | `10011110`   | 0x9E |
+| A19           | space | `01000000`   | 0x40 |
+| A20           | space | `01000000`   | 0x40 |
+| A21 (SSID)    | none  | `11100011`   | 0xE3 |
+| Control       | none  | `00111110`   | 0x3E |
+| PID           | none  | `11110000`   | 0xF0 |
+| FCS           | none  | `XXXXXXXX`   | 0xHH |
+| FCS           | none  | `XXXXXXXX`   | 0xHH |
+| Flag          | none  | `01111110`   | 0x7E |
+| Bit Position  |       | `76543210`   |      |
 
 **Figure 3.8 AX.25 Frame In Repeater Mode.**
 
@@ -1020,7 +1136,12 @@ An upward-compatible AX.25 TNC communicating with a distant TNC determines if th
 
 The command/response information is encoded into the address field as shown in Figure 6.1. Implementations of AX.25 prior to version 2.0 defined these bits to be either both “0” or “1”.
 
-![Figure 6.1 Command/Response Encoding](media/fig6.1.png)
+| Frame Type        | Destination SSID C-Bit | Source SSID C-Bit |
+|-------------------|------------------------|-------------------|
+| Previous Versions | 0                      | 0                 |
+| Command (V2)      | 1                      | 0                 |
+| Response (V2)     | 0                      | 1                 |
+| Previous Versions | 1                      | 1                 |
 
 **Figure 6.1 Command/Response Encoding.**
 
@@ -1268,7 +1389,10 @@ The segmenter/reassembler procedure is only enabled if both stations on the link
 
 The segmenter is a simple process that divides long data units into smaller segments for transmission, attaching a two-octet header to each segment. At the receiving end, segments are reassembled into the original data unit. Overhead is kept to a minimum throughout; steps are taken to prevent deadlock situations from arising in the buffer management of both stations on the link. The header is illustrated in Figure 6.2.
 
-![Figure 6.2 Segment Header Format](media/fig6.2.png)
+| Bit position <br />`76543210` | Hex   | Description                                                                 |
+|-------------------|-------|-----------------------------------------------------------------------------|
+| `00001000`        | 0x08  | PID for segmented frame                                                     |
+| `FXXXXXXX`        | F*128+X      | F=1 if first segmented frame, F=0 for all other frames; X=number of segments remaining |
 
 **Figure 6.2 Segment Header Format.**
 
