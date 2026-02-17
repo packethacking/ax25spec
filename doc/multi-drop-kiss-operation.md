@@ -4,7 +4,7 @@
 
 1991
 
-> *This markdown document was adapted from the original PDF. The source PDF is available in the [src folder](../src/multi-kiss.pdf).*
+> *This markdown document has been adapted from the original PDF. The source PDF is available in the [src folder](../src/multi-kiss.pdf).*
 
 John Wiseman (G8BPQ) has developed a multi-drop KISS protocol, allowing several TNCs to be connected to a single serial I/O port while operating in KISS mode.
 
@@ -36,9 +36,23 @@ The G8BPQ multi-drop KISS has extended the KISS command bytes listed above by ad
 | `$xC` | Data to be transmitted - required |
 | `$xE` | Poll frame (see Polled Mode below) |
 
-![Figure 1](multi-drop-kiss-operation-fig1.png)
+### Figure 1 - Standard KISS Frame Format
 
-*Figure 1: Standard KISS frame format*
+| Byte | Field         | Value / Meaning |
+|------|---------------|-----------------|
+| 0    | FEND          | `$C0` |
+| 1    | Command Byte  | `$00` Data to be transmitted |
+|      |               | `$01` Set TNC TXDELAY |
+|      |               | `$02` Set TNC Persistence |
+|      |               | `$03` Set TNC SlotTime |
+|      |               | `$04` Set TXTail time |
+|      |               | `$05` Full Duplex mode |
+|      |               | `$06` Set hardware |
+|      |               | `$FF` Exit KISS mode |
+| 2–N  | Data          | Only if Command Byte = `$00` |
+| 2    | Parameters    | Only if Command Byte ≠ `$00` |
+| N+1  | FEND          | `$C0` |
+
 
 ## Acknowledgment Mode (ACKMODE)
 
@@ -88,16 +102,94 @@ Since these modes are not directly compatible with "standard" KISS, the firmware
 
 Note that to use Acknowledgment Mode, you must have the INTFACE set to BPQ. The acknowledgment will be sent automatically if the command byte is `$xC`.
 
-![Figure 2](multi-drop-kiss-operation-fig2.png)
+### Figure 2 - Kantronics command additions for extended KISS mode selection
 
-*Figure 2: Kantronics command additions for extended KISS mode selection*
+| Name     | Range / Values        | Description |
+|----------|-----------------------|-------------|
+| MYDROP   | 0–15                  | Specifies the TNC address |
+| CHECKSUM | ON / OFF              | Enables Checksum Mode |
+| POLLED   | ON / OFF              | Enables Polled Mode |
+| INTFACE  | TERMINAL / KISS / BPQ | TERMINAL allows setting parameters<br>KISS implements “standard” KISS<br>BPQ enables the extended BPQ KISS |
+
+## KISS Frame and Command Encoding
+
+### Frame Format
+
+A KISS frame is delimited by `FEND` bytes (`$C0`) and consists of a command byte followed by optional data.
+
+```text
+┌────┬──────────────┬──────────────────────────┬────┐
+│ C0 │ Command Byte │           Data           │ C0 │
+└────┴──────────────┴──────────────────────────┴────┘
+```
+
+---
+
+### Command Byte Bit Layout
+
+The command byte is 8 bits wide. Depending on mode, the upper bits may encode a TNC address.
+
+```text
+Bit:   7    6    5    4    3    2    1    0
+     ┌────┬────┬────┬────┬────┬────┬────┬────┐
+     │ b7 │ b6 │ b5 │ b4 │ b3 │ b2 │ b1 │ b0 │
+     └────┴────┴────┴────┴────┴────┴────┴────┘
+```
+
+In standard KISS mode, all 8 bits represent the command value.
+
+---
+
+### Standard KISS Command Values
+
+| Bit Pattern | Hex  | Meaning |
+|------------|------|---------|
+| `00000000` | `$00` | Data to be transmitted |
+| `00000001` | `$01` | Set TNC TXDELAY |
+| `00000010` | `$02` | Set TNC Persistence |
+| `00000011` | `$03` | Set TNC SlotTime |
+| `00000100` | `$04` | Set TXTail time |
+| `00000101` | `$05` | Full Duplex mode |
+| `00000110` | `$06` | Set Hardware |
+| `11111111` | `$FF` | Exit KISS mode |
+
+---
+
+### G8BPQ Multi-Drop KISS Extensions
+
+In multi-drop mode, the upper nibble (bits 7–4) encodes the TNC address, and the lower nibble (bits 3–0) encodes a base KISS command.
+
+| Bit Pattern | Hex  | Meaning |
+|------------|------|---------|
+| `00001100` | `$0C` | Data to be transmitted (Ack required) |
+| `00001110` | `$0E` | Poll frame |
+| `0000xxxx` | `$0x` | TNC address 0 |
+| `0001xxxx` | `$1x` | TNC address 1 |
+| `1111xxxx` | `$Fx` | TNC address 15 |
+
+Where:
+
+- `x` = any valid base KISS command value (as defined in the Standard KISS Command table)
+- Upper bits select the destination TNC
+- Lower bits retain their original command semantics
+
+---
+
+### Checksum Mode
+
+When checksum mode is enabled, an XOR checksum byte is inserted immediately before the terminating `FEND`.
+
+```text
+┌────┬──────────────┬──────────────────────────┬──────────────┬────┐
+│ C0 │ Command Byte │           Data           │ XOR Checksum │ C0 │
+└────┴──────────────┴──────────────────────────┴──────────────┴────┘
+```
+
+The checksum is computed over the command byte and data bytes only.
+
 
 ## Summary
 
 John's implementation of this extended KISS protocol should enhance KISS-type operations, especially on HF where timing becomes a particular problem. The ability to multi-drop many TNCs from one master (computer or Data Engine) allows multi-port networking nodes from a single serial port on a computer, thus reducing hardware requirements.
 
 The multi-drop (or extended KISS) EPROMs for Kantronics TNCs are available as part of the G8BPQ Data Engine firmware which may be downloaded from the Kantronics BBS at (913) 842-4678. John is preparing multi-drop KISS images for other TNCs and will distribute them along with his standard PC-based G8BPQ code. When these other multi-drop KISS EPROMs become available, they will be included in the Data Engine BPQ distribution.
-
-![Figure 3](multi-drop-kiss-operation-fig3.png)
-
-*Figure 3: Multi-drop KISS hardware configuration*
