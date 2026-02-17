@@ -4,7 +4,12 @@
 
 1986
 
-> *This markdown document was compiled from publicly available FBB protocol documentation. Primary sources include [f6fbb.org](https://www.f6fbb.org/protocole.html), [packet-radio.net](https://packet-radio.net/fbb-forward-protocol/), and the [Winlink B2F specification](https://winlink.org/B2F). It has not been verified manually for correctness. Please raise an issue in this repo with any corrections.*
+> *This markdown document was compiled from publicly available FBB protocol documentation. Primary sources include [f6fbb.org](https://www.f6fbb.org/protocole.html), [packet-radio.net](https://packet-radio.net/fbb-forward-protocol/), and the [Winlink B2F specification](https://winlink.org/B2F). Core protocol details (control characters, response codes, checksum algorithm, compression parameters, B1 header format) have been verified against the LinFBB and LinBPQ source code. Please raise an issue in this repo with any corrections.*
+>
+> **Verification notes:**
+> - Sections 1-10 (core FBB protocol) have been verified against LinFBB r239 and LinBPQ source code
+> - Section 11 (B2/B2F extended mode) is based on web documentation and LinBPQ code; full FC proposal handling was not found in LinFBB (this is primarily a Winlink extension)
+> - The "FD" command mentioned in some online sources was not found in either implementation and may not exist
 
 ## Abstract
 
@@ -84,7 +89,9 @@ Each message is assigned a unique identifier to prevent duplicate forwarding:
 2734_FC1GHV
 ```
 
-The sequence number is typically an incrementing counter maintained by the originating BBS. Combined with the callsign, this creates a globally unique identifier.
+The sequence number is typically an incrementing counter (modulo 65536) maintained by the originating BBS. Combined with the callsign, this creates a globally unique identifier.
+
+**Alternate format:** Some implementations also accept `<sequence>-<callsign>` (hyphen instead of underscore) for compatibility.
 
 ### 3.2 BID Usage
 
@@ -158,10 +165,12 @@ FB P F6FBB FC1GHV FC1MVP 24657_F6FBB 1345
 
 | Command | Description |
 |---------|-------------|
-| FA | ASCII compressed message |
-| FB | Binary compressed file (or standard proposal in basic mode) |
+| FA | Compressed binary transfer (message will be sent using LZHUF compression) |
+| FB | Standard ASCII transfer (uncompressed text mode) |
 | FC | Encapsulated message (B2 mode only) |
-| F> | End of proposal block |
+| F> | End of proposal block (with optional checksum) |
+
+**Note:** The naming is somewhat counterintuitive—FA indicates binary/compressed mode will be used, while FB indicates standard ASCII text mode. The receiving station uses this to determine whether to expect compressed binary data or plain text.
 
 ### 5.3 Proposal Block Limits
 
@@ -198,18 +207,20 @@ This accepts proposals 1 and 3, rejects proposal 2.
 
 **Version 1 (Extended) Responses:**
 
+Used when both systems indicate B1 or B2 capability in their SIDs.
+
 | Code | Description |
 |------|-------------|
 | Y | Accept (equivalent to +) |
 | N | Reject (equivalent to -) |
 | L | Later/defer (equivalent to =) |
 | H | Accept but hold for later delivery |
-| R | Reject |
-| E | Error in proposal line |
-| !offset | Accept from specified byte offset |
+| R | Reject (message rejected by policy) |
+| E | Error in proposal line format |
+| !offset | Accept from specified byte offset (for resume) |
 | Aoffset | Accept from specified byte offset (alternate syntax) |
 
-The offset capability allows resumption of interrupted transfers in version 1 implementations.
+The offset capability allows resumption of interrupted transfers. The offset specifies the byte position in the compressed data stream from which to resume sending.
 
 ## 7. Message Transfer
 
@@ -240,12 +251,20 @@ After transmitting accepted messages, the sending station sends its proposal blo
 
 ### 8.1 Compression Algorithm
 
-FBB compressed mode uses LZHUF compression, a variant of LZH compression using:
+FBB compressed mode uses LZHUF compression, a variant of LZH compression combining:
 
-- Lempel-Ziv sliding dictionary compression
+- Lempel-Ziv sliding dictionary compression (LZSS)
 - Huffman coding
 
-The algorithm was adapted from Haruhiko Okumura's LZARI via Haruyasu Yoshizaki's LHarc. Open source implementations are available.
+The algorithm was adapted from Haruhiko Okumura's LZARI via Haruyasu Yoshizaki's LHarc (1988). The implementation uses the following parameters:
+
+| Parameter | Value | Description |
+|-----------|-------|-------------|
+| N | 2048 | Sliding window buffer size |
+| F | 60 | Lookahead buffer size |
+| THRESHOLD | 2 | Minimum match length for compression |
+
+Open source implementations are available in the LinFBB and LinBPQ projects.
 
 ### 8.2 Compressed Message Header
 
@@ -281,16 +300,17 @@ Same structure with filename instead of title.
 | size | 0x00-0xFF | Byte count (0x00 = 256 bytes) |
 | data | 1-256 bytes | Compressed data |
 
-### 8.4 Version 1 First Block Addition
+### 8.4 Version 1 (B1) Data Format
 
-In B1 mode, the first data block prepends:
+In B1 mode, the compressed data stream has the following structure:
 
-| Field | Size | Description |
-|-------|------|-------------|
-| CRC16 | 2 bytes | CRC of uncompressed file (little-endian) |
-| Size | 4 bytes | Uncompressed file size (little-endian) |
+| Offset | Size | Description |
+|--------|------|-------------|
+| 0 | 2 bytes | CRC-16 of bytes 2 onwards (little-endian) |
+| 2 | 4 bytes | Uncompressed message size (little-endian) |
+| 6 | variable | Compressed message data |
 
-This enables verification and resume capability.
+The CRC-16 uses the CCITT polynomial and covers the 4-byte size field plus all compressed data bytes. This enables both integrity verification and resume capability by allowing partial transfers to be validated.
 
 ### 8.5 End of Transfer
 
@@ -305,11 +325,13 @@ This enables verification and resume capability.
 
 **Checksum calculation:**
 
-1. Sum all data bytes
-2. Take modulo 256
-3. Take two's complement
+The checksum is computed over all bytes in all data blocks (the bytes following STX/size, not including STX or size bytes themselves):
 
-Verification: Sum of all data bytes plus checksum equals zero (mod 256).
+1. Initialize accumulator to 0
+2. Add each data byte to accumulator (8-bit addition, overflow wraps)
+3. Negate the result (two's complement): `checksum = -sum & 0xFF`
+
+**Verification:** When the receiver adds all data bytes plus the checksum byte, the result is zero (mod 256). In code: `(sum_of_data_bytes + checksum) & 0xFF == 0`
 
 ## 9. Control Characters Summary
 
@@ -439,6 +461,8 @@ BBS systems must maintain a database of received BIDs to prevent duplicate bulle
 3. Packet-Radio.net FBB Protocol: https://packet-radio.net/fbb-forward-protocol/
 4. Winlink B2F Specification: https://winlink.org/B2F
 5. ARSFI Winlink Compression Source: https://github.com/ARSFI/Winlink-Compression
+6. LinFBB Source Code: https://sourceforge.net/projects/linfbb/
+7. LinBPQ Source Code: https://github.com/g8bpq/linbpq (or https://www.cantab.net/users/john.wiseman/Documents/)
 
 ## Document History
 
@@ -447,4 +471,4 @@ BBS systems must maintain a database of received BIDs to prevent duplicate bulle
 | 1986 | Original FBB protocol developed by F6FBB |
 | — | Compressed forwarding (B/B1) added |
 | — | B2F extension developed for Winlink |
-| 2025 | This markdown document compiled from public sources |
+| 2026 | This markdown document compiled from public sources, and verified against latest LinFBB and LinBPQ source code |
