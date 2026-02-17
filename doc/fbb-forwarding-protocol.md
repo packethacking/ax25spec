@@ -107,10 +107,12 @@ When a BBS receives a message proposal containing a BID, it checks its database 
 4. Station B responds with acceptance/rejection codes
 5. Station A sends accepted messages
 6. Direction reverses; Station B sends proposals
-7. Process continues until both sides send FF (no more messages)
-8. Session terminates with FQ
+7. Process continues until one side sends FF (no more messages)
+8. Other side responds with FQ to terminate the session
 
 ### 4.2 Example Session
+
+This example shows an ASCII (uncompressed) session using FB proposals:
 
 ```
 B: [FBB-7.10-B1FHM$]
@@ -129,7 +131,6 @@ A: FS +
 B: <message data>
 B: ^Z
 B: FF
-A: FF
 A: FQ
 ```
 
@@ -139,10 +140,10 @@ A: FQ
 
 All proposal commands begin with F in the first column and end with carriage return.
 
-**Basic proposal format (seven fields required):**
+**Basic proposal format (six fields required, plus block terminator):**
 ```
-FB <type> <sender> <bbs> <recipient> <mid/bid> <size> [<checksum>]
-F>
+FB <type> <sender> <bbs> <recipient> <mid/bid> <size>
+F> [<checksum>]
 ```
 
 | Field | Description |
@@ -268,7 +269,8 @@ Open source implementations are available in the LinFBB and LinBPQ projects.
 
 ### 8.2 Compressed Message Header
 
-**ASCII compressed message (FA) header:**
+When using compressed transfer (FA proposal), each message is preceded by a binary header:
+
 ```
 <SOH> <length> <title> <NUL> <offset> <NUL>
 ```
@@ -276,17 +278,13 @@ Open source implementations are available in the LinFBB and LinBPQ projects.
 | Field | Value | Description |
 |-------|-------|-------------|
 | SOH | 0x01 | Start of header |
-| length | 1 byte | Header length |
-| title | 1-80 bytes | Message title (ASCII) |
+| length | 1 byte | Total header length (excluding SOH and length byte) |
+| title | 1-80 bytes | Message title (ASCII, uncompressed) |
 | NUL | 0x00 | Field separator |
-| offset | 1-6 bytes | Resume offset (ASCII) |
+| offset | 1-6 bytes | Resume offset in ASCII digits (or "0" for new transfer) |
 | NUL | 0x00 | Header terminator |
 
-**Binary file (FB) header:**
-
-Same structure with filename instead of title.
-
-**Note:** French regulations require that titles and filenames remain uncompressed for regulatory inspection.
+**Note:** The title remains uncompressed in the header for regulatory inspection requirements.
 
 ### 8.3 Data Block Format
 
@@ -352,14 +350,15 @@ The checksum is computed over all bytes in all data blocks (the bytes following 
 
 ### 10.1 Normal Termination
 
-A normal session ends when both sides have sent FF:
+A normal session ends when one side sends FF (no more messages) and the other responds with FQ:
 
 ```
 A: FF
-B: FF
-A: FQ
+B: FQ
 <disconnect>
 ```
+
+If both sides have messages, they exchange proposals until one side exhausts its queue and sends FF. The other side then sends FQ to close the session.
 
 ### 10.2 Error Handling
 
@@ -446,9 +445,9 @@ When connecting to a system without FBB capability, implementations should detec
 
 The default 10 KB block size balances efficiency with error recovery. On reliable links, larger blocks improve throughput. On noisy links, smaller blocks reduce retransmission overhead.
 
-### 13.2 Pipeline Effect
+### 13.2 Bidirectional Transfer
 
-The protocol's bidirectional block transfer creates a pipeline effect that optimizes throughput on high-latency links (satellite, long digipeater chains). While one station transmits data, the other prepares its next proposal block.
+The protocol's bidirectional block transfer reduces overhead on long links by allowing both stations to exchange messages in the same session. After one station completes sending its messages, direction reverses and the other station sends its queued messages. Each station prepares its proposals only when it is its turn to send.
 
 ### 13.3 BID Database Management
 
