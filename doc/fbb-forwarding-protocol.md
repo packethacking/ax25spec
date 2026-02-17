@@ -140,11 +140,13 @@ A: FQ
 
 All proposal commands begin with F in the first column and end with carriage return.
 
-**Basic proposal format (six fields required, plus block terminator):**
+**Basic proposal format (FB command plus six data fields, followed by block terminator):**
 ```
 FB <type> <sender> <bbs> <recipient> <mid/bid> <size>
 F> [<checksum>]
 ```
+
+Note: Some documentation refers to this as "seven mandatory fields" when counting the FB command itself as a field.
 
 | Field | Description |
 |-------|-------------|
@@ -164,14 +166,27 @@ FB P F6FBB FC1GHV FC1MVP 24657_F6FBB 1345
 
 ### 5.2 Proposal Commands
 
+The meaning of FA and FB depends on whether the compressed protocol extension is in use:
+
+**Basic (Uncompressed) Protocol:**
+
 | Command | Description |
 |---------|-------------|
-| FA | Compressed binary transfer (message will be sent using LZHUF compression) |
 | FB | Standard ASCII transfer (uncompressed text mode) |
+| F> | End of proposal block (with optional checksum) |
+
+**Compressed Protocol Extension (B/B1 mode):**
+
+When the B flag is present in both SIDs, the compressed protocol is used:
+
+| Command | Description |
+|---------|-------------|
+| FA | Compressed ASCII message (text message with title, sent using LZHUF compression) |
+| FB | Compressed binary file (binary file with filename, sent using LZHUF compression) |
 | FC | Encapsulated message (B2 mode only) |
 | F> | End of proposal block (with optional checksum) |
 
-**Note:** The naming is somewhat counterintuitive—FA indicates binary/compressed mode will be used, while FB indicates standard ASCII text mode. The receiving station uses this to determine whether to expect compressed binary data or plain text.
+**Note:** In the compressed protocol, both FA and FB use LZHUF compression. The difference is what is being transferred: FA is for text messages (header contains message title), while FB is for binary file attachments (header contains filename). The FB binary file mode was noted as "not yet implemented" in FBB version 5.12, so in practice FA is used for most compressed transfers.
 
 ### 5.3 Proposal Block Limits
 
@@ -261,30 +276,32 @@ The algorithm was adapted from Haruhiko Okumura's LZARI via Haruyasu Yoshizaki's
 
 | Parameter | Value | Description |
 |-----------|-------|-------------|
-| N | 2048 | Sliding window buffer size |
+| N | 2048 | Sliding window buffer size (FBB-specific; standard LZHUF uses 4096) |
 | F | 60 | Lookahead buffer size |
 | THRESHOLD | 2 | Minimum match length for compression |
+
+**Important:** The N=2048 buffer size is specific to FBB. Standard LZHUF implementations use N=4096. Implementers must ensure their LZHUF code uses N=2048 for FBB compatibility.
 
 Open source implementations are available in the LinFBB and LinBPQ projects.
 
 ### 8.2 Compressed Message Header
 
-When using compressed transfer (FA proposal), each message is preceded by a binary header:
+When using compressed transfer (FA or FB proposal), each message is preceded by a binary header:
 
 ```
-<SOH> <length> <title> <NUL> <offset> <NUL>
+<SOH> <length> <title/filename> <NUL> <offset> <NUL>
 ```
 
 | Field | Value | Description |
 |-------|-------|-------------|
 | SOH | 0x01 | Start of header |
-| length | 1 byte | Total header length (excluding SOH and length byte) |
-| title | 1-80 bytes | Message title (ASCII, uncompressed) |
+| length | 1 byte | Total header length (excluding SOH and length byte itself) |
+| title/filename | 1-80 bytes | Message title (FA) or filename (FB), ASCII, uncompressed |
 | NUL | 0x00 | Field separator |
 | offset | 1-6 bytes | Resume offset in ASCII digits (or "0" for new transfer) |
 | NUL | 0x00 | Header terminator |
 
-**Note:** The title remains uncompressed in the header for regulatory inspection requirements.
+**Note:** The length byte encodes the number of bytes from the title/filename through the final NUL, inclusive of both NUL separators. The title/filename remains uncompressed in the header for regulatory inspection requirements.
 
 ### 8.3 Data Block Format
 
@@ -308,7 +325,7 @@ In B1 mode, the compressed data stream has the following structure:
 | 2 | 4 bytes | Uncompressed message size (little-endian) |
 | 6 | variable | Compressed message data |
 
-The CRC-16 uses the CCITT polynomial and covers the 4-byte size field plus all compressed data bytes. This enables both integrity verification and resume capability by allowing partial transfers to be validated.
+The CRC-16 uses the CCITT polynomial (0x1021, also known as CRC-16-CCITT or X.25) and covers the 4-byte size field plus all compressed data bytes. This enables both integrity verification and resume capability by allowing partial transfers to be validated.
 
 ### 8.5 End of Transfer
 
