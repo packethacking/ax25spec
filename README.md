@@ -11,3 +11,7 @@ The source documents are in [/src](src).
 [doc/fbb-forwarding-protocol.md](doc/fbb-forwarding-protocol.md) is a description of the FBB (F6FBB) Forwarding Protocol compiled from public sources, covering message forwarding between amateur packet radio BBS systems, including compressed transfer modes and the B2F extension used by Winlink.
 
 Please feel free to raise issues and PRs vs this repo.
+
+## Future targets
+
+- APRS101.pdf and the corrections page
