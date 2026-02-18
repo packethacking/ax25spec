@@ -1833,6 +1833,71 @@ flow down the page through the specified sequence of operations, and end with th
 
 ![Figure C1.1 SDL Symbol Definitions](media/figc1.1.png)
 
+The following Mermaid shape conventions are used throughout these diagrams
+to approximate ITU-T SDL notation:
+
+```mermaid
+flowchart LR
+    subgraph States
+        s1([0 Ready])
+    end
+
+    subgraph "Signal Reception"
+        s2[/DL-RELEASE Request\]
+        s3[\SABM/]
+    end
+
+    subgraph "Signal Generation"
+        s4[\DL-UNIT-DATA Indication/]
+        s5[/UI command p=0\]
+    end
+
+    subgraph "Internal Signals"
+        s6{{Push on I frame queue}}
+        s7{{I frame pops off queue}}
+    end
+
+    subgraph Processing
+        s8[Stop T2 — Start T1]
+    end
+
+    subgraph Decisions
+        s9{Peer receiver ready?}
+    end
+
+    subgraph "Subroutine Call"
+        s10[[Establish data link]]
+    end
+
+    subgraph "Subroutine Start"
+        s11([Start transmitter]):::substart
+    end
+
+    classDef substart stroke-width:3px
+```
+
+## Symbol Legend (Figure C1.1)
+
+| SDL Symbol | Mermaid Syntax | Meaning |
+|---|---|---|
+| Rounded rectangle | `([text])` | **State** |
+| Left trapezoid | `[/text\]` | **Signal Reception from Lower Layer** |
+| Right trapezoid | `[\text/]` | **Signal Reception from Upper Layer** |
+| Right trapezoid (reversed) | `[\text/]` | **Signal Generation to Lower Layer** |
+| Left trapezoid (reversed) | `[/text\]` | **Signal Generation to Upper Layer** |
+| Hexagon | `{{text}}` | **Internal Signal (generation or reception)** |
+| Rectangle | `[text]` | **Processing Description** |
+| Diamond | `{text}` | **Test or Decision** |
+| Double-bordered rect | `[[text]]` | **Subroutine Call** |
+| Bold-stroke rounded rect | `([text]):::substart` | **Subroutine Start** |
+
+> **Note:** Mermaid does not have exact SDL shapes for all symbols (e.g. the
+> "save" signal, or the return-from-subroutine cross-circle). The trapezoid
+> direction is used to distinguish signal direction (upper vs lower layer),
+> and hexagons are used for internal signals. Annotations in the diagram
+> text help disambiguate where shape alone is insufficient.
+
+
 **Figure C1.1 SDL Symbol Definitions**
 
 # Appendix C2a - Simplex Physical Layer State Machines
@@ -1933,6 +1998,60 @@ Timers:
 - T107 — Anti-Hogging Limit - T108 — Receiver Startup
 
 ![Figure C2a.1 Simplex Physical Ready State](media/figc2a.1.png)
+
+> **NOTE:** Normal Queue Processing is Enabled, Priority Queue is Empty.
+
+```mermaid
+flowchart TD
+    state0([0 Ready])
+
+    state0 --> inp1[/PH-EXPEDITED-DATA Request\]
+    state0 --> inp2[/PH-SIEZE Request\]
+    state0 --> inp3[/PH-RELEASE Request\]
+    state0 --> inp4[/PH-DATA Request\]
+    state0 --> inp5[/All Other Primitives\]
+    state0 --> inp6{{T102 Expiry}}
+    state0 --> inp7[/HW-AOS Indication\]
+    state0 --> inp8[/All Other Primitives\]
+
+    %% Column 1: PH-EXPEDITED-DATA Request
+    inp1 --> proc1[Add to Priority Queue]
+    proc1 --> proc2[Set Digipeating]
+    proc2 --> sub1[[Start Transmitter]]
+    sub1 --> st_tx1([3 Transmitter Start])
+
+    %% Column 2: PH-SIEZE Request
+    inp2 --> proc3[Clear Digipeating]
+    proc3 --> sub2[[Start Transmitter]]
+    sub2 --> st_tx2([3 Transmitter Start])
+
+    %% Column 3: PH-RELEASE Request
+    inp3 --> proc4[Discard: Erroneous Primitive]
+    proc4 --> st_r1([0 Ready])
+
+    %% Column 4: PH-DATA Request
+    inp4 --> proc5[Discard: Erroneous Primitive]
+    proc5 --> st_r2([0 Ready])
+
+    %% Column 5: All Other Primitives (left)
+    inp5 --> proc6[Add to Normal Queue]
+    proc6 --> st_r3([0 Ready])
+
+    %% Column 6: T102 Expiry
+    inp6 --> proc7[Clear Repeater Up]
+    proc7 --> st_r4([0 Ready])
+
+    %% Column 7: HW-AOS Indication
+    inp7 --> proc8[Acquisition]
+    proc8 --> st_rx([1 Receiving])
+
+    %% Column 8: All Other Primitives (right)
+    inp8 --> proc9[Discard: Erroneous Primitive]
+    proc9 --> st_r5([0 Ready])
+```
+
+*By definition, there are no other primitives.*
+
 
 **Figure C2a.1 Simplex Physical Ready State.**
 
