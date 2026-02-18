@@ -2745,9 +2745,27 @@ Once objects are in the queue, the DLS provider may manipulate pairs of adjacent
 
 The relationship between objects that may be manipulated in the above fashion are summarized in Figure D.1.
 
-![Figure D.1 Relationships between Queue Model Objects](media/figd1.png)
-
 **Figure D.1 Relationships between Queue Model Objects.**
+
+```
++---------------------+                       +---------------------+
+|   Data Link Service |                       |   Data Link Service |
+|        User A       |                       |        User B       |
++---------------------+                       +---------------------+
+          ^                                               ^  
+          |                                               |
+          v                                               v
+    +----------+                                    +----------+
+    |  DLSAP   |                                    |  DLSAP   |
+    +----------+                                    +----------+
+        ^  |                                            ^  |
+        |  |              Queue from A to B             |  |
+        |  |------------------------------------------->|  |
+        |                                                  |
+        |              Queue from B to A                   |
+        |<-------------------------------------------------|
+                                  
+```
 
 Whether the DLS provider performs actions resulting in deletion or not will depend upon the behavior of the DLC users. In general, if a DLS user does not remove objects from a queue, the DLS provider shall, after some unspecified period of time, perform all the permitted deletions.
 
