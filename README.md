@@ -6,6 +6,8 @@
 
 [doc/multi-drop-kiss-operation.md](doc/multi-drop-kiss-operation.md) is a Markdown version of the Multi-Drop KISS operation specification. This document also describes G8BPQ's Acknowledgement Mode, better known as ACKMODE.
 
+[doc/il2p-specification-v0.6.md](doc/il2p-specification-v0.6.md) is a Markdown version of version 0.6 of the Improved Layer 2 Protocol (IL2P).
+
 The source documents are in [/src](src).
 
 [doc/fbb-forwarding-protocol.md](doc/fbb-forwarding-protocol.md) is a description of the FBB (F6FBB) Forwarding Protocol compiled from public sources, covering message forwarding between amateur packet radio BBS systems, including compressed transfer modes and the B2F extension used by Winlink.
