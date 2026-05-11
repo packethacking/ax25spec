@@ -1,0 +1,25 @@
+%% This file was produced by tools/Packet.Sdl.CodeGen from spec-sdl/data-link/connected.sdl.yaml
+%% Do not edit by hand. Run `dotnet run --project tools/Packet.Sdl.CodeGen` to regenerate.
+%%
+%% Source: ax.25.2.2.4_Oct_25, figure figc4.4a
+%% URL: https://raw.githubusercontent.com/packethacking/ax25spec/main/doc/media/figc4.4a.png
+%% Coverage: partial
+%%
+%% Important: this rendering is approximate and intentionally
+%% looks nothing like the original SDL figure. It is a machine-
+%% generated view of the transitions in the .sdl.yaml — useful
+%% for spotting transcription bugs (missing transitions, wrong
+%% destination state) but NOT a substitute for reading the spec
+%% figure itself. See docs/sdl-primer.md.
+
+stateDiagram-v2
+    direction LR
+
+    classDef focal fill:#fff5b1,stroke:#b08800;
+    class Connected focal
+
+    Connected --> Connected: t01_dl_flow_off_when_own_receiver_busy<br/>on: DL_FLOW_OFF_request<br/>[own_receiver_busy]<br/>/ set_own_receiver_busy<br/>/ RNR response<br/>/ clear_acknowledge_pending
+    Connected --> Connected: t02_dl_flow_off_when_own_receiver_not_busy<br/>on: DL_FLOW_OFF_request<br/>[not own_receiver_busy]
+    Connected --> Connected: t03_dl_flow_on_when_own_receiver_not_busy<br/>on: DL_FLOW_ON_request<br/>[not own_receiver_busy]
+    Connected --> Connected: t04_dl_flow_on_when_busy_and_T1_not_running<br/>on: DL_FLOW_ON_request<br/>[own_receiver_busy and not T1_running]<br/>/ clear_own_receiver_busy<br/>/ RR command<br/>/ clear_acknowledge_pending<br/>/ stop_T3<br/>/ start_T1
+    Connected --> Connected: t05_dl_flow_on_when_busy_and_T1_running<br/>on: DL_FLOW_ON_request<br/>[own_receiver_busy and T1_running]<br/>/ clear_own_receiver_busy<br/>/ RR command<br/>/ clear_acknowledge_pending

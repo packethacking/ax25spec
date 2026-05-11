@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://packet.net/schema/sdl-machine.schema.json",
+  "title": "SDL state machine page",
+  "description": "Machine-readable transcription of one SDL diagram from the AX.25 spec.",
+  "type": "object",
+  "required": ["machine", "state", "source", "transitions"],
+  "additionalProperties": false,
+  "properties": {
+    "machine": {
+      "type": "string",
+      "enum": [
+        "data_link",
+        "link_mux",
+        "mgmt_data_link",
+        "simplex_phy",
+        "duplex_phy",
+        "segmenter",
+        "reassembler"
+      ],
+      "description": "Which spec state machine this page belongs to."
+    },
+    "state": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Za-z0-9]*$",
+      "description": "PascalCase name of the state this page describes."
+    },
+    "coverage": {
+      "type": "string",
+      "enum": ["complete", "partial"],
+      "default": "complete",
+      "description": "'partial' means this page covers only some of the state's transitions (e.g. one panel of a 3-panel SDL). 'complete' asserts every transition for this state appears here."
+    },
+    "source": {
+      "type": "object",
+      "required": ["spec", "figure"],
+      "additionalProperties": false,
+      "properties": {
+        "spec": { "type": "string" },
+        "figure": { "type": "string" },
+        "url":   { "type": "string", "format": "uri" }
+      }
+    },
+    "variables": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Documentation-only list of variables this state reads/writes."
+    },
+    "transitions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "on", "next"],
+        "additionalProperties": false,
+        "properties": {
+          "id":      { "type": "string", "pattern": "^t[0-9]{2}_[a-z0-9_]+$" },
+          "on":      { "type": "string", "description": "Event name from /spec-sdl/events.yaml." },
+          "guard":   { "type": "string", "description": "Optional boolean expression, opaque to codegen." },
+          "actions": { "type": "array", "items": { "type": "string" } },
+          "next":    { "type": "string", "description": "Name of the destination state." },
+          "notes":   { "type": "string" }
+        }
+      }
+    }
+  }
+}

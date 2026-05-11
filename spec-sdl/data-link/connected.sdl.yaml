@@ -1,0 +1,133 @@
+# Data-Link state machine, "Connected" state.
+#
+# Partial transcription. Other columns of figc4.4a / 4b / 4c are pending.
+# Per ADR-0001, every transition here comes from an explicit human-authored
+# transcription against the spec figure — not inferred by the agent from the
+# raster image. We trust the figure; if it surprises us, the surprise is ours.
+#
+# Variable definitions (excerpted from ax.25.2.2.4_Oct_25.md §C4.3 "Flags"):
+#
+#   Own Receiver Busy
+#       Layer 3 is busy and cannot receive I frames.
+#
+#   Peer Receiver Busy
+#       Remote station is busy and cannot receive I frames.
+#
+#   Acknowledge Pending
+#       I frames have been successfully received but not yet acknowledged to
+#       the remote station.
+#
+# Implementation cross-reference for the DL-FLOW-OFF / DL-FLOW-ON columns
+# below (this matters because the figure semantics are subtle):
+#
+#   LinBPQ           (G8BPQ, reference impl): does NOT implement DL primitives
+#                    at all. Busy state is derived live from buffer counts in
+#                    RR_OR_RNR() (L2Code.c:4143). No Own-Receiver-Busy flag.
+#   ax25ms           (Thomas Habets, protocol-faithful): defines own_receiver_busy
+#                    but the flag is only ever assigned `false`; busy branches
+#                    are dead code (seqpacket_con.cc).
+#   direwolf         (WB2OSZ): explicitly states "dl_flow_off — not implemented.
+#                    Not in AGW API." (ax25_link.c:935-936). Every check of
+#                    S->own_receiver_busy is annotated "This should be unreachable
+#                    because we currently don't have a way to set it."
+#                    (ax25_link.c:2707-2710).
+#
+# So the columns below describe spec behaviour that no major peer actually
+# exercises today. We encode them anyway so our state machine matches the spec.
+
+machine: data_link
+state: Connected
+coverage: partial
+
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc4.4a
+  url: https://raw.githubusercontent.com/packethacking/ax25spec/main/doc/media/figc4.4a.png
+
+# Documentation-only. The orchestrator owns the real fields.
+variables:
+  - V(S)
+  - V(A)
+  - V(R)
+  - RC
+  - own_receiver_busy
+  - peer_receiver_busy
+  - acknowledge_pending
+  - T1_running
+  - T3_running
+
+transitions:
+
+  # --- figc4.4a column 5 — DL-FLOW-OFF request -----------------------------
+  # The action chain hangs off the **Yes** branch of `Own Receiver Busy?`.
+  # On first read this is counter-intuitive (you'd expect RNR to fire on
+  # entry into busy state, not when already busy). The figure is correct as
+  # drawn — confirmed by the spec author and corroborated by direwolf
+  # (which implements the same SDL faithfully, including this directionality).
+  # The most coherent reading from the collaborator who's been working with
+  # the spec author:
+  #
+  #   "DL-* messages are messages from the upper layers. When the upper
+  #    layer says it's busy, it sets the busy flag."
+  #
+  # i.e. the act of Layer 3 sending DL-FLOW-OFF is conceptually the upper
+  # layer setting the Own-Receiver-Busy flag; the diamond then reads the
+  # just-set state and the action chain formalises it on the wire (RNR
+  # Response) and re-affirms the local flag. The "No" branch handles the
+  # case where the flag isn't set — in practice unreachable per direwolf's
+  # comments, so the right behaviour is no-op.
+  #
+  # Citation: §5.3 (DL primitives), §6.4.10 (Sending a Busy Indication),
+  # §C4.3 (Flag definitions).
+
+  - id: t01_dl_flow_off_when_own_receiver_busy
+    on: DL_FLOW_OFF_request
+    guard: "own_receiver_busy"
+    actions:
+      - set_own_receiver_busy
+      - "RNR response"
+      - clear_acknowledge_pending
+    next: Connected
+    notes: "figc4.4a col 5, Yes branch of 'Own Receiver Busy?'. Transcribed by M0LTE 2026-05-11; semantics confirmed by upstream collaborator + figure semantics consistent with direwolf ax25_link.c."
+
+  - id: t02_dl_flow_off_when_own_receiver_not_busy
+    on: DL_FLOW_OFF_request
+    guard: "not own_receiver_busy"
+    actions: []
+    next: Connected
+    notes: "figc4.4a col 5, No branch of 'Own Receiver Busy?'. Transcribed by M0LTE 2026-05-11. Per direwolf this path is unreachable in practice."
+
+  # --- figc4.4a column 6 — DL-FLOW-ON request ------------------------------
+  # Mirror of col 5: Layer 3 asks DL to resume flow. Yes branch (currently
+  # busy) does the work — clear local flag, signal peer with RR command,
+  # then T1/T3 hygiene per the §6.4.11 waiting-acknowledgement procedure.
+  # Inner `T1 Running?` decision avoids re-arming an already-running T1.
+
+  - id: t03_dl_flow_on_when_own_receiver_not_busy
+    on: DL_FLOW_ON_request
+    guard: "not own_receiver_busy"
+    actions: []
+    next: Connected
+    notes: "figc4.4a col 6, No branch of 'Own Receiver Busy?'. Transcribed by M0LTE 2026-05-11."
+
+  - id: t04_dl_flow_on_when_busy_and_T1_not_running
+    on: DL_FLOW_ON_request
+    guard: "own_receiver_busy and not T1_running"
+    actions:
+      - clear_own_receiver_busy
+      - "RR command"
+      - clear_acknowledge_pending
+      - stop_T3
+      - start_T1
+    next: Connected
+    notes: "figc4.4a col 6, Yes branch with inner 'T1 Running?' = No. Transcribed by M0LTE 2026-05-11. RR command poll + T3→T1 swap matches §6.4.11."
+
+  - id: t05_dl_flow_on_when_busy_and_T1_running
+    on: DL_FLOW_ON_request
+    guard: "own_receiver_busy and T1_running"
+    actions:
+      - clear_own_receiver_busy
+      - "RR command"
+      - clear_acknowledge_pending
+    next: Connected
+    notes: "figc4.4a col 6, Yes branch with inner 'T1 Running?' = Yes. Transcribed by M0LTE 2026-05-11. T1 already running so no timer swap needed."

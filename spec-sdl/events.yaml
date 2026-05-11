@@ -1,0 +1,51 @@
+# Canonical AX.25 event catalog. Every transition's `on:` field in a
+# *.sdl.yaml MUST appear in one of the groups below. The codegen tool will
+# refuse to emit code for an event it can't find here.
+#
+# Source: AX.25 v2.2 rev 4 (Oct 2025) §5 (primitives) and §C (SDL).
+
+# Service primitives from the upper layer (Layer 3 → Data-Link).
+primitives_upper:
+  - DL_DATA_request
+  - DL_UNIT_DATA_request
+  - DL_CONNECT_request
+  - DL_DISCONNECT_request
+  - DL_FLOW_OFF_request
+  - DL_FLOW_ON_request
+
+# Service primitives between Data-Link and Management Data-Link.
+primitives_mgmt:
+  - MDL_NEGOTIATE_request
+  - MDL_NEGOTIATE_confirm
+  - MDL_ERROR_indicate
+
+# Frames received from the link (decoded from the lower layer).
+frames_received:
+  - I_received
+  - RR_received
+  - RNR_received
+  - REJ_received
+  - SREJ_received
+  - UI_received
+  - SABM_received
+  - SABME_received
+  - DISC_received
+  - UA_received
+  - DM_received
+  - FRMR_received
+  - XID_received
+  - TEST_received
+
+# Internal events (queue / timer).
+internal:
+  - I_frame_pops_off_queue
+  - all_other_primitives
+  - control_field_error
+  - info_not_permitted_in_frame
+  - u_or_s_frame_length_error
+
+# Timer expiries.
+timers:
+  - T1_expiry
+  - T2_expiry
+  - T3_expiry
