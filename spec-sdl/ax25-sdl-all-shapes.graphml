@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:java="http://www.yworks.com/xml/yfiles-common/1.0/java" xmlns:sys="http://www.yworks.com/xml/yfiles-common/markup/primitives/2.0" xmlns:x="http://www.yworks.com/xml/yfiles-common/markup/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:yed="http://www.yworks.com/xml/yed/3" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
+  <!--Created by yEd 3.25.1-->
+  <key attr.name="Description" attr.type="string" for="graph" id="d0"/>
+  <key for="port" id="d1" yfiles.type="portgraphics"/>
+  <key for="port" id="d2" yfiles.type="portgeometry"/>
+  <key for="port" id="d3" yfiles.type="portuserdata"/>
+  <key attr.name="url" attr.type="string" for="node" id="d4"/>
+  <key attr.name="description" attr.type="string" for="node" id="d5"/>
+  <key for="node" id="d6" yfiles.type="nodegraphics"/>
+  <key for="graphml" id="d7" yfiles.type="resources"/>
+  <key attr.name="url" attr.type="string" for="edge" id="d8"/>
+  <key attr.name="description" attr.type="string" for="edge" id="d9"/>
+  <key for="edge" id="d10" yfiles.type="edgegraphics"/>
+  <graph edgedefault="directed" id="G">
+    <data key="d0"/>
+    <node id="n0">
+      <data key="d4" xml:space="preserve"/>
+      <data key="d5" xml:space="preserve"><![CDATA[State]]></data>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="60.0" width="120.0" x="29.0" y="136.0"/>
+          <y:Fill color="#FFFFFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="21.09375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="19.453125">State</y:NodeLabel>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="1"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n1">
+      <data key="d4" xml:space="preserve"/>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from Lower Layer]]></data>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="71.89795918367349" width="120.0" x="40.0" y="243.05102040816325"/>
+          <y:Fill color="#FFFFFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" bottomInset="0" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.1875" horizontalTextPosition="center" iconTextGap="4" leftInset="20" modelName="internal" modelPosition="c" rightInset="0" textColor="#000000" topInset="0" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="19.855229591836746">Signal reception from lower layer</y:NodeLabel>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="2"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n2">
+      <data key="d4" xml:space="preserve"/>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="71.89795918367352" width="120.0" x="29.0" y="372.05102040816325"/>
+          <y:Fill color="#FFFFFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" bottomInset="0" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.1875" horizontalTextPosition="center" iconTextGap="4" leftInset="0" modelName="internal" modelPosition="c" rightInset="20" textColor="#000000" topInset="0" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="19.855229591836746">Signal reception from upper layer</y:NodeLabel>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="3"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n3">
+      <data key="d4" xml:space="preserve"/>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal generation to upper layer]]></data>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="60.0" width="114.11591836734692" x="31.94204081632654" y="491.0"/>
+          <y:Fill color="#FFFFFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" bottomInset="0" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.1875" horizontalTextPosition="center" iconTextGap="4" leftInset="10" modelName="internal" modelPosition="c" rightInset="0" textColor="#000000" topInset="0" verticalTextPosition="bottom" visible="true" width="114.11591836734692" x="0.0" xml:space="preserve" y="13.90625">Signal generation to upper layer</y:NodeLabel>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="4"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n4">
+      <data key="d4" xml:space="preserve"/>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal generation to lower layer]]></data>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="71.89795918367352" width="108.23183673469384" x="34.88408163265308" y="575.0510204081633"/>
+          <y:Fill color="#FFFFFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="36.1875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="108.23183673469384" x="0.0" xml:space="preserve" y="17.855229591836746">Signal generation to lower layer</y:NodeLabel>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="5"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n5">
+      <data key="d4" xml:space="preserve"/>
+      <data key="d5" xml:space="preserve"><![CDATA[Processing description]]></data>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="60.0" width="120.0" x="23.11591836734692" y="684.0"/>
+          <y:Fill color="#FFFFFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="36.1875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="11.90625">Processing description</y:NodeLabel>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="6"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n6">
+      <data key="d4" xml:space="preserve"/>
+      <data key="d5" xml:space="preserve"><![CDATA[Test or decision]]></data>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="95.30448979591836" width="120.0" x="18.0" y="762.3477551020408"/>
+          <y:Fill color="#FFFFFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="21.09375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="37.105369897959235">Test or decision</y:NodeLabel>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="7"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n7">
+      <data key="d4" xml:space="preserve"/>
+      <data key="d5" xml:space="preserve"><![CDATA[Subroutine call]]></data>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="60.0" width="120.0" x="18.0" y="931.3125"/>
+          <y:Fill color="#FFFFFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="21.09375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="19.453125">Subroutine call</y:NodeLabel>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="8"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n8">
+      <data key="d5" xml:space="preserve"><![CDATA[Save a signal until a new state is reached]]></data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="53.93591836734697" width="129.68326530612245" x="8.316734693877578" y="1064.972755102041"/>
+          <y:Fill color="#FFFFFF" transparent="false"/>
+          <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="36.1875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="129.68326530612245" x="0.0" xml:space="preserve" y="8.874209183673429">Save a signal until a new state is reached</y:NodeLabel>
+          <y:Shape type="parallelogram"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n9">
+      <data key="d4" xml:space="preserve"/>
+      <data key="d5" xml:space="preserve"><![CDATA[Internal Signal Reception]]></data>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="77.22669982910156" width="130.73878127740355" x="7.78897670823703" y="1192.5689285714288"/>
+          <y:Fill color="#FFFFFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" bottomInset="0" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.1875" horizontalTextPosition="center" iconTextGap="4" leftInset="20" modelName="internal" modelPosition="c" rightInset="20" textColor="#000000" topInset="0" verticalTextPosition="bottom" visible="true" width="130.73878127740355" x="0.0" xml:space="preserve" y="22.51959991455078">Internal Signal Reception</y:NodeLabel>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="9"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n10">
+      <data key="d5" xml:space="preserve"><![CDATA[Internal Signal Generation]]></data>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="77.22669982910156" width="131.811417952557" x="-7.468208976278504" y="1299.7956284005304"/>
+          <y:Fill color="#FFFFFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" bottomInset="0" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.1875" horizontalTextPosition="center" iconTextGap="4" leftInset="20" modelName="internal" modelPosition="c" rightInset="20" textColor="#000000" topInset="0" verticalTextPosition="bottom" visible="true" width="131.811417952557" x="0.0" xml:space="preserve" y="22.51959991455078">Internal Signal Generation</y:NodeLabel>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="10"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n11">
+      <data key="d5" xml:space="preserve"><![CDATA[Subroutine start]]></data>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="71.89795918367355" width="128.67068424097243" x="17.387274942701055" y="1420.6760204081631"/>
+          <y:Fill color="#FFFFFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="21.09375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="128.67068424097243" x="0.0" xml:space="preserve" y="25.40210459183686">Subroutine start</y:NodeLabel>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="11"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n12">
+      <data key="d4" xml:space="preserve"/>
+      <data key="d5" xml:space="preserve"><![CDATA[Return from Subroutine]]></data>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="98.88570108219062" width="98.88570108219062" x="17.38727494270114" y="1522.5739795918369"/>
+          <y:Fill color="#FFFFFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="sandwich" modelPosition="s" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="47.44285054109531" y="102.88570108219051"/>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="12"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+  </graph>
+  <data key="d7">
+    <y:Resources>
+      <y:Resource id="1" xml:space="preserve">&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60" width="120" height="60"&gt;
+  &lt;title&gt;State&lt;/title&gt;
+  &lt;g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt"&gt;
+    &lt;rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0"/&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;</y:Resource>
+      <y:Resource id="2" xml:space="preserve">&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60" width="120" height="60"&gt;
+  &lt;title&gt;Input (left notch)&lt;/title&gt;
+  &lt;g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt"&gt;
+    &lt;polygon points="0,0 120,0 120,60 0,60 18,30.0"/&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;</y:Resource>
+      <y:Resource id="3" xml:space="preserve">&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60" width="120" height="60"&gt;
+  &lt;title&gt;Input (right notch)&lt;/title&gt;
+  &lt;g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt"&gt;
+    &lt;polygon points="0,0 120,0 102,30.0 120,60 0,60"/&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;</y:Resource>
+      <y:Resource id="4" xml:space="preserve">&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60" width="120" height="60"&gt;
+  &lt;title&gt;Output (left pointer)&lt;/title&gt;
+  &lt;g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt"&gt;
+    &lt;polygon points="18,0 120,0 120,60 18,60 0,30.0"/&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;</y:Resource>
+      <y:Resource id="5" xml:space="preserve">&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60" width="120" height="60"&gt;
+  &lt;title&gt;Output (right pointer)&lt;/title&gt;
+  &lt;g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt"&gt;
+    &lt;polygon points="0,0 102,0 120,30.0 102,60 0,60"/&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;</y:Resource>
+      <y:Resource id="6" xml:space="preserve">&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60" width="120" height="60"&gt;
+  &lt;title&gt;Processing&lt;/title&gt;
+  &lt;g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt"&gt;
+    &lt;rect x="1.0" y="1.0" width="118" height="58"/&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;</y:Resource>
+      <y:Resource id="7" xml:space="preserve">&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60" width="120" height="60"&gt;
+  &lt;title&gt;Test&lt;/title&gt;
+  &lt;g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt"&gt;
+    &lt;polygon points="60.0,0 120,30.0 60.0,60 0,30.0"/&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;</y:Resource>
+      <y:Resource id="8" xml:space="preserve">&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60" width="120" height="60"&gt;
+  &lt;title&gt;Subroutine call&lt;/title&gt;
+  &lt;g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt"&gt;
+    &lt;rect x="1.0" y="1.0" width="118" height="58"/&gt;
+    &lt;line x1="10" y1="1.0" x2="10" y2="59.0"/&gt;
+    &lt;line x1="110" y1="1.0" x2="110" y2="59.0"/&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;</y:Resource>
+      <y:Resource id="9" xml:space="preserve">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;!-- Created with Inkscape (http://www.inkscape.org/) --&gt;
+
+&lt;svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"&gt;
+  &lt;defs
+     id="defs1" /&gt;
+  &lt;g
+     id="layer1"&gt;
+    &lt;rect
+       style="fill:none;stroke-width:0.264583"
+       id="rect1"
+       width="39.01115"
+       height="30.546467"
+       x="26.380772"
+       y="77.512665" /&gt;
+    &lt;g
+       id="g2"
+       transform="translate(-5.2697856,-6.7661445)"&gt;
+      &lt;path
+         style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1"
+         d="M 8.5877986,9.2383895 H 41.767929 l -3.252955,10.4094525 3.122838,9.758862 H 8.5877986 Z"
+         id="path1" /&gt;
+    &lt;/g&gt;
+    &lt;path
+       style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1"
+       d="M 7.9372074,2.5373039 V 22.575502"
+       id="path2" /&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;
+</y:Resource>
+      <y:Resource id="10" xml:space="preserve">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;!-- Created with Inkscape (http://www.inkscape.org/) --&gt;
+
+&lt;svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   sodipodi:docname="drawing.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"&gt;
+  &lt;sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="4.0668163"
+     inkscape:cx="147.6585"
+     inkscape:cy="87.168923"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" /&gt;
+  &lt;defs
+     id="defs1" /&gt;
+  &lt;g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"&gt;
+    &lt;rect
+       style="fill:none;stroke-width:0.264583"
+       id="rect1"
+       width="39.01115"
+       height="30.546467"
+       x="-42.196873"
+       y="77.512665"
+       transform="scale(-1,1)" /&gt;
+    &lt;g
+       id="g2"
+       transform="matrix(-1,0,0,1,73.847429,-6.7661445)"&gt;
+      &lt;path
+         style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1"
+         d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z"
+         id="path1"
+         sodipodi:nodetypes="cccccc" /&gt;
+    &lt;/g&gt;
+    &lt;path
+       style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1"
+       d="M 60.640436,2.5373039 V 22.575502"
+       id="path2" /&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;
+</y:Resource>
+      <y:Resource id="11" xml:space="preserve">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;!-- Created with Inkscape (http://www.inkscape.org/) --&gt;
+
+&lt;svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   sodipodi:docname="drawing.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"&gt;
+  &lt;sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="11.502694"
+     inkscape:cx="68.288353"
+     inkscape:cy="44.293973"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" /&gt;
+  &lt;defs
+     id="defs1" /&gt;
+  &lt;g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"&gt;
+    &lt;path
+       style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1"
+       d="M 9.2383895,6.6360261 V 16.785243 H 28.040465 l 0,-10.1492169 z"
+       id="path2"
+       sodipodi:nodetypes="ccccc" /&gt;
+    &lt;path
+       style="fill:none;stroke:#000000;stroke-width:0.260906;stroke-opacity:1"
+       d="m 28.297226,6.8882035 c 2.832168,3.5304925 2.382971,6.6180825 1e-6,9.6450405 z"
+       id="path3"
+       sodipodi:nodetypes="ccc" /&gt;
+    &lt;path
+       style="fill:none;stroke:#000000;stroke-width:0.260911;stroke-opacity:1"
+       d="m 8.9876443,6.8912318 c -2.8322152,3.5305292 -2.3830107,6.6181522 -10e-7,9.6451442 z"
+       id="path3-8"
+       sodipodi:nodetypes="ccc" /&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;
+</y:Resource>
+      <y:Resource id="12" xml:space="preserve">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;!-- Created with Inkscape (http://www.inkscape.org/) --&gt;
+
+&lt;svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   sodipodi:docname="drawing.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"&gt;
+  &lt;sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="11.502694"
+     inkscape:cx="66.288821"
+     inkscape:cy="37.773761"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" /&gt;
+  &lt;defs
+     id="defs1" /&gt;
+  &lt;g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"&gt;
+    &lt;circle
+       style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1"
+       id="path3"
+       cx="18.550999"
+       cy="11.190404"
+       r="4.5428672" /&gt;
+    &lt;path
+       style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1"
+       d="m 15.319238,8.0506505 6.44052,6.2795065 z"
+       id="path4"
+       sodipodi:nodetypes="ccc" /&gt;
+    &lt;path
+       style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1"
+       d="M 15.319238,14.445167 21.828764,8.0736524 Z"
+       id="path5" /&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;
+</y:Resource>
+    </y:Resources>
+  </data>
+</graphml>
