@@ -176,6 +176,9 @@ transitions:
       UA without F=1 isn't a valid response to our polled SABM —
       DL-ERROR(D), keep waiting.
     references:
+      - source: spec_prose
+        cite: "§6.3.1 ¶4"
+        quote: "Reception of the UA response frame by the originating TNC causes it to cancel the T1 timer and set its internal state variables to '0'."
       - source: direwolf
         path: src/ax25_link.c
         function: ua_frame
@@ -431,6 +434,9 @@ transitions:
       - { action: UI_command, kind: signal_lower }
     next: AwaitingConnection
     references:
+      - source: spec_prose
+        cite: "§6.3.7"
+        quote: "AX.25 uses a special frame for this operation, the Unnumbered Information (UI) frame."
       - source: linux_oot
         path: net/ax25/af_ax25.c
         function: ax25_sendmsg
@@ -558,6 +564,9 @@ transitions:
       - { action: "DM F=1",  kind: signal_lower }
     next: AwaitingConnection
     references:
+      - source: spec_prose
+        cite: "§6.3.5 ¶3"
+        quote: "UI frame with the P bit set to '1' responds with a DM frame with the F bit set to '1'."
       - source: direwolf
         path: src/ax25_link.c
         function: ui_frame
@@ -582,6 +591,9 @@ transitions:
       - { decision: ui_p_eq_1, branch: "No" }
     next: AwaitingConnection
     references:
+      - source: spec_prose
+        cite: "§6.3.5 ¶3"
+        quote: "The offending frame is ignored."
       - source: direwolf
         path: src/ax25_link.c
         function: ui_frame
@@ -692,6 +704,9 @@ transitions:
       'Awaiting 2.2 Connection' (state 5 in the figure / figc4.6) — peer
       wants v2.2, we'll handle the next collision step there.
     references:
+      - source: spec_prose
+        cite: "§6.3.1 ¶3"
+        quote: "If the distant TNC receives a SABM(E) command and cannot enter the indicated state, it sends a DM frame."
       - source: direwolf
         path: src/ax25_link.c
         function: sabm_e_frame

@@ -227,6 +227,9 @@ transitions:
       spec_prose: §C "error indications are discussed in the SDL
       appendices" — code letter (L) is figure-authoritative.
     references:
+      - source: spec_prose
+        cite: "§C"
+        quote: "error indications are discussed in the SDL appendices"
       - source: linbpq
         path: L2Code.c
         function: L2FORUS
@@ -247,7 +250,10 @@ transitions:
     next: Disconnected
     notes: |
       spec_prose: figure-authoritative (DL-ERROR code M). See t07 note.
-    references: []
+    references:
+      - source: spec_prose
+        cite: "§C"
+        quote: "error indications are discussed in the SDL appendices"
       # All four implementations omit:
       # linbpq: no explicit info-not-permitted check; malformed U/S frames released silently.
       # direwolf: no DL-ERROR(M); info-on-U/S not validated.
@@ -263,6 +269,9 @@ transitions:
     notes: |
       spec_prose: figure-authoritative (DL-ERROR code N). See t07 note.
     references:
+      - source: spec_prose
+        cite: "§C"
+        quote: "error indications are discussed in the SDL appendices"
       - source: linbpq
         path: L2Code.c
         function: L2Routine
@@ -291,6 +300,9 @@ transitions:
       rax25:1158 "1998 & 2017 bug: C and D make no sense here." Worth
       tracking as a candidate upstream spec issue.
     references:
+      - source: spec_prose
+        cite: "§C"
+        quote: "error indications are discussed in the SDL appendices"
       - source: direwolf
         path: src/ax25_link.c
         function: ua_frame
