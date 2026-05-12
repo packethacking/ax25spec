@@ -32,12 +32,21 @@ transitions:
     path:
       - { action: DL_DISCONNECT_confirm, kind: signal_upper }
     next: Disconnected
+    notes: |
+      spec_prose: not in §6.3.5; standard DL primitive behaviour —
+      if the upper layer requests disconnect while already disconnected,
+      the data-link immediately confirms back. See §6.3.4 (link
+      disconnection procedure) for the broader context.
 
   - id: t02_dl_unit_data_request
     on: DL_UNIT_DATA_request
     path:
       - { action: UI_command, kind: signal_lower }
     next: Disconnected
+    notes: |
+      spec_prose: §6.3.5 silent; UI frame handling defined in §4.3.3.6
+      (UI frame) and §6.4. Connectionless data path — disconnected
+      state can still send UI frames at the upper layer's request.
 
   - id: t03_dl_connect_request
     on: DL_CONNECT_request
@@ -47,15 +56,21 @@ transitions:
       - { action: Establish_Data_Link,        kind: subroutine }
       - { action: set_layer_3_initiated,      kind: processing }
     next: AwaitingConnection
+    notes: |
+      spec_prose: §6.3.5 ¶2 ("a TNC may initiate a link set up as
+      outlined in connection establishment") + §6.3.1 ¶1 (sends a SABM
+      command frame and starts T1). Establish_Data_Link is the
+      subroutine defined in figc4.7.
 
   - id: t04_all_other_primitives_from_lower_layer
     on: all_other_primitives__from_lower_layer
     path: []
     next: Disconnected
     notes: |
-      Catch-all column with no actions: receive any unhandled primitive
-      drawn with the "Signal reception from Lower Layer" shape, stay in
-      Disconnected, do nothing.
+      spec_prose: catch-all column with no prose backing. Receive any
+      unhandled primitive drawn with the "Signal reception from Lower
+      Layer" shape (d5), stay in Disconnected, do nothing. Standard
+      SDL convention for "everything else from this source class".
 
   # ─── Received frames (d5: "Signal reception from upper layer") ────────
 
@@ -66,38 +81,56 @@ transitions:
       - { action: DM,        kind: signal_lower }
     next: Disconnected
     notes: |
-      Catch-all for received command frames not handled by SABM/SABME/
-      DISC/UI explicitly: respond DM.
+      spec_prose: §6.3.5 ¶3 — "Any TNC receiving a command frame other
+      than a SABM(E) or UI frame…responds with a DM frame with the F
+      bit set to '1'. The offending frame is ignored." Catch-all for
+      received command frames not handled by SABM/SABME/DISC/UI
+      explicitly. F := P sets F to the incoming P bit (typically 1 on a
+      polled command frame).
 
   - id: t06_all_other_primitives_from_upper_layer
     on: all_other_primitives__from_upper_layer
     path:
       - { action: discard_primitive, kind: processing }
     next: Disconnected
+    notes: |
+      spec_prose: catch-all column with no prose backing. Receive any
+      unhandled primitive drawn with the "Signal reception from upper
+      layer" shape (d5), discard it, stay in Disconnected.
 
   - id: t07_control_field_error
     on: control_field_error
     path:
       - { action: DL_ERROR_indication_L, kind: signal_upper }
     next: Disconnected
+    notes: |
+      spec_prose: §C "error indications are discussed in the SDL
+      appendices" — code letter (L) is figure-authoritative.
 
   - id: t08_info_not_permitted_in_frame
     on: info_not_permitted_in_frame
     path:
       - { action: DL_ERROR_indication_M, kind: signal_upper }
     next: Disconnected
+    notes: |
+      spec_prose: figure-authoritative (DL-ERROR code M). See t07 note.
 
   - id: t09_u_or_s_frame_length_error
     on: u_or_s_frame_length_error
     path:
       - { action: DL_ERROR_indication_N, kind: signal_upper }
     next: Disconnected
+    notes: |
+      spec_prose: figure-authoritative (DL-ERROR code N). See t07 note.
 
   - id: t10_ua_received
     on: UA_received
     path:
       - { action: DL_ERROR_indication_C_D, kind: signal_upper }
     next: Disconnected
+    notes: |
+      spec_prose: unexpected UA while disconnected (UA is a response;
+      we didn't send a command). Codes C and D are figure-authoritative.
 
   - id: t11_ui_received_p_eq_1
     on: UI_received
@@ -107,6 +140,11 @@ transitions:
       - { action: "F := 1",  kind: processing }
       - { action: DM,         kind: signal_lower }
     next: Disconnected
+    notes: |
+      spec_prose: §6.3.5 ¶3 — "UI frame with the P bit set to '1'
+      responds with a DM frame with the F bit set to '1'". Figure
+      sets F := 1 explicitly (vs F := P for other command frames in
+      t05) — i.e. the spec dictates F=1 specifically for polled UI.
 
   - id: t12_ui_received_p_eq_0
     on: UI_received
@@ -114,6 +152,10 @@ transitions:
       - { action: UI_Check, kind: subroutine }
       - { decision: ui_p_eq_1, branch: "No" }
     next: Disconnected
+    notes: |
+      spec_prose: §6.3.5 ¶3 — UI with P=0 falls under "the offending
+      frame is ignored" (no DM response). UI_Check subroutine still
+      runs to surface the UI payload to upper layer.
 
   - id: t13_disc_received
     on: DISC_received
@@ -121,6 +163,9 @@ transitions:
       - { action: "F := P", kind: processing }
       - { action: DM,        kind: signal_lower }
     next: Disconnected
+    notes: |
+      spec_prose: §6.3.5 ¶1 — "transmits a DM frame in response to a
+      DISC command".
 
   - id: t14_sabm_received_able
     on: SABM_received
@@ -139,6 +184,13 @@ transitions:
       - { action: start_T3,                    kind: processing }
       - { action: "RC := 0",                   kind: processing }
     next: Connected
+    notes: |
+      spec_prose: §6.3.5 ¶1 + §6.3.1 ¶1 — "responds with a UA response
+      frame and resets all of its internal state variables (V(S), V(A)
+      and V(R))". The figure adds DL_CONNECT_indication (notify upper
+      layer), SRT/T1V init, start_T3, RC := 0 — the Connected-state
+      entry housekeeping not detailed in this prose paragraph but
+      implied by §6.7 (timer parameters) and the SDL appendix.
 
   - id: t15_sabm_received_unable
     on: SABM_received
@@ -147,6 +199,9 @@ transitions:
       - { decision: sabm_able_to_establish, branch: "No" }
       - { action: DM, kind: signal_lower }
     next: Disconnected
+    notes: |
+      spec_prose: §6.3.1 ¶3 — "If the distant TNC receives a SABM(E)
+      command and cannot enter the indicated state, it sends a DM frame."
 
   - id: t16_sabme_received_able
     on: SABME_received
@@ -165,6 +220,10 @@ transitions:
       - { action: start_T3,                    kind: processing }
       - { action: "RC := 0",                   kind: processing }
     next: Connected
+    notes: |
+      spec_prose: as t14 — §6.3.5 ¶1 + §6.3.1 ¶1. SABME is the v2.2
+      variant of SABM; this column sets Version 2.2 and otherwise
+      mirrors t14's chain.
 
   - id: t17_sabme_received_unable
     on: SABME_received
@@ -173,3 +232,5 @@ transitions:
       - { decision: sabme_able_to_establish, branch: "No" }
       - { action: DM, kind: signal_lower }
     next: Disconnected
+    notes: |
+      spec_prose: as t15 — §6.3.1 ¶3.
