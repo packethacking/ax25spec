@@ -54,6 +54,30 @@ transitions:
       if the upper layer requests disconnect while already disconnected,
       the data-link immediately confirms back. See §6.3.4 (link
       disconnection procedure) for the broader context.
+    references:
+      - source: spec_prose
+        cite: "§6.3.4"
+        quote: "link disconnection procedure"
+      - source: linbpq
+        path: L2Code.c
+        function: InformPartner
+        line: 4125
+        note: "upper-layer-initiated disconnect; no DL_DISCONNECT_confirm — closes via CLEAROUTLINK/CloseSessionPartner after DISC handshake"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: dl_disconnect_request
+        line: 1100
+        note: "state_0 case logs 'Disconnected from' info + calls server_link_terminated; no explicit confirm primitive (rolled into client notification)"
+      - source: rax25
+        path: src/state.rs
+        function: "Disconnected::disconnect"
+        line: 1126
+        note: "logs 'Disconnect while already disconnected' to stderr and returns empty; no confirm emitted (deviation from spec)"
+      - source: linux_oot
+        path: net/ax25/af_ax25.c
+        function: ax25_release
+        line: 1012
+        note: "folds DL_DISCONNECT_request into socket release(); state-0 case is a near no-op confirm"
 
   - id: t02_dl_unit_data_request
     on: DL_UNIT_DATA_request
@@ -64,6 +88,22 @@ transitions:
       spec_prose: §6.3.5 silent; UI frame handling defined in §4.3.3.6
       (UI frame) and §6.4. Connectionless data path — disconnected
       state can still send UI frames at the upper layer's request.
+    references:
+      - source: spec_prose
+        cite: "§6.4"
+        quote: "Unnumbered Information frame handling"
+      - source: linbpq
+        path: CommonCode.c
+        function: UISend_AX_Datagram
+        line: 4013
+        note: "outbound UI send bypasses state machine entirely — no LINK consulted"
+      - source: linux_oot
+        path: net/ax25/af_ax25.c
+        function: ax25_sendmsg
+        line: 1655
+        note: "SOCK_DGRAM path builds UI command frame and ax25_queue_xmit's straight out; independent of LAPB state"
+      # direwolf: not implemented (src/ax25_link.c:934 comment "APRS & KISS bypass this")
+      # rax25: omitted — no upper-layer DL_UNIT_DATA_request handler in the State trait
 
   - id: t03_dl_connect_request
     on: DL_CONNECT_request
@@ -78,6 +118,30 @@ transitions:
       outlined in connection establishment") + §6.3.1 ¶1 (sends a SABM
       command frame and starts T1). Establish_Data_Link is the
       subroutine defined in figc4.7.
+    references:
+      - source: spec_prose
+        cite: "§6.3.5 ¶2 + §6.3.1 ¶1"
+        quote: "a TNC may initiate a link set up as outlined in connection establishment"
+      - source: linbpq
+        path: L2Code.c
+        function: InternalL2SETUPCROSSLINK
+        line: 1858
+        note: "L3 crosslink path; sets L2STATE=2 (or 1 for XID-first) then SENDSABM"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: dl_connect_request
+        line: 1008
+        note: "state_0 case calls INIT_T1V_SRT, set_version_2_0/2_2, establish_data_link, layer_3_initiated=1; chooses state_1 or state_5 based on v2.0/v2.2 preference"
+      - source: rax25
+        path: src/state.rs
+        function: "Disconnected::connect"
+        line: 1112
+        note: "sets modulus/srt/t1v/layer3_initiated, transitions to AwaitingConnection, calls establish_data_link(); author comment 'It says \"SAT\" in the PDF, but surely means SRT?' flags spec typo"
+      - source: linux_oot
+        path: net/ax25/af_ax25.c
+        function: ax25_connect
+        line: 1313
+        note: "ax25_std_establish_data_link does SRT/T1V init + SABM(E) send + RC:=0; state:=AX25_STATE_1. set_layer_3_initiated implicit (no explicit flag in Linux)"
 
   - id: t04_all_other_primitives_from_lower_layer
     on: all_other_primitives__from_lower_layer
@@ -88,6 +152,15 @@ transitions:
       unhandled primitive drawn with the "Signal reception from Lower
       Layer" shape (d5), stay in Disconnected, do nothing. Standard
       SDL convention for "everything else from this source class".
+    references:
+      - source: linux_oot
+        path: net/ax25/ax25_in.c
+        function: ax25_rcv
+        line: 330
+        note: "catch-all 'goto free' for non-SABM(E) state-0 frames that aren't ours — silently dropped, no action"
+      # linbpq: no catch-all; unknown CTL falls through L2FORUS to release-buffer branch
+      # direwolf: no explicit catch-all; lm_data_indication silently drops frame_type_U / frame_not_AX25
+      # rax25: default trait impls return empty for unhandled events
 
   # ─── Received frames (d5: "Signal reception from upper layer") ────────
 
@@ -104,6 +177,26 @@ transitions:
       received command frames not handled by SABM/SABME/DISC/UI
       explicitly. F := P sets F to the incoming P bit (typically 1 on a
       polled command frame).
+    references:
+      - source: spec_prose
+        cite: "§6.3.5 ¶3"
+        quote: "Any TNC receiving a command frame other than a SABM(E) or UI frame with the P bit set to '1' responds with a DM frame with the F bit set to '1'. The offending frame is ignored."
+      - source: linbpq
+        path: L2Code.c
+        function: L2FORUS
+        line: 735
+        note: "DM only if CMD+P=1, else releases buffer silently — diverges from figure (figure responds unconditionally on any unhandled command)"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: ui_frame
+        line: 5114
+        note: "split per-frame: only UI command with P=1 sends DM here (SABM/SABME/DISC have own handlers). Unrecognized U frames fall to frame_type_U and are silently dropped — no catch-all DM"
+      - source: linux_oot
+        path: net/ax25/ax25_in.c
+        function: ax25_rcv
+        line: 327
+        note: "state-0 non-SABM(E) path: any command frame to us (except DM) gets a DM via ax25_return_dm; F:=P implicit via path reversal"
+      # rax25: omitted — author comment at line 1100 flags this as unimplemented: '"All other commands" should generate a DM. Does it mean all other incoming packets?'
 
   - id: t06_all_other_primitives_from_upper_layer
     on: all_other_primitives__from_upper_layer
@@ -114,6 +207,16 @@ transitions:
       spec_prose: catch-all column with no prose backing. Receive any
       unhandled primitive drawn with the "Signal reception from upper
       layer" shape (d5), discard it, stay in Disconnected.
+    references: []
+      # All four implementations omit this transition entirely:
+      # linbpq: upper layer reaches L2 only via explicit entry points (SENDSABM, UISend,
+      #         InformPartner); no generic dispatcher with catch-all discard.
+      # direwolf: no explicit discard_primitive branch — unimplemented upper primitives
+      #          (dl_flow_off, dl_flow_on, …) noted at src/ax25_link.c:934-936.
+      # rax25: State trait only exposes connect/disconnect from upper layer; other
+      #        upper primitives are unrepresentable.
+      # linux_oot: no equivalent — unsupported syscalls return -EINVAL/-ENOTCONN at
+      #            the socket layer, not a discardable 'primitive' in spec terms.
 
   - id: t07_control_field_error
     on: control_field_error
@@ -123,6 +226,19 @@ transitions:
     notes: |
       spec_prose: §C "error indications are discussed in the SDL
       appendices" — code letter (L) is figure-authoritative.
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: L2FORUS
+        line: 693
+        note: "SABME (and SREJ when no 2.2 support) treated as invalid CTRL — L2SENDINVALIDCTRL sends FRMR rather than DL_ERROR_indication"
+      - source: linux_oot
+        path: net/ax25/ax25_in.c
+        function: ax25_rcv
+        line: 207
+        note: "malformed frames silently dropped via ax25_addr_parse() == NULL → goto free; no DL_ERROR(L) raised"
+      # direwolf: no DL-ERROR(L); ax25_get_control<0 yields frame_not_AX25 which is silently dropped
+      # rax25: DlError::L variant defined at src/state.rs:144 but never raised; parse errors return anyhow::Error from src/lib.rs
 
   - id: t08_info_not_permitted_in_frame
     on: info_not_permitted_in_frame
@@ -131,6 +247,13 @@ transitions:
     next: Disconnected
     notes: |
       spec_prose: figure-authoritative (DL-ERROR code M). See t07 note.
+    references: []
+      # All four implementations omit:
+      # linbpq: no explicit info-not-permitted check; malformed U/S frames released silently.
+      # direwolf: no DL-ERROR(M); info-on-U/S not validated.
+      # rax25: DlError::M variant defined (src/state.rs:145) but never raised.
+      # linux_oot: no 'info-not-permitted' check in state 0; non-SABM(E) U/S with spurious info
+      #            accepted by ax25_decode and either DM'd or dropped via state-0 catch-all.
 
   - id: t09_u_or_s_frame_length_error
     on: u_or_s_frame_length_error
@@ -139,6 +262,19 @@ transitions:
     next: Disconnected
     notes: |
       spec_prose: figure-authoritative (DL-ERROR code N). See t07 note.
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: L2Routine
+        line: 210
+        note: "min-length check releases buffer; no DL_ERROR raised — just Debugprintf and discard"
+      - source: rax25
+        path: src/lib.rs
+        function: "Packet::parse"
+        line: 549
+        note: "length check returns anyhow::Error 'AX.25 in ext mode, but S/U frame is too short' rather than DlError::N (variant defined at src/state.rs:146 but unused)"
+      # direwolf: no DL-ERROR(N); length implicit via ax25_frame_type — malformed → frame_not_AX25, dropped
+      # linux_oot: no separate validator in state 0; short frames either fail ax25_addr_parse or are decoded leniently
 
   - id: t10_ua_received
     on: UA_received
@@ -148,6 +284,29 @@ transitions:
     notes: |
       spec_prose: unexpected UA while disconnected (UA is a response;
       we didn't send a command). Codes C and D are figure-authoritative.
+
+      NOTE: Both direwolf and rax25 authors independently flagged C,D
+      as a spec quirk in their source comments. direwolf:4823 "Erratum:
+      flow chart says errors C and D. Neither one really makes sense.";
+      rax25:1158 "1998 & 2017 bug: C and D make no sense here." Worth
+      tracking as a candidate upstream spec issue.
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: ua_frame
+        line: 4821
+        note: "state_0 case logs Protocol Error C; author erratum comment at 4823: 'flow chart says errors C and D. Neither one really makes sense.'"
+      - source: rax25
+        path: src/state.rs
+        function: "Disconnected::ua"
+        line: 1158
+        note: "returns [DlError::C, DlError::D]; author comment '1998 & 2017 bug: C and D make no sense here' — flags same spec issue as direwolf"
+      - source: linux_oot
+        path: net/ax25/ax25_in.c
+        function: ax25_rcv
+        line: 327
+        note: "falls into state-0 catch-all; Linux doesn't distinguish UA from any other unexpected command, just DMs — no DL_ERROR(C,D) raised"
+      # linbpq: no-session unexpected UA falls into L2FORUS:732 non-SABM/XID branch and is silently released — no DL_ERROR raised
 
   - id: t11_ui_received_p_eq_1
     on: UI_received
@@ -162,6 +321,30 @@ transitions:
       responds with a DM frame with the F bit set to '1'". Figure
       sets F := 1 explicitly (vs F := P for other command frames in
       t05) — i.e. the spec dictates F=1 specifically for polled UI.
+    references:
+      - source: spec_prose
+        cite: "§6.3.5 ¶3"
+        quote: "UI frame with the P bit set to '1' responds with a DM frame with the F bit set to '1'"
+      - source: linbpq
+        path: L2Code.c
+        function: L2FORUS
+        line: 656
+        note: "UI handled by PID switch (NetROM/IP/discard); does not send DM on P=1 — diverges from figure"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: ui_frame
+        line: 5114
+        note: "sends DM (F=P) in state_0; no UI_Check subroutine — UI payload routing to upper layer happens elsewhere (APRS/KISS)"
+      - source: rax25
+        path: src/state.rs
+        function: "Disconnected::ui"
+        line: 1132
+        note: "calls ui_check then if packet.push (P=1) pushes SendDm{pf:true}; ui_check at src/state.rs:567 comment '1998 Spec bug: error Q says this is also for UI frames with Poll set' — flags 4.3.3.6 reading vs erratum"
+      - source: linux_oot
+        path: net/ax25/ax25_in.c
+        function: ax25_rcv
+        line: 229
+        note: "DIVERGENCE: Linux handles UI before any state-0 check, uniformly for all states (APRS-style); no DM sent on UI P=1 — the spec's F:=1/send-DM behaviour is absent"
 
   - id: t12_ui_received_p_eq_0
     on: UI_received
@@ -173,6 +356,26 @@ transitions:
       spec_prose: §6.3.5 ¶3 — UI with P=0 falls under "the offending
       frame is ignored" (no DM response). UI_Check subroutine still
       runs to surface the UI payload to upper layer.
+    references:
+      - source: spec_prose
+        cite: "§6.3.5 ¶3"
+        quote: "The offending frame is ignored."
+      - source: linbpq
+        path: L2Code.c
+        function: L2FORUS
+        line: 656
+        note: "same UI branch handles P=0 and P=1 identically; no UI_Check subroutine"
+      - source: rax25
+        path: src/state.rs
+        function: "Disconnected::ui"
+        line: 1132
+        note: "when packet.push==false, only ui_check result (DL-UNIT_DATA indication or DlError::Q/K) is returned, no DM"
+      - source: linux_oot
+        path: net/ax25/ax25_in.c
+        function: ax25_rcv
+        line: 229
+        note: "same UI bypass path as t11; PID switch at line 238 dispatches IP/ARP/text/raw — UI_Check semantics not a discrete subroutine"
+      # direwolf: omit — ui_frame gate at src/ax25_link.c:5110 requires cr==cmd && pf==1; P=0 UI falls through with no action (APRS handling lives in higher-layer code)
 
   - id: t13_disc_received
     on: DISC_received
@@ -232,6 +435,30 @@ transitions:
       layer), SRT/T1V init, start_T3, RC := 0 — the Connected-state
       entry housekeeping not detailed in this prose paragraph but
       implied by §6.7 (timer parameters) and the SDL appendix.
+    references:
+      - source: spec_prose
+        cite: "§6.3.5 ¶1 + §6.3.1 ¶1"
+        quote: "responds with a UA response frame and resets all of its internal state variables (V(S), V(A) and V(R))"
+      - source: linbpq
+        path: L2Code.c
+        function: L2SABM
+        line: 1292
+        note: "SETUPNEWL2SESSION (L2Code.c:1650) resets state and sets L2STATE; UA sent via L2SENDUA at line 1356; no explicit set_version_2_0 (LinBPQ tracks Ver2point2 separately)"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: sabm_e_frame
+        line: 4333
+        note: "state_0 case with extended=0; no 'able?' decision — author comment at 4337: 'We are always willing to accept connections.' RC:=0 noted as direwolf enhancement at 4371"
+      - source: rax25
+        path: src/state.rs
+        function: "Disconnected::sabm"
+        line: 1141
+        note: "calls data.set_version_2() then sabm_and_sabme helper (line 1077); NOTE rax25 does NOT emit DL_CONNECT_indication to upper layer (only a debug! log)"
+      - source: linux_oot
+        path: net/ax25/ax25_in.c
+        function: ax25_rcv
+        line: 332
+        note: "accept block 332-420: ax25_make_new, modulus=AX25_MODULUS, send UA (404), state:=AX25_STATE_3 (411), start t3+idle. DL_CONNECT_indication implicit via sk_acceptq_added; V(s/a/r):=0 in ax25_create_cb/ax25_fillin_cb"
 
   - id: t15_sabm_received_unable
     on: SABM_received
@@ -243,6 +470,31 @@ transitions:
     notes: |
       spec_prose: §6.3.1 ¶3 — "If the distant TNC receives a SABM(E)
       command and cannot enter the indicated state, it sends a DM frame."
+
+      NOTE: direwolf has no equivalent for this transition — author
+      comment at src/ax25_link.c:4337 reads "We are always willing to
+      accept connections" and the SABM-refuse branch is unconditionally
+      removed.
+    references:
+      - source: spec_prose
+        cite: "§6.3.1 ¶3"
+        quote: "If the distant TNC receives a SABM(E) command and cannot enter the indicated state, it sends a DM frame."
+      - source: linbpq
+        path: L2Code.c
+        function: L2SABM
+        line: 1310
+        note: "multiple unable-paths (no link slot, CLOSING, interlock, SETUPNEWL2SESSION fail, user-limit, KISSHF busy) all call L2SENDDM"
+      - source: rax25
+        path: src/state.rs
+        function: "Disconnected::sabm_and_sabme"
+        line: 1079
+        note: "`if !data.able_to_establish { return vec![Action::SendDm { pf }]; }` — handles unable branch for both SABM and SABME"
+      - source: linux_oot
+        path: net/ax25/ax25_in.c
+        function: ax25_rcv
+        line: 345
+        note: "listener present but acceptq full or ax25_make_new failed → ax25_return_dm; no-listener-and-can't-alloc-cb path at line 366 also fits"
+      # direwolf: omit — no 'unable to establish' branch; sabm_e_frame state_0 unconditionally accepts (src/ax25_link.c:4336-4338)
 
   - id: t16_sabme_received_able
     on: SABME_received
@@ -266,6 +518,30 @@ transitions:
       variant of SABM; this column sets Version 2.2 and otherwise
       mirrors t14's chain.
 
+      NOTE: LinBPQ doesn't support SABME / Mod-128 at all — rejects
+      SABME outright at L2FORUS:693 with FRMR (L2SENDINVALIDCTRL).
+      The 'able' branch has no equivalent there.
+    references:
+      - source: spec_prose
+        cite: "§6.3.5 ¶1 + §6.3.1 ¶1"
+        quote: "responds with a UA response frame and resets all of its internal state variables (V(S), V(A) and V(R))"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: sabm_e_frame
+        line: 4333
+        note: "same state_0 branch as t14 with extended=1 selecting set_version_2_2 at line 4341; unified handler, no separate code path"
+      - source: rax25
+        path: src/state.rs
+        function: "Disconnected::sabme"
+        line: 1147
+        note: "calls data.set_version_2_2() then sabm_and_sabme helper (line 1077); same body as t14 — same missing DL_CONNECT_indication caveat"
+      - source: linux_oot
+        path: net/ax25/ax25_in.c
+        function: ax25_rcv
+        line: 396
+        note: "same accept block as t14; SABME branch at 396-398 sets ax25->modulus = AX25_EMODULUS (version 2.2); otherwise identical"
+      # linbpq: omit — LinBPQ rejects SABME outright (no Mod-128 support); see notes:
+
   - id: t17_sabme_received_unable
     on: SABME_received
     path:
@@ -275,3 +551,27 @@ transitions:
     next: Disconnected
     notes: |
       spec_prose: as t15 — §6.3.1 ¶3.
+
+      NOTE: LinBPQ treats SABME as invalid CTRL regardless of able/unable
+      (sends FRMR via L2SENDINVALIDCTRL rather than DM). direwolf has no
+      'unable' branch at all.
+    references:
+      - source: spec_prose
+        cite: "§6.3.1 ¶3"
+        quote: "If the distant TNC receives a SABM(E) command and cannot enter the indicated state, it sends a DM frame."
+      - source: linbpq
+        path: L2Code.c
+        function: L2FORUS
+        line: 693
+        note: "SABME always treated as invalid CTRL; sends FRMR via L2SENDINVALIDCTRL rather than DM — diverges from figure"
+      - source: rax25
+        path: src/state.rs
+        function: "Disconnected::sabm_and_sabme"
+        line: 1079
+        note: "same helper branch as t15: returns SendDm{pf} when !able_to_establish, regardless of whether caller was sabm or sabme"
+      - source: linux_oot
+        path: net/ax25/ax25_in.c
+        function: ax25_rcv
+        line: 345
+        note: "same DM-return path as t15; Linux doesn't distinguish SABM vs SABME when refusing — SABM/SABME bit is read only on the accept path (line 396)"
+      # direwolf: omit — same as t15, no 'unable' branch in sabm_e_frame
