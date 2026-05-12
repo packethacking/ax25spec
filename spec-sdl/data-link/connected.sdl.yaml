@@ -1,0 +1,1101 @@
+# Data-Link state machine: Connected state.
+#
+# Source: AX.25 v2.2 rev 4 (Oct 2025), figure C4.4 "Data Link Connected
+# State". Transcribed from spec-sdl/data-link/DataLink_Connected.graphml.
+#
+# 26 input columns → 66 transitions after enumerating decision branches.
+# This is the biggest figure in the AX.25 spec — the connected state has
+# to handle the full set of frame types, flow control, error events, and
+# user-initiated primitives.
+#
+# Decision naming convention on this page: predicate-canonical with no
+# context prefix. Where a predicate (e.g. P_eq_1, Version 2.2?, V(a) <=
+# N(r) <= V(s)?) appears in multiple drawn diamonds across columns, the
+# YAML deduplicates to one `decisions:` entry — different columns'
+# transitions reference the same id. This is canonicalisation, not loss
+# of fidelity: the predicate is the same, only the figure-position
+# differs.
+machine: data_link
+state: Connected
+coverage: complete
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc4.4
+  url: https://raw.githubusercontent.com/packethacking/ax25spec/main/doc/media/figc4.4a.png
+
+decisions:
+  # ─── Frame-reception predicates (used on I-received column) ─────────
+  - id: command
+    question: "Command?"
+    predicate: command
+  - id: info_field_valid
+    question: "Info Field Length <= N1 and Content is Octet Aligned?"
+    predicate: info_field_valid
+
+  # ─── Sequence-number predicates ─────────────────────────────────────
+  - id: nr_in_window
+    question: "V(a) <= N(r) <= V(s)?"
+    predicate: V_a_le_N_r_le_V_s
+  - id: ns_eq_vr
+    question: "N(s) == V(r)?"
+    predicate: N_s_eq_V_r
+  - id: ns_gt_vr_plus_1
+    question: "N(s) > V(r) + 1?"
+    predicate: N_s_gt_V_r_plus_1
+  - id: vs_eq_va
+    question: "V(s) == V(a)?"
+    predicate: V_s_eq_V_a
+  - id: vs_eq_va_plus_k
+    question: "V(s) == V(a) + k?"
+    predicate: V_s_eq_V_a_plus_k
+
+  # ─── Flag predicates ────────────────────────────────────────────────
+  - id: own_receiver_busy
+    question: "Own Receiver Busy?"
+    predicate: own_receiver_busy
+  - id: peer_receiver_busy
+    question: "Peer Receiver Busy?"
+    predicate: peer_receiver_busy
+  - id: reject_exception
+    question: "Reject Exception?"
+    predicate: reject_exception
+  - id: srej_enabled
+    question: "SREJ Enabled?"
+    predicate: srej_enabled
+  - id: srej_exception_gt_0
+    question: "SReject Exception > 0?"
+    predicate: srej_exception_gt_0
+  - id: ack_pending
+    question: "Ack Pending?"
+    predicate: acknowledge_pending
+  - id: vr_i_frame_stored
+    question: "V(r) I Frame Stored?"
+    predicate: V_r_I_frame_stored
+  - id: version_2_2
+    question: "Version 2.2?"
+    predicate: version_2_2
+
+  # ─── Frame-bit predicates ───────────────────────────────────────────
+  - id: p_eq_1
+    question: "P == 1?"
+    predicate: P_eq_1
+  - id: p_or_f_eq_1
+    question: "P/F == 1?"
+    predicate: P_or_F_eq_1
+
+  # ─── Timer predicates ───────────────────────────────────────────────
+  - id: t1_running
+    question: "T1 Running?"
+    predicate: T1_running
+
+transitions:
+  # ─── Column 1: DL-DISCONNECT Request ────────────────────────────────
+
+  - id: t01_dl_disconnect_request
+    on: DL_DISCONNECT_request
+    path:
+      - { action: discard_I_frame_queue, kind: processing }
+      - { action: "RC := 0",              kind: processing }
+      - { action: "DISC (P = 1)",         kind: signal_lower }
+      - { action: stop_T3,                kind: processing }
+      - { action: start_T1,               kind: processing }
+    next: AwaitingRelease
+    notes: |
+      Upper layer requests disconnect. Tear down: discard pending I
+      frames, reset retry counter, send DISC with P=1, swap timers
+      (stop T3, start T1 for the DISC ack wait), → AwaitingRelease.
+
+  # ─── Column 2: I received (16 paths — the biggest in figc4.4) ───────
+  #
+  # n134 Command? — n135 Info Field Length valid? — n139 V(a)<=N(r)<=V(s)?
+  #   n140 Check I Frames Acknowledged
+  #     n144 Own Receiver Busy?
+  #       Yes → n175 Discard Contents — n176 P==1?
+  #         Yes → F:=1; N(R):=V(r); RR; Clear Ack Pending → Connected
+  #         No  → Connected
+  #       No → n145 N(s)==V(r)?
+  #         Yes → n146 V(r):=V(r)+1; Clear Reject Exc; Decrement SREJ-exc;
+  #               DL-DATA Indication;
+  #               n148 V(r) I Frame Stored?
+  #                 (only No-path drawn — see note)
+  #                 n152 P==1?
+  #                   Yes → F:=1; N(R):=V(r); RR; Clear Ack Pending → Connected
+  #                   No  → n153 Ack Pending?
+  #                     Yes → Connected
+  #                     No  → LM-SEIZE Request; Set Ack Pending → Connected
+  #         No → n161 Reject Exception?
+  #           Yes → n162 Discard Contents — n163 P==1?
+  #             Yes → F:=1; N(R):=V(r); RR; Clear Ack Pending → Connected
+  #             No  → Connected
+  #           No → n164 SREJ Enabled?
+  #             Yes → n167 Save Contents — n168 SReject Exception > 0?
+  #               Yes → n169 N(r):=N(s); F:=0; n170 Increment SREJ-exc; SREJ → Connected
+  #               No  → n173 N(s) > V(r)+1?
+  #                 Yes → n165 Discard Contents; Set Reject Exc; F:=P; N(r):=V(r); REJ; Clear Ack Pending → Connected
+  #                 No  → n174 N(r):=V(r); F:=1; n170 Increment SREJ-exc; SREJ → Connected
+  #             No → n165 Discard Contents; Set Reject Exc; F:=P; N(r):=V(r); REJ; Clear Ack Pending → Connected
+  #   No (N(r) outside V(a)..V(s)) → n116 N(r) Error Recovery — n124 Version 2.2?
+  #     Yes → Awaiting 2.2 Connection
+  #     No  → Awaiting Connection
+  # No (Info Field Length invalid) → DL-ERROR(O); Establish Data Link; Clear L3 Initiated; n124 Version 2.2?
+  #   Yes → Awaiting 2.2 Connection
+  #   No  → Awaiting Connection
+  # No (not a command) → DL-ERROR(O); Discard I Frame → Connected
+
+  - id: t02_i_received_not_command
+    on: I_received
+    path:
+      - { decision: command, branch: "No" }
+      - { action: DL_ERROR_indication_O, kind: signal_upper }
+      - { action: discard_I_frame,        kind: processing }
+    next: Connected
+    notes: |
+      I frame received as a response rather than a command — protocol
+      error. DL-ERROR(O), discard, stay.
+
+  - id: t03_i_received_command_info_field_invalid_v22
+    on: I_received
+    path:
+      - { decision: command,          branch: "Yes" }
+      - { decision: info_field_valid, branch: "No" }
+      - { action: DL_ERROR_indication_O,     kind: signal_upper }
+      - { action: Establish_Data_Link,        kind: subroutine }
+      - { action: clear_layer_3_initiated,    kind: processing }
+      - { decision: version_2_2,      branch: "Yes" }
+    next: AwaitingConnection22
+    notes: |
+      Bad I-frame info field (length > N1 or not octet-aligned), v2.2 peer.
+      Re-establish link via the v2.2 path.
+
+  - id: t04_i_received_command_info_field_invalid_v20
+    on: I_received
+    path:
+      - { decision: command,          branch: "Yes" }
+      - { decision: info_field_valid, branch: "No" }
+      - { action: DL_ERROR_indication_O,     kind: signal_upper }
+      - { action: Establish_Data_Link,        kind: subroutine }
+      - { action: clear_layer_3_initiated,    kind: processing }
+      - { decision: version_2_2,      branch: "No" }
+    next: AwaitingConnection
+    notes: |
+      Bad I-frame info field, v2.0 peer. Re-establish via v2.0 path.
+
+  - id: t05_i_received_command_info_valid_nr_out_of_window_v22
+    on: I_received
+    path:
+      - { decision: command,          branch: "Yes" }
+      - { decision: info_field_valid, branch: "Yes" }
+      - { decision: nr_in_window,     branch: "No" }
+      - { action: N_r_Error_Recovery, kind: subroutine }
+      - { decision: version_2_2,      branch: "Yes" }
+    next: AwaitingConnection22
+    notes: |
+      N(r) outside the V(a)..V(s) window — peer ACK is invalid. Recover
+      via re-establish on v2.2 path.
+
+  - id: t06_i_received_command_info_valid_nr_out_of_window_v20
+    on: I_received
+    path:
+      - { decision: command,          branch: "Yes" }
+      - { decision: info_field_valid, branch: "Yes" }
+      - { decision: nr_in_window,     branch: "No" }
+      - { action: N_r_Error_Recovery, kind: subroutine }
+      - { decision: version_2_2,      branch: "No" }
+    next: AwaitingConnection
+    notes: |
+      As t05 but v2.0 peer.
+
+  - id: t07_i_received_own_busy_p_eq_1
+    on: I_received
+    path:
+      - { decision: command,            branch: "Yes" }
+      - { decision: info_field_valid,   branch: "Yes" }
+      - { decision: nr_in_window,       branch: "Yes" }
+      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
+      - { decision: own_receiver_busy,  branch: "Yes" }
+      - { action: discard_contents_of_I_frame, kind: processing }
+      - { decision: p_eq_1,             branch: "Yes" }
+      - { action: "F := 1",             kind: processing }
+      - { action: "N(R) := V(r)",       kind: processing }
+      - { action: RR,                   kind: signal_lower }
+      - { action: clear_acknowledge_pending, kind: processing }
+    next: Connected
+    notes: |
+      Own receiver is busy — drop the I-frame's contents. Peer polled
+      (P=1) so we owe a status response: RR with F=1.
+
+  - id: t08_i_received_own_busy_p_eq_0
+    on: I_received
+    path:
+      - { decision: command,            branch: "Yes" }
+      - { decision: info_field_valid,   branch: "Yes" }
+      - { decision: nr_in_window,       branch: "Yes" }
+      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
+      - { decision: own_receiver_busy,  branch: "Yes" }
+      - { action: discard_contents_of_I_frame, kind: processing }
+      - { decision: p_eq_1,             branch: "No" }
+    next: Connected
+    notes: |
+      Own busy and not polled — just drop the frame, stay.
+
+  - id: t09_i_received_in_seq_no_stored_p_eq_1
+    on: I_received
+    path:
+      - { decision: command,            branch: "Yes" }
+      - { decision: info_field_valid,   branch: "Yes" }
+      - { decision: nr_in_window,       branch: "Yes" }
+      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
+      - { decision: own_receiver_busy,  branch: "No" }
+      - { decision: ns_eq_vr,           branch: "Yes" }
+      - { action: "V(r) := V(r) + 1",            kind: processing }
+      - { action: clear_reject_exception,         kind: processing }
+      - { action: "decrement_srej_exception_if_gt_0", kind: processing }
+      - { action: DL_DATA_indication,             kind: signal_upper }
+      - { decision: vr_i_frame_stored,  branch: "No" }
+      - { decision: p_eq_1,             branch: "Yes" }
+      - { action: "F := 1",             kind: processing }
+      - { action: "N(R) := V(r)",       kind: processing }
+      - { action: RR,                   kind: signal_lower }
+      - { action: clear_acknowledge_pending, kind: processing }
+    next: Connected
+    notes: |
+      In-sequence I frame received, no stored frame for V(r), peer
+      polled. Deliver data, advance V(r), respond RR(F=1).
+
+  - id: t10_i_received_in_seq_no_stored_p_eq_0_ack_pending
+    on: I_received
+    path:
+      - { decision: command,            branch: "Yes" }
+      - { decision: info_field_valid,   branch: "Yes" }
+      - { decision: nr_in_window,       branch: "Yes" }
+      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
+      - { decision: own_receiver_busy,  branch: "No" }
+      - { decision: ns_eq_vr,           branch: "Yes" }
+      - { action: "V(r) := V(r) + 1",            kind: processing }
+      - { action: clear_reject_exception,         kind: processing }
+      - { action: "decrement_srej_exception_if_gt_0", kind: processing }
+      - { action: DL_DATA_indication,             kind: signal_upper }
+      - { decision: vr_i_frame_stored,  branch: "No" }
+      - { decision: p_eq_1,             branch: "No" }
+      - { decision: ack_pending,        branch: "Yes" }
+    next: Connected
+    notes: |
+      In-sequence data; not polled; ack already pending — let it batch.
+
+  - id: t11_i_received_in_seq_no_stored_p_eq_0_no_ack_pending
+    on: I_received
+    path:
+      - { decision: command,            branch: "Yes" }
+      - { decision: info_field_valid,   branch: "Yes" }
+      - { decision: nr_in_window,       branch: "Yes" }
+      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
+      - { decision: own_receiver_busy,  branch: "No" }
+      - { decision: ns_eq_vr,           branch: "Yes" }
+      - { action: "V(r) := V(r) + 1",            kind: processing }
+      - { action: clear_reject_exception,         kind: processing }
+      - { action: "decrement_srej_exception_if_gt_0", kind: processing }
+      - { action: DL_DATA_indication,             kind: signal_upper }
+      - { decision: vr_i_frame_stored,  branch: "No" }
+      - { decision: p_eq_1,             branch: "No" }
+      - { decision: ack_pending,        branch: "No" }
+      - { action: LM_seize_request,     kind: signal_lower }
+      - { action: set_acknowledgement_pending, kind: processing }
+    next: Connected
+    notes: |
+      In-sequence data; not polled; no ack pending — arrange to send
+      one: seize the medium and set ack-pending so we know to RR when
+      we get LM-SEIZE Confirm (see column 24).
+
+  - id: t12_i_received_out_of_seq_reject_exception_p_eq_1
+    on: I_received
+    path:
+      - { decision: command,            branch: "Yes" }
+      - { decision: info_field_valid,   branch: "Yes" }
+      - { decision: nr_in_window,       branch: "Yes" }
+      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
+      - { decision: own_receiver_busy,  branch: "No" }
+      - { decision: ns_eq_vr,           branch: "No" }
+      - { decision: reject_exception,   branch: "Yes" }
+      - { action: discard_contents_of_I_frame, kind: processing }
+      - { decision: p_eq_1,             branch: "Yes" }
+      - { action: "F := 1",             kind: processing }
+      - { action: "N(R) := V(r)",       kind: processing }
+      - { action: RR,                   kind: signal_lower }
+      - { action: clear_acknowledge_pending, kind: processing }
+    next: Connected
+
+  - id: t13_i_received_out_of_seq_reject_exception_p_eq_0
+    on: I_received
+    path:
+      - { decision: command,            branch: "Yes" }
+      - { decision: info_field_valid,   branch: "Yes" }
+      - { decision: nr_in_window,       branch: "Yes" }
+      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
+      - { decision: own_receiver_busy,  branch: "No" }
+      - { decision: ns_eq_vr,           branch: "No" }
+      - { decision: reject_exception,   branch: "Yes" }
+      - { action: discard_contents_of_I_frame, kind: processing }
+      - { decision: p_eq_1,             branch: "No" }
+    next: Connected
+
+  - id: t14_i_received_out_of_seq_srej_enabled_no_excep_in_range
+    on: I_received
+    path:
+      - { decision: command,            branch: "Yes" }
+      - { decision: info_field_valid,   branch: "Yes" }
+      - { decision: nr_in_window,       branch: "Yes" }
+      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
+      - { decision: own_receiver_busy,  branch: "No" }
+      - { decision: ns_eq_vr,           branch: "No" }
+      - { decision: reject_exception,   branch: "No" }
+      - { decision: srej_enabled,       branch: "Yes" }
+      - { action: save_contents_of_I_frame, kind: processing }
+      - { decision: srej_exception_gt_0, branch: "No" }
+      - { decision: ns_gt_vr_plus_1,    branch: "No" }
+      - { action: "N(r) := V(r)",       kind: processing }
+      - { action: "F := 1",             kind: processing }
+      - { action: increment_srej_exception, kind: processing }
+      - { action: SREJ,                 kind: signal_lower }
+    next: Connected
+
+  - id: t15_i_received_out_of_seq_srej_enabled_no_excep_far_skip
+    on: I_received
+    path:
+      - { decision: command,            branch: "Yes" }
+      - { decision: info_field_valid,   branch: "Yes" }
+      - { decision: nr_in_window,       branch: "Yes" }
+      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
+      - { decision: own_receiver_busy,  branch: "No" }
+      - { decision: ns_eq_vr,           branch: "No" }
+      - { decision: reject_exception,   branch: "No" }
+      - { decision: srej_enabled,       branch: "Yes" }
+      - { action: save_contents_of_I_frame, kind: processing }
+      - { decision: srej_exception_gt_0, branch: "No" }
+      - { decision: ns_gt_vr_plus_1,    branch: "Yes" }
+      - { action: discard_contents_of_I_frame, kind: processing }
+      - { action: set_reject_exception, kind: processing }
+      - { action: "F := P",             kind: processing }
+      - { action: "N(r) := V(r)",       kind: processing }
+      - { action: REJ,                  kind: signal_lower }
+      - { action: clear_acknowledge_pending, kind: processing }
+    next: Connected
+
+  - id: t16_i_received_out_of_seq_srej_enabled_existing_excep
+    on: I_received
+    path:
+      - { decision: command,            branch: "Yes" }
+      - { decision: info_field_valid,   branch: "Yes" }
+      - { decision: nr_in_window,       branch: "Yes" }
+      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
+      - { decision: own_receiver_busy,  branch: "No" }
+      - { decision: ns_eq_vr,           branch: "No" }
+      - { decision: reject_exception,   branch: "No" }
+      - { decision: srej_enabled,       branch: "Yes" }
+      - { action: save_contents_of_I_frame, kind: processing }
+      - { decision: srej_exception_gt_0, branch: "Yes" }
+      - { action: "N(r) := N(s)",       kind: processing }
+      - { action: "F := 0",             kind: processing }
+      - { action: increment_srej_exception, kind: processing }
+      - { action: SREJ,                 kind: signal_lower }
+    next: Connected
+
+  - id: t17_i_received_out_of_seq_srej_disabled
+    on: I_received
+    path:
+      - { decision: command,            branch: "Yes" }
+      - { decision: info_field_valid,   branch: "Yes" }
+      - { decision: nr_in_window,       branch: "Yes" }
+      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
+      - { decision: own_receiver_busy,  branch: "No" }
+      - { decision: ns_eq_vr,           branch: "No" }
+      - { decision: reject_exception,   branch: "No" }
+      - { decision: srej_enabled,       branch: "No" }
+      - { action: discard_contents_of_I_frame, kind: processing }
+      - { action: set_reject_exception, kind: processing }
+      - { action: "F := P",             kind: processing }
+      - { action: "N(r) := V(r)",       kind: processing }
+      - { action: REJ,                  kind: signal_lower }
+      - { action: clear_acknowledge_pending, kind: processing }
+    next: Connected
+
+  # ─── Column 3: DL-DATA Request ──────────────────────────────────────
+
+  - id: t18_dl_data_request
+    on: DL_DATA_request
+    path:
+      - { action: push_on_I_frame_queue, kind: internal_out }
+    next: Connected
+    notes: |
+      verification_pending: graphml label is 'Push on I Frame Queue
+      (note: word order?)' — Tom flagged uncertainty about whether the
+      spec text is "Push on I Frame Queue" vs "Push I Frame on Queue"
+      (or similar word order). Canonical verb chosen here is
+      push_on_I_frame_queue. Worth a spec re-read.
+
+  # ─── Column 4: I Frame Pops Off Queue ───────────────────────────────
+
+  - id: t19_i_frame_pops_off_queue_send_now_t1_running
+    on: I_frame_pops_off_queue
+    path:
+      - { decision: peer_receiver_busy,  branch: "No" }
+      - { decision: vs_eq_va_plus_k,     branch: "No" }
+      - { action: "N(s) := V(s)",        kind: processing }
+      - { action: "N(r) := V(r)",        kind: processing }
+      - { action: "p := 0",              kind: processing }
+      - { action: I_command,             kind: signal_lower }
+      - { action: "V(s) := V(s) + 1",    kind: processing }
+      - { action: clear_acknowledge_pending, kind: processing }
+      - { decision: t1_running,          branch: "Yes" }
+    next: Connected
+
+  - id: t20_i_frame_pops_off_queue_send_now_t1_not_running
+    on: I_frame_pops_off_queue
+    path:
+      - { decision: peer_receiver_busy,  branch: "No" }
+      - { decision: vs_eq_va_plus_k,     branch: "No" }
+      - { action: "N(s) := V(s)",        kind: processing }
+      - { action: "N(r) := V(r)",        kind: processing }
+      - { action: "p := 0",              kind: processing }
+      - { action: I_command,             kind: signal_lower }
+      - { action: "V(s) := V(s) + 1",    kind: processing }
+      - { action: clear_acknowledge_pending, kind: processing }
+      - { decision: t1_running,          branch: "No" }
+      - { action: stop_T3,               kind: processing }
+      - { action: start_T1,              kind: processing }
+    next: Connected
+
+  - id: t21_i_frame_pops_off_queue_window_full
+    on: I_frame_pops_off_queue
+    path:
+      - { decision: peer_receiver_busy,  branch: "No" }
+      - { decision: vs_eq_va_plus_k,     branch: "Yes" }
+      - { action: push_on_I_frame_queue, kind: internal_out }
+    next: Connected
+    notes: |
+      Window full (V(s) reached V(a)+k) — push back on queue and wait.
+
+  - id: t22_i_frame_pops_off_queue_peer_busy
+    on: I_frame_pops_off_queue
+    path:
+      - { decision: peer_receiver_busy,  branch: "Yes" }
+      - { action: push_on_I_frame_queue, kind: internal_out }
+    next: Connected
+    notes: |
+      Peer busy — push back on queue.
+
+  # ─── Column 5: DL-UNIT-DATA Request ─────────────────────────────────
+
+  - id: t23_dl_unit_data_request
+    on: DL_UNIT_DATA_request
+    path:
+      - { action: UI_command, kind: signal_lower }
+    next: Connected
+
+  # ─── Column 6: DL-FLOW-OFF Request ──────────────────────────────────
+
+  - id: t24_dl_flow_off_when_not_busy
+    on: DL_FLOW_OFF_request
+    path:
+      - { decision: own_receiver_busy,    branch: "Yes" }
+      - { action: set_own_receiver_busy,  kind: processing }
+      - { action: RNR_response,           kind: signal_lower }
+      - { action: clear_acknowledge_pending, kind: processing }
+    next: Connected
+
+  - id: t25_dl_flow_off_when_already_busy
+    on: DL_FLOW_OFF_request
+    path:
+      - { decision: own_receiver_busy, branch: "No" }
+    next: Connected
+
+  # ─── Column 7: DL-FLOW-ON Request ───────────────────────────────────
+
+  - id: t26_dl_flow_on_when_busy_and_t1_not_running
+    on: DL_FLOW_ON_request
+    path:
+      - { decision: own_receiver_busy,     branch: "Yes" }
+      - { action: clear_own_receiver_busy, kind: processing }
+      - { action: RR_command,              kind: signal_lower }
+      - { action: clear_acknowledge_pending, kind: processing }
+      - { decision: t1_running,            branch: "No" }
+      - { action: stop_T3,                 kind: processing }
+      - { action: start_T1,                kind: processing }
+    next: Connected
+
+  - id: t27_dl_flow_on_when_busy_and_t1_running
+    on: DL_FLOW_ON_request
+    path:
+      - { decision: own_receiver_busy,     branch: "Yes" }
+      - { action: clear_own_receiver_busy, kind: processing }
+      - { action: RR_command,              kind: signal_lower }
+      - { action: clear_acknowledge_pending, kind: processing }
+      - { decision: t1_running,            branch: "Yes" }
+    next: Connected
+
+  - id: t28_dl_flow_on_when_not_busy
+    on: DL_FLOW_ON_request
+    path:
+      - { decision: own_receiver_busy, branch: "No" }
+    next: Connected
+
+  # ─── Column 8: DL-CONNECT Request ───────────────────────────────────
+
+  - id: t29_dl_connect_request_v22
+    on: DL_CONNECT_request
+    path:
+      - { action: discard_I_frame_queue,   kind: processing }
+      - { action: Establish_Data_Link,     kind: subroutine }
+      - { action: set_layer_3_initiated,   kind: processing }
+      - { decision: version_2_2,           branch: "Yes" }
+    next: AwaitingConnection22
+
+  - id: t30_dl_connect_request_v20
+    on: DL_CONNECT_request
+    path:
+      - { action: discard_I_frame_queue,   kind: processing }
+      - { action: Establish_Data_Link,     kind: subroutine }
+      - { action: set_layer_3_initiated,   kind: processing }
+      - { decision: version_2_2,           branch: "No" }
+    next: AwaitingConnection
+
+  # ─── Column 9: All Other Primitives (lower-layer shape) ─────────────
+
+  - id: t31_all_other_primitives_from_lower_layer
+    on: all_other_primitives__from_lower_layer
+    path: []
+    next: Connected
+
+  # ─── Column 10: Control Field Error ─────────────────────────────────
+
+  - id: t32_control_field_error_v22
+    on: control_field_error
+    path:
+      - { action: DL_ERROR_indication_L,   kind: signal_upper }
+      - { action: discard_I_frame_queue,   kind: processing }
+      - { action: Establish_Data_Link,     kind: subroutine }
+      - { action: set_layer_3_initiated,   kind: processing }
+      - { decision: version_2_2,           branch: "Yes" }
+    next: AwaitingConnection22
+
+  - id: t33_control_field_error_v20
+    on: control_field_error
+    path:
+      - { action: DL_ERROR_indication_L,   kind: signal_upper }
+      - { action: discard_I_frame_queue,   kind: processing }
+      - { action: Establish_Data_Link,     kind: subroutine }
+      - { action: set_layer_3_initiated,   kind: processing }
+      - { decision: version_2_2,           branch: "No" }
+    next: AwaitingConnection
+
+  # ─── Column 11: Info Not Permitted in Frame ─────────────────────────
+
+  - id: t34_info_not_permitted_in_frame_v22
+    on: info_not_permitted_in_frame
+    path:
+      - { action: DL_ERROR_indication_M,   kind: signal_upper }
+      - { action: discard_I_frame_queue,   kind: processing }
+      - { action: Establish_Data_Link,     kind: subroutine }
+      - { action: set_layer_3_initiated,   kind: processing }
+      - { decision: version_2_2,           branch: "Yes" }
+    next: AwaitingConnection22
+
+  - id: t35_info_not_permitted_in_frame_v20
+    on: info_not_permitted_in_frame
+    path:
+      - { action: DL_ERROR_indication_M,   kind: signal_upper }
+      - { action: discard_I_frame_queue,   kind: processing }
+      - { action: Establish_Data_Link,     kind: subroutine }
+      - { action: set_layer_3_initiated,   kind: processing }
+      - { decision: version_2_2,           branch: "No" }
+    next: AwaitingConnection
+
+  # ─── Column 12: U or S Frame Length Error ───────────────────────────
+
+  - id: t36_u_or_s_frame_length_error_v22
+    on: u_or_s_frame_length_error
+    path:
+      - { action: DL_ERROR_indication_N,   kind: signal_upper }
+      - { action: discard_I_frame_queue,   kind: processing }
+      - { action: Establish_Data_Link,     kind: subroutine }
+      - { action: set_layer_3_initiated,   kind: processing }
+      - { decision: version_2_2,           branch: "Yes" }
+    next: AwaitingConnection22
+
+  - id: t37_u_or_s_frame_length_error_v20
+    on: u_or_s_frame_length_error
+    path:
+      - { action: DL_ERROR_indication_N,   kind: signal_upper }
+      - { action: discard_I_frame_queue,   kind: processing }
+      - { action: Establish_Data_Link,     kind: subroutine }
+      - { action: set_layer_3_initiated,   kind: processing }
+      - { decision: version_2_2,           branch: "No" }
+    next: AwaitingConnection
+
+  # ─── Column 13: Timer T1 Expiry ─────────────────────────────────────
+
+  - id: t38_t1_expiry
+    on: T1_expiry
+    path:
+      - { action: "RC := 1",       kind: processing }
+      - { action: Transmit_Enquiry, kind: subroutine }
+    next: TimerRecovery
+    notes: |
+      T1 expired — start the timer-recovery procedure. Note: figure
+      labels the subroutine "Transmit Enquery" (sic) — preserved
+      verbatim but the canonical verb here is the spec's
+      "Transmit Enquiry" routine.
+
+  # ─── Column 14: Timer T3 Expiry ─────────────────────────────────────
+
+  - id: t39_t3_expiry
+    on: T3_expiry
+    path:
+      - { action: "RC := 1",       kind: processing }
+      - { action: Transmit_Enquiry, kind: subroutine }
+    next: TimerRecovery
+    notes: |
+      T3 expired — long idle, poll the peer via Transmit Enquiry.
+
+  # ─── Column 15: SABM received (collision / reset) ───────────────────
+
+  - id: t40_sabm_received_vs_neq_va
+    on: SABM_received
+    path:
+      - { action: "F := P",            kind: processing }
+      - { action: set_version_2_0,     kind: processing }
+      - { action: UA,                  kind: signal_lower }
+      - { action: Clear_Exception_Conditions, kind: subroutine }
+      - { action: DL_ERROR_indication_F, kind: signal_upper }
+      - { decision: vs_eq_va,          branch: "No" }
+      - { action: discard_I_frame_queue, kind: processing }
+      - { action: DL_CONNECT_indication, kind: signal_upper }
+      - { action: stop_T1,             kind: processing }
+      - { action: start_T3,            kind: processing }
+      - { action: "V(a) := 0",         kind: processing }
+      - { action: "V(s) := 0",         kind: processing }
+      - { action: "V(r) := 0",         kind: processing }
+      - { action: "RC := 0",           kind: processing }
+    next: Connected
+    notes: |
+      Peer sent SABM while we're already Connected → reset to v2.0.
+      V(s) ≠ V(a) means we have unacknowledged data; discard queue and
+      notify L3 of the reset via DL-CONNECT indication.
+
+  - id: t41_sabm_received_vs_eq_va
+    on: SABM_received
+    path:
+      - { action: "F := P",            kind: processing }
+      - { action: set_version_2_0,     kind: processing }
+      - { action: UA,                  kind: signal_lower }
+      - { action: Clear_Exception_Conditions, kind: subroutine }
+      - { action: DL_ERROR_indication_F, kind: signal_upper }
+      - { decision: vs_eq_va,          branch: "Yes" }
+      - { action: stop_T1,             kind: processing }
+      - { action: start_T3,            kind: processing }
+      - { action: "V(a) := 0",         kind: processing }
+      - { action: "V(s) := 0",         kind: processing }
+      - { action: "V(r) := 0",         kind: processing }
+      - { action: "RC := 0",           kind: processing }
+    next: Connected
+    notes: |
+      Peer SABM with V(s)==V(a) (no unacked data) — silent reset, no
+      DL-CONNECT indication to upper layer.
+
+  # ─── Column 16: SABME received (collision / reset → v2.2) ───────────
+
+  - id: t42_sabme_received_vs_neq_va
+    on: SABME_received
+    path:
+      - { action: "F := P",            kind: processing }
+      - { action: set_version_2_2,     kind: processing }
+      - { action: UA,                  kind: signal_lower }
+      - { action: Clear_Exception_Conditions, kind: subroutine }
+      - { action: DL_ERROR_indication_F, kind: signal_upper }
+      - { decision: vs_eq_va,          branch: "No" }
+      - { action: discard_I_frame_queue, kind: processing }
+      - { action: DL_CONNECT_indication, kind: signal_upper }
+      - { action: stop_T1,             kind: processing }
+      - { action: start_T3,            kind: processing }
+      - { action: "V(a) := 0",         kind: processing }
+      - { action: "V(s) := 0",         kind: processing }
+      - { action: "V(r) := 0",         kind: processing }
+      - { action: "RC := 0",           kind: processing }
+    next: Connected
+
+  - id: t43_sabme_received_vs_eq_va
+    on: SABME_received
+    path:
+      - { action: "F := P",            kind: processing }
+      - { action: set_version_2_2,     kind: processing }
+      - { action: UA,                  kind: signal_lower }
+      - { action: Clear_Exception_Conditions, kind: subroutine }
+      - { action: DL_ERROR_indication_F, kind: signal_upper }
+      - { decision: vs_eq_va,          branch: "Yes" }
+      - { action: stop_T1,             kind: processing }
+      - { action: start_T3,            kind: processing }
+      - { action: "V(a) := 0",         kind: processing }
+      - { action: "V(s) := 0",         kind: processing }
+      - { action: "V(r) := 0",         kind: processing }
+      - { action: "RC := 0",           kind: processing }
+    next: Connected
+
+  # ─── Column 17: FRMR received ───────────────────────────────────────
+
+  - id: t44_frmr_received_v22
+    on: FRMR_received
+    path:
+      - { action: DL_ERROR_indication_K,  kind: signal_upper }
+      - { action: Establish_Data_Link,    kind: subroutine }
+      - { action: clear_layer_3_initiated, kind: processing }
+      - { decision: version_2_2,          branch: "Yes" }
+    next: AwaitingConnection22
+
+  - id: t45_frmr_received_v20
+    on: FRMR_received
+    path:
+      - { action: DL_ERROR_indication_K,  kind: signal_upper }
+      - { action: Establish_Data_Link,    kind: subroutine }
+      - { action: clear_layer_3_initiated, kind: processing }
+      - { decision: version_2_2,          branch: "No" }
+    next: AwaitingConnection
+
+  # ─── Column 18: UA received (unexpected) ────────────────────────────
+
+  - id: t46_ua_received_v22
+    on: UA_received
+    path:
+      - { action: DL_ERROR_indication_K,  kind: signal_upper }
+      - { action: Establish_Data_Link,    kind: subroutine }
+      - { action: clear_layer_3_initiated, kind: processing }
+      - { decision: version_2_2,          branch: "Yes" }
+    next: AwaitingConnection22
+
+  - id: t47_ua_received_v20
+    on: UA_received
+    path:
+      - { action: DL_ERROR_indication_K,  kind: signal_upper }
+      - { action: Establish_Data_Link,    kind: subroutine }
+      - { action: clear_layer_3_initiated, kind: processing }
+      - { decision: version_2_2,          branch: "No" }
+    next: AwaitingConnection
+
+  # ─── Column 19: UI received ─────────────────────────────────────────
+
+  - id: t48_ui_received_p_eq_0
+    on: UI_received
+    path:
+      - { action: UI_Check,    kind: subroutine }
+      - { decision: p_eq_1, branch: "No" }
+    next: Connected
+
+  - id: t49_ui_received_p_eq_1
+    on: UI_received
+    path:
+      - { action: UI_Check,             kind: subroutine }
+      - { decision: p_eq_1, branch: "Yes" }
+      - { action: "Enquiry_Response_F_1", kind: subroutine }
+    next: Connected
+
+  # ─── Column 20: DISC received ───────────────────────────────────────
+
+  - id: t50_disc_received
+    on: DISC_received
+    path:
+      - { action: discard_I_frame_queue, kind: processing }
+      - { action: "F := P",              kind: processing }
+      - { action: UA,                    kind: signal_lower }
+      - { action: DL_DISCONNECT_indication, kind: signal_upper }
+      - { action: stop_T3,               kind: processing }
+      - { action: start_T1,              kind: processing }
+    next: Disconnected
+    notes: |
+      Peer wants to disconnect — confirm with UA, notify L3, swap
+      timers and head to Disconnected. The figure draws stop_T3 then
+      start_T1 (and indeed wait for the peer's ack of the UA via T1).
+
+  # ─── Column 21: DM received ─────────────────────────────────────────
+
+  - id: t51_dm_received
+    on: DM_received
+    path:
+      - { action: DL_ERROR_indication_E,  kind: signal_upper }
+      - { action: DL_DISCONNECT_indication, kind: signal_upper }
+      - { action: discard_I_frame_queue,  kind: processing }
+      - { action: stop_T1,                kind: processing }
+      - { action: stop_T3,                kind: processing }
+    next: Disconnected
+    notes: |
+      Unexpected DM while connected — peer claims it's not connected.
+      DL-ERROR(E), tell L3 the link is gone, stop both timers.
+
+  # ─── Column 22: RR received ─────────────────────────────────────────
+
+  - id: t52_rr_received_nr_in_window
+    on: RR_received
+    path:
+      - { action: clear_peer_busy,        kind: processing }
+      - { action: Check_Need_For_Response, kind: subroutine }
+      - { decision: nr_in_window,         branch: "Yes" }
+      - { action: Check_I_Frame_Acknowledged, kind: subroutine }
+    next: Connected
+
+  - id: t53_rr_received_nr_out_of_window_v22
+    on: RR_received
+    path:
+      - { action: clear_peer_busy,        kind: processing }
+      - { action: Check_Need_For_Response, kind: subroutine }
+      - { decision: nr_in_window,         branch: "No" }
+      - { action: N_r_Error_Recovery,     kind: subroutine }
+      - { decision: version_2_2,          branch: "Yes" }
+    next: AwaitingConnection22
+
+  - id: t54_rr_received_nr_out_of_window_v20
+    on: RR_received
+    path:
+      - { action: clear_peer_busy,        kind: processing }
+      - { action: Check_Need_For_Response, kind: subroutine }
+      - { decision: nr_in_window,         branch: "No" }
+      - { action: N_r_Error_Recovery,     kind: subroutine }
+      - { decision: version_2_2,          branch: "No" }
+    next: AwaitingConnection
+
+  # ─── Column 23: RNR received ────────────────────────────────────────
+
+  - id: t55_rnr_received_nr_in_window
+    on: RNR_received
+    path:
+      - { action: set_peer_busy,          kind: processing }
+      - { action: Check_Need_For_Response, kind: subroutine }
+      - { decision: nr_in_window,         branch: "Yes" }
+      - { action: Check_I_Frame_Acknowledged, kind: subroutine }
+    next: Connected
+
+  - id: t56_rnr_received_nr_out_of_window_v22
+    on: RNR_received
+    path:
+      - { action: set_peer_busy,          kind: processing }
+      - { action: Check_Need_For_Response, kind: subroutine }
+      - { decision: nr_in_window,         branch: "No" }
+      - { action: N_r_Error_Recovery,     kind: subroutine }
+      - { decision: version_2_2,          branch: "Yes" }
+    next: AwaitingConnection22
+
+  - id: t57_rnr_received_nr_out_of_window_v20
+    on: RNR_received
+    path:
+      - { action: set_peer_busy,          kind: processing }
+      - { action: Check_Need_For_Response, kind: subroutine }
+      - { decision: nr_in_window,         branch: "No" }
+      - { action: N_r_Error_Recovery,     kind: subroutine }
+      - { decision: version_2_2,          branch: "No" }
+    next: AwaitingConnection
+
+  # ─── Column 24: LM-SEIZE Confirm ────────────────────────────────────
+
+  - id: t58_lm_seize_confirm_no_ack_pending
+    on: LM_SEIZE_confirm
+    path:
+      - { decision: ack_pending,       branch: "No" }
+      - { action: LM_release_request,  kind: signal_lower }
+    next: Connected
+
+  - id: t59_lm_seize_confirm_ack_pending
+    on: LM_SEIZE_confirm
+    path:
+      - { decision: ack_pending,       branch: "Yes" }
+      - { action: clear_acknowledge_pending, kind: processing }
+      - { action: "Enquiry_Response_F_0", kind: subroutine }
+      - { action: LM_release_request,  kind: signal_lower }
+    next: Connected
+
+  # ─── Column 25: SREJ received ───────────────────────────────────────
+
+  - id: t60_srej_received_nr_in_window_pf_eq_0
+    on: SREJ_received
+    path:
+      - { action: clear_peer_busy,        kind: processing }
+      - { action: Check_Need_For_Response, kind: subroutine }
+      - { decision: nr_in_window,         branch: "Yes" }
+      - { decision: p_or_f_eq_1,          branch: "No" }
+      - { action: stop_T1,                kind: processing }
+      - { action: start_T3,               kind: processing }
+      - { action: Select_T1_Value,        kind: subroutine }
+      - { action: push_old_I_frame_N_r_on_queue, kind: internal_out }
+      - { action: LM_data_request,        kind: signal_lower }
+      - { action: stop_T3,                kind: processing }
+      - { action: start_T1,               kind: processing }
+      - { action: clear_acknowledge_pending, kind: processing }
+    next: Connected
+
+  - id: t61_srej_received_nr_in_window_pf_eq_1
+    on: SREJ_received
+    path:
+      - { action: clear_peer_busy,        kind: processing }
+      - { action: Check_Need_For_Response, kind: subroutine }
+      - { decision: nr_in_window,         branch: "Yes" }
+      - { decision: p_or_f_eq_1,          branch: "Yes" }
+      - { action: "V(a) := N(r)",         kind: processing }
+      - { action: stop_T1,                kind: processing }
+      - { action: start_T3,               kind: processing }
+      - { action: Select_T1_Value,        kind: subroutine }
+      - { action: push_old_I_frame_N_r_on_queue, kind: internal_out }
+      - { action: LM_data_request,        kind: signal_lower }
+      - { action: stop_T3,                kind: processing }
+      - { action: start_T1,               kind: processing }
+      - { action: clear_acknowledge_pending, kind: processing }
+    next: Connected
+
+  - id: t62_srej_received_nr_out_of_window_v22
+    on: SREJ_received
+    path:
+      - { action: clear_peer_busy,        kind: processing }
+      - { action: Check_Need_For_Response, kind: subroutine }
+      - { decision: nr_in_window,         branch: "No" }
+      - { action: N_r_Error_Recovery,     kind: subroutine }
+      - { decision: version_2_2,          branch: "Yes" }
+    next: AwaitingConnection22
+
+  - id: t63_srej_received_nr_out_of_window_v20
+    on: SREJ_received
+    path:
+      - { action: clear_peer_busy,        kind: processing }
+      - { action: Check_Need_For_Response, kind: subroutine }
+      - { decision: nr_in_window,         branch: "No" }
+      - { action: N_r_Error_Recovery,     kind: subroutine }
+      - { decision: version_2_2,          branch: "No" }
+    next: AwaitingConnection
+
+  # ─── Column 26: REJ received ────────────────────────────────────────
+
+  - id: t64_rej_received_nr_in_window
+    on: REJ_received
+    path:
+      - { action: clear_peer_busy,         kind: processing }
+      - { action: Check_Need_For_Response, kind: subroutine }
+      - { decision: nr_in_window,          branch: "Yes" }
+      - { action: "V(a) := N(r)",          kind: processing }
+      - { action: start_T1,                kind: processing }
+      - { action: stop_T3,                 kind: processing }
+      - { action: clear_acknowledge_pending, kind: processing }
+      - { action: Select_T1_Value,         kind: subroutine }
+      - { action: Invoke_Retransmission,   kind: subroutine }
+    next: Connected
+
+  - id: t65_rej_received_nr_out_of_window_v22
+    on: REJ_received
+    path:
+      - { action: clear_peer_busy,         kind: processing }
+      - { action: Check_Need_For_Response, kind: subroutine }
+      - { decision: nr_in_window,          branch: "No" }
+      - { action: N_r_Error_Recovery,      kind: subroutine }
+      - { decision: version_2_2,           branch: "Yes" }
+    next: AwaitingConnection22
+
+  - id: t66_rej_received_nr_out_of_window_v20
+    on: REJ_received
+    path:
+      - { action: clear_peer_busy,         kind: processing }
+      - { action: Check_Need_For_Response, kind: subroutine }
+      - { decision: nr_in_window,          branch: "No" }
+      - { action: N_r_Error_Recovery,      kind: subroutine }
+      - { decision: version_2_2,           branch: "No" }
+    next: AwaitingConnection
+
+  # ─── Column 2 continued — V(r) I Frame Stored? = Yes paths ──────────
+  #
+  # In figc4.4 the n148 "V(r) I Frame Stored?" Yes branch is a loop:
+  # n149 Retrieve Stored V(r) I Frame → n150 DL-DATA Indication →
+  # n151 V(r) := V(r) + 1 → back to n148. Each iteration delivers one
+  # previously-stored out-of-sequence frame. The loop terminates when
+  # no further frame is stored at the new V(r), at which point the
+  # column continues with n152 (P == 1?).
+  #
+  # Encoding the loop in a flat path: the YAML carries one iteration of
+  # the loop body (retrieve, DL-DATA indication, increment V(r)) and a
+  # `verification_pending` note explaining the figure semantics. The
+  # runtime dispatcher will need to interpret these three actions as a
+  # loop body when wiring real handlers — see notes on t67-t69. Added
+  # at the end to avoid renumbering t12-t66; semantically they belong
+  # to column 2 alongside t02-t17.
+
+  - id: t67_i_received_in_seq_stored_p_eq_1
+    on: I_received
+    path:
+      - { decision: command,            branch: "Yes" }
+      - { decision: info_field_valid,   branch: "Yes" }
+      - { decision: nr_in_window,       branch: "Yes" }
+      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
+      - { decision: own_receiver_busy,  branch: "No" }
+      - { decision: ns_eq_vr,           branch: "Yes" }
+      - { action: "V(r) := V(r) + 1",            kind: processing }
+      - { action: clear_reject_exception,         kind: processing }
+      - { action: "decrement_srej_exception_if_gt_0", kind: processing }
+      - { action: DL_DATA_indication,             kind: signal_upper }
+      - { decision: vr_i_frame_stored,  branch: "Yes" }
+      - { action: retrieve_stored_V_r_I_frame,    kind: processing }
+      - { action: DL_DATA_indication,             kind: signal_upper }
+      - { action: "V(r) := V(r) + 1",            kind: processing }
+      - { decision: p_eq_1,             branch: "Yes" }
+      - { action: "F := 1",             kind: processing }
+      - { action: "N(R) := V(r)",       kind: processing }
+      - { action: RR,                   kind: signal_lower }
+      - { action: clear_acknowledge_pending, kind: processing }
+    next: Connected
+    notes: |
+      verification_pending: the path[] above lists *one iteration* of
+      figc4.4's "V(r) I Frame Stored?" Yes loop (n148-n149-n150-n151).
+      The figure's actual behaviour is to repeat retrieve / DL-DATA
+      indication / V(r) := V(r)+1 until the loop's decision returns No.
+      The flat-path YAML schema can't express the unbounded loop, so
+      the runtime will need to treat these three actions as a loop
+      body bounded by the "V(r) I Frame Stored?" predicate.
+
+  - id: t68_i_received_in_seq_stored_p_eq_0_ack_pending
+    on: I_received
+    path:
+      - { decision: command,            branch: "Yes" }
+      - { decision: info_field_valid,   branch: "Yes" }
+      - { decision: nr_in_window,       branch: "Yes" }
+      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
+      - { decision: own_receiver_busy,  branch: "No" }
+      - { decision: ns_eq_vr,           branch: "Yes" }
+      - { action: "V(r) := V(r) + 1",            kind: processing }
+      - { action: clear_reject_exception,         kind: processing }
+      - { action: "decrement_srej_exception_if_gt_0", kind: processing }
+      - { action: DL_DATA_indication,             kind: signal_upper }
+      - { decision: vr_i_frame_stored,  branch: "Yes" }
+      - { action: retrieve_stored_V_r_I_frame,    kind: processing }
+      - { action: DL_DATA_indication,             kind: signal_upper }
+      - { action: "V(r) := V(r) + 1",            kind: processing }
+      - { decision: p_eq_1,             branch: "No" }
+      - { decision: ack_pending,        branch: "Yes" }
+    next: Connected
+    notes: |
+      verification_pending: see t67. One iteration of figc4.4's stored-
+      frame loop, then continues into the not-polled / ack-pending tail.
+
+  - id: t69_i_received_in_seq_stored_p_eq_0_no_ack_pending
+    on: I_received
+    path:
+      - { decision: command,            branch: "Yes" }
+      - { decision: info_field_valid,   branch: "Yes" }
+      - { decision: nr_in_window,       branch: "Yes" }
+      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
+      - { decision: own_receiver_busy,  branch: "No" }
+      - { decision: ns_eq_vr,           branch: "Yes" }
+      - { action: "V(r) := V(r) + 1",            kind: processing }
+      - { action: clear_reject_exception,         kind: processing }
+      - { action: "decrement_srej_exception_if_gt_0", kind: processing }
+      - { action: DL_DATA_indication,             kind: signal_upper }
+      - { decision: vr_i_frame_stored,  branch: "Yes" }
+      - { action: retrieve_stored_V_r_I_frame,    kind: processing }
+      - { action: DL_DATA_indication,             kind: signal_upper }
+      - { action: "V(r) := V(r) + 1",            kind: processing }
+      - { decision: p_eq_1,             branch: "No" }
+      - { decision: ack_pending,        branch: "No" }
+      - { action: LM_seize_request,     kind: signal_lower }
+      - { action: set_acknowledgement_pending, kind: processing }
+    next: Connected
+    notes: |
+      verification_pending: see t67. One iteration of figc4.4's stored-
+      frame loop, then continues into the not-polled / no-ack tail.

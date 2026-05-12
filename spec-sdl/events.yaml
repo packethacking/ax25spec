@@ -53,6 +53,10 @@ internal:
   - info_not_permitted_in_frame
   - u_or_s_frame_length_error
 
+# Service primitives between Data-Link and Link Multiplexer.
+link_multiplexer:
+  - LM_SEIZE_confirm
+
 # Timer expiries.
 timers:
   - T1_expiry
