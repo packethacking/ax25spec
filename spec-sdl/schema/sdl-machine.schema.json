@@ -51,6 +51,19 @@
       "items": { "type": "string" },
       "description": "Events to be saved (deferred for processing in the next state) when received in this state. Corresponds to the SDL 'save' parallelogram shape (figc1.1)."
     },
+    "pinned_refs": {
+      "type": "object",
+      "description": "Per-source git ref pins for cross-reference citations. Each entry binds a source identifier (e.g. 'linbpq') to the repo URL and the specific commit at which line numbers in transitions[].references[] are valid. Pinning to commits stops citations going stale when the upstream repos refactor.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["repo", "commit"],
+        "additionalProperties": false,
+        "properties": {
+          "repo":   { "type": "string", "format": "uri", "description": "Upstream repository URL." },
+          "commit": { "type": "string", "description": "Commit hash, tag, or other immutable ref at which the citation's line numbers are valid." }
+        }
+      }
+    },
     "decisions": {
       "type": "array",
       "description": "Catalogue of decision diamonds appearing on this page. Each diamond has a stable id (referenced from transitions[].path[].decision), the question text as drawn in the figure, and a canonical boolean predicate evaluated at runtime.",
@@ -106,7 +119,25 @@
             }
           },
           "next":  { "type": "string", "description": "Name of the destination state." },
-          "notes": { "type": "string" }
+          "notes": { "type": "string" },
+          "references": {
+            "type": "array",
+            "description": "Cross-reference citations for this transition. `spec_prose` entries cite AX.25 spec text; other source entries cite implementation code in pinned repos (commit pinned at page-level pinned_refs[source]). function: is the primary anchor; line: is a best-effort hint (function names survive refactors, line numbers don't).",
+            "items": {
+              "type": "object",
+              "required": ["source"],
+              "additionalProperties": false,
+              "properties": {
+                "source":   { "type": "string", "description": "Origin of the citation. 'spec_prose' for the AX.25 specification text; any other value must have a matching entry in the page's pinned_refs." },
+                "cite":     { "type": "string", "description": "spec_prose only: section + paragraph reference, e.g. '§6.3.5 ¶1'." },
+                "quote":    { "type": "string", "description": "spec_prose only: verbatim text from the cited paragraph." },
+                "path":     { "type": "string", "description": "Code citations: path of the cited file within the source repo." },
+                "function": { "type": "string", "description": "Code citations: function/method name containing the cited logic. Primary anchor — survives refactors that shift line numbers." },
+                "line":     { "type": "integer", "minimum": 1, "description": "Code citations: line number hint (best-effort)." },
+                "note":     { "type": "string", "description": "Optional short comment explaining what to look at in the cited code." }
+              }
+            }
+          }
         }
       }
     }

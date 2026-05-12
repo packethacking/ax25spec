@@ -13,6 +13,23 @@ source:
   figure: figc4.1
   url: https://raw.githubusercontent.com/packethacking/ax25spec/main/doc/media/figc4.1.png
 
+# Per-source commit pins for cross-reference citations in transitions[].references[].
+# Pinning to specific commits means line numbers stay valid; bumping requires
+# auditing the citations for any drift.
+pinned_refs:
+  linbpq:
+    repo: https://github.com/M0LTE/linbpq
+    commit: 88a68988b446187cc5f7a2dfdbe33d1cc3ebd46f
+  direwolf:
+    repo: https://github.com/wb2osz/direwolf
+    commit: a231971a652bfb574a4bae9a5d875fbce53d2267
+  rax25:
+    repo: https://github.com/ThomasHabets/rax25
+    commit: d97b7ab725620497d5444e7393969b8d6f9ae58d
+  linux_oot:
+    repo: https://github.com/linux-netdev/mod-orphan
+    commit: 40188e901024be90f50fc37ba1ba3a84678dfe12
+
 decisions:
   - id: ui_p_eq_1
     question: "P == 1?"
@@ -166,6 +183,30 @@ transitions:
     notes: |
       spec_prose: §6.3.5 ¶1 — "transmits a DM frame in response to a
       DISC command".
+    references:
+      - source: spec_prose
+        cite: "§6.3.5 ¶1"
+        quote: "transmits a DM frame in response to a DISC command"
+      - source: linbpq
+        path: L2Code.c
+        function: L2FORUS
+        line: 735
+        note: "no-session catch-all — sends DM when received command is neither SABM nor XID and has P=1; ignores P=0 (figure responds unconditionally with F:=P)"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: disc_frame
+        line: 4524
+        note: "state_0_disconnected case sends DM via lm_data_request"
+      - source: rax25
+        path: src/state.rs
+        function: "Disconnected::disc"
+        line: 1164
+        note: "returns Action::SendDm { pf: packet.poll }"
+      - source: linux_oot
+        path: net/ax25/ax25_in.c
+        function: ax25_rcv
+        line: 327
+        note: "state-0 catch-all — calls ax25_return_dm when no ax25_cb exists and frame isn't SABM/SABME/DM. Same code path handles t05, t10, t13 by exclusion."
 
   - id: t14_sabm_received_able
     on: SABM_received
