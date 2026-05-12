@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://packet.net/schema/sdl-machine.schema.json",
   "title": "SDL state machine page",
-  "description": "Machine-readable transcription of one SDL diagram from the AX.25 spec.",
+  "description": "Machine-readable transcription of one SDL diagram from the AX.25 spec. Designed to be lossless w.r.t. the figure (minus physical layout) — the original diamond structure and original action ordering are preserved, so a figure can be redrawn from the YAML alone.",
   "type": "object",
   "required": ["machine", "state", "source", "transitions"],
   "additionalProperties": false,
@@ -29,16 +29,16 @@
       "type": "string",
       "enum": ["complete", "partial"],
       "default": "complete",
-      "description": "'partial' means this page covers only some of the state's transitions (e.g. one panel of a 3-panel SDL). 'complete' asserts every transition for this state appears here."
+      "description": "'partial' means this page covers only some of the state's transitions (e.g. one panel of a multi-panel SDL). 'complete' asserts every transition for this state appears here."
     },
     "source": {
       "type": "object",
       "required": ["spec", "figure"],
       "additionalProperties": false,
       "properties": {
-        "spec": { "type": "string" },
+        "spec":   { "type": "string" },
         "figure": { "type": "string" },
-        "url":   { "type": "string", "format": "uri" }
+        "url":    { "type": "string", "format": "uri" }
       }
     },
     "variables": {
@@ -46,20 +46,67 @@
       "items": { "type": "string" },
       "description": "Documentation-only list of variables this state reads/writes."
     },
+    "save": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Events to be saved (deferred for processing in the next state) when received in this state. Corresponds to the SDL 'save' parallelogram shape (figc1.1)."
+    },
+    "decisions": {
+      "type": "array",
+      "description": "Catalogue of decision diamonds appearing on this page. Each diamond has a stable id (referenced from transitions[].path[].decision), the question text as drawn in the figure, and a canonical boolean predicate evaluated at runtime.",
+      "items": {
+        "type": "object",
+        "required": ["id", "question", "predicate"],
+        "additionalProperties": false,
+        "properties": {
+          "id":        { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+          "question":  { "type": "string", "description": "Exact wording from the figure (e.g. 'Own Receiver Busy?')." },
+          "predicate": { "type": "string", "description": "Canonical boolean expression evaluated by the runtime GuardEvaluator (e.g. 'own_receiver_busy')." }
+        }
+      }
+    },
     "transitions": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["id", "on", "next"],
+        "required": ["id", "on", "path", "next"],
         "additionalProperties": false,
         "properties": {
-          "id":      { "type": "string", "pattern": "^t[0-9]{2}_[a-z0-9_]+$" },
-          "on":      { "type": "string", "description": "Event name from /spec-sdl/events.yaml." },
-          "guard":   { "type": "string", "description": "Optional boolean expression, opaque to codegen." },
-          "actions": { "type": "array", "items": { "type": "string" } },
-          "next":    { "type": "string", "description": "Name of the destination state." },
-          "notes":   { "type": "string" }
+          "id":    { "type": "string", "pattern": "^t[0-9]{2}_[a-z0-9_]+$" },
+          "on":    { "type": "string", "description": "Event name from /spec-sdl/events.yaml." },
+          "path":  {
+            "type": "array",
+            "description": "Ordered interleaving of decision-branch steps and action steps describing one column of the SDL figure. The codegen compiles this into a flat (guard, actions[]) pair for the runtime; the original ordering is preserved so the figure can be redrawn.",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "required": ["decision", "branch"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "decision": { "type": "string", "description": "References an id in the page-level decisions[] list." },
+                    "branch":   { "type": "string", "enum": ["Yes", "No"], "description": "Which outgoing edge of the diamond this path follows. Only binary diamonds are supported today; if a 3-way decision appears in the spec we'll extend this enum." }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": ["action", "kind"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "action": { "type": "string", "description": "Verb as drawn in the figure (e.g. 'RNR response', 'start_T1', 'DL_DISCONNECT_confirm')." },
+                    "kind":   {
+                      "type": "string",
+                      "enum": ["signal_upper", "signal_lower", "processing", "subroutine", "internal_out"],
+                      "description": "Which figc1.1 shape class produced this action. signal_upper=left-pointer parallelogram (to upper layer); signal_lower=right-pointer parallelogram (to lower layer); processing=plain rectangle (internal task); subroutine=rectangle with sidebars; internal_out=internal signal generation."
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "next":  { "type": "string", "description": "Name of the destination state." },
+          "notes": { "type": "string" }
         }
       }
     }
