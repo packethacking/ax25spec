@@ -1,0 +1,328 @@
+# Data-Link state machine: Awaiting Connection state.
+#
+# Source: AX.25 v2.2 rev 4 (Oct 2025), figure C4.2 "Data Link Awaiting
+# Connection State". Transcribed from
+# spec-sdl/data-link/DataLink_AwaitingConnection.graphml.
+#
+# 17 input columns → 24 transitions after enumerating decision branches.
+# 1 column drawn with the SDL Save shape becomes a page-level `save:` entry
+# rather than a transition (DL-DISCONNECT request is deferred until a new
+# state is reached).
+machine: data_link
+state: AwaitingConnection
+coverage: complete
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc4.2
+  url: https://raw.githubusercontent.com/packethacking/ax25spec/main/doc/media/figc4.2.jpeg
+
+# DL-DISCONNECT request received while in this state is held (not
+# discarded) and replayed when the state machine reaches a new state.
+# Corresponds to the SDL Save parallelogram on column 1 of figc4.2.
+save:
+  - DL_DISCONNECT_request
+
+decisions:
+  - id: dm_f_eq_1
+    question: "F == 1?"
+    predicate: F_eq_1
+  - id: ua_f_eq_1
+    question: "F == 1?"
+    predicate: F_eq_1
+  - id: ua_layer_3_initiated
+    question: "Layer 3 Initiated?"
+    predicate: layer_3_initiated
+  - id: ua_vs_eq_va
+    question: "V(s) == V(a)?"
+    predicate: V_s_eq_V_a
+  - id: t1_rc_eq_n2
+    question: "RC == N2?"
+    predicate: RC_eq_N2
+  - id: data_layer_3_initiated
+    question: "Layer 3 Initiated?"
+    predicate: layer_3_initiated
+  - id: ui_p_eq_1
+    question: "P == 1?"
+    predicate: P_eq_1
+
+transitions:
+  # ─── DISC received (upper-layer shape per d5) ────────────────────────
+
+  - id: t01_disc_received
+    on: DISC_received
+    path:
+      - { action: "F := P", kind: processing }
+      - { action: DM,        kind: signal_lower }
+    next: AwaitingConnection
+    notes: |
+      Received DISC while waiting for UA. Respond DM (we're not connected),
+      stay in AwaitingConnection waiting for our SABM's UA.
+
+  # ─── DM received — F bit decides whether we abandon the attempt ──────
+
+  - id: t02_dm_received_f_eq_1
+    on: DM_received
+    path:
+      - { decision: dm_f_eq_1, branch: "Yes" }
+      - { action: discard_frame_queue,        kind: processing }
+      - { action: DL_DISCONNECT_indication,    kind: signal_upper }
+      - { action: stop_T1,                     kind: processing }
+    next: Disconnected
+    notes: |
+      DM with F=1 = peer is refusing the connect. Abandon: discard queue,
+      tell upper layer the connect failed, stop T1.
+
+  - id: t03_dm_received_not_f_eq_1
+    on: DM_received
+    path:
+      - { decision: dm_f_eq_1, branch: "No" }
+    next: AwaitingConnection
+    notes: |
+      DM without F=1 isn't a response to our SABM — ignore, keep waiting.
+
+  # ─── UA received — three chained diamonds enumerate four paths ───────
+  #
+  # F==1? No  → DL-ERROR(D), stay
+  # F==1? Yes → Layer 3 Initiated? Yes → DL-CONNECT confirm + connect housekeeping → Connected
+  #          → Layer 3 Initiated? No  → V(s) == V(a)? Yes → connect housekeeping (no confirm) → Connected
+  #                                  → V(s) == V(a)? No  → SRT/T1V init + restart T1 + DL-CONNECT confirm + housekeeping → Connected
+
+  - id: t04_ua_received_not_f_eq_1
+    on: UA_received
+    path:
+      - { decision: ua_f_eq_1, branch: "No" }
+      - { action: DL_ERROR_indication_D, kind: signal_upper }
+    next: AwaitingConnection
+    notes: |
+      UA without F=1 isn't a valid response to our polled SABM —
+      DL-ERROR(D), keep waiting.
+
+  - id: t05_ua_received_f_eq_1_layer_3_initiated
+    on: UA_received
+    path:
+      - { decision: ua_f_eq_1,             branch: "Yes" }
+      - { decision: ua_layer_3_initiated,  branch: "Yes" }
+      - { action: DL_CONNECT_confirm, kind: signal_upper }
+      - { action: stop_T1,             kind: processing }
+      - { action: start_T3,            kind: processing }
+      - { action: "V(s) := 0",         kind: processing }
+      - { action: "V(a) := 0",         kind: processing }
+      - { action: "V(r) := 0",         kind: processing }
+      - { action: Select_T1_Value,     kind: subroutine }
+    next: Connected
+    notes: |
+      Happy path: UA with F=1 in response to our L3-initiated SABM. Confirm
+      to upper layer, run the standard Connected-entry housekeeping.
+
+  - id: t06_ua_received_f_eq_1_not_layer_3_initiated_vs_eq_va
+    on: UA_received
+    path:
+      - { decision: ua_f_eq_1,             branch: "Yes" }
+      - { decision: ua_layer_3_initiated,  branch: "No" }
+      - { decision: ua_vs_eq_va,           branch: "Yes" }
+      - { action: stop_T1,             kind: processing }
+      - { action: start_T3,            kind: processing }
+      - { action: "V(s) := 0",         kind: processing }
+      - { action: "V(a) := 0",         kind: processing }
+      - { action: "V(r) := 0",         kind: processing }
+      - { action: Select_T1_Value,     kind: subroutine }
+    next: Connected
+    notes: |
+      Connection coming up that we didn't initiate (peer connected to us
+      via SABM and we sent UA back; this branch is reached when local
+      send-variables already align with peer's ack-variables). No
+      DL-CONNECT confirm — upper layer wasn't expecting one.
+
+  - id: t07_ua_received_f_eq_1_not_layer_3_initiated_vs_neq_va
+    on: UA_received
+    path:
+      - { decision: ua_f_eq_1,             branch: "Yes" }
+      - { decision: ua_layer_3_initiated,  branch: "No" }
+      - { decision: ua_vs_eq_va,           branch: "No" }
+      - { action: "SRT := Initial Default", kind: processing }
+      - { action: "T1V := 2 * SRT",         kind: processing }
+      - { action: start_T1,                  kind: processing }
+      - { action: DL_CONNECT_confirm,       kind: signal_upper }
+      - { action: stop_T1,                   kind: processing }
+      - { action: start_T3,                  kind: processing }
+      - { action: "V(s) := 0",               kind: processing }
+      - { action: "V(a) := 0",               kind: processing }
+      - { action: "V(r) := 0",               kind: processing }
+      - { action: Select_T1_Value,           kind: subroutine }
+    next: Connected
+    notes: |
+      V(s) ≠ V(a) recovery branch: re-init timer values + restart T1
+      *before* the standard housekeeping. (The figure starts T1 here then
+      immediately stops it in the next chain — looks redundant on paper
+      but is what's drawn; trust the figure.)
+
+  # ─── T1 expiry — retry SABM until RC reaches N2 ──────────────────────
+
+  - id: t08_t1_expiry_rc_eq_n2
+    on: T1_expiry
+    path:
+      - { decision: t1_rc_eq_n2, branch: "Yes" }
+      - { action: discard_frame_queue,        kind: processing }
+      - { action: DL_ERROR_indication_G,       kind: signal_upper }
+      - { action: DL_DISCONNECT_indication,    kind: signal_upper }
+    next: Disconnected
+    notes: |
+      Reached the retry limit (N2). Give up: discard pending frames,
+      DL-ERROR(G), DL-DISCONNECT indication, go to Disconnected.
+
+  - id: t09_t1_expiry_rc_neq_n2
+    on: T1_expiry
+    path:
+      - { decision: t1_rc_eq_n2, branch: "No" }
+      - { action: "RC := RC + 1",     kind: processing }
+      - { action: "SABM (P == 1)",     kind: signal_lower }
+      - { action: Select_T1_Value,     kind: subroutine }
+      - { action: start_T1,            kind: processing }
+    next: AwaitingConnection
+    notes: |
+      Below retry limit — bump RC, resend SABM with P=1, recalc T1V via
+      Select T1 Value, restart T1.
+
+  # ─── All Other Primitives (upper-layer shape) ────────────────────────
+
+  - id: t10_all_other_primitives_from_upper_layer
+    on: all_other_primitives__from_upper_layer
+    path: []
+    next: AwaitingConnection
+    notes: |
+      Catch-all for unhandled upper-layer-shape primitives. No action —
+      stay in AwaitingConnection.
+
+  # ─── DL-CONNECT request (lower-layer shape, per figc4.2 convention) ──
+
+  - id: t11_dl_connect_request
+    on: DL_CONNECT_request
+    path:
+      - { action: discard_queue,            kind: processing }
+      - { action: set_layer_3_initiated,    kind: processing }
+    next: AwaitingConnection
+    notes: |
+      DL-CONNECT while already waiting for connection: discard pending
+      queue and re-mark layer-3-initiated. Stays in AwaitingConnection
+      (the existing T1 / RC counters continue).
+
+  # ─── DL-UNIT-DATA request — connectionless data even while waiting ───
+
+  - id: t12_dl_unit_data_request
+    on: DL_UNIT_DATA_request
+    path:
+      - { action: UI_command, kind: signal_lower }
+    next: AwaitingConnection
+
+  # ─── DL-DATA request + I-frame-pops-off-queue share a decision ───────
+  #
+  # Note: n46's Yes/No labels are flagged in the graphml as "assumed;
+  # missing from spec". Trust-the-figure plus a verification_pending
+  # marker per the encode-then-verify rule (§2.2 of docs/plan.md).
+
+  - id: t13_dl_data_request_layer_3_initiated
+    on: DL_DATA_request
+    path:
+      - { decision: data_layer_3_initiated, branch: "Yes" }
+      - { action: push_frame_on_queue, kind: internal_out }
+    next: AwaitingConnection
+    notes: |
+      verification_pending: the Yes/No branch labels on this diamond are
+      not drawn in the spec PNG — Tom assumed them when transcribing the
+      graphml. Reading: when L3 initiated the connection, we accept
+      incoming I-frame payloads onto the queue for delivery once
+      Connected. Could be inverted — flag for upstream check.
+
+  - id: t14_dl_data_request_not_layer_3_initiated
+    on: DL_DATA_request
+    path:
+      - { decision: data_layer_3_initiated, branch: "No" }
+    next: AwaitingConnection
+    notes: |
+      verification_pending: see t13's note. Reading: peer-initiated
+      connection — drop the data silently rather than queue it.
+
+  - id: t15_i_frame_pops_off_queue_layer_3_initiated
+    on: I_frame_pops_off_queue
+    path:
+      - { decision: data_layer_3_initiated, branch: "Yes" }
+      - { action: push_frame_on_queue, kind: internal_out }
+    next: AwaitingConnection
+    notes: |
+      verification_pending: shares the (label-assumed) diamond with t13.
+
+  - id: t16_i_frame_pops_off_queue_not_layer_3_initiated
+    on: I_frame_pops_off_queue
+    path:
+      - { decision: data_layer_3_initiated, branch: "No" }
+    next: AwaitingConnection
+    notes: |
+      verification_pending: shares the (label-assumed) diamond with t14.
+
+  # ─── All Other Primitives (lower-layer shape) ────────────────────────
+
+  - id: t17_all_other_primitives_from_lower_layer
+    on: all_other_primitives__from_lower_layer
+    path: []
+    next: AwaitingConnection
+
+  # ─── UI received with P bit decision ─────────────────────────────────
+
+  - id: t18_ui_received_p_eq_1
+    on: UI_received
+    path:
+      - { action: UI_Check, kind: subroutine }
+      - { decision: ui_p_eq_1, branch: "Yes" }
+      - { action: "DM F=1",  kind: signal_lower }
+    next: AwaitingConnection
+
+  - id: t19_ui_received_p_eq_0
+    on: UI_received
+    path:
+      - { action: UI_Check, kind: subroutine }
+      - { decision: ui_p_eq_1, branch: "No" }
+    next: AwaitingConnection
+
+  # ─── Frame-format errors ─────────────────────────────────────────────
+
+  - id: t20_control_field_error
+    on: control_field_error
+    path:
+      - { action: DL_ERROR_indication_L, kind: signal_upper }
+    next: AwaitingConnection
+
+  - id: t21_info_not_permitted_in_frame
+    on: info_not_permitted_in_frame
+    path:
+      - { action: DL_ERROR_indication_M, kind: signal_upper }
+    next: AwaitingConnection
+
+  - id: t22_u_or_s_frame_length_error
+    on: u_or_s_frame_length_error
+    path:
+      - { action: DL_ERROR_indication_N, kind: signal_upper }
+    next: AwaitingConnection
+
+  # ─── SABM/SABME received while we ourselves are awaiting connection ──
+  #
+  # SABM → collision recovery: respond UA, stay (our own SABM may still
+  # be in flight). SABME → reply DM and shift to the v2.2 collision
+  # state (figc4.6).
+
+  - id: t23_sabm_received
+    on: SABM_received
+    path:
+      - { action: "F := P", kind: processing }
+      - { action: UA,        kind: signal_lower }
+    next: AwaitingConnection
+
+  - id: t24_sabme_received
+    on: SABME_received
+    path:
+      - { action: "F := P", kind: processing }
+      - { action: DM,        kind: signal_lower }
+    next: AwaitingConnection22
+    notes: |
+      SABME received while we sent SABM (v2.0). Reply DM and move to
+      'Awaiting 2.2 Connection' (state 5 in the figure / figc4.6) — peer
+      wants v2.2, we'll handle the next collision step there.
