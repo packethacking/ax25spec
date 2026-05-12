@@ -2011,9 +2011,11 @@ transitions:
       - { action: "decrement_srej_exception_if_gt_0", kind: processing }
       - { action: DL_DATA_indication,             kind: signal_upper }
       - { decision: vr_i_frame_stored,  branch: "Yes" }
-      - { action: retrieve_stored_V_r_I_frame,    kind: processing }
-      - { action: DL_DATA_indication,             kind: signal_upper }
-      - { action: "V(r) := V(r) + 1",            kind: processing }
+      - loop_while: vr_i_frame_stored
+        body:
+          - { action: retrieve_stored_V_r_I_frame, kind: processing }
+          - { action: DL_DATA_indication,          kind: signal_upper }
+          - { action: "V(r) := V(r) + 1",          kind: processing }
       - { decision: p_eq_1,             branch: "Yes" }
       - { action: "F := 1",             kind: processing }
       - { action: "N(R) := V(r)",       kind: processing }
@@ -2021,13 +2023,12 @@ transitions:
       - { action: clear_acknowledge_pending, kind: processing }
     next: Connected
     notes: |
-      verification_pending: the path[] above lists *one iteration* of
-      figc4.4's "V(r) I Frame Stored?" Yes loop (n148-n149-n150-n151).
-      The figure's actual behaviour is to repeat retrieve / DL-DATA
-      indication / V(r) := V(r)+1 until the loop's decision returns No.
-      The flat-path YAML schema can't express the unbounded loop, so
-      the runtime will need to treat these three actions as a loop
-      body bounded by the "V(r) I Frame Stored?" predicate.
+      Loop body (retrieve / DL-DATA Indication / V(r)++) drained
+      via the `loop_while` step — iterates until V(r) I Frame Stored
+      returns false. Compiled to flat Actions[] with a LoopRange entry;
+      runtime loop semantics handled by loop-aware dispatchers, falls
+      back to one-iteration on legacy consumers (matches today's smoke
+      test behaviour).
 
     references:
       - source: rax25
@@ -2059,15 +2060,17 @@ transitions:
       - { action: "decrement_srej_exception_if_gt_0", kind: processing }
       - { action: DL_DATA_indication,             kind: signal_upper }
       - { decision: vr_i_frame_stored,  branch: "Yes" }
-      - { action: retrieve_stored_V_r_I_frame,    kind: processing }
-      - { action: DL_DATA_indication,             kind: signal_upper }
-      - { action: "V(r) := V(r) + 1",            kind: processing }
+      - loop_while: vr_i_frame_stored
+        body:
+          - { action: retrieve_stored_V_r_I_frame, kind: processing }
+          - { action: DL_DATA_indication,          kind: signal_upper }
+          - { action: "V(r) := V(r) + 1",          kind: processing }
       - { decision: p_eq_1,             branch: "No" }
       - { decision: ack_pending,        branch: "Yes" }
     next: Connected
     notes: |
-      verification_pending: see t67. One iteration of figc4.4's stored-
-      frame loop, then continues into the not-polled / ack-pending tail.
+      Same stored-frame loop as t67; continues into the not-polled /
+      ack-pending tail.
 
     references:
       - source: rax25
@@ -2099,17 +2102,19 @@ transitions:
       - { action: "decrement_srej_exception_if_gt_0", kind: processing }
       - { action: DL_DATA_indication,             kind: signal_upper }
       - { decision: vr_i_frame_stored,  branch: "Yes" }
-      - { action: retrieve_stored_V_r_I_frame,    kind: processing }
-      - { action: DL_DATA_indication,             kind: signal_upper }
-      - { action: "V(r) := V(r) + 1",            kind: processing }
+      - loop_while: vr_i_frame_stored
+        body:
+          - { action: retrieve_stored_V_r_I_frame, kind: processing }
+          - { action: DL_DATA_indication,          kind: signal_upper }
+          - { action: "V(r) := V(r) + 1",          kind: processing }
       - { decision: p_eq_1,             branch: "No" }
       - { decision: ack_pending,        branch: "No" }
       - { action: LM_seize_request,     kind: signal_lower }
       - { action: set_acknowledgement_pending, kind: processing }
     next: Connected
     notes: |
-      verification_pending: see t67. One iteration of figc4.4's stored-
-      frame loop, then continues into the not-polled / no-ack tail.
+      Same stored-frame loop as t67; continues into the not-polled /
+      no-ack tail.
     references:
       - source: rax25
         path: src/state.rs

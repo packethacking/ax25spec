@@ -114,6 +114,19 @@
                       "description": "Which figc1.1 shape class produced this action. signal_upper=left-pointer parallelogram (to upper layer); signal_lower=right-pointer parallelogram (to lower layer); processing=plain rectangle (internal task); subroutine=rectangle with sidebars; internal_out=internal signal generation."
                     }
                   }
+                },
+                {
+                  "type": "object",
+                  "required": ["loop_while", "body"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "loop_while": { "type": "string", "description": "References an id in the page-level decisions[] list. The body is executed while the decision's predicate evaluates true; loop exits when it returns false." },
+                    "body": {
+                      "type": "array",
+                      "minItems": 1,
+                      "description": "Sub-path executed each iteration of the loop. Same step types as the outer path[] (action steps and decision-branch steps). Nested loop_while is permitted but unusual in AX.25 figures."
+                    }
+                  }
                 }
               ]
             }
