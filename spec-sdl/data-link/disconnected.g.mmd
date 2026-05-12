@@ -1,0 +1,36 @@
+%% This file was produced by tools/Packet.Sdl.CodeGen from spec-sdl/data-link/disconnected.sdl.yaml
+%% Do not edit by hand. Run `dotnet run --project tools/Packet.Sdl.CodeGen` to regenerate.
+%%
+%% Source: ax.25.2.2.4_Oct_25, figure figc4.1
+%% URL: https://raw.githubusercontent.com/packethacking/ax25spec/main/doc/media/figc4.1.png
+%% Coverage: complete
+%%
+%% Important: this rendering is approximate and intentionally
+%% looks nothing like the original SDL figure. It is a machine-
+%% generated view of the transitions in the .sdl.yaml — useful
+%% for spotting transcription bugs (missing transitions, wrong
+%% destination state) but NOT a substitute for reading the spec
+%% figure itself. See docs/sdl-primer.md.
+
+stateDiagram-v2
+    direction LR
+
+    classDef focal fill:#fff5b1,stroke:#b08800;
+    class Disconnected focal
+    Disconnected --> Disconnected: t01_dl_disconnect_request<br/>on: DL_DISCONNECT_request<br/>/ ↑ DL_DISCONNECT_confirm
+    Disconnected --> Disconnected: t02_dl_unit_data_request<br/>on: DL_UNIT_DATA_request<br/>/ ↓ UI_command
+    Disconnected --> AwaitingConnection: t03_dl_connect_request<br/>on: DL_CONNECT_request<br/>/ · SRT := Initial Default<br/>/ · T1V := 2 * SRT<br/>/ →() Establish_Data_Link<br/>/ · set_layer_3_initiated
+    Disconnected --> Disconnected: t04_all_other_primitives_from_lower_layer<br/>on: all_other_primitives__from_lower_layer
+    Disconnected --> Disconnected: t05_all_other_commands<br/>on: all_other_commands<br/>/ · F := P<br/>/ ↓ DM
+    Disconnected --> Disconnected: t06_all_other_primitives_from_upper_layer<br/>on: all_other_primitives__from_upper_layer<br/>/ · discard_primitive
+    Disconnected --> Disconnected: t07_control_field_error<br/>on: control_field_error<br/>/ ↑ DL_ERROR_indication_L
+    Disconnected --> Disconnected: t08_info_not_permitted_in_frame<br/>on: info_not_permitted_in_frame<br/>/ ↑ DL_ERROR_indication_M
+    Disconnected --> Disconnected: t09_u_or_s_frame_length_error<br/>on: u_or_s_frame_length_error<br/>/ ↑ DL_ERROR_indication_N
+    Disconnected --> Disconnected: t10_ua_received<br/>on: UA_received<br/>/ ↑ DL_ERROR_indication_C_D
+    Disconnected --> Disconnected: t11_ui_received_p_eq_1<br/>on: UI_received<br/>[P_eq_1]<br/>/ →() UI_Check<br/>/ · F := 1<br/>/ ↓ DM
+    Disconnected --> Disconnected: t12_ui_received_p_eq_0<br/>on: UI_received<br/>[not P_eq_1]<br/>/ →() UI_Check
+    Disconnected --> Disconnected: t13_disc_received<br/>on: DISC_received<br/>/ · F := P<br/>/ ↓ DM
+    Disconnected --> Connected: t14_sabm_received_able<br/>on: SABM_received<br/>[able_to_establish]<br/>/ · F := P<br/>/ · set_version_2_0<br/>/ ↓ UA<br/>/ →() Clear_Exception_Conditions<br/>/ · V(s) := 0<br/>/ · V(a) := 0<br/>/ · V(r) := 0<br/>/ ↑ DL_CONNECT_indication<br/>/ · SRT := Initial Default<br/>/ · T1V := 2 * SRT<br/>/ · start_T3<br/>/ · RC := 0
+    Disconnected --> Disconnected: t15_sabm_received_unable<br/>on: SABM_received<br/>[not able_to_establish]<br/>/ · F := P<br/>/ ↓ DM
+    Disconnected --> Connected: t16_sabme_received_able<br/>on: SABME_received<br/>[able_to_establish]<br/>/ · F := P<br/>/ · set_version_2_2<br/>/ ↓ UA<br/>/ →() Clear_Exception_Conditions<br/>/ · V(s) := 0<br/>/ · V(a) := 0<br/>/ · V(r) := 0<br/>/ ↑ DL_CONNECT_indication<br/>/ · SRT := Initial Default<br/>/ · T1V := 2 * SRT<br/>/ · start_T3<br/>/ · RC := 0
+    Disconnected --> Disconnected: t17_sabme_received_unable<br/>on: SABME_received<br/>[not able_to_establish]<br/>/ · F := P<br/>/ ↓ DM

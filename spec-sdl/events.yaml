@@ -36,10 +36,19 @@ frames_received:
   - XID_received
   - TEST_received
 
+# Catch-all "everything not matched above" events. The double-underscore
+# suffix records which shape-class (figc1.1 / d5 description) the catch-all
+# was drawn with, since the same label can appear in a figure with two
+# different shape sources (figc4.1's Disconnected state is the worked
+# example: two "All Other Primitives" columns, one per source).
+catchalls:
+  - all_other_primitives__from_lower_layer
+  - all_other_primitives__from_upper_layer
+  - all_other_commands
+
 # Internal events (queue / timer).
 internal:
   - I_frame_pops_off_queue
-  - all_other_primitives
   - control_field_error
   - info_not_permitted_in_frame
   - u_or_s_frame_length_error

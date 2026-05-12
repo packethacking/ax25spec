@@ -1,0 +1,175 @@
+# Data-Link state machine: Disconnected state.
+#
+# Source: AX.25 v2.2 rev 4 (Oct 2025), figure C4.1 "Data Link Disconnected
+# State". Transcribed from spec-sdl/data-link/DataLink_Disconnected.graphml.
+#
+# 14 input columns → 17 transitions after enumerating the binary decision
+# branches (UI's "P == 1?", and one "Able to Establish?" per SABM/SABME).
+machine: data_link
+state: Disconnected
+coverage: complete
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc4.1
+  url: https://raw.githubusercontent.com/packethacking/ax25spec/main/doc/media/figc4.1.png
+
+decisions:
+  - id: ui_p_eq_1
+    question: "P == 1?"
+    predicate: P_eq_1
+  - id: sabm_able_to_establish
+    question: "Able to Establish?"
+    predicate: able_to_establish
+  - id: sabme_able_to_establish
+    question: "Able to Establish?"
+    predicate: able_to_establish
+
+transitions:
+  # ─── Upper-layer primitives (d5: "Signal reception from Lower Layer") ─
+
+  - id: t01_dl_disconnect_request
+    on: DL_DISCONNECT_request
+    path:
+      - { action: DL_DISCONNECT_confirm, kind: signal_upper }
+    next: Disconnected
+
+  - id: t02_dl_unit_data_request
+    on: DL_UNIT_DATA_request
+    path:
+      - { action: UI_command, kind: signal_lower }
+    next: Disconnected
+
+  - id: t03_dl_connect_request
+    on: DL_CONNECT_request
+    path:
+      - { action: "SRT := Initial Default", kind: processing }
+      - { action: "T1V := 2 * SRT",          kind: processing }
+      - { action: Establish_Data_Link,        kind: subroutine }
+      - { action: set_layer_3_initiated,      kind: processing }
+    next: AwaitingConnection
+
+  - id: t04_all_other_primitives_from_lower_layer
+    on: all_other_primitives__from_lower_layer
+    path: []
+    next: Disconnected
+    notes: |
+      Catch-all column with no actions: receive any unhandled primitive
+      drawn with the "Signal reception from Lower Layer" shape, stay in
+      Disconnected, do nothing.
+
+  # ─── Received frames (d5: "Signal reception from upper layer") ────────
+
+  - id: t05_all_other_commands
+    on: all_other_commands
+    path:
+      - { action: "F := P", kind: processing }
+      - { action: DM,        kind: signal_lower }
+    next: Disconnected
+    notes: |
+      Catch-all for received command frames not handled by SABM/SABME/
+      DISC/UI explicitly: respond DM.
+
+  - id: t06_all_other_primitives_from_upper_layer
+    on: all_other_primitives__from_upper_layer
+    path:
+      - { action: discard_primitive, kind: processing }
+    next: Disconnected
+
+  - id: t07_control_field_error
+    on: control_field_error
+    path:
+      - { action: DL_ERROR_indication_L, kind: signal_upper }
+    next: Disconnected
+
+  - id: t08_info_not_permitted_in_frame
+    on: info_not_permitted_in_frame
+    path:
+      - { action: DL_ERROR_indication_M, kind: signal_upper }
+    next: Disconnected
+
+  - id: t09_u_or_s_frame_length_error
+    on: u_or_s_frame_length_error
+    path:
+      - { action: DL_ERROR_indication_N, kind: signal_upper }
+    next: Disconnected
+
+  - id: t10_ua_received
+    on: UA_received
+    path:
+      - { action: DL_ERROR_indication_C_D, kind: signal_upper }
+    next: Disconnected
+
+  - id: t11_ui_received_p_eq_1
+    on: UI_received
+    path:
+      - { action: UI_Check, kind: subroutine }
+      - { decision: ui_p_eq_1, branch: "Yes" }
+      - { action: "F := 1",  kind: processing }
+      - { action: DM,         kind: signal_lower }
+    next: Disconnected
+
+  - id: t12_ui_received_p_eq_0
+    on: UI_received
+    path:
+      - { action: UI_Check, kind: subroutine }
+      - { decision: ui_p_eq_1, branch: "No" }
+    next: Disconnected
+
+  - id: t13_disc_received
+    on: DISC_received
+    path:
+      - { action: "F := P", kind: processing }
+      - { action: DM,        kind: signal_lower }
+    next: Disconnected
+
+  - id: t14_sabm_received_able
+    on: SABM_received
+    path:
+      - { action: "F := P", kind: processing }
+      - { decision: sabm_able_to_establish, branch: "Yes" }
+      - { action: set_version_2_0,           kind: processing }
+      - { action: UA,                         kind: signal_lower }
+      - { action: Clear_Exception_Conditions, kind: subroutine }
+      - { action: "V(s) := 0", kind: processing }
+      - { action: "V(a) := 0", kind: processing }
+      - { action: "V(r) := 0", kind: processing }
+      - { action: DL_CONNECT_indication,      kind: signal_upper }
+      - { action: "SRT := Initial Default",   kind: processing }
+      - { action: "T1V := 2 * SRT",           kind: processing }
+      - { action: start_T3,                    kind: processing }
+      - { action: "RC := 0",                   kind: processing }
+    next: Connected
+
+  - id: t15_sabm_received_unable
+    on: SABM_received
+    path:
+      - { action: "F := P", kind: processing }
+      - { decision: sabm_able_to_establish, branch: "No" }
+      - { action: DM, kind: signal_lower }
+    next: Disconnected
+
+  - id: t16_sabme_received_able
+    on: SABME_received
+    path:
+      - { action: "F := P", kind: processing }
+      - { decision: sabme_able_to_establish, branch: "Yes" }
+      - { action: set_version_2_2,           kind: processing }
+      - { action: UA,                         kind: signal_lower }
+      - { action: Clear_Exception_Conditions, kind: subroutine }
+      - { action: "V(s) := 0", kind: processing }
+      - { action: "V(a) := 0", kind: processing }
+      - { action: "V(r) := 0", kind: processing }
+      - { action: DL_CONNECT_indication,      kind: signal_upper }
+      - { action: "SRT := Initial Default",   kind: processing }
+      - { action: "T1V := 2 * SRT",           kind: processing }
+      - { action: start_T3,                    kind: processing }
+      - { action: "RC := 0",                   kind: processing }
+    next: Connected
+
+  - id: t17_sabme_received_unable
+    on: SABME_received
+    path:
+      - { action: "F := P", kind: processing }
+      - { decision: sabme_able_to_establish, branch: "No" }
+      - { action: DM, kind: signal_lower }
+    next: Disconnected
