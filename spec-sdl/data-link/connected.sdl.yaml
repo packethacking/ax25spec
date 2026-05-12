@@ -171,6 +171,9 @@ transitions:
   # No (not a command) → DL-ERROR(O); Discard I Frame → Connected
 
     references:
+      - source: spec_prose
+        cite: "§6.3.4 ¶1"
+        quote: "While in the information-transfer state, either TNC may indicate a request to disconnect the link by transmitting a DISC command frame and starting timer T1."
       - source: linbpq
         path: L4Code.c
         function: "CLOSECURRENTSESSION"
@@ -369,6 +372,9 @@ transitions:
       (P=1) so we owe a status response: RR with F=1.
 
     references:
+      - source: spec_prose
+        cite: "§6.4.2.2"
+        quote: "If the TNC is in a busy condition, it ignores any received I frames without reporting this condition, other than repeating the indication of the busy condition."
       - source: direwolf
         path: src/ax25_link.c
         function: "i_frame"
@@ -404,6 +410,9 @@ transitions:
       Own busy and not polled — just drop the frame, stay.
 
     references:
+      - source: spec_prose
+        cite: "§6.4.2.2"
+        quote: "If the TNC is in a busy condition, it ignores any received I frames without reporting this condition, other than repeating the indication of the busy condition."
       - source: direwolf
         path: src/ax25_link.c
         function: "i_frame"
@@ -439,6 +448,9 @@ transitions:
       polled. Deliver data, advance V(r), respond RR(F=1).
 
     references:
+      - source: spec_prose
+        cite: "§6.4.2.1"
+        quote: "If a TNC receives a valid I frame...it accepts the received I frame, increments its receive state variable, and acts in one of the following manners: …the receiving TNC sends an RR frame with N(R) equal to V(R)."
       - source: direwolf
         path: src/ax25_link.c
         function: "i_frame_continued"
@@ -480,6 +492,9 @@ transitions:
       In-sequence data; not polled; ack already pending — let it batch.
 
     references:
+      - source: spec_prose
+        cite: "§6.4.2.1"
+        quote: "If there are no outstanding I frames, the receiving TNC sends an RR frame with N(R) equal to V(R). The receiving TNC may wait a small period of time before sending the RR frame to be sure additional I frames are not being transmitted."
       - source: direwolf
         path: src/ax25_link.c
         function: "i_frame_continued"
@@ -525,6 +540,9 @@ transitions:
       we get LM-SEIZE Confirm (see column 24).
 
     references:
+      - source: spec_prose
+        cite: "§6.4.2.1"
+        quote: "If there are no outstanding I frames, the receiving TNC sends an RR frame with N(R) equal to V(R). The receiving TNC may wait a small period of time before sending the RR frame…"
       - source: direwolf
         path: src/ax25_link.c
         function: "i_frame_continued"
@@ -559,6 +577,9 @@ transitions:
     next: Connected
 
     references:
+      - source: spec_prose
+        cite: "§6.4.4.1"
+        quote: "When an I frame is received with a correct FCS, but its send sequence number N(S) does not match the current receiver's receive state variable, the frame is discarded."
       - source: direwolf
         path: src/ax25_link.c
         function: "i_frame_continued"
@@ -589,6 +610,9 @@ transitions:
     next: Connected
 
     references:
+      - source: spec_prose
+        cite: "§6.4.4.1"
+        quote: "When an I frame is received with a correct FCS, but its send sequence number N(S) does not match the current receiver's receive state variable, the frame is discarded."
       - source: direwolf
         path: src/ax25_link.c
         function: "i_frame_continued"
@@ -620,6 +644,9 @@ transitions:
     next: Connected
 
     references:
+      - source: spec_prose
+        cite: "§6.4.4.2"
+        quote: "When an I frame is received…the frame is retained. SREJ frames are sent with a receive sequence number equal to the value N(R) of the missing frame, and P=1 if an uncleared SREJ condition has not been previously established."
       - source: direwolf
         path: src/ax25_link.c
         function: "i_frame_continued"
@@ -658,6 +685,9 @@ transitions:
     next: Connected
 
     references:
+      - source: spec_prose
+        cite: "§6.4.4.2"
+        quote: "SREJ frames are sent with a receive sequence number equal to the value N(R) of the missing frame, and P=1 if an uncleared SREJ condition has not been previously established."
       - source: direwolf
         path: src/ax25_link.c
         function: "i_frame_continued"
@@ -688,6 +718,9 @@ transitions:
     next: Connected
 
     references:
+      - source: spec_prose
+        cite: "§6.4.4.2"
+        quote: "If an SREJ condition is already pending, an SREJ will be sent with P=0."
       - source: direwolf
         path: src/ax25_link.c
         function: "i_frame_continued"
@@ -720,6 +753,9 @@ transitions:
   # ─── Column 3: DL-DATA Request ──────────────────────────────────────
 
     references:
+      - source: spec_prose
+        cite: "§6.4.4.1"
+        quote: "A REJ frame is sent with a receive sequence number equal to one higher than the last correctly received I frame if an uncleared N(S) sequence error condition has not been previously established."
       - source: direwolf
         path: src/ax25_link.c
         function: "i_frame_continued"
@@ -755,6 +791,9 @@ transitions:
   # ─── Column 4: I Frame Pops Off Queue ───────────────────────────────
 
     references:
+      - source: spec_prose
+        cite: "§6.4.1"
+        quote: "Whenever a TNC has an I frame to transmit, it sends the I frame with the N(S) of the control field equal to its current send state variable V(S)."
       - source: linbpq
         path: L4Code.c
         function: "SendL4Data"
@@ -790,6 +829,9 @@ transitions:
     next: Connected
 
     references:
+      - source: spec_prose
+        cite: "§6.4.1"
+        quote: "After the I frame is sent, the send state variable is incremented by one. If timer T1 is not running, it is started. If timer T1 is running, it is restarted."
       - source: direwolf
         path: src/ax25_link.c
         function: "i_frame_pop_off_queue"
@@ -827,6 +869,9 @@ transitions:
     next: Connected
 
     references:
+      - source: spec_prose
+        cite: "§6.4.1"
+        quote: "If timer T1 is not running, it is started. If timer T1 is running, it is restarted."
       - source: direwolf
         path: src/ax25_link.c
         function: "i_frame_pop_off_queue"
@@ -853,6 +898,9 @@ transitions:
       Window full (V(s) reached V(a)+k) — push back on queue and wait.
 
     references:
+      - source: spec_prose
+        cite: "§6.4.1"
+        quote: "The TNC does not transmit any more I frames if its send state variable equals the last received N(R) from the other side of the link plus k. If the TNC sent more I frames, the flow control window would be exceeded."
       - source: direwolf
         path: src/ax25_link.c
         function: "i_frame_pop_off_queue"
@@ -880,6 +928,9 @@ transitions:
   # ─── Column 5: DL-UNIT-DATA Request ─────────────────────────────────
 
     references:
+      - source: spec_prose
+        cite: "§6.4.1"
+        quote: "If a TNC is in a busy condition, it may still send I frames as long as the distant TNC is not also busy."
       - source: direwolf
         path: src/ax25_link.c
         function: "i_frame_pop_off_queue"
@@ -909,6 +960,9 @@ transitions:
   # ─── Column 6: DL-FLOW-OFF Request ──────────────────────────────────
 
     references:
+      - source: spec_prose
+        cite: "§6.3.7"
+        quote: "AX.25 uses a special frame for this operation, the Unnumbered Information (UI) frame."
       - source: linux_oot
         path: net/ax25/af_ax25.c
         function: "ax25_sendmsg"
@@ -924,6 +978,9 @@ transitions:
     next: Connected
 
     references:
+      - source: spec_prose
+        cite: "§6.4.10"
+        quote: "Whenever a TNC enters a busy condition, it indicates this by sending an RNR response at the next opportunity."
       - source: linbpq
         path: L2Code.c
         function: "RR_OR_RNR"
@@ -991,6 +1048,9 @@ transitions:
     next: AwaitingConnection22
 
     references:
+      - source: spec_prose
+        cite: "§6.3.6.2"
+        quote: "If sent and received SABM(E) or DISC command frames are the same, both TNCs send a UA response at the earliest opportunity, and both devices enter the indicated state."
       - source: direwolf
         path: src/ax25_link.c
         function: "dl_connect_request"
@@ -1013,6 +1073,9 @@ transitions:
   # ─── Column 9: All Other Primitives (lower-layer shape) ─────────────
 
     references:
+      - source: spec_prose
+        cite: "§6.3.6.2"
+        quote: "If sent and received SABM(E) or DISC command frames are the same, both TNCs send a UA response at the earliest opportunity, and both devices enter the indicated state."
       - source: direwolf
         path: src/ax25_link.c
         function: "dl_connect_request"
@@ -1047,6 +1110,9 @@ transitions:
     next: AwaitingConnection22
 
     references:
+      - source: spec_prose
+        cite: "§6.4.5"
+        quote: "When a TNC receives a frame with an incorrect FCS, an invalid frame, or a frame with an improper address, that frame is discarded."
       - source: linbpq
         path: L2Code.c
         function: "L2_PROCESS"
@@ -1065,6 +1131,9 @@ transitions:
   # ─── Column 11: Info Not Permitted in Frame ─────────────────────────
 
     references:
+      - source: spec_prose
+        cite: "§6.4.5"
+        quote: "When a TNC receives a frame with an incorrect FCS, an invalid frame, or a frame with an improper address, that frame is discarded."
       - source: linbpq
         path: L2Code.c
         function: "L2_PROCESS"
@@ -1079,8 +1148,11 @@ transitions:
       - { action: set_layer_3_initiated,   kind: processing }
       - { decision: version_2_2,           branch: "Yes" }
     next: AwaitingConnection22
+    references:
+      - source: spec_prose
+        cite: "§6.4.5"
+        quote: "When a TNC receives a frame with an incorrect FCS, an invalid frame, or a frame with an improper address, that frame is discarded."
 
-    references: []
   - id: t35_info_not_permitted_in_frame_v20
     on: info_not_permitted_in_frame
     path:
@@ -1090,10 +1162,12 @@ transitions:
       - { action: set_layer_3_initiated,   kind: processing }
       - { decision: version_2_2,           branch: "No" }
     next: AwaitingConnection
+    references:
+      - source: spec_prose
+        cite: "§6.4.5"
+        quote: "When a TNC receives a frame with an incorrect FCS, an invalid frame, or a frame with an improper address, that frame is discarded."
 
   # ─── Column 12: U or S Frame Length Error ───────────────────────────
-
-    references: []
   - id: t36_u_or_s_frame_length_error_v22
     on: u_or_s_frame_length_error
     path:
@@ -1105,6 +1179,9 @@ transitions:
     next: AwaitingConnection22
 
     references:
+      - source: spec_prose
+        cite: "§6.4.5"
+        quote: "When a TNC receives a frame with an incorrect FCS, an invalid frame, or a frame with an improper address, that frame is discarded."
       - source: linbpq
         path: L2Code.c
         function: "PROC_I_FRAME"
@@ -1123,6 +1200,9 @@ transitions:
   # ─── Column 13: Timer T1 Expiry ─────────────────────────────────────
 
     references:
+      - source: spec_prose
+        cite: "§6.4.5"
+        quote: "When a TNC receives a frame with an incorrect FCS, an invalid frame, or a frame with an improper address, that frame is discarded."
       - source: linbpq
         path: L2Code.c
         function: "PROC_I_FRAME"
@@ -1143,6 +1223,9 @@ transitions:
   # ─── Column 14: Timer T3 Expiry ─────────────────────────────────────
 
     references:
+      - source: spec_prose
+        cite: "§6.4.11"
+        quote: "If the originating TNC's timer T1 expires while awaiting the distant TNC's acknowledgement of an I frame transmitted, the originating TNC restarts timer T1 and transmits an appropriate supervisory command frame (RR or RNR) with the P bit set."
       - source: linbpq
         path: L2Code.c
         function: "L2TIMEOUT"
@@ -1175,6 +1258,9 @@ transitions:
   # ─── Column 15: SABM received (collision / reset) ───────────────────
 
     references:
+      - source: spec_prose
+        cite: "§6.7.1"
+        quote: "T3 (inactive link timer): used to monitor data link traffic during idle periods to ensure the link is still functional."
       - source: linbpq
         path: L2Code.c
         function: "L2TimerProc"
@@ -1219,6 +1305,9 @@ transitions:
       notify L3 of the reset via DL-CONNECT indication.
 
     references:
+      - source: spec_prose
+        cite: "§6.3.3"
+        quote: "If the TNC receives a SABM(E) command while in the information-transfer state, it follows the resetting procedure outlined in Section 6.5."
       - source: linbpq
         path: L2Code.c
         function: "L2LINKACTIVE"
@@ -1262,6 +1351,9 @@ transitions:
   # ─── Column 16: SABME received (collision / reset → v2.2) ───────────
 
     references:
+      - source: spec_prose
+        cite: "§6.3.3"
+        quote: "If the TNC receives a SABM(E) command while in the information-transfer state, it follows the resetting procedure outlined in Section 6.5."
       - source: linbpq
         path: L2Code.c
         function: "L2LINKACTIVE"
@@ -1297,6 +1389,9 @@ transitions:
     next: Connected
 
     references:
+      - source: spec_prose
+        cite: "§6.3.3"
+        quote: "If the TNC receives a SABM(E) command while in the information-transfer state, it follows the resetting procedure outlined in Section 6.5."
       - source: direwolf
         path: src/ax25_link.c
         function: "sabm_e_frame"
@@ -1332,6 +1427,9 @@ transitions:
   # ─── Column 17: FRMR received ───────────────────────────────────────
 
     references:
+      - source: spec_prose
+        cite: "§6.3.3"
+        quote: "If the TNC receives a SABM(E) command while in the information-transfer state, it follows the resetting procedure outlined in Section 6.5."
       - source: direwolf
         path: src/ax25_link.c
         function: "sabm_e_frame"
@@ -1352,6 +1450,9 @@ transitions:
     next: AwaitingConnection22
 
     references:
+      - source: spec_prose
+        cite: "§6.5 ¶2"
+        quote: "A TNC initiates a reset procedure whenever it receives an unexpected UA response frame, or after receipt of a FRMR frame from a TNC using an older version of the protocol."
       - source: linbpq
         path: L2Code.c
         function: "L2_PROCESS"
@@ -1384,6 +1485,9 @@ transitions:
   # ─── Column 18: UA received (unexpected) ────────────────────────────
 
     references:
+      - source: spec_prose
+        cite: "§6.5 ¶2"
+        quote: "A TNC initiates a reset procedure whenever it receives an unexpected UA response frame, or after receipt of a FRMR frame from a TNC using an older version of the protocol."
       - source: direwolf
         path: src/ax25_link.c
         function: "frmr_frame"
@@ -1414,6 +1518,9 @@ transitions:
     next: AwaitingConnection22
 
     references:
+      - source: spec_prose
+        cite: "§6.5 ¶2"
+        quote: "A TNC initiates a reset procedure whenever it receives an unexpected UA response frame, or after receipt of a FRMR frame from a TNC using an older version of the protocol."
       - source: direwolf
         path: src/ax25_link.c
         function: "ua_frame"
@@ -1446,6 +1553,9 @@ transitions:
   # ─── Column 19: UI received ─────────────────────────────────────────
 
     references:
+      - source: spec_prose
+        cite: "§6.5 ¶2"
+        quote: "A TNC initiates a reset procedure whenever it receives an unexpected UA response frame, or after receipt of a FRMR frame from a TNC using an older version of the protocol."
       - source: direwolf
         path: src/ax25_link.c
         function: "ua_frame"
@@ -1474,6 +1584,9 @@ transitions:
     next: Connected
 
     references:
+      - source: spec_prose
+        cite: "§6.3.7"
+        quote: "AX.25 uses a special frame for this operation, the Unnumbered Information (UI) frame…Since this mode is connectionless, there are no requests for retransmissions of bad frames."
       - source: direwolf
         path: src/ax25_link.c
         function: "ui_frame"
@@ -1505,6 +1618,9 @@ transitions:
   # ─── Column 20: DISC received ───────────────────────────────────────
 
     references:
+      - source: spec_prose
+        cite: "§6.3.7"
+        quote: "AX.25 uses a special frame for this operation, the Unnumbered Information (UI) frame…"
       - source: rax25
         path: src/state.rs
         function: "Connected::ui"
@@ -1533,6 +1649,9 @@ transitions:
   # ─── Column 21: DM received ─────────────────────────────────────────
 
     references:
+      - source: spec_prose
+        cite: "§6.3.4 ¶2"
+        quote: "After receiving a valid DISC command, the TNC sends a UA response frame and enters the disconnected state."
       - source: linbpq
         path: L2Code.c
         function: "L2LINKACTIVE"
@@ -1599,6 +1718,9 @@ transitions:
     next: Connected
 
     references:
+      - source: spec_prose
+        cite: "§6.4.6"
+        quote: "Whenever an I or S frame is correctly received, even in a busy condition, the N(R) of the received frame is checked to see if it includes an acknowledgement of outstanding sent I frames."
       - source: linbpq
         path: L2Code.c
         function: "SFRAME"
@@ -1693,6 +1815,9 @@ transitions:
     next: Connected
 
     references:
+      - source: spec_prose
+        cite: "§6.4.9"
+        quote: "Whenever a TNC receives an RNR frame, it stops transmitting I frames until the busy condition is cleared."
       - source: linbpq
         path: L2Code.c
         function: "SFRAME"
@@ -1719,6 +1844,9 @@ transitions:
     next: AwaitingConnection22
 
     references:
+      - source: spec_prose
+        cite: "§6.4.9"
+        quote: "Whenever a TNC receives an RNR frame, it stops transmitting I frames until the busy condition is cleared."
       - source: linbpq
         path: L2Code.c
         function: "SFRAME"
@@ -1815,6 +1943,9 @@ transitions:
     next: Connected
 
     references:
+      - source: spec_prose
+        cite: "§6.4.8"
+        quote: "After receiving a SREJ frame, the transmitting TNC retransmits the individual I frame indicated by the N(R) contained in the SREJ at the next available opportunity."
       - source: linbpq
         path: L2Code.c
         function: "SFRAME"
@@ -1844,6 +1975,9 @@ transitions:
     next: Connected
 
     references:
+      - source: spec_prose
+        cite: "§6.4.8"
+        quote: "If the P bit was set, then all frames up to N(R)-1 are acknowledged."
       - source: linbpq
         path: L2Code.c
         function: "SFRAME"
@@ -1913,6 +2047,9 @@ transitions:
     next: Connected
 
     references:
+      - source: spec_prose
+        cite: "§6.4.7"
+        quote: "After receiving a REJ frame, the transmitting TNC sets its send state variable to the same value as the REJ frame's received sequence number in the control field. The TNC then retransmits any I frame(s) outstanding at the next available opportunity."
       - source: linbpq
         path: L2Code.c
         function: "SFRAME"
@@ -2031,6 +2168,9 @@ transitions:
       test behaviour).
 
     references:
+      - source: spec_prose
+        cite: "§6.4.4.2"
+        quote: "When an I frame is received…the frame is retained…This mode requires frame queuing and frame resequencing at the receiver."
       - source: rax25
         path: src/state.rs
         function: "Connected::iframe"
@@ -2073,6 +2213,9 @@ transitions:
       ack-pending tail.
 
     references:
+      - source: spec_prose
+        cite: "§6.4.4.2"
+        quote: "When an I frame is received…the frame is retained…This mode requires frame queuing and frame resequencing at the receiver."
       - source: rax25
         path: src/state.rs
         function: "Connected::iframe"
@@ -2116,6 +2259,9 @@ transitions:
       Same stored-frame loop as t67; continues into the not-polled /
       no-ack tail.
     references:
+      - source: spec_prose
+        cite: "§6.4.4.2"
+        quote: "When an I frame is received…the frame is retained…This mode requires frame queuing and frame resequencing at the receiver."
       - source: rax25
         path: src/state.rs
         function: "Connected::iframe"
