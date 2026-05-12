@@ -23,6 +23,34 @@ source:
   figure: figc4.4
   url: https://raw.githubusercontent.com/packethacking/ax25spec/main/doc/media/figc4.4a.png
 
+# Per-source commit pins for cross-reference citations in transitions[].references[].
+# Notable patterns surfaced across all four implementations on this page:
+# - rax25 and direwolf both fuse Connected (state 3) with TimerRecovery (state 4)
+#   into a single handler discriminated by an internal flag/enum. figc4.5's
+#   transcription will share many code paths with this page.
+# - All four implementations bypass DL-UNIT-DATA Request (t23) — UI is sent via
+#   APRS/KISS/socket layers rather than through the LAPB state machine.
+# - LinBPQ disables spec-compliant FRMR recovery via the FRMRHACK macro
+#   (L2Code.c:24) — treats FRMR as DM (link drop). Original spec-compliant code
+#   is commented out at L2Code.c:2192-2202.
+# - Linux silently drops AX25_SREJ as AX25_ILLEGAL (no SREJ implementation at all).
+# - DL-ERROR codes (A/C/D/F/K/L/M/N/O) are inconsistently surfaced — direwolf
+#   logs them as text messages, rax25 emits typed DlError variants for some,
+#   LinBPQ and Linux mostly omit.
+pinned_refs:
+  linbpq:
+    repo: https://github.com/M0LTE/linbpq
+    commit: 88a68988b446187cc5f7a2dfdbe33d1cc3ebd46f
+  direwolf:
+    repo: https://github.com/wb2osz/direwolf
+    commit: a231971a652bfb574a4bae9a5d875fbce53d2267
+  rax25:
+    repo: https://github.com/ThomasHabets/rax25
+    commit: d97b7ab725620497d5444e7393969b8d6f9ae58d
+  linux_oot:
+    repo: https://github.com/linux-netdev/mod-orphan
+    commit: 40188e901024be90f50fc37ba1ba3a84678dfe12
+
 decisions:
   # ─── Frame-reception predicates (used on I-received column) ─────────
   - id: command
@@ -142,6 +170,27 @@ transitions:
   #   No  → Awaiting Connection
   # No (not a command) → DL-ERROR(O); Discard I Frame → Connected
 
+    references:
+      - source: linbpq
+        path: L4Code.c
+        function: "CLOSECURRENTSESSION"
+        line: 1086
+        note: "sets DISCPENDING if TX_Q non-empty; immediate state 4 + T1=1 otherwise — figure says always discard + DISC(P=1)"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "dl_disconnect_request"
+        line: 1170
+        note: "state_3/state_4 fall-through: discard queue, DISC cmd P=1, STOP_T3 / START_T1, → state_2"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::disconnect"
+        line: 1472
+        note: "fused Connected+TimerRecovery; clears iframe queue, rc=0, sends DISC, → AwaitingRelease. Author TODO flag on timer choice."
+      - source: linux_oot
+        path: net/ax25/af_ax25.c
+        function: "ax25_release"
+        line: 1031
+        note: "STATE_3/STATE_4 branch — Linux collapses Connected and TimerRecovery into one DISC path"
   - id: t02_i_received_not_command
     on: I_received
     path:
@@ -153,6 +202,27 @@ transitions:
       I frame received as a response rather than a command — protocol
       error. DL-ERROR(O), discard, stay.
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "SDIFRM"
+        line: 2641
+        note: "in-sequence path; LinBPQ funnels all I-frame logic through SDIFRM → PROC_I_FRAME → no spec_prose-mapped command check"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame"
+        line: 2648
+        note: "state_3/state_4 entry. States 3 & 4 share body — divergence from figure"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::iframe"
+        line: 1553
+        note: "Author rejects spec's DlError::O on non-command I: \"not even remotely correct, since O means packet too big\" — emits DlError::S instead"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 254
+        note: "no separate command-check; non-I frames fall to default (silent drop)"
   - id: t03_i_received_command_info_field_invalid_v22
     on: I_received
     path:
@@ -167,6 +237,22 @@ transitions:
       Bad I-frame info field (length > N1 or not octet-aligned), v2.2 peer.
       Re-establish link via the v2.2 path.
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame"
+        line: 2754
+        note: "bad-info-length path: DL-ERROR(O) message, establish_data_link, state→1 or 5 (modulo-128 author enhancement)"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::iframe"
+        line: 1561
+        note: "Payload>N1 → establish_data_link + DlError::O + AwaitingConnection. Author TODO: \"should we discard it?\""
+      - source: linbpq
+        path: L2Code.c
+        function: "PROC_I_FRAME"
+        line: 2914
+        note: "Length<1 or >257 → silent ReleaseBuffer. No DL-ERROR(O), no Establish — diverges from figure"
   - id: t04_i_received_command_info_field_invalid_v20
     on: I_received
     path:
@@ -180,6 +266,22 @@ transitions:
     notes: |
       Bad I-frame info field, v2.0 peer. Re-establish via v2.0 path.
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame"
+        line: 2754
+        note: "same code path as t03 — direwolf has no v2.0/v2.2 split for bad info length"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::iframe"
+        line: 1561
+        note: "same as t03"
+      - source: linbpq
+        path: L2Code.c
+        function: "PROC_I_FRAME"
+        line: 2914
+        note: "same as t03 — LinBPQ has no v22/v20 distinction for info-field length"
   - id: t05_i_received_command_info_valid_nr_out_of_window_v22
     on: I_received
     path:
@@ -193,6 +295,27 @@ transitions:
       N(r) outside the V(a)..V(s) window — peer ACK is invalid. Recover
       via re-establish on v2.2 path.
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "SDNRCHK"
+        line: 2968
+        note: "LinBPQ collapse: all N(r) errors → SDFRMR/FRMR state. No N(r) Error Recovery → AwaitingConnection22"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame"
+        line: 2747
+        note: "is_good_nr false → nr_error_recovery, → state 1 or 5 (author enhancement: modulo==128 ? state_5 : state_1)"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::iframe"
+        line: 1571
+        note: "N(R) out of range → nr_error_recovery + transition AwaitingConnection"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 209
+        note: "ax25_validate_nr fails → nr_error_recovery + STATE_1"
   - id: t06_i_received_command_info_valid_nr_out_of_window_v20
     on: I_received
     path:
@@ -205,6 +328,27 @@ transitions:
     notes: |
       As t05 but v2.0 peer.
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "SDNRCHK"
+        line: 2968
+        note: "same path as t05 — no v22/v20 split"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame"
+        line: 2747
+        note: "same as t05"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::iframe"
+        line: 1571
+        note: "same as t05"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 209
+        note: "same as t05"
   - id: t07_i_received_own_busy_p_eq_1
     on: I_received
     path:
@@ -224,6 +368,27 @@ transitions:
       Own receiver is busy — drop the I-frame's contents. Peer polled
       (P=1) so we owe a status response: RR with F=1.
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame"
+        line: 2711
+        note: "own_receiver_busy && p==1: send RNR response. Author flags \"should be unreachable because we currently don't have a way to set own_receiver_busy\" — figure path effectively dead in direwolf"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::iframe"
+        line: 1604
+        note: "own_receiver_busy: discard iframe (implicit), optionally send RNR if polled. Author note \"discord (implicit)\" typo"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 219
+        note: "OWN_RX_BUSY: discard, send enquiry_response only if P=1, no V(r) advance"
+      - source: linbpq
+        path: L2Code.c
+        function: "RR_OR_RNR"
+        line: 4173
+        note: "no separate own-busy-discard inside SDIFRM — busy decided dynamically at response-send time (QCOUNT<20)"
   - id: t08_i_received_own_busy_p_eq_0
     on: I_received
     path:
@@ -238,6 +403,17 @@ transitions:
     notes: |
       Own busy and not polled — just drop the frame, stay.
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame"
+        line: 2707
+        note: "own_receiver_busy with !P=1: implicit no-op. See t07 note about unreachable code."
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 219
+        note: "same OWN_RX_BUSY branch; P=0 takes the no-response path"
   - id: t09_i_received_in_seq_no_stored_p_eq_1
     on: I_received
     path:
@@ -262,6 +438,27 @@ transitions:
       In-sequence I frame received, no stored frame for V(r), peer
       polled. Deliver data, advance V(r), respond RR(F=1).
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame_continued"
+        line: 2927
+        note: "P=1 path: send RR response with F=1 after in-order delivery"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::iframe"
+        line: 1635
+        note: "After in-order delivery with poll: send RR F=1, clear acknowledge_pending"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 229
+        note: "ns==vr with pf=1: send enquiry_response (RR/RNR F=1) instead of arming T2"
+      - source: linbpq
+        path: L2Code.c
+        function: "SDIFRM"
+        line: 2688
+        note: "P-bit set → SEND_RR_RESP(LINK, PFBIT) at 2708"
   - id: t10_i_received_in_seq_no_stored_p_eq_0_ack_pending
     on: I_received
     path:
@@ -282,6 +479,27 @@ transitions:
     notes: |
       In-sequence data; not polled; ack already pending — let it batch.
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame_continued"
+        line: 2956
+        note: "P=0, ack_pending: no-op; will piggyback or T2-fire later"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::iframe"
+        line: 1644
+        note: "In-order, no poll: set acknowledge_pending. Comment \"LM seize request (?)\""
+      - source: linbpq
+        path: L2Code.c
+        function: "PROC_I_FRAME"
+        line: 2930
+        note: "Sets L2ACKREQ = PORTT2 (delayed-ack) — equivalent to ack-pending; sent later via L2TimerProc:3533"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 232
+        note: "ACK_PENDING set + T2 started when pf=0 — T2 is Linux's deferred-ack timer (figc4.4 LM-SEIZE-request analogue)"
   - id: t11_i_received_in_seq_no_stored_p_eq_0_no_ack_pending
     on: I_received
     path:
@@ -306,6 +524,22 @@ transitions:
       one: seize the medium and set ack-pending so we know to RR when
       we get LM-SEIZE Confirm (see column 24).
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame_continued"
+        line: 2942
+        note: "!ack_pending branch: set ack_pending=1, lm_seize_request"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::iframe"
+        line: 1644
+        note: "same handler as t10 — ack_pending flag set but no concrete LM seize emitted"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 232
+        note: "same path as t10 via T2 timer"
   - id: t12_i_received_out_of_seq_reject_exception_p_eq_1
     on: I_received
     path:
@@ -324,6 +558,22 @@ transitions:
       - { action: clear_acknowledge_pending, kind: processing }
     next: Connected
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame_continued"
+        line: 2974
+        note: "srej_enable==srej_none path: set reject_exception, REJ response, F=P"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::iframe"
+        line: 1651
+        note: "reject_exception already set: discard frame; respond RR only if polled"
+      - source: linbpq
+        path: L2Code.c
+        function: "SDIFRM"
+        line: 2670
+        note: "L2STATE==6 (REJ Sent) drops out of REJ when in-sequence frame arrives"
   - id: t13_i_received_out_of_seq_reject_exception_p_eq_0
     on: I_received
     path:
@@ -338,6 +588,17 @@ transitions:
       - { decision: p_eq_1,             branch: "No" }
     next: Connected
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame_continued"
+        line: 2956
+        note: "REJ outstanding + P=0: no response, stay"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::iframe"
+        line: 1651
+        note: "same handler as t12"
   - id: t14_i_received_out_of_seq_srej_enabled_no_excep_in_range
     on: I_received
     path:
@@ -358,6 +619,22 @@ transitions:
       - { action: SREJ,                 kind: signal_lower }
     next: Connected
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame_continued"
+        line: 3018
+        note: "SREJ-enabled and is_ns_in_window. Author Erratum 3014: \"AX.25 protocol spec did not handle SREJ very well. Based on X.25 section 2.4.6.4.\" Major divergence — direwolf follows X.25 rather than AX.25 SDL"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::iframe"
+        line: 1697
+        note: "Single-frame gap with SREJ enabled: sreject_exception++, ack_pending=false. TODO: SendSrej action not implemented"
+      - source: linbpq
+        path: L2Code.c
+        function: "SDIFRM"
+        line: 2636
+        note: "Out-of-sequence stored in RXFRAMES[NS]; SREJ vs REJ chosen in RR_OR_RNR:4230"
   - id: t15_i_received_out_of_seq_srej_enabled_no_excep_far_skip
     on: I_received
     path:
@@ -380,6 +657,17 @@ transitions:
       - { action: clear_acknowledge_pending, kind: processing }
     next: Connected
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame_continued"
+        line: 3102
+        note: "X.25 2.4.6.4 (a) — N(S) out of window, discard, respond if P=1"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::iframe"
+        line: 1688
+        note: "p.ns != (vr+1) % modulus: SendRej path (gap > 1). Comment \"Maybe a version of if in_range(p.ns)\" TODO"
   - id: t16_i_received_out_of_seq_srej_enabled_existing_excep
     on: I_received
     path:
@@ -399,6 +687,17 @@ transitions:
       - { action: SREJ,                 kind: signal_lower }
     next: Connected
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame_continued"
+        line: 3018
+        note: "same SREJ-in-window path as t14 with existing exception"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::iframe"
+        line: 1680
+        note: "sreject_exception > 0: increment + clear ack_pending. TODO: actual SendSrej not implemented"
   - id: t17_i_received_out_of_seq_srej_disabled
     on: I_received
     path:
@@ -420,6 +719,27 @@ transitions:
 
   # ─── Column 3: DL-DATA Request ──────────────────────────────────────
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame_continued"
+        line: 2974
+        note: "SREJ disabled: set reject_exception, REJ response, F=P. Same as t12"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::iframe"
+        line: 1663
+        note: "SREJ disabled path: set reject_exception, SendRej. Author TODO: \"should we maybe wait a bit with sending a REJ?\""
+      - source: linbpq
+        path: L2Code.c
+        function: "SDIFRM"
+        line: 2605
+        note: "L2OUTOFSEQ++; L2STATE=6 (REJ state). REJ sent later when L2ACKREQ expires"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 242
+        note: "REJ F=pf RESPONSE on first out-of-sequence I, ACK_PENDING cleared. Linux: go-back-N only — no SREJ alternative"
   - id: t18_dl_data_request
     on: DL_DATA_request
     path:
@@ -434,6 +754,27 @@ transitions:
 
   # ─── Column 4: I Frame Pops Off Queue ───────────────────────────────
 
+    references:
+      - source: linbpq
+        path: L4Code.c
+        function: "SendL4Data"
+        line: 919
+        note: "C_Q_ADD(&LINK->TX_Q, Msg). Multiple L4 paths (637/908/919/1846/1950/1980) all push to TX_Q"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "data_request_good_size"
+        line: 1480
+        note: "state_3/state_4 fall-through: append to I-frame queue, then lm_seize_request if within window. v1.5 change at 1502-1506"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::data"
+        line: 1491
+        note: "Appends to obuf — \"deliberately doesn't preserve the application's frame boundaries\" — then calls Data::flush()"
+      - source: linux_oot
+        path: net/ax25/af_ax25.c
+        function: "ax25_sendmsg"
+        line: 1630
+        note: "SOCK_SEQPACKET path: ax25_output() → ax25_kick(). No explicit DL-DATA primitive"
   - id: t19_i_frame_pops_off_queue_send_now_t1_running
     on: I_frame_pops_off_queue
     path:
@@ -448,6 +789,27 @@ transitions:
       - { decision: t1_running,          branch: "Yes" }
     next: Connected
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame_pop_off_queue"
+        line: 6591
+        note: "Build I frame, V(s)++, ack_pending=0. Author erratum 6621: \"always want to restart T1 when an I frame is sent\" — unconditional STOP_T3/START_T1"
+      - source: rax25
+        path: src/state.rs
+        function: "Data::flush"
+        line: 882
+        note: "Drains mtu_out bytes, builds Iframe, vs++, emits SendIframe. TODO on Direwolf advice \"always restart T1\""
+      - source: linux_oot
+        path: net/ax25/ax25_out.c
+        function: "ax25_kick"
+        line: 251
+        note: "Window-bounded TX loop. Sends with P=1 only on last frame of window (308). Stops T3 / starts T1 at end (330-332). Handles t19-t22 uniformly"
+      - source: linbpq
+        path: L2Code.c
+        function: "SDETX"
+        line: 3195
+        note: "Drains TX_Q, sends from FRAMES[LINKNS], V(s)++. T1 reset to ONEMINUTE unconditionally — no distinction t19/t20"
   - id: t20_i_frame_pops_off_queue_send_now_t1_not_running
     on: I_frame_pops_off_queue
     path:
@@ -464,6 +826,22 @@ transitions:
       - { action: start_T1,              kind: processing }
     next: Connected
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame_pop_off_queue"
+        line: 6624
+        note: "unconditional STOP_T3/START_T1 (covers t19 and t20)"
+      - source: rax25
+        path: src/state.rs
+        function: "Data::flush"
+        line: 891
+        note: "if T1 not running: stop T3, start T1(srt)"
+      - source: linbpq
+        path: L2Code.c
+        function: "SDETX"
+        line: 3431
+        note: "same as t19 — no T1-state branch"
   - id: t21_i_frame_pops_off_queue_window_full
     on: I_frame_pops_off_queue
     path:
@@ -474,6 +852,22 @@ transitions:
     notes: |
       Window full (V(s) reached V(a)+k) — push back on queue and wait.
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame_pop_off_queue"
+        line: 6581
+        note: "while-loop guard exits when window full (WITHIN_WINDOW_SIZE false)"
+      - source: rax25
+        path: src/state.rs
+        function: "Data::flush"
+        line: 875
+        note: "vs == (va+k) mod modulus: window full, leaves obuf intact"
+      - source: linbpq
+        path: L2Code.c
+        function: "SDETX"
+        line: 3190
+        note: "Window check Outstanding >= LINKWINDOW; frames stay on TX_Q. No \"push back\" — never popped"
   - id: t22_i_frame_pops_off_queue_peer_busy
     on: I_frame_pops_off_queue
     path:
@@ -485,6 +879,27 @@ transitions:
 
   # ─── Column 5: DL-UNIT-DATA Request ─────────────────────────────────
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame_pop_off_queue"
+        line: 6581
+        note: "same loop guard handles peer_busy"
+      - source: rax25
+        path: src/state.rs
+        function: "Data::flush"
+        line: 867
+        note: "Peer receiver busy → returns empty (no send)"
+      - source: linux_oot
+        path: net/ax25/ax25_out.c
+        function: "ax25_kick"
+        line: 260
+        note: "PEER_RX_BUSY guard at line 260; loop skips"
+      - source: linbpq
+        path: L2Code.c
+        function: "SDETX"
+        line: 3360
+        note: "send loop guarded by POLLSENT not peer-busy; RNRSET consulted via timer policy"
   - id: t23_dl_unit_data_request
     on: DL_UNIT_DATA_request
     path:
@@ -493,6 +908,12 @@ transitions:
 
   # ─── Column 6: DL-FLOW-OFF Request ──────────────────────────────────
 
+    references:
+      - source: linux_oot
+        path: net/ax25/af_ax25.c
+        function: "ax25_sendmsg"
+        line: 1645
+        note: "SOCK_DGRAM path: builds UI directly, bypasses LAPB state machine. Same path in any state"
   - id: t24_dl_flow_off_when_not_busy
     on: DL_FLOW_OFF_request
     path:
@@ -502,6 +923,12 @@ transitions:
       - { action: clear_acknowledge_pending, kind: processing }
     next: Connected
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "RR_OR_RNR"
+        line: 4238
+        note: "RNR decided dynamically at supervisory-send time (QCOUNT<20 or session busy). No explicit DL-FLOW-OFF primitive"
   - id: t25_dl_flow_off_when_already_busy
     on: DL_FLOW_OFF_request
     path:
@@ -510,6 +937,7 @@ transitions:
 
   # ─── Column 7: DL-FLOW-ON Request ───────────────────────────────────
 
+    references: []
   - id: t26_dl_flow_on_when_busy_and_t1_not_running
     on: DL_FLOW_ON_request
     path:
@@ -522,6 +950,12 @@ transitions:
       - { action: start_T1,                kind: processing }
     next: Connected
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "L2TimerProc"
+        line: 3505
+        note: "RNRSENT clears when no longer busy → SendSupervisCmd; closest analog to DL-FLOW-ON"
   - id: t27_dl_flow_on_when_busy_and_t1_running
     on: DL_FLOW_ON_request
     path:
@@ -532,6 +966,7 @@ transitions:
       - { decision: t1_running,            branch: "Yes" }
     next: Connected
 
+    references: []
   - id: t28_dl_flow_on_when_not_busy
     on: DL_FLOW_ON_request
     path:
@@ -540,6 +975,12 @@ transitions:
 
   # ─── Column 8: DL-CONNECT Request ───────────────────────────────────
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "SendSupervisCmd"
+        line: 3621
+        note: "RR(P) sent with PFBIT, L2TIMER restart via L2SENDCOMMAND"
   - id: t29_dl_connect_request_v22
     on: DL_CONNECT_request
     path:
@@ -549,6 +990,17 @@ transitions:
       - { decision: version_2_2,           branch: "Yes" }
     next: AwaitingConnection22
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "dl_connect_request"
+        line: 1052
+        note: "state_3/state_4 fall-through: discard_i_queue, establish_data_link, layer_3_initiated=1. Author enhancement at 1058-1060: state_5 if modulo==128 else state_1"
+      - source: linux_oot
+        path: net/ax25/af_ax25.c
+        function: "ax25_connect"
+        line: 1227
+        note: "Already STATE_3: rejects with -EISCONN. Linux does NOT implement re-establishment"
   - id: t30_dl_connect_request_v20
     on: DL_CONNECT_request
     path:
@@ -560,6 +1012,12 @@ transitions:
 
   # ─── Column 9: All Other Primitives (lower-layer shape) ─────────────
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "dl_connect_request"
+        line: 1060
+        note: "modulo!=128 branch → state_1"
   - id: t31_all_other_primitives_from_lower_layer
     on: all_other_primitives__from_lower_layer
     path: []
@@ -567,6 +1025,17 @@ transitions:
 
   # ─── Column 10: Control Field Error ─────────────────────────────────
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "L2_PROCESS"
+        line: 2203
+        note: "default → ReleaseBuffer"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 254
+        note: "default case silently no-ops"
   - id: t32_control_field_error_v22
     on: control_field_error
     path:
@@ -577,6 +1046,12 @@ transitions:
       - { decision: version_2_2,           branch: "Yes" }
     next: AwaitingConnection22
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "L2_PROCESS"
+        line: 2049
+        note: "default in S-frame switch → SDFRMR (FRMR state). NO Establish Data Link — sends FRMR instead"
   - id: t33_control_field_error_v20
     on: control_field_error
     path:
@@ -589,6 +1064,12 @@ transitions:
 
   # ─── Column 11: Info Not Permitted in Frame ─────────────────────────
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "L2_PROCESS"
+        line: 2049
+        note: "same as t32 — no v22/v20 split"
   - id: t34_info_not_permitted_in_frame_v22
     on: info_not_permitted_in_frame
     path:
@@ -599,6 +1080,7 @@ transitions:
       - { decision: version_2_2,           branch: "Yes" }
     next: AwaitingConnection22
 
+    references: []
   - id: t35_info_not_permitted_in_frame_v20
     on: info_not_permitted_in_frame
     path:
@@ -611,6 +1093,7 @@ transitions:
 
   # ─── Column 12: U or S Frame Length Error ───────────────────────────
 
+    references: []
   - id: t36_u_or_s_frame_length_error_v22
     on: u_or_s_frame_length_error
     path:
@@ -621,6 +1104,12 @@ transitions:
       - { decision: version_2_2,           branch: "Yes" }
     next: AwaitingConnection22
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "PROC_I_FRAME"
+        line: 2914
+        note: "Length<1 or >257 → drop. No DL-ERROR(N)"
   - id: t37_u_or_s_frame_length_error_v20
     on: u_or_s_frame_length_error
     path:
@@ -633,6 +1122,12 @@ transitions:
 
   # ─── Column 13: Timer T1 Expiry ─────────────────────────────────────
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "PROC_I_FRAME"
+        line: 2914
+        note: "same as t36"
   - id: t38_t1_expiry
     on: T1_expiry
     path:
@@ -647,6 +1142,27 @@ transitions:
 
   # ─── Column 14: Timer T3 Expiry ─────────────────────────────────────
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "L2TIMEOUT"
+        line: 3826
+        note: "State>=5: L2RETRIES++; sends DISC at N2 (3839) or SendSupervisCmd (3843). No separate TimerRecovery state in LinBPQ"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "t1_expiry"
+        line: 5514
+        note: "state_3: SET_RC(1), transmit_enquiry, → state_4"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::t1"
+        line: 1704
+        note: "Single method handles Connected (rc=1) and TimerRecovery (rc++). Author: \"1998 spec doesn't say if it should be true or false. 2017 spec adds that pf should be false\""
+      - source: linux_oot
+        path: net/ax25/ax25_std_timer.c
+        function: "ax25_std_t1timer_expiry"
+        line: 155
+        note: "STATE_3: n2count=1, transmit_enquiry, → STATE_4"
   - id: t39_t3_expiry
     on: T3_expiry
     path:
@@ -658,6 +1174,27 @@ transitions:
 
   # ─── Column 15: SABM received (collision / reset) ───────────────────
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "L2TimerProc"
+        line: 3557
+        note: "L2SLOTIM (T3) decrement → SendSupervisCmd (RR(P) link-validation poll)"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "t3_expiry"
+        line: 5631
+        note: "Author erratum 5633: \"Original sets RC to 0, 2006 revision sets RC to 1 which makes more sense.\" Direwolf follows 2006"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::t3"
+        line: 1732
+        note: "Author: \"1998 bug: Says to set rc=0. Fixed in 2017.\" Sets rc=1, → TimerRecovery"
+      - source: linux_oot
+        path: net/ax25/ax25_std_timer.c
+        function: "ax25_std_t3timer_expiry"
+        line: 87
+        note: "n2count=0 then transmit_enquiry, → STATE_4. DIVERGES: figure says \"stay in Connected\"; Linux moves to TimerRecovery"
   - id: t40_sabm_received_vs_neq_va
     on: SABM_received
     path:
@@ -681,6 +1218,27 @@ transitions:
       V(s) ≠ V(a) means we have unacknowledged data; discard queue and
       notify L3 of the reset via DL-CONNECT indication.
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "L2LINKACTIVE"
+        line: 1281
+        note: "If SESSACTIVE: InformPartner(NORMALCLOSE) + reset via L2SABM. LinBPQ uses SESSACTIVE flag instead of V(s)==V(a) — no DL-CONNECT-Indication"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "sabm_e_frame"
+        line: 4442
+        note: "state_3/state_4 fall-through: UA F=p, clear_exception_conditions, error F, discard queue if vs!=va, reset V(), STOP_T1/START_T3"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::sabm"
+        line: 1506
+        note: "Sets version 2, delegates to sabm_or_sabme()"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 146
+        note: "Combined SABM/SABME case 146-165. Collapses figure's t40-t43 — no per-F-bit or per-V-state branching"
   - id: t41_sabm_received_vs_eq_va
     on: SABM_received
     path:
@@ -703,6 +1261,22 @@ transitions:
 
   # ─── Column 16: SABME received (collision / reset → v2.2) ───────────
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "L2LINKACTIVE"
+        line: 1275
+        note: "SESSACTIVE==0: repeat UA. Treats SABM as missed-UA case — no DL-CONNECT-Indication. Divergence from spec"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "sabm_e_frame"
+        line: 4468
+        note: "vs!=va branch: discard I queue and re-issue server_link_established (figure's DL-CONNECT indication path)"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::sabm_or_sabme"
+        line: 1433
+        note: "Author: \"2017 spec says to stop both T1 and T3 in state timer recovery. That can't be right, can it?\" (only T1 stopped)"
   - id: t42_sabme_received_vs_neq_va
     on: SABME_received
     path:
@@ -722,6 +1296,22 @@ transitions:
       - { action: "RC := 0",           kind: processing }
     next: Connected
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "sabm_e_frame"
+        line: 4454
+        note: "SABM and SABME merge in state_3. extended bool only routes set_version — structural collapse vs figc4.4"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::sabme"
+        line: 1515
+        note: "Sets version 2.2, delegates to sabm_or_sabme()"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 147
+        note: "Same combined case as t40. Extended modulus set at 152-153"
   - id: t43_sabme_received_vs_eq_va
     on: SABME_received
     path:
@@ -741,6 +1331,17 @@ transitions:
 
   # ─── Column 17: FRMR received ───────────────────────────────────────
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "sabm_e_frame"
+        line: 4468
+        note: "same as t41 — direwolf doesn't distinguish SABM/SABME branches"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::sabm_or_sabme"
+        line: 1447
+        note: "Author: \"Added in 2017 spec, but only for Connected. TODO: should this be set also for TimerRecovery?\" on rc=0 reset"
   - id: t44_frmr_received_v22
     on: FRMR_received
     path:
@@ -750,6 +1351,27 @@ transitions:
       - { decision: version_2_2,          branch: "Yes" }
     next: AwaitingConnection22
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "L2_PROCESS"
+        line: 2168
+        note: "FRMRHACK (L2Code.c:24) treats FRMR as DM — InformPartner(LINKLOST) + DM + CLEAROUTLINK. NOTABLE DIVERGENCE: spec says DL-ERROR(K)+Establish. Spec-compliant path commented out at 2192-2202"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "frmr_frame"
+        line: 5020
+        note: "state_3/state_4: error K, set_version_2_0 (Erratum 5028: \"FRMR can only be sent by v2.0\"), establish_data_link, → state_1"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::frmr"
+        line: 1760
+        note: "Both Connected and TimerRecovery: layer3_initiated=false, DlError::K, establish_data_link, → AwaitingConnection"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 248
+        note: "AX25_FRMR (and AX25_ILLEGAL) → establish_data_link + STATE_1. No DL-ERROR(K) report; no FRMR info bytes inspected"
   - id: t45_frmr_received_v20
     on: FRMR_received
     path:
@@ -761,6 +1383,27 @@ transitions:
 
   # ─── Column 18: UA received (unexpected) ────────────────────────────
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "frmr_frame"
+        line: 5031
+        note: "single path — direwolf has no separate L3-initiated branch"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::frmr"
+        line: 1760
+        note: "same handler as t44"
+      - source: linbpq
+        path: L2Code.c
+        function: "L2_PROCESS"
+        line: 2168
+        note: "same FRMRHACK path as t44 — no v22/v20 split"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 248
+        note: "same case as t44"
   - id: t46_ua_received_v22
     on: UA_received
     path:
@@ -770,6 +1413,27 @@ transitions:
       - { decision: version_2_2,          branch: "Yes" }
     next: AwaitingConnection22
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "ua_frame"
+        line: 4948
+        note: "state_3/state_4: error C (\"Unexpected UA\"), establish_data_link, → state_1 or 5 (modulo author enhancement). Direwolf does NOT branch on F bit — figure's two-path F=1/F=0 collapsed"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::ua"
+        line: 1748
+        note: "Author: \"2017 spec says DlError::K, which is undocumented.\" Uses DlError::C, establish_data_link, → AwaitingConnection"
+      - source: linbpq
+        path: L2Code.c
+        function: "L2_PROCESS"
+        line: 2140
+        note: "UA in state 5 falls to default → ReleaseBuffer (silent ignore). NOTABLE DIVERGENCE from spec DL-ERROR(C)+Establish"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 254
+        note: "No AX25_UA case in STATE_3 switch → silent default. DIVERGENCE: figure t46 calls for DL-ERROR(C)"
   - id: t47_ua_received_v20
     on: UA_received
     path:
@@ -781,6 +1445,27 @@ transitions:
 
   # ─── Column 19: UI received ─────────────────────────────────────────
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "ua_frame"
+        line: 4948
+        note: "same path as t46 — no F-bit branching"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::ua"
+        line: 1748
+        note: "same handler as t46"
+      - source: linbpq
+        path: L2Code.c
+        function: "L2_PROCESS"
+        line: 2140
+        note: "same silent-ignore as t46"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 254
+        note: "same default-case drop as t46. Linux uniform: no F-bit distinction"
   - id: t48_ui_received_p_eq_0
     on: UI_received
     path:
@@ -788,6 +1473,27 @@ transitions:
       - { decision: p_eq_1, branch: "No" }
     next: Connected
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "ui_frame"
+        line: 5127
+        note: "Only runs when cmd && pf==1. state_3/4 case calls enquiry_response with frame_type_U_UI"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::ui"
+        line: 1770
+        note: "Calls Data::ui_check(cr, len); no enquiry response unless poll set"
+      - source: linbpq
+        path: L2Code.c
+        function: "L2LINKACTIVE"
+        line: 1065
+        note: "UI dispatched by PID (Netrom/IP/ARP). No UI_Check DL-error semantics — LinBPQ just routes"
+      - source: linux_oot
+        path: net/ax25/ax25_in.c
+        function: "ax25_rcv"
+        line: 229
+        note: "UI intercepted before LAPB state machine — handled state-independently"
   - id: t49_ui_received_p_eq_1
     on: UI_received
     path:
@@ -798,6 +1504,17 @@ transitions:
 
   # ─── Column 20: DISC received ───────────────────────────────────────
 
+    references:
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::ui"
+        line: 1772
+        note: "Poll branch: act.push(data.enquiry_response(true))"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "ui_frame"
+        line: 5127
+        note: "same path as t48 — direwolf only handles cmd && pf==1 case"
   - id: t50_disc_received
     on: DISC_received
     path:
@@ -815,6 +1532,27 @@ transitions:
 
   # ─── Column 21: DM received ─────────────────────────────────────────
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "L2LINKACTIVE"
+        line: 1090
+        note: "InformPartner(NORMALCLOSE) + L2SENDUA + CLEAROUTLINK. Goes straight to Disconnected — no explicit T3-stop/T1-start"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "disc_frame"
+        line: 4557
+        note: "state_3/state_4: discard queue, UA F=p, server_link_terminated, STOP_T1, STOP_T3, → state_0"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::disc"
+        line: 1537
+        note: "Author marks \"Done.\" Clear queue, stop T1/T3, SendUa + EOF + Disconnected"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 167
+        note: "UA F=pf, then ax25_disconnect(0) → STATE_0"
   - id: t51_dm_received
     on: DM_received
     path:
@@ -830,6 +1568,27 @@ transitions:
 
   # ─── Column 22: RR received ─────────────────────────────────────────
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "L2_PROCESS"
+        line: 2145
+        note: "InformPartner(LINKLOST) + CLEAROUTLINK. No explicit DL-ERROR(E)"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "dm_frame"
+        line: 4696
+        note: "state_3/state_4: error E, server_link_terminated, → state_0. Direwolf does NOT branch on F bit (spec figure shows F=1/F=0 paths)"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::dm"
+        line: 1523
+        note: "Author marks \"Done.\" DL-DISCONNECT, clear queue, stop T1/T3, DlError::E, → Disconnected"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 172
+        note: "ax25_disconnect(ECONNRESET) → STATE_0. Linux ignores F bit (figure t51 only acts on F=1)"
   - id: t52_rr_received_nr_in_window
     on: RR_received
     path:
@@ -839,6 +1598,27 @@ transitions:
       - { action: Check_I_Frame_Acknowledged, kind: subroutine }
     next: Connected
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "SFRAME"
+        line: 2403
+        note: "treatasRR: clears RNRSET; ACKMSG releases acked frames. Stays in 5"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "rr_rnr_frame"
+        line: 3545
+        note: "state_3 entry. peer_receiver_busy=!ready. Erratum 3549-3552: check_need_for_response only for cmd&&pf (figure has unconditional)"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::rr_connected"
+        line: 1361
+        note: "Connected branch. Clears peer_receiver_busy, check_need_for_response, check_iframe_acked"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 182
+        note: "Combined RR/RNR case. enquiry_response on cmd&&pf, then check_iframes_acked"
   - id: t53_rr_received_nr_out_of_window_v22
     on: RR_received
     path:
@@ -849,6 +1629,27 @@ transitions:
       - { decision: version_2_2,          branch: "Yes" }
     next: AwaitingConnection22
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "SFRAME"
+        line: 2277
+        note: "SDREJF set by SDNRCHK → SDFRMR (FRMR state). NOTABLE DIVERGENCE: spec says N(r) Error Recovery → AwaitingConnection22. LinBPQ goes to FRMR state 3"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "rr_rnr_frame"
+        line: 3569
+        note: "bad N(R): nr_error_recovery, → state_1 (or state_5 modulo author enhancement)"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::rr_connected"
+        line: 1366
+        note: "N(R) out of window: nr_error_recovery → AwaitingConnection"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 184
+        note: "On invalid N(R): nr_error_recovery + STATE_1"
   - id: t54_rr_received_nr_out_of_window_v20
     on: RR_received
     path:
@@ -861,6 +1662,27 @@ transitions:
 
   # ─── Column 23: RNR received ────────────────────────────────────────
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "SFRAME"
+        line: 2277
+        note: "same SDFRMR path as t53 — no v22/v20 split"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "rr_rnr_frame"
+        line: 3569
+        note: "same as t53"
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::rr_connected"
+        line: 1366
+        note: "same as t53"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 184
+        note: "same as t53"
   - id: t55_rnr_received_nr_in_window
     on: RNR_received
     path:
@@ -870,6 +1692,22 @@ transitions:
       - { action: Check_I_Frame_Acknowledged, kind: subroutine }
     next: Connected
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "SFRAME"
+        line: 2410
+        note: "Sets RNRSET (peer busy). RNR(F) restarts L2TIMER (2511) — explicit divergence comment at 2507"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "rr_rnr_frame"
+        line: 3547
+        note: "Same code path as RR; ready=0 sets peer_receiver_busy=1. Structural collapse RR/RNR"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 181
+        note: "Shares RR/RNR case. Sets PEER_RX_BUSY (only difference from RR)"
   - id: t56_rnr_received_nr_out_of_window_v22
     on: RNR_received
     path:
@@ -880,6 +1718,22 @@ transitions:
       - { decision: version_2_2,          branch: "Yes" }
     next: AwaitingConnection22
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "SFRAME"
+        line: 2277
+        note: "same SDFRMR path as t53"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "rr_rnr_frame"
+        line: 3569
+        note: "RR/RNR converge for bad-N(R)"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 184
+        note: "same as t53"
   - id: t57_rnr_received_nr_out_of_window_v20
     on: RNR_received
     path:
@@ -892,6 +1746,22 @@ transitions:
 
   # ─── Column 24: LM-SEIZE Confirm ────────────────────────────────────
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "SFRAME"
+        line: 2277
+        note: "same SDFRMR path"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "rr_rnr_frame"
+        line: 3569
+        note: "same as t56"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 184
+        note: "same as t53"
   - id: t58_lm_seize_confirm_no_ack_pending
     on: LM_SEIZE_confirm
     path:
@@ -899,6 +1769,12 @@ transitions:
       - { action: LM_release_request,  kind: signal_lower }
     next: Connected
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "lm_seize_confirm"
+        line: 2223
+        note: "state_3/4: i_frame_pop_off_queue, no enquiry_response (acknowledge_pending false). Erratum 2244: states 3 & 4 merged per 2006 revision"
   - id: t59_lm_seize_confirm_ack_pending
     on: LM_SEIZE_confirm
     path:
@@ -910,6 +1786,17 @@ transitions:
 
   # ─── Column 25: SREJ received ───────────────────────────────────────
 
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "lm_seize_confirm"
+        line: 2231
+        note: "Same code path; acknowledge_pending check at 2235"
+      - source: linbpq
+        path: L2Code.c
+        function: "L2TimerProc"
+        line: 3526
+        note: "Closest analog: delayed-ack timer (L2ACKREQ) fires SEND_RR_RESP. Not literally LM-SEIZE — deferred ack mechanism"
   - id: t60_srej_received_nr_in_window_pf_eq_0
     on: SREJ_received
     path:
@@ -927,6 +1814,17 @@ transitions:
       - { action: clear_acknowledge_pending, kind: processing }
     next: Connected
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "SFRAME"
+        line: 2954
+        note: "SDNRCHK: SREJ without F doesn't ACK (early return)"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "srej_frame"
+        line: 4057
+        note: "state_3 entry. Erratum 4061-4067: figure has check_need_for_response but SREJ can only be response, so removed"
   - id: t61_srej_received_nr_in_window_pf_eq_1
     on: SREJ_received
     path:
@@ -945,6 +1843,17 @@ transitions:
       - { action: clear_acknowledge_pending, kind: processing }
     next: Connected
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "SFRAME"
+        line: 2303
+        note: "SREJ(F) resend: clear POLLSENT, look up FRAMES[NS], resend. No V(s) advance / T3 restart — collapses spec's t60/t61"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "srej_frame"
+        line: 4079
+        note: "resend_for_srej. Author addition at 4082-4093: STOP_T3/START_T1 after sending I frame — avoids mutual-timeout deadlock"
   - id: t62_srej_received_nr_out_of_window_v22
     on: SREJ_received
     path:
@@ -955,6 +1864,17 @@ transitions:
       - { decision: version_2_2,          branch: "Yes" }
     next: AwaitingConnection22
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "SFRAME"
+        line: 2277
+        note: "same SDFRMR path as t53"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "srej_frame"
+        line: 4096
+        note: "bad N(R): nr_error_recovery, → state_1 or 5. Erratum 4098: \"Flow chart shows state 1 but that would not be appropriate if modulo is 128\""
   - id: t63_srej_received_nr_out_of_window_v20
     on: SREJ_received
     path:
@@ -967,6 +1887,17 @@ transitions:
 
   # ─── Column 26: REJ received ────────────────────────────────────────
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "SFRAME"
+        line: 2277
+        note: "same as t62"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "srej_frame"
+        line: 4096
+        note: "same as t62"
   - id: t64_rej_received_nr_in_window
     on: REJ_received
     path:
@@ -981,6 +1912,22 @@ transitions:
       - { action: Invoke_Retransmission,   kind: subroutine }
     next: Connected
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "SFRAME"
+        line: 2481
+        note: "REJ → POLLSENT check → RESETNS resets V(s) to N(r) (= Invoke_Retransmission). T1 cleared at 2486. No explicit Select_T1_Value"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "rej_frame"
+        line: 3804
+        note: "state_3: peer_receiver_busy=0, check_need_for_response UNCONDITIONAL (different from rr_rnr_frame), is_good_nr"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 192
+        note: "AX25_REJ: clears PEER_RX_BUSY, enquiry_response on cmd&&pf, ax25_frames_acked + RTT + stop T1 + start T3 + requeue_frames on valid N(R)"
   - id: t65_rej_received_nr_out_of_window_v22
     on: REJ_received
     path:
@@ -991,6 +1938,22 @@ transitions:
       - { decision: version_2_2,           branch: "Yes" }
     next: AwaitingConnection22
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "SFRAME"
+        line: 2277
+        note: "same SDFRMR path"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "rej_frame"
+        line: 3840
+        note: "bad N(R): nr_error_recovery, → state_1 or 5 (author enhancement)"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 194
+        note: "same as t53"
   - id: t66_rej_received_nr_out_of_window_v20
     on: REJ_received
     path:
@@ -1018,6 +1981,22 @@ transitions:
   # at the end to avoid renumbering t12-t66; semantically they belong
   # to column 2 alongside t02-t17.
 
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "SFRAME"
+        line: 2277
+        note: "same as t65"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "rej_frame"
+        line: 3840
+        note: "same as t65"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: "ax25_std_state3_machine"
+        line: 194
+        note: "same as t65"
   - id: t67_i_received_in_seq_stored_p_eq_1
     on: I_received
     path:
@@ -1050,6 +2029,22 @@ transitions:
       the runtime will need to treat these three actions as a loop
       body bounded by the "V(r) I Frame Stored?" predicate.
 
+    references:
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::iframe"
+        line: 1628
+        note: "Loop to drain stored out-of-order iframes — stub only (`while false`); TODO: \"check for stored out of order frames\""
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame_continued"
+        line: 2906
+        note: "Drain SREJ-buffered out-of-order frames now contiguous with V(R) — equivalent of figure's stored-frame loop"
+      - source: linbpq
+        path: L2Code.c
+        function: "SDIFRM"
+        line: 2586
+        note: "After REJ, when missing frame arrives, replays stored RXFRAMES via CheckNSLoop → PROC_I_FRAME at 2593"
   - id: t68_i_received_in_seq_stored_p_eq_0_ack_pending
     on: I_received
     path:
@@ -1074,6 +2069,22 @@ transitions:
       verification_pending: see t67. One iteration of figc4.4's stored-
       frame loop, then continues into the not-polled / ack-pending tail.
 
+    references:
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::iframe"
+        line: 1628
+        note: "same loop stub as t67"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame_continued"
+        line: 2906
+        note: "same drain loop as t67"
+      - source: linbpq
+        path: L2Code.c
+        function: "SDIFRM"
+        line: 2586
+        note: "same replay path as t67"
   - id: t69_i_received_in_seq_stored_p_eq_0_no_ack_pending
     on: I_received
     path:
@@ -1099,3 +2110,19 @@ transitions:
     notes: |
       verification_pending: see t67. One iteration of figc4.4's stored-
       frame loop, then continues into the not-polled / no-ack tail.
+    references:
+      - source: rax25
+        path: src/state.rs
+        function: "Connected::iframe"
+        line: 1628
+        note: "same loop stub"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: "i_frame_continued"
+        line: 2906
+        note: "same drain loop"
+      - source: linbpq
+        path: L2Code.c
+        function: "RR_OR_RNR"
+        line: 4185
+        note: "Second replay loop in RR_OR_RNR — replays RXFRAMES when about to send supervisory response"
