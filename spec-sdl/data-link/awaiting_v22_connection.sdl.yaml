@@ -1,0 +1,431 @@
+# Data-Link state machine: Awaiting V2.2 Connection state.
+#
+# Source: AX.25 v2.2 rev 4 (Oct 2025), figure C4.6 "Data Link Awaiting
+# 2.2 Connection State" (pages a + b — single state, two figure pages).
+# Transcribed from spec-sdl/data-link/DataLink_AwaitingV22Connection.graphml.
+#
+# 18 input columns → 25 transitions after enumerating decision branches,
+# plus 1 page-level `save:` entry (DL-DISCONNECT request, drawn with the
+# SDL Save shape just like figc4.2's column 1).
+#
+# AwaitingConnection22 is the "we sent SABME, waiting for UA/DM with peer
+# possibly responding with v2.0 DM" state. Closes the placeholder loop
+# left open by figc4.4's 14 SABME-while-Awaiting transitions and
+# figc4.2's t24.
+#
+# Exits:
+# - Connected (state 3)        — on UA(F=1), via the standard 3-branch
+#                                 entry tree (mirrors figc4.2's UA paths
+#                                 but with an extra MDL-NEGOTIATE Request
+#                                 firing on the way into Connected).
+# - Disconnected (state 0)      — on DM(F=1) (peer refused), or T1 retry
+#                                 exhaustion (RC==N2).
+# - AwaitingConnection (state 1) — on DM(F=0) (peer is v2.0, fall back),
+#                                 FRMR (re-establish via v2.0), or SABM
+#                                 (peer requested v2.0 — accept).
+#
+# Two `verification_pending` flags preserved verbatim from the spec figure,
+# both potential upstream-spec issues:
+#
+# 1. The "Info Field Permitted In Frame" column label (n8 in the graphml).
+#    figc4.3 has the same column labelled "Info Not Permitted In Frame".
+#    Both flow to DL-ERROR Indication (M), whose canonical meaning is
+#    "info field NOT permitted in this frame". The figc4.6 figure likely
+#    dropped the "Not" in error. Encoded with the canonical
+#    `info_not_permitted_in_frame` event (action target dictates), but
+#    flagged on the transition's notes for upstream review.
+#
+# 2. The UI column's `P == 1?` diamond has Yes/No labels swapped vs
+#    figc4.3 (and inverted vs §6.3.5 ¶3 prose): the spec figc4.6 PNG
+#    literally shows `P == 1? Yes → stay` and `P == 1? No → DM F=1`.
+#    Encoded verbatim — flagged for upstream review on the two
+#    `t_ui_*` transitions.
+machine: data_link
+state: AwaitingConnection22
+coverage: complete
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc4.6
+  url: https://raw.githubusercontent.com/packethacking/ax25spec/main/doc/media/figc4.6.png
+
+# DL-DISCONNECT request received while in AwaitingConnection22 is held
+# (not discarded) and replayed when the state machine reaches a new
+# state. Corresponds to the SDL Save shape on column 1 (n12: "Requeue
+# Request" with d5 "Save a signal until a new state is reached").
+# Mirrors figc4.2's identical save column.
+save:
+  - DL_DISCONNECT_request
+
+decisions:
+  - id: data_layer_3_initiated
+    question: "Layer 3 Initiated?"
+    predicate: layer_3_initiated
+  - id: ui_p_eq_1
+    question: "P == 1?"
+    predicate: P_eq_1
+  - id: dm_f_eq_1
+    question: "F == 1?"
+    predicate: F_eq_1
+  - id: ua_f_eq_1
+    question: "F == 1?"
+    predicate: F_eq_1
+  - id: ua_layer_3_initiated
+    question: "Layer 3 Initiated?"
+    predicate: layer_3_initiated
+  - id: ua_vs_eq_va
+    question: "V(s) == V(a)?"
+    predicate: V_s_eq_V_a
+  - id: t1_rc_eq_n2
+    question: "RC == N2?"
+    predicate: RC_eq_N2
+
+transitions:
+  # ─── DL-CONNECT request (d5: "Signal reception from Lower Layer") ───
+
+  - id: t01_dl_connect_request
+    on: DL_CONNECT_request
+    path:
+      - { action: discard_queue,         kind: processing }
+      - { action: set_layer_3_initiated, kind: processing }
+    next: AwaitingConnection22
+    notes: |
+      DL-CONNECT while already negotiating v2.2: discard pending queue
+      and re-mark layer-3-initiated. Stays in AwaitingConnection22 (the
+      existing T1 / RC counters continue). Mirrors figc4.2's t11.
+
+  # ─── DL-UNIT-DATA request (d5: "Signal reception from Lower Layer") ─
+
+  - id: t02_dl_unit_data_request
+    on: DL_UNIT_DATA_request
+    path:
+      - { action: UI_command, kind: signal_lower }
+    next: AwaitingConnection22
+    notes: |
+      Connectionless data even while negotiating v2.2 — send UI command,
+      stay. Mirrors figc4.2's t12 and figc4.3's t07.
+
+  # ─── DL-DATA request — Layer 3 Initiated? diamond shared with I-frame-pop
+
+  - id: t03_dl_data_request_layer_3_initiated
+    on: DL_DATA_request
+    path:
+      - { decision: data_layer_3_initiated, branch: "Yes" }
+    next: AwaitingConnection22
+    notes: |
+      verification_pending (carried forward from figc4.2's t13/t14):
+      Yes/No labels on this diamond are not drawn in the spec PNG —
+      Tom assumed them when transcribing the graphml. Reading: when L3
+      initiated the connection, accept the I-frame data into… no action
+      drawn on this branch (queue not pushed). Could be inverted — flag
+      for upstream check. direwolf author flags the equivalent diamond
+      on figc4.2 as confusing (data_request_good_size:1466-1473).
+
+  - id: t04_dl_data_request_not_layer_3_initiated
+    on: DL_DATA_request
+    path:
+      - { decision: data_layer_3_initiated, branch: "No" }
+      - { action: "Push Frame Onto Queue", kind: internal_out }
+    next: AwaitingConnection22
+    notes: |
+      verification_pending: shares the (label-assumed) diamond with t03.
+      Reading: peer-initiated connection negotiating v2.2 — queue the
+      data for delivery once Connected.
+
+  # ─── I Frame Pops Off Queue — same Layer 3 Initiated? diamond ───────
+
+  - id: t05_i_frame_pops_off_queue_layer_3_initiated
+    on: I_frame_pops_off_queue
+    path:
+      - { decision: data_layer_3_initiated, branch: "Yes" }
+    next: AwaitingConnection22
+    notes: |
+      verification_pending: shares the (label-assumed) diamond with t03.
+
+  - id: t06_i_frame_pops_off_queue_not_layer_3_initiated
+    on: I_frame_pops_off_queue
+    path:
+      - { decision: data_layer_3_initiated, branch: "No" }
+      - { action: "Push Frame Onto Queue", kind: internal_out }
+    next: AwaitingConnection22
+    notes: |
+      verification_pending: shares the (label-assumed) diamond with t04.
+
+  # ─── All Other Primitives (d5: "Signal reception from Lower Layer") ─
+
+  - id: t07_all_other_primitives_from_lower_layer
+    on: all_other_primitives__from_lower_layer
+    path: []
+    next: AwaitingConnection22
+    notes: |
+      Catch-all for unhandled primitives drawn with d5
+      "Signal reception from Lower Layer". No action — stay.
+
+  # ─── Frame-format errors (all d5: "Signal reception from upper layer")
+
+  - id: t08_control_field_error
+    on: control_field_error
+    path:
+      - { action: DL_ERROR_indication_L, kind: signal_upper }
+    next: AwaitingConnection22
+
+  - id: t09_info_not_permitted_in_frame
+    on: info_not_permitted_in_frame
+    path:
+      - { action: DL_ERROR_indication_M, kind: signal_upper }
+    next: AwaitingConnection22
+    notes: |
+      verification_pending: the spec figc4.6 PNG labels this column
+      "Info Field Permitted In Frame" — the canonical reading per the
+      DL-ERROR(M) action (and per figc4.3's equivalent column) is
+      "Info Field NOT Permitted In Frame". The figc4.6 figure appears
+      to have dropped the "Not". Encoded with the canonical event id
+      `info_not_permitted_in_frame` since the downstream action
+      (DL-ERROR(M)) is unambiguous; figure-verbatim label preserved in
+      this note. Candidate upstream-spec typo.
+
+  - id: t10_u_or_s_frame_length_error
+    on: u_or_s_frame_length_error
+    path:
+      - { action: DL_ERROR_indication_N, kind: signal_upper }
+    next: AwaitingConnection22
+
+  # ─── UI received (P==1 diamond with Yes/No SWAPPED vs figc4.3) ──────
+
+  - id: t11_ui_received_p_eq_1
+    on: UI_received
+    path:
+      - { action: UI_Check, kind: subroutine }
+      - { decision: ui_p_eq_1, branch: "Yes" }
+    next: AwaitingConnection22
+    notes: |
+      verification_pending: the spec figc4.6 PNG has the UI-column
+      `P == 1?` diamond's Yes/No labels INVERTED compared to figc4.3
+      (and §6.3.5 ¶3 prose): "Any TNC receiving a command frame other
+      than a SABM(E) or UI frame with the P bit set to '1' responds
+      with a DM frame with the F bit set to '1'." The figure here
+      shows P==1 Yes → no action (this transition), P==1 No → DM(F=1)
+      (t12). Encoded verbatim per Trust-the-Figure (CLAUDE.md §2.1).
+      Strong upstream-spec issue candidate — Tom confirmed the swap
+      is genuine in the spec PNG.
+
+  - id: t12_ui_received_not_p_eq_1
+    on: UI_received
+    path:
+      - { action: UI_Check, kind: subroutine }
+      - { decision: ui_p_eq_1, branch: "No" }
+      - { action: "DM (F = 1)", kind: signal_lower }
+    next: AwaitingConnection22
+    notes: |
+      See t11's verification_pending note — figc4.6 has P==1 Yes/No
+      swapped vs figc4.3 and §6.3.5 ¶3 prose. This is the "No → DM(F=1)"
+      branch.
+
+  # ─── DM received — F=1 is connect-refused, F=0 falls back to v2.0 ───
+
+  - id: t13_dm_received_f_eq_1
+    on: DM_received
+    path:
+      - { decision: dm_f_eq_1, branch: "Yes" }
+      - { action: "Discard I Frame Queue",  kind: processing }
+      - { action: DL_DISCONNECT_indication, kind: signal_upper }
+      - { action: stop_T1,                  kind: processing }
+    next: Disconnected
+    notes: |
+      DM(F=1) is a refusal response to our SABME. Discard queue, notify
+      upper layer of disconnect, stop T1, drop to Disconnected. Mirrors
+      figc4.2's t02 (which exits to Disconnected on the same condition,
+      via discard_frame_queue rather than discard_i_frame_queue —
+      figure-verbatim wording difference between figc4.2 and figc4.6).
+
+  - id: t14_dm_received_not_f_eq_1
+    on: DM_received
+    path:
+      - { decision: dm_f_eq_1, branch: "No" }
+    next: AwaitingConnection
+    notes: |
+      DM(F=0) drops us back to v2.0 AwaitingConnection (state 1). Read:
+      peer doesn't want v2.2 right now — let the v2.0 negotiation cycle
+      take over.
+
+  # ─── UA received — F + Layer 3 Initiated + V(s)==V(a) chained tree ──
+  #
+  # F==1? No  → DL-ERROR(D), stay
+  # F==1? Yes → Layer 3 Initiated? Yes → DL-CONNECT confirm + connect housekeeping + MDL-NEGOTIATE → Connected
+  #          → Layer 3 Initiated? No  → V(s) == V(a)? Yes → connect housekeeping (no confirm) + MDL-NEGOTIATE → Connected
+  #                                  → V(s) == V(a)? No  → SRT/T1V init + Start T3 + DL-CONNECT confirm + housekeeping + MDL-NEGOTIATE → Connected
+  #
+  # Same structure as figc4.2's UA-received tree (t04-t07) with two
+  # additions: V(s):=0/V(a):=0/V(r):=0 are now inside the housekeeping
+  # block (n52), and MDL-NEGOTIATE Request fires on the way into Connected.
+
+  - id: t15_ua_received_not_f_eq_1
+    on: UA_received
+    path:
+      - { decision: ua_f_eq_1, branch: "No" }
+      - { action: DL_ERROR_indication_D, kind: signal_upper }
+    next: AwaitingConnection22
+    notes: |
+      UA without F=1 isn't a valid response to our polled SABME — emit
+      DL-ERROR(D), keep waiting. Mirrors figc4.2's t04.
+
+  - id: t16_ua_received_f_eq_1_layer_3_initiated
+    on: UA_received
+    path:
+      - { decision: ua_f_eq_1,            branch: "Yes" }
+      - { decision: ua_layer_3_initiated, branch: "Yes" }
+      - { action: DL_CONNECT_confirm,     kind: signal_upper }
+      - { action: stop_T1,                kind: processing }
+      - { action: start_T3,               kind: processing }
+      - { action: "V(s) := 0",            kind: processing }
+      - { action: "V(a) := 0",            kind: processing }
+      - { action: "V(r) := 0",            kind: processing }
+      - { action: Select_T1_Value,        kind: subroutine }
+      - { action: MDL_NEGOTIATE_request,  kind: internal_out }
+    next: Connected
+    notes: |
+      Happy path: UA(F=1) in response to our L3-initiated SABME. Confirm
+      to upper layer, run housekeeping, kick MDL-NEGOTIATE Request on
+      the way to Connected. The MDL-NEGOTIATE is what makes this state
+      v2.2-specific — figc4.2's t05 doesn't fire it.
+
+  - id: t17_ua_received_f_eq_1_not_layer_3_initiated_vs_eq_va
+    on: UA_received
+    path:
+      - { decision: ua_f_eq_1,            branch: "Yes" }
+      - { decision: ua_layer_3_initiated, branch: "No" }
+      - { decision: ua_vs_eq_va,          branch: "Yes" }
+      - { action: stop_T1,                kind: processing }
+      - { action: start_T3,               kind: processing }
+      - { action: "V(s) := 0",            kind: processing }
+      - { action: "V(a) := 0",            kind: processing }
+      - { action: "V(r) := 0",            kind: processing }
+      - { action: Select_T1_Value,        kind: subroutine }
+      - { action: MDL_NEGOTIATE_request,  kind: internal_out }
+    next: Connected
+    notes: |
+      Peer-initiated v2.2 connection coming up with V(s) already aligned.
+      No DL-CONNECT confirm (upper layer wasn't expecting one). Mirrors
+      figc4.2's t06 with the added MDL-NEGOTIATE Request.
+
+  - id: t18_ua_received_f_eq_1_not_layer_3_initiated_vs_neq_va
+    on: UA_received
+    path:
+      - { decision: ua_f_eq_1,            branch: "Yes" }
+      - { decision: ua_layer_3_initiated, branch: "No" }
+      - { decision: ua_vs_eq_va,          branch: "No" }
+      - { action: "SRT := Initial Default", kind: processing }
+      - { action: "T1V := 2*SRT",           kind: processing }
+      - { action: start_T3,                 kind: processing }
+      - { action: DL_CONNECT_confirm,       kind: signal_upper }
+      - { action: stop_T1,                  kind: processing }
+      - { action: start_T3,                 kind: processing }
+      - { action: "V(s) := 0",              kind: processing }
+      - { action: "V(a) := 0",              kind: processing }
+      - { action: "V(r) := 0",              kind: processing }
+      - { action: Select_T1_Value,          kind: subroutine }
+      - { action: MDL_NEGOTIATE_request,    kind: internal_out }
+    next: Connected
+    notes: |
+      V(s) ≠ V(a) recovery branch: re-init timer values + Start T3
+      BEFORE the standard housekeeping which ALSO restarts T3. Same
+      "Start T3 twice" pattern as figc4.2's t07 (rax25 author flagged
+      the figc4.2 equivalent as "1998 bug...start T1, then immediately
+      stop it again" at src/state.rs:1226). Trust-the-figure verbatim.
+
+  # ─── Timer T1 Expiry — same RC==N2 split as figc4.2 t08/t09 ─────────
+
+  - id: t19_t1_expiry_rc_eq_n2
+    on: T1_expiry
+    path:
+      - { decision: t1_rc_eq_n2, branch: "Yes" }
+      - { action: "Discard Frame Queue",    kind: processing }
+      - { action: DL_ERROR_indication_G,    kind: signal_upper }
+      - { action: DL_DISCONNECT_indication, kind: signal_upper }
+    next: Disconnected
+    notes: |
+      Retry exhaustion while awaiting UA for our SABME — discard queue,
+      emit DL-ERROR(G), DL-DISCONNECT indication, drop to Disconnected.
+      Mirrors figc4.2's t08 with the additional Discard Frame Queue
+      step (figure-authoritative).
+
+  - id: t20_t1_expiry_rc_neq_n2
+    on: T1_expiry
+    path:
+      - { decision: t1_rc_eq_n2, branch: "No" }
+      - { action: "RC := RC + 1",   kind: processing }
+      - { action: "SABME (P = 1)",  kind: signal_lower }
+      - { action: Select_T1_Value,  kind: subroutine }
+      - { action: start_T1,         kind: processing }
+    next: AwaitingConnection22
+    notes: |
+      Below retry limit — bump RC, resend SABME(P=1), recalc T1V via
+      Select T1 Value, restart T1, keep waiting. Mirrors figc4.2's t09
+      (which retransmits SABM instead of SABME).
+
+  # ─── FRMR — peer reports a frame-reject; fall back to v2.0 setup ────
+
+  - id: t21_frmr_received
+    on: FRMR_received
+    path:
+      - { action: "SRT := Initial Default", kind: processing }
+      - { action: "T1V := 2 * SRT",         kind: processing }
+      - { action: "Establish Data Link",    kind: subroutine }
+      - { action: set_layer_3_initiated,    kind: processing }
+      - { action: "Set Version 2.0",        kind: processing }
+    next: AwaitingConnection
+    notes: |
+      FRMR while negotiating v2.2 — peer is v2.0 (or pre-2.2 in v2.0
+      mode), so re-initialise timers, run the Establish Data Link
+      subroutine, force v2.0, and fall to AwaitingConnection (state 1).
+
+  # ─── SABME — same-version collision recovery ────────────────────────
+
+  - id: t22_sabme_received
+    on: SABME_received
+    path:
+      - { action: "F := P", kind: processing }
+      - { action: UA,       kind: signal_lower }
+    next: AwaitingConnection22
+    notes: |
+      SABME from peer while our own SABME is in flight — collision
+      recovery: respond UA, stay (our own SABME may still get its UA).
+      Mirrors figc4.2's t23 SABM-while-SABM-pending collision.
+
+  # ─── SABM — peer wants v2.0; honour it and fall back ────────────────
+
+  - id: t23_sabm_received
+    on: SABM_received
+    path:
+      - { action: "F := P",          kind: processing }
+      - { action: UA,                kind: signal_lower }
+      - { action: "Set Version 2.0", kind: processing }
+    next: AwaitingConnection
+    notes: |
+      SABM (v2.0) from peer while we're trying v2.2 — peer doesn't
+      support v2.2 or is downgrading. Reply UA, set version 2.0, fall to
+      v2.0 AwaitingConnection (state 1).
+
+  # ─── DISC — peer wants to disconnect, refuse with DM ────────────────
+
+  - id: t24_disc_received
+    on: DISC_received
+    path:
+      - { action: "F := P", kind: processing }
+      - { action: DM,       kind: signal_lower }
+    next: AwaitingConnection22
+    notes: |
+      DISC from peer while negotiating v2.2: respond DM (we're not
+      connected yet), stay in AwaitingConnection22 waiting for our
+      SABME's UA. Note: unlike figc4.3 (Awaiting Release), which
+      responds UA to a cross-DISC, figc4.6 responds DM because we
+      haven't established the link yet.
+
+  # ─── All Other Primitives (d5: "Signal reception from upper layer") ─
+
+  - id: t25_all_other_primitives_from_upper_layer
+    on: all_other_primitives__from_upper_layer
+    path: []
+    next: AwaitingConnection22
+    notes: |
+      Catch-all for unhandled primitives drawn with d5
+      "Signal reception from upper layer". No action — stay.
