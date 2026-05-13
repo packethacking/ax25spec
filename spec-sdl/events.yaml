@@ -35,6 +35,12 @@ frames_received:
   - FRMR_received
   - XID_received
   - TEST_received
+  # Composite event: figc4.3 (AwaitingRelease) groups all info/supervisory
+  # command frames into a single SDL input column labelled
+  # "I, RR, RNR, REJ or SREJ Commands". Lossless encoding preserves the
+  # figure's grouping rather than fanning out across the five individual
+  # frame events above.
+  - i_or_s_command_received
 
 # Catch-all "everything not matched above" events. The double-underscore
 # suffix records which shape-class (figc1.1 / d5 description) the catch-all

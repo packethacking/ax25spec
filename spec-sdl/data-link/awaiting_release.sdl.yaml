@@ -1,0 +1,262 @@
+# Data-Link state machine: Awaiting Release state.
+#
+# Source: AX.25 v2.2 rev 4 (Oct 2025), figure C4.3 "Data Link Awaiting
+# Release State". Transcribed from
+# spec-sdl/data-link/DataLink_AwaitingRelease.graphml.
+#
+# 15 input columns → 20 transitions after enumerating decision branches.
+# AwaitingRelease is the "we sent DISC, waiting for UA or DM" state —
+# entered from Connected/TimerRecovery on a local DL-DISCONNECT request,
+# exited to Disconnected on a peer ack of the disconnect (UA with F=1) or
+# a peer-initiated disconnect (DM with F=1) or T1-expiry retry exhaustion.
+#
+# Decision naming convention follows figc4.2:
+# - F==1? diamonds keep a column-specific id prefix (ua_f_eq_1, dm_f_eq_1)
+#   because the figure draws two distinct diamonds with the same question.
+# - P==1? diamond is shared (single drawn diamond) between the UI and the
+#   "I, RR, RNR, REJ or SREJ Commands" columns, so one `decisions:` entry.
+#
+# New event in catalogue: `i_or_s_command_received` (frames_received group)
+# — composite event covering the single SDL input column labelled
+# "I, RR, RNR, REJ or SREJ Commands" on this page.
+machine: data_link
+state: AwaitingRelease
+coverage: complete
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc4.3
+  url: https://raw.githubusercontent.com/packethacking/ax25spec/main/doc/media/figc4.3.png
+
+decisions:
+  - id: t1_rc_eq_n2
+    question: "RC == N2?"
+    predicate: RC_eq_N2
+  - id: ua_f_eq_1
+    question: "F == 1?"
+    predicate: F_eq_1
+  - id: dm_f_eq_1
+    question: "F == 1?"
+    predicate: F_eq_1
+  - id: p_eq_1
+    question: "P == 1?"
+    predicate: P_eq_1
+
+transitions:
+  # ─── DL-DISCONNECT request (d5: "Signal reception from Lower Layer") ─
+
+  - id: t01_dl_disconnect_request
+    on: DL_DISCONNECT_request
+    path:
+      - { action: "Expedited DM", kind: signal_lower }
+    next: AwaitingRelease
+    notes: |
+      Second DL-DISCONNECT from upper layer while already waiting for the
+      first DISC's UA. Respond Expedited DM and keep waiting — upper layer
+      asked again, so reaffirm refusal without forgetting we already have
+      a DISC outstanding.
+
+  # ─── Timer T1 Expiry (d5: "Signal reception from upper layer") ──────
+  #
+  # RC==N2? Yes → DL-ERROR(H), DL-DISCONNECT indication → Disconnected
+  #               (figure labels DL-ERROR with code G — see t02 notes)
+  # RC==N2? No  → bump RC, resend DISC(P=1), reselect T1V, restart T1, stay
+
+  - id: t02_t1_expiry_rc_eq_n2
+    on: T1_expiry
+    path:
+      - { decision: t1_rc_eq_n2, branch: "Yes" }
+      - { action: DL_ERROR_indication_G,    kind: signal_upper }
+      - { action: DL_DISCONNECT_indication, kind: signal_upper }
+    next: Disconnected
+    notes: |
+      Retry limit hit while awaiting UA for our DISC. Surface DL-ERROR(G)
+      (no response to repeated command frame) and DL-DISCONNECT indication
+      to upper layer, then drop to Disconnected. Figure's drawn ERROR code
+      is "G" — same code rax25 author flagged as a 1998-spec typo (`G`
+      not `g`) on figc4.2.
+
+  - id: t03_t1_expiry_rc_neq_n2
+    on: T1_expiry
+    path:
+      - { decision: t1_rc_eq_n2, branch: "No" }
+      - { action: "RC := RC + 1",  kind: processing }
+      - { action: "DISC (P = 1)",  kind: signal_lower }
+      - { action: Select_T1_Value, kind: subroutine }
+      - { action: start_T1,        kind: processing }
+    next: AwaitingRelease
+    notes: |
+      Below retry limit — bump RC, resend DISC with P=1, recalc T1V via
+      Select T1 Value, restart T1, keep waiting.
+
+  # ─── UA received — F decides whether peer's UA acks our DISC ─────────
+
+  - id: t04_ua_received_f_eq_1
+    on: UA_received
+    path:
+      - { decision: ua_f_eq_1, branch: "Yes" }
+      - { action: DL_DISCONNECT_confirm, kind: signal_upper }
+      - { action: stop_T1,                kind: processing }
+    next: Disconnected
+    notes: |
+      Peer acked our DISC with UA(F=1). Confirm to upper layer, stop T1,
+      drop to Disconnected. Happy path out of AwaitingRelease.
+
+  - id: t05_ua_received_not_f_eq_1
+    on: UA_received
+    path:
+      - { decision: ua_f_eq_1, branch: "No" }
+      - { action: DL_ERROR_indication_D, kind: signal_upper }
+    next: AwaitingRelease
+    notes: |
+      UA without F=1 isn't a valid response to our polled DISC —
+      DL-ERROR(D), keep waiting for a properly-flagged UA or DM.
+
+  # ─── All Other Primitives (d5: "Signal reception from upper layer") ─
+
+  - id: t06_all_other_primitives_from_upper_layer
+    on: all_other_primitives__from_upper_layer
+    path: []
+    next: AwaitingRelease
+    notes: |
+      Catch-all for unhandled primitives drawn with d5
+      "Signal reception from upper layer". No action — stay in
+      AwaitingRelease.
+
+  # ─── DL-UNIT-DATA request (d5: "Signal reception from Lower Layer") ─
+
+  - id: t07_dl_unit_data_request
+    on: DL_UNIT_DATA_request
+    path:
+      - { action: UI_command, kind: signal_lower }
+    next: AwaitingRelease
+    notes: |
+      Connectionless data even while waiting for release — send UI command,
+      stay. Mirrors figc4.2's same column.
+
+  # ─── All Other Primitives (d5: "Signal reception from Lower Layer") ─
+
+  - id: t08_all_other_primitives_from_lower_layer
+    on: all_other_primitives__from_lower_layer
+    path: []
+    next: AwaitingRelease
+    notes: |
+      Catch-all for unhandled primitives drawn with d5
+      "Signal reception from Lower Layer". No action — stay in
+      AwaitingRelease.
+
+  # ─── Frame-format errors ─────────────────────────────────────────────
+
+  - id: t09_control_field_error
+    on: control_field_error
+    path:
+      - { action: DL_ERROR_indication_L, kind: signal_upper }
+    next: AwaitingRelease
+
+  - id: t10_info_not_permitted_in_frame
+    on: info_not_permitted_in_frame
+    path:
+      - { action: DL_ERROR_indication_M, kind: signal_upper }
+    next: AwaitingRelease
+
+  - id: t11_u_or_s_frame_length_error
+    on: u_or_s_frame_length_error
+    path:
+      - { action: DL_ERROR_indication_N, kind: signal_upper }
+    next: AwaitingRelease
+
+  # ─── SABM/SABME/DISC: peer connect or disconnect attempts during release
+  #
+  # SABM, SABME → F:=P then Expedited DM (we're going away, refuse).
+  # DISC        → F:=P then Expedited UA (peer also wants to disconnect —
+  #               acknowledge their DISC, stay in AwaitingRelease until
+  #               our own DISC is acked).
+
+  - id: t12_sabm_received
+    on: SABM_received
+    path:
+      - { action: "F := P",       kind: processing }
+      - { action: "Expedited DM", kind: signal_lower }
+    next: AwaitingRelease
+    notes: |
+      Peer tried to (re)connect while we're tearing down — refuse with
+      Expedited DM, stay in AwaitingRelease.
+
+  - id: t13_sabme_received
+    on: SABME_received
+    path:
+      - { action: "F := P",       kind: processing }
+      - { action: "Expedited DM", kind: signal_lower }
+    next: AwaitingRelease
+    notes: |
+      Same as t12 but for v2.2 SABME. Refuse with Expedited DM, stay.
+
+  - id: t14_disc_received
+    on: DISC_received
+    path:
+      - { action: "F := P",       kind: processing }
+      - { action: "Expedited UA", kind: signal_lower }
+    next: AwaitingRelease
+    notes: |
+      Cross-DISC: peer also wants to disconnect. Acknowledge with
+      Expedited UA, stay in AwaitingRelease until our own DISC gets
+      its UA (or T1 retries out).
+
+  # ─── DM received — F decides whether peer is acking our DISC ─────────
+
+  - id: t15_dm_received_f_eq_1
+    on: DM_received
+    path:
+      - { decision: dm_f_eq_1, branch: "Yes" }
+      - { action: DL_DISCONNECT_confirm, kind: signal_upper }
+      - { action: stop_T1,                kind: processing }
+    next: Disconnected
+    notes: |
+      Peer responded DM(F=1) to our polled DISC — equivalent to UA(F=1)
+      for tear-down purposes. Confirm, stop T1, drop to Disconnected.
+
+  - id: t16_dm_received_not_f_eq_1
+    on: DM_received
+    path:
+      - { decision: dm_f_eq_1, branch: "No" }
+    next: AwaitingRelease
+    notes: |
+      DM without F=1 isn't a response to our polled DISC — ignore, keep
+      waiting.
+
+  # ─── UI received (P==1 diamond shared with I/S commands column) ──────
+
+  - id: t17_ui_received_p_eq_1
+    on: UI_received
+    path:
+      - { action: UI_Check, kind: subroutine }
+      - { decision: p_eq_1, branch: "Yes" }
+      - { action: "DM F = 1", kind: signal_lower }
+    next: AwaitingRelease
+
+  - id: t18_ui_received_not_p_eq_1
+    on: UI_received
+    path:
+      - { action: UI_Check, kind: subroutine }
+      - { decision: p_eq_1, branch: "No" }
+    next: AwaitingRelease
+
+  # ─── I, RR, RNR, REJ or SREJ Commands (composite event) ──────────────
+  #
+  # The figure draws a single input column labelled
+  # "I, RR, RNR, REJ or SREJ Commands" whose path joins the same P==1?
+  # diamond as the UI column (no UI_Check on this side). Encoded as a
+  # composite event `i_or_s_command_received` rather than fanning out
+  # across the five individual frame events — see events.yaml note.
+
+  - id: t19_i_or_s_command_p_eq_1
+    on: i_or_s_command_received
+    path:
+      - { decision: p_eq_1, branch: "Yes" }
+      - { action: "DM F = 1", kind: signal_lower }
+    next: AwaitingRelease
+
+  - id: t20_i_or_s_command_not_p_eq_1
+    on: i_or_s_command_received
+    path:
+      - { decision: p_eq_1, branch: "No" }
+    next: AwaitingRelease

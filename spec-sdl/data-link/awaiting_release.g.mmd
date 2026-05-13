@@ -1,0 +1,39 @@
+%% This file was produced by tools/Packet.Sdl.CodeGen from spec-sdl/data-link/awaiting_release.sdl.yaml
+%% Do not edit by hand. Run `dotnet run --project tools/Packet.Sdl.CodeGen` to regenerate.
+%%
+%% Source: ax.25.2.2.4_Oct_25, figure figc4.3
+%% URL: https://raw.githubusercontent.com/packethacking/ax25spec/main/doc/media/figc4.3.png
+%% Coverage: complete
+%%
+%% Important: this rendering is approximate and intentionally
+%% looks nothing like the original SDL figure. It is a machine-
+%% generated view of the transitions in the .sdl.yaml — useful
+%% for spotting transcription bugs (missing transitions, wrong
+%% destination state) but NOT a substitute for reading the spec
+%% figure itself. See docs/sdl-primer.md.
+
+stateDiagram-v2
+    direction LR
+
+    classDef focal fill:#fff5b1,stroke:#b08800;
+    class AwaitingRelease focal
+    AwaitingRelease --> AwaitingRelease: t01_dl_disconnect_request<br/>on: DL_DISCONNECT_request<br/>/ ↓ Expedited DM
+    AwaitingRelease --> Disconnected: t02_t1_expiry_rc_eq_n2<br/>on: T1_expiry<br/>[RC_eq_N2]<br/>/ ↑ DL_ERROR_indication_G<br/>/ ↑ DL_DISCONNECT_indication
+    AwaitingRelease --> AwaitingRelease: t03_t1_expiry_rc_neq_n2<br/>on: T1_expiry<br/>[not RC_eq_N2]<br/>/ · RC := RC + 1<br/>/ ↓ DISC (P = 1)<br/>/ →() Select_T1_Value<br/>/ · start_T1
+    AwaitingRelease --> Disconnected: t04_ua_received_f_eq_1<br/>on: UA_received<br/>[F_eq_1]<br/>/ ↑ DL_DISCONNECT_confirm<br/>/ · stop_T1
+    AwaitingRelease --> AwaitingRelease: t05_ua_received_not_f_eq_1<br/>on: UA_received<br/>[not F_eq_1]<br/>/ ↑ DL_ERROR_indication_D
+    AwaitingRelease --> AwaitingRelease: t06_all_other_primitives_from_upper_layer<br/>on: all_other_primitives__from_upper_layer
+    AwaitingRelease --> AwaitingRelease: t07_dl_unit_data_request<br/>on: DL_UNIT_DATA_request<br/>/ ↓ UI_command
+    AwaitingRelease --> AwaitingRelease: t08_all_other_primitives_from_lower_layer<br/>on: all_other_primitives__from_lower_layer
+    AwaitingRelease --> AwaitingRelease: t09_control_field_error<br/>on: control_field_error<br/>/ ↑ DL_ERROR_indication_L
+    AwaitingRelease --> AwaitingRelease: t10_info_not_permitted_in_frame<br/>on: info_not_permitted_in_frame<br/>/ ↑ DL_ERROR_indication_M
+    AwaitingRelease --> AwaitingRelease: t11_u_or_s_frame_length_error<br/>on: u_or_s_frame_length_error<br/>/ ↑ DL_ERROR_indication_N
+    AwaitingRelease --> AwaitingRelease: t12_sabm_received<br/>on: SABM_received<br/>/ · F := P<br/>/ ↓ Expedited DM
+    AwaitingRelease --> AwaitingRelease: t13_sabme_received<br/>on: SABME_received<br/>/ · F := P<br/>/ ↓ Expedited DM
+    AwaitingRelease --> AwaitingRelease: t14_disc_received<br/>on: DISC_received<br/>/ · F := P<br/>/ ↓ Expedited UA
+    AwaitingRelease --> Disconnected: t15_dm_received_f_eq_1<br/>on: DM_received<br/>[F_eq_1]<br/>/ ↑ DL_DISCONNECT_confirm<br/>/ · stop_T1
+    AwaitingRelease --> AwaitingRelease: t16_dm_received_not_f_eq_1<br/>on: DM_received<br/>[not F_eq_1]
+    AwaitingRelease --> AwaitingRelease: t17_ui_received_p_eq_1<br/>on: UI_received<br/>[P_eq_1]<br/>/ →() UI_Check<br/>/ ↓ DM F = 1
+    AwaitingRelease --> AwaitingRelease: t18_ui_received_not_p_eq_1<br/>on: UI_received<br/>[not P_eq_1]<br/>/ →() UI_Check
+    AwaitingRelease --> AwaitingRelease: t19_i_or_s_command_p_eq_1<br/>on: i_or_s_command_received<br/>[P_eq_1]<br/>/ ↓ DM F = 1
+    AwaitingRelease --> AwaitingRelease: t20_i_or_s_command_not_p_eq_1<br/>on: i_or_s_command_received<br/>[not P_eq_1]
