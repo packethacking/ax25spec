@@ -1070,7 +1070,7 @@ transitions:
       - { decision: version_2_2,           branch: "No" }
     next: AwaitingConnection
 
-  # ─── Column 9: All Other Primitives (lower-layer shape) ─────────────
+  # ─── Column 9: All Other Primitives (d5: "Signal reception from Lower Layer") ─────
 
     references:
       - source: spec_prose

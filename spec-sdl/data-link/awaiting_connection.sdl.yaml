@@ -75,7 +75,7 @@ decisions:
     predicate: P_eq_1
 
 transitions:
-  # ─── DISC received (upper-layer shape per d5) ────────────────────────
+  # ─── DISC received (d5: "Signal reception from upper layer") ────────
 
   - id: t01_disc_received
     on: DISC_received
@@ -388,15 +388,16 @@ transitions:
         line: 134
         note: "increments n2count, retransmits SABM/SABME(P=1), ax25_calculate_t1 + ax25_start_t1timer at function tail (173-174)"
 
-  # ─── All Other Primitives (upper-layer shape) ────────────────────────
+  # ─── All Other Primitives (d5: "Signal reception from upper layer") ─
 
   - id: t10_all_other_primitives_from_upper_layer
     on: all_other_primitives__from_upper_layer
     path: []
     next: AwaitingConnection
     notes: |
-      Catch-all for unhandled upper-layer-shape primitives. No action —
-      stay in AwaitingConnection.
+      Catch-all for unhandled primitives drawn with d5
+      "Signal reception from upper layer". No action — stay in
+      AwaitingConnection.
     references: []
       # All four implementations omit:
       # linbpq: no generic upper-primitive sink
@@ -404,7 +405,7 @@ transitions:
       # rax25: trait defaults log 'TODO: unexpected X'
       # linux_oot: non-handled primitives error at syscall boundary
 
-  # ─── DL-CONNECT request (lower-layer shape, per figc4.2 convention) ──
+  # ─── DL-CONNECT request (d5: "Signal reception from Lower Layer" — figc4.2 quirk) ──
 
   - id: t11_dl_connect_request
     on: DL_CONNECT_request
@@ -534,7 +535,7 @@ transitions:
         note: "VERIFICATION PENDING: direwolf falls through with no action when !L3-init — opposite of this transcription's reading (we'd push to queue). See t15"
       # linbpq, rax25, linux_oot: see t15 — none cleanly model this branch
 
-  # ─── All Other Primitives (lower-layer shape) ────────────────────────
+  # ─── All Other Primitives (d5: "Signal reception from Lower Layer") ─
 
   - id: t17_all_other_primitives_from_lower_layer
     on: all_other_primitives__from_lower_layer
