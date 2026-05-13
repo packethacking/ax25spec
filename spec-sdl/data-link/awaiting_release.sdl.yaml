@@ -19,6 +19,25 @@
 # New event in catalogue: `i_or_s_command_received` (frames_received group)
 # — composite event covering the single SDL input column labelled
 # "I, RR, RNR, REJ or SREJ Commands" on this page.
+#
+# Triangulated upstream-spec findings (collected during the validation pass):
+# - t01 (DL-DISCONNECT request → stay): all four implementations diverge.
+#   rax25 and direwolf transition to Disconnected (with explicit erratum
+#   comments questioning the figure's "Expedited DM, stay" semantics);
+#   linbpq and Linux never re-enter the second-DISCONNECT codepath at all.
+# - t02 (T1 expiry RC==N2 → DL-ERROR(G)): all four diverge on the error
+#   code. rax25 emits DlError::H (a different letter), direwolf and
+#   linbpq log/print without typed codes, Linux surfaces ETIMEDOUT.
+# - t14 (DISC received → UA, stay in AwaitingRelease): only direwolf
+#   matches the figure. linbpq and Linux send UA but go to Disconnected
+#   (closer to §6.3.4 ¶2 prose). Figure-vs-prose tension on this branch.
+# - t17 (UI P=1 → DM F=1): the figure contradicts §6.3.5 ¶3 prose which
+#   excludes UI from "respond DM" rule. direwolf alone follows the figure.
+# - direwolf's rr_rnr_frame:3537-3541 erratum: "RR, RNR, REJ, SREJ
+#   responses would fall under all other primitives. In the original, we
+#   simply ignore it and stay in state 2. The 2006 version, page 94, says
+#   go into 1 awaiting connection state. That makes no sense to me." —
+#   2006 vs 1998 spec divergence captured by direwolf.
 machine: data_link
 state: AwaitingRelease
 coverage: complete
@@ -26,6 +45,21 @@ source:
   spec: ax.25.2.2.4_Oct_25
   figure: figc4.3
   url: https://raw.githubusercontent.com/packethacking/ax25spec/main/doc/media/figc4.3.png
+
+# Per-source commit pins for cross-reference citations in transitions[].references[].
+pinned_refs:
+  linbpq:
+    repo: https://github.com/M0LTE/linbpq
+    commit: 88a68988b446187cc5f7a2dfdbe33d1cc3ebd46f
+  direwolf:
+    repo: https://github.com/wb2osz/direwolf
+    commit: a231971a652bfb574a4bae9a5d875fbce53d2267
+  rax25:
+    repo: https://github.com/ThomasHabets/rax25
+    commit: d97b7ab725620497d5444e7393969b8d6f9ae58d
+  linux_oot:
+    repo: https://github.com/linux-netdev/mod-orphan
+    commit: 40188e901024be90f50fc37ba1ba3a84678dfe12
 
 decisions:
   - id: t1_rc_eq_n2
@@ -55,10 +89,38 @@ transitions:
       asked again, so reaffirm refusal without forgetting we already have
       a DISC outstanding.
 
+      NOTE: all four implementations diverge from the figure here.
+      rax25 transitions to Disconnected and stops T1 (with author erratum
+      comments at src/state.rs:1329/1332 questioning the "expedited"
+      wording and missing PF bit); direwolf also transitions to state_0
+      with similar erratum comments; linbpq and Linux never re-enter the
+      DL-DISCONNECT codepath in this state at all (one-shot release).
+      Candidate upstream-spec issue: "Expedited DM, stay" looks unnatural.
+    references:
+      - source: linbpq
+        path: L4Code.c
+        function: "L4 disconnect handler (DISCPENDING setter)"
+        line: 1112
+        note: "DL-DISCONNECT request from upper layer sets DISCPENDING when frames are still outstanding (line 1112); else jumps straight to L2STATE=4 and arms timer (line 1118). DIVERGES: no spec-style 'Expedited DM, stay' — LinBPQ does not loop a second DL-DISCONNECT once already disconnecting"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: dl_disconnect_request
+        line: 1138
+        note: "case state_2_awaiting_release: builds DM (cr_res, p=0), lm_data_request at TQ_PRIO_0_HI (expedited). DIVERGES from figure — also stops T1, notifies app, enter_new_state(state_0_disconnected) rather than staying. Erratum at 1147-1148 questions 'expedited' wording; 1157: 'Shouldn't we inform the user when going to disconnected state? Notifying the application, here, is my own enhancement.'"
+      - source: rax25
+        path: src/state.rs
+        function: "AwaitingRelease::disconnect"
+        line: 1328
+        note: "Sends DM (pf=false) then transitions to Disconnected. Author erratum at 1329: '1998&2017 bug: What's an \"expedited\" DM?' and 1332: '1998&2017 bug: Doesn''t specify pf.' DIVERGES: spec says stay in AwaitingRelease; rax25 goes to Disconnected and stops T1"
+      - source: linux_oot
+        path: net/ax25/af_ax25.c
+        function: ax25_release
+        line: 1021
+        note: "release() handles user disconnect once via single AX25_STATE_1/STATE_2 case (sends DISC, calls ax25_disconnect). Linux socket layer does not re-enter STATE_2 from STATE_2 on user disconnect; figc4.3 expedited-DM-then-stay semantics absent"
+
   # ─── Timer T1 Expiry (d5: "Signal reception from upper layer") ──────
   #
-  # RC==N2? Yes → DL-ERROR(H), DL-DISCONNECT indication → Disconnected
-  #               (figure labels DL-ERROR with code G — see t02 notes)
+  # RC==N2? Yes → DL-ERROR(G), DL-DISCONNECT indication → Disconnected
   # RC==N2? No  → bump RC, resend DISC(P=1), reselect T1V, restart T1, stay
 
   - id: t02_t1_expiry_rc_eq_n2
@@ -71,9 +133,36 @@ transitions:
     notes: |
       Retry limit hit while awaiting UA for our DISC. Surface DL-ERROR(G)
       (no response to repeated command frame) and DL-DISCONNECT indication
-      to upper layer, then drop to Disconnected. Figure's drawn ERROR code
-      is "G" — same code rax25 author flagged as a 1998-spec typo (`G`
-      not `g`) on figc4.2.
+      to upper layer, then drop to Disconnected.
+
+      NOTE: all four implementations diverge on the error code.
+      rax25 emits DlError::H (a different letter); direwolf only
+      dw_printf's an error string; linbpq silently CLEAROUTLINKs; Linux
+      reports ETIMEDOUT. The "G" code appears figure-authoritative.
+    references:
+      - source: spec_prose
+        cite: "§6.3.4 ¶3"
+        quote: "If a UA or DM response is not correctly received before T1 times out, the DISC frame is sent again and T1 is restarted. If this happens N2 times, the TNC enters the disconnected state."
+      - source: linbpq
+        path: L2Code.c
+        function: L2TIMEOUT
+        line: 3791
+        note: "L2STATE==4 branch: if L2RETRIES >= PORTN2 then CLEAROUTLINK (lines 3791-3799). No DL-ERROR(G) and no DL-DISCONNECT indication — InformPartner NORMALCLOSE happens via CLEAROUTLINK rather than a typed error code"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: t1_expiry
+        line: 5489
+        note: "case state_2_awaiting_release with S->rc == S->n2_retry: notifies app of disconnect, enter_new_state(state_0_disconnected), dl_connection_terminated. No typed DL-ERROR(G) — error via dw_printf only"
+      - source: rax25
+        path: src/state.rs
+        function: "AwaitingRelease::t1"
+        line: 1311
+        note: "RC==N2 branch (lines 1311-1320). Stops T1 and T3, emits DlError::H, transitions to Disconnected. DIVERGES: spec calls for DL-ERROR(G); rax25 emits H. Missing explicit DL-DISCONNECT indication (only debug! log at 1312). Comment at 1313: '// The 1998 spec doesn''t say, but if we''re going disconnected, then there''s no need for timers.'"
+      - source: linux_oot
+        path: net/ax25/ax25_std_timer.c
+        function: ax25_std_t1timer_expiry
+        line: 144
+        note: "STATE_2 branch: if (n2count == n2) → ax25_send_control(DISC,P=1,COMMAND) then ax25_disconnect(ETIMEDOUT). DIVERGES: also retransmits DISC alongside disconnect, and surfaces ETIMEDOUT not DL-ERROR(G)"
 
   - id: t03_t1_expiry_rc_neq_n2
     on: T1_expiry
@@ -87,6 +176,30 @@ transitions:
     notes: |
       Below retry limit — bump RC, resend DISC with P=1, recalc T1V via
       Select T1 Value, restart T1, keep waiting.
+    references:
+      - source: spec_prose
+        cite: "§6.3.4 ¶3"
+        quote: "If a UA or DM response is not correctly received before T1 times out, the DISC frame is sent again and T1 is restarted."
+      - source: linbpq
+        path: L2Code.c
+        function: L2TIMEOUT
+        line: 3802
+        note: "L2STATE==4, RC<N2: increments L2RETRIES (line 3789) and re-sends DISC|PFBIT (line 3802). DIVERGES: no Select_T1_Value algorithm — LINK->L2TIME is fixed PORTT1"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: t1_expiry
+        line: 5496
+        note: "else branch: SET_RC(S->rc+1), build DISC cmd p=1, lm_data_request, select_t1_value(S), START_T1, 'stay in same state'. Matches figure"
+      - source: rax25
+        path: src/state.rs
+        function: "AwaitingRelease::t1"
+        line: 1321
+        note: "RC!=N2 branch (lines 1321-1324): increments rc, select_t1_value(), restarts T1, emits SendDisc { pf: true }. Matches figure"
+      - source: linux_oot
+        path: net/ax25/ax25_std_timer.c
+        function: ax25_std_t1timer_expiry
+        line: 149
+        note: "STATE_2 else branch: n2count++; ax25_send_control(AX25_DISC,POLLON,COMMAND); ax25_calculate_t1+ax25_start_t1timer at L173-174. Matches RC++, DISC(P=1), Select_T1_Value, start T1; stays in STATE_2"
 
   # ─── UA received — F decides whether peer's UA acks our DISC ─────────
 
@@ -100,6 +213,30 @@ transitions:
     notes: |
       Peer acked our DISC with UA(F=1). Confirm to upper layer, stop T1,
       drop to Disconnected. Happy path out of AwaitingRelease.
+    references:
+      - source: spec_prose
+        cite: "§6.3.4 ¶2"
+        quote: "After receiving a UA or DM response to a sent DISC command, the TNC cancels timer T1 and enters the disconnected state."
+      - source: linbpq
+        path: L2Code.c
+        function: "L2_PROCESS (case UA)"
+        line: 2129
+        note: "On UA in L2STATE==4: InformPartner(NORMALCLOSE) + hookL2SessionClosed + CLEAROUTLINK (lines 2129-2138). DIVERGES: LinBPQ does NOT check F=1 — accepts UA regardless. F-bit check at line 1977 only decides whether to cancel L2TIMER"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: ua_frame
+        line: 4931
+        note: "case state_2_awaiting_release with if(f==1): notify disconnect, STOP_T1, enter_new_state(state_0_disconnected), dl_connection_terminated. Matches figure"
+      - source: rax25
+        path: src/state.rs
+        function: "AwaitingRelease::ua"
+        line: 1303
+        note: "When p.poll (F=1) true: stops T1, debug 'DL-DISCONNECT confirm', transitions to Disconnected. Matches figure"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: ax25_std_state2_machine
+        line: 116
+        note: "case AX25_DM/AX25_UA: if (pf) ax25_disconnect(ax25,0). DIVERGES: Linux collapses DM and UA into one branch and uses pf instead of distinct F bit"
 
   - id: t05_ua_received_not_f_eq_1
     on: UA_received
@@ -111,6 +248,22 @@ transitions:
       UA without F=1 isn't a valid response to our polled DISC —
       DL-ERROR(D), keep waiting for a properly-flagged UA or DM.
 
+      NOTE: only direwolf and rax25 emit a typed DL-ERROR(D). linbpq and
+      Linux don't check the F bit at all in this state.
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: ua_frame
+        line: 4939
+        note: "else branch logs 'AX.25 Protocol Error D: UA received without F=1 when SABM or DISC was sent P=1' and 'stay in same state'. Erratum at 4928: '2006 version is missing yes/no labels on this test. DL-ERROR Indication does not mention error D.' Matches figure"
+      - source: rax25
+        path: src/state.rs
+        function: "AwaitingRelease::ua"
+        line: 1300
+        note: "F=0 branch (lines 1300-1302) returns vec![Action::DlError(DlError::D)]. Matches figure"
+      # linbpq: omit — UA accepted regardless of F at L2Code.c:2129 (no F=0 branch, no DL-ERROR)
+      # linux_oot: omit — pf==0 falls through ax25_std_in.c:117-120 silently (no DL-ERROR codes)
+
   # ─── All Other Primitives (d5: "Signal reception from upper layer") ─
 
   - id: t06_all_other_primitives_from_upper_layer
@@ -121,6 +274,15 @@ transitions:
       Catch-all for unhandled primitives drawn with d5
       "Signal reception from upper layer". No action — stay in
       AwaitingRelease.
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: data_request_good_size
+        line: 1457
+        note: "case state_0_disconnected/state_2_awaiting_release: 'Discard it.' via cdata_delete(txdata). Direwolf doesn't have a monolithic 'all other' switch but this is the clearest equivalent for DL-DATA-style primitives"
+      # linbpq: omit — no explicit upper-primitive guard for state 4
+      # rax25: omit — falls through to trait defaults at src/state.rs:926/940 logging 'TODO: unexpected X' (divergence)
+      # linux_oot: omit — SOCK_SEQPACKET sendmsg gated by TCP_ESTABLISHED at af_ax25.c:1598/1632 so I-frames can't reach STATE_2
 
   # ─── DL-UNIT-DATA request (d5: "Signal reception from Lower Layer") ─
 
@@ -132,6 +294,18 @@ transitions:
     notes: |
       Connectionless data even while waiting for release — send UI command,
       stay. Mirrors figc4.2's same column.
+    references:
+      - source: spec_prose
+        cite: "§6.3.7"
+        quote: "AX.25 uses a special frame for this operation, the Unnumbered Information (UI) frame."
+      - source: linux_oot
+        path: net/ax25/af_ax25.c
+        function: ax25_sendmsg
+        line: 1655
+        note: "SOCK_DGRAM path bypasses state machine: builds AX25_UI frame and ax25_queue_xmit at 1658. State-independent; works in any STATE_x including STATE_2"
+      # linbpq: omit — UI tx via APRS/IP/NETROM modules irrespective of L2 state
+      # direwolf: omit — src/ax25_link.c:934 comment 'dl_unit_data_request - not implemented. APRS & KISS bypass this'
+      # rax25: omit — no unit_data method in State trait or AwaitingRelease impl
 
   # ─── All Other Primitives (d5: "Signal reception from Lower Layer") ─
 
@@ -143,6 +317,23 @@ transitions:
       Catch-all for unhandled primitives drawn with d5
       "Signal reception from Lower Layer". No action — stay in
       AwaitingRelease.
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "L2_PROCESS (default case)"
+        line: 2203
+        note: "After state-4 UA/DM/FRMR handlers, switch default 'ANY OTHER - IGNORE' simply ReleaseBuffer (lines 2203-2207). Covers most 'other lower-layer primitives' in state 4"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: frmr_frame
+        line: 5016
+        note: "frmr_frame case state_2_awaiting_release: 'Ignore it. Keep current state.' lm_seize_confirm at line 2218 also no-ops for state_2. Direwolf has no monolithic 'all other' switch — spread across per-frame handlers"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: ax25_std_state2_machine
+        line: 129
+        note: "default: break; covers unhandled frame types (FRMR, XID, TEST, SREJ) in STATE_2"
+      # rax25: omit — no catch-all; iframe/rr/rnr/rej/srej/xid/test/frmr all fall through to trait defaults logging 'TODO: unexpected X' (divergence)
 
   # ─── Frame-format errors ─────────────────────────────────────────────
 
@@ -151,18 +342,40 @@ transitions:
     path:
       - { action: DL_ERROR_indication_L, kind: signal_upper }
     next: AwaitingRelease
+    notes: |
+      Figure-authoritative DL-ERROR(L) emission. None of the four pinned
+      implementations emit a typed DL-ERROR(L) — unrecognised control
+      fields are silently dropped.
+    references: []
+      # linbpq: omit — invalid CTL falls through L2_PROCESS default at L2Code.c:2203 silently
+      # direwolf: omit — unknown control fields filtered upstream by ax25_get_frame_type
+      # rax25: omit — no FRMR/error-handler override; default frmr at src/state.rs:1000 logs TODO
+      # linux_oot: omit — AX25_ILLEGAL hits default: break in ax25_std_state2_machine (L129)
 
   - id: t10_info_not_permitted_in_frame
     on: info_not_permitted_in_frame
     path:
       - { action: DL_ERROR_indication_M, kind: signal_upper }
     next: AwaitingRelease
+    notes: |
+      Figure-authoritative DL-ERROR(M) emission. No implementation
+      surfaces this error code.
+    references: []
+      # All four implementations omit — no DL-ERROR(M) emission anywhere.
 
   - id: t11_u_or_s_frame_length_error
     on: u_or_s_frame_length_error
     path:
       - { action: DL_ERROR_indication_N, kind: signal_upper }
     next: AwaitingRelease
+    notes: |
+      Figure-authoritative DL-ERROR(N) emission. No implementation
+      surfaces this error code; malformed frames are rejected earlier.
+    references: []
+      # linbpq: omit — no U/S length validation in L2Code.c for state 4
+      # direwolf: omit — ax25_frame parsing rejects malformed frames pre-dispatch
+      # rax25: omit — no handler for U/S length errors in AwaitingRelease
+      # linux_oot: omit — no STATE_2 length validation
 
   # ─── SABM/SABME/DISC: peer connect or disconnect attempts during release
   #
@@ -180,6 +393,23 @@ transitions:
     notes: |
       Peer tried to (re)connect while we're tearing down — refuse with
       Expedited DM, stay in AwaitingRelease.
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "L2LINKACTIVE (SABM branch)"
+        line: 1252
+        note: "L2LINKACTIVE state-4 branch: L2SENDDM(PORT, Buffer, ADJBUFFER) and return (lines 1252-1256). L2SENDDM copies received P-bit into DM F-bit via L2SENDRESP, matching 'F:=P'"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: sabm_e_frame
+        line: 4426
+        note: "case state_2_awaiting_release: build DM response with f=p (F:=P), lm_data_request at TQ_PRIO_0_HI (expedited), 'stay in state 2'. Matches figure. Erratum at 4428: 'Flow charts don''t list SABME for state 2. Probably just want to treat it the same as SABM here.'"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: ax25_std_state2_machine
+        line: 106
+        note: "case AX25_SABM/SABME share ax25_send_control(AX25_DM, pf, AX25_RESPONSE) — F:=P via pf passthrough. Not flagged 'expedited' but functionally identical"
+      # rax25: omit — no AwaitingRelease::sabm override; trait default at src/state.rs:1014 logs 'TODO: unexpected SABM' (divergence)
 
   - id: t13_sabme_received
     on: SABME_received
@@ -189,6 +419,20 @@ transitions:
     next: AwaitingRelease
     notes: |
       Same as t12 but for v2.2 SABME. Refuse with Expedited DM, stay.
+
+      Triangulation: direwolf author at sabm_e_frame:4428 flagged that
+      the figure doesn't list SABME for state 2 — treats same as SABM.
+      The figure here (figc4.3) does include SABME as a separate column,
+      with identical behaviour.
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: sabm_e_frame
+        line: 4426
+        note: "Same state_2 branch as t12 — sabm_e_frame parameterised by 'extended' but state_2 path ignores it. Erratum at 4428 notes SABME not in figure for state 2; direwolf treats same as SABM"
+      # linbpq: omit — SABME on existing link not specifically routed to state-4 branch (would fall through to L2_PROCESS default)
+      # rax25: omit — no AwaitingRelease::sabme override; trait default at src/state.rs:1021 logs 'TODO: unexpected SABME'
+      # linux_oot: omit — Linux shares SABM/SABME branch at ax25_std_in.c:106-109 without distinguishing; see t12
 
   - id: t14_disc_received
     on: DISC_received
@@ -200,6 +444,35 @@ transitions:
       Cross-DISC: peer also wants to disconnect. Acknowledge with
       Expedited UA, stay in AwaitingRelease until our own DISC gets
       its UA (or T1 retries out).
+
+      DIVERGENCE: §6.3.4 ¶2 prose says "After receiving a valid DISC
+      command, the TNC sends a UA response frame and enters the
+      disconnected state" — i.e. UA + go to Disconnected. The figure
+      keeps us in AwaitingRelease. linbpq and Linux follow the prose
+      (UA + disconnect); direwolf alone follows the figure (UA, stay).
+      §6.3.6.2 first sentence ("If sent and received SABM(E) or DISC
+      command frames are the same…both devices enter the indicated
+      state") also conflicts with the figure on this branch.
+    references:
+      - source: spec_prose
+        cite: "§6.3.4 ¶2"
+        quote: "After receiving a valid DISC command, the TNC sends a UA response frame and enters the disconnected state."
+      - source: linbpq
+        path: L2Code.c
+        function: "L2LINKACTIVE (DISC branch)"
+        line: 1090
+        note: "DISC on active link unconditionally: InformPartner(NORMALCLOSE), hookL2SessionClosed, CLEAROUTLINK, L2SENDUA (1090-1100). UA sent (F:=P via L2SENDUA), but tears down link — DIVERGES from figc4.3 t14 (stays); matches spec prose"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: disc_frame
+        line: 4544
+        note: "case state_2_awaiting_release: build UA response with f=p (F:=P), lm_data_request at TQ_PRIO_0_HI (expedited), 'keep current state, 2'. Matches figure"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: ax25_std_state2_machine
+        line: 111
+        note: "case AX25_DISC: ax25_send_control(AX25_UA, pf, AX25_RESPONSE); ax25_disconnect(ax25, 0). DIVERGES from figc4.3 (stays in AwaitingRelease); matches spec prose (enters Disconnected)"
+      # rax25: omit — no AwaitingRelease::disc override; trait default at src/state.rs:1055 logs 'TODO: unexpected DISC' (divergence)
 
   # ─── DM received — F decides whether peer is acking our DISC ─────────
 
@@ -214,6 +487,37 @@ transitions:
       Peer responded DM(F=1) to our polled DISC — equivalent to UA(F=1)
       for tear-down purposes. Confirm, stop T1, drop to Disconnected.
 
+      Direwolf author erratum (dm_frame:4677): "Original flow chart, page
+      91, shows DL-CONNECT confirm. It should clearly be DISconnect rather
+      than Connect. 2006 has DISCONNECT *Indication*. Should it be
+      indication or confirm? Not sure." figc4.3 here resolves it as
+      DL-DISCONNECT *confirm*; 2006 prose had *indication*. The 1998
+      figure typo (CONNECT instead of DISCONNECT) is captured separately.
+    references:
+      - source: spec_prose
+        cite: "§6.3.4 ¶2"
+        quote: "After receiving a UA or DM response to a sent DISC command, the TNC cancels timer T1 and enters the disconnected state."
+      - source: linbpq
+        path: L2Code.c
+        function: "L2_PROCESS (case DM)"
+        line: 2145
+        note: "DM in case-DM block: line 2149 handles L2STATE==2 (connect refused); otherwise falls through (2155-2166) to InformPartner(LINKLOST) + CLEAROUTLINK. DIVERGES: no F-bit check — DM tears down regardless of F"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: dm_frame
+        line: 4675
+        note: "case state_2_awaiting_release with if(f==1): DL-DISCONNECT confirm via server_link_terminated, STOP_T1, enter_new_state(state_0_disconnected). Erratum at 4677 captures spec ambiguity between CONNECT/DISCONNECT confirm vs indication"
+      - source: rax25
+        path: src/state.rs
+        function: "AwaitingRelease::dm"
+        line: 1293
+        note: "F=1 branch (lines 1293-1295): debug 'DL-DISCONNECT Confirm', stops T1, transitions to Disconnected. Matches figure"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: ax25_std_state2_machine
+        line: 116
+        note: "case AX25_DM/AX25_UA: if (pf) ax25_disconnect(ax25,0). Shared branch with UA F=1; ax25_disconnect stops timers and transitions to STATE_0"
+
   - id: t16_dm_received_not_f_eq_1
     on: DM_received
     path:
@@ -222,6 +526,23 @@ transitions:
     notes: |
       DM without F=1 isn't a response to our polled DISC — ignore, keep
       waiting.
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: dm_frame
+        line: 4691
+        note: "else branch: '// keep current state.' — no action. Matches figure"
+      - source: rax25
+        path: src/state.rs
+        function: "AwaitingRelease::dm"
+        line: 1290
+        note: "F=0 branch (lines 1290-1292) returns vec![] (silent no-op). Matches figure"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: ax25_std_state2_machine
+        line: 118
+        note: "AX25_DM with pf==0 falls through if-guard without action; remains in STATE_2"
+      # linbpq: omit — DM with F=0 in state 4 still hits CLEAROUTLINK fallthrough at L2Code.c:2159 (divergence; goes to Disconnected)
 
   # ─── UI received (P==1 diamond shared with I/S commands column) ──────
 
@@ -232,6 +553,22 @@ transitions:
       - { decision: p_eq_1, branch: "Yes" }
       - { action: "DM F = 1", kind: signal_lower }
     next: AwaitingRelease
+    notes: |
+      DIVERGENCE: §6.3.5 ¶3 explicitly EXCLUDES UI from the "respond DM"
+      rule ("Any TNC receiving a command frame other than a SABM(E) or
+      UI frame with the P bit set to '1' responds with a DM frame..."),
+      yet figc4.3 shows UI(P=1) → DM(F=1). direwolf alone follows the
+      figure on this; linbpq/linux/rax25 follow the prose (no DM reply).
+      Figure-authoritative here, but flagged as candidate spec issue.
+    references:
+      - source: direwolf
+        path: src/ax25_link.c
+        function: ui_frame
+        line: 5116
+        note: "case state_2_awaiting_release inside 'if (cr == cr_cmd && pf == 1)': sends DM response with f=pf=1, lm_data_request. Direwolf does NOT perform UI_Check (no DL-DATA indication of UI payload to upper layer) — only the DM(F=1) reply. Partial match"
+      # linbpq: omit — UI dispatched by PID at L2Code.c:1065 irrespective of state; no DM-on-P=1 (divergence)
+      # rax25: omit — no AwaitingRelease::ui override; trait default at src/state.rs:1035 returns vec![] silently (divergence)
+      # linux_oot: omit — UI bypass at ax25_in.c:229 strips P/F bit via '~0x10' mask; no DM(F=1) response (divergence)
 
   - id: t18_ui_received_not_p_eq_1
     on: UI_received
@@ -239,6 +576,14 @@ transitions:
       - { action: UI_Check, kind: subroutine }
       - { decision: p_eq_1, branch: "No" }
     next: AwaitingRelease
+    references:
+      - source: spec_prose
+        cite: "§6.3.5 ¶3"
+        quote: "The offending frame is ignored."
+      # direwolf: omit — ui_frame at 5110 gates entire switch on '(cr == cr_cmd && pf == 1)', UI with P=0 falls through silently (no UI_Check)
+      # linbpq: omit — same path as t17; UI dispatched by PID without inspecting P bit
+      # rax25: omit — no AwaitingRelease::ui override (divergence)
+      # linux_oot: omit — same UI bypass path as t17 at ax25_in.c:229
 
   # ─── I, RR, RNR, REJ or SREJ Commands (composite event) ──────────────
   #
@@ -254,9 +599,52 @@ transitions:
       - { decision: p_eq_1, branch: "Yes" }
       - { action: "DM F = 1", kind: signal_lower }
     next: AwaitingRelease
+    notes: |
+      Direwolf erratum at rr_rnr_frame:3537-3541 (duplicated in rej/srej):
+      "RR, RNR, REJ, SREJ responses would fall under all other primitives.
+      In the original, we simply ignore it and stay in state 2. The 2006
+      version, page 94, says go into 1 awaiting connection state. That
+      makes no sense to me." — 2006 vs 1998 spec divergence.
+
+      Direwolf srej_frame:4046 erratum: "Based on X.25, I don't think
+      SREJ can be a command" — suggests the figure's enumeration of SREJ
+      in the command-column is questionable.
+    references:
+      - source: spec_prose
+        cite: "§6.3.5 ¶3"
+        quote: "Any TNC receiving a command frame other than a SABM(E) or UI frame with the P bit set to '1' responds with a DM frame with the F bit set to '1'."
+      - source: direwolf
+        path: src/ax25_link.c
+        function: i_frame
+        line: 2634
+        note: "case state_2_awaiting_release: 'Logic from flow chart for I, RR, RNR, REJ, SREJ commands' — if (cr==cr_cmd && p==1) send DM response F=1. Same pattern in rr_rnr_frame:3524, rej_frame:3785, srej_frame:4039 (srej gated to no-op with erratum at 4046). Matches figure"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: ax25_std_state2_machine
+        line: 122
+        note: "case AX25_I/REJ/RNR/RR: if (pf) ax25_send_control(AX25_DM, AX25_POLLON, AX25_RESPONSE). Matches DM F=1. SREJ not in switch (folds to default)"
+      # linbpq: omit — guard at L2Code.c:2015 'if (L2STATE >= 5)' skips SDIFRM path for state 4; falls into 'ANY OTHER - IGNORE' default at 2203, no DM(F=1) (divergence)
+      # rax25: omit — no AwaitingRelease overrides for iframe/rr/rnr/rej/srej; trait defaults log TODO (divergence)
 
   - id: t20_i_or_s_command_not_p_eq_1
     on: i_or_s_command_received
     path:
       - { decision: p_eq_1, branch: "No" }
     next: AwaitingRelease
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: "L2_PROCESS (state<5 fallthrough)"
+        line: 2203
+        note: "Same path as t19: I/S frames in state 4 silently dropped via default 'ANY OTHER - IGNORE'. Matches spec (no action) but for the wrong reason — linbpq doesn't inspect P bit"
+      - source: direwolf
+        path: src/ax25_link.c
+        function: i_frame
+        line: 2638
+        note: "Implicit else of (cr==cr_cmd && p==1) test in i_frame:2638, rr_rnr_frame:3528, rej_frame:3787, srej_frame:4055: falls out with no action. Matches figure"
+      - source: linux_oot
+        path: net/ax25/ax25_std_in.c
+        function: ax25_std_state2_machine
+        line: 126
+        note: "Same case AX25_I/REJ/RNR/RR at 122-127: if(pf) guard means pf==0 falls through with no action; remains in STATE_2"
+      # rax25: omit — same as t19, trait defaults log TODO instead of silent no-op
