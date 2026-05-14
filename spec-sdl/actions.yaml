@@ -80,3 +80,69 @@ signal_upper:
   - name: DL_ERROR_indication_M
   - name: DL_ERROR_indication_N
   - name: DL_ERROR_indication_O
+
+processing:
+  # Queue-clearing verbs — three figure spellings, one semantic
+  # operation (clear ctx.IFrameQueue). All three remain canonical
+  # because they're drawn distinctly in different figures; the
+  # dispatcher's switch handles all three identically.
+  - name: discard_frame_queue
+    aliases:
+      - "Discard Frame Queue"      # figc4.6 title-case spelling
+  - name: discard_queue
+  - name: discard_I_frame_queue
+    aliases:
+      - "Discard I Frame Queue"    # figc4.6 title-case spelling
+
+  # No-op discard verbs — drop trigger frame / primitive, no context
+  # mutation. Kept distinct to preserve figure semantics.
+  - name: discard_I_frame
+  - name: discard_contents_of_I_frame
+  - name: discard_primitive
+
+  # Reject / SREJ exception bookkeeping.
+  - name: set_reject_exception
+  - name: clear_reject_exception
+  - name: increment_srej_exception
+  - name: decrement_srej_exception_if_gt_0
+
+  # Out-of-sequence I-frame storage.
+  - name: save_contents_of_I_frame
+  - name: retrieve_stored_V_r_I_frame
+
+  # Modulus selection.
+  - name: set_version_2_0
+    aliases:
+      - "Set Version 2.0"          # figc4.6 title-case spelling
+  - name: set_version_2_2
+
+signal_lower:
+  # Link-multiplexer requests. signal_lower kind because they exit the
+  # data-link state machine going downward (toward the radio).
+  - name: LM_seize_request
+  - name: LM_release_request
+  - name: LM_data_request
+
+internal_out:
+  # Push to the internal I-frame transmission queue. Three figure
+  # spellings:
+  #   - push_on_I_frame_queue (figc4.4)
+  #   - push_frame_on_queue (figc4.2; figc4.6 title-case alias below)
+  #   - push_old_I_frame_N_r_on_queue (figc4.4 retransmission flow)
+  - name: push_on_I_frame_queue
+  - name: push_frame_on_queue
+    aliases:
+      - "Push Frame Onto Queue"    # figc4.6 title-case spelling
+  - name: push_old_I_frame_N_r_on_queue
+
+  # Management data-link XID negotiation trigger.
+  - name: MDL_NEGOTIATE_request
+
+subroutine:
+  # Subroutine calls — figc4.7 territory. The dispatcher will stub
+  # these in a later PR (no-op or wired against a registry). For now
+  # they're catalogued so the alias mechanism normalises figc4.6's
+  # title-case spellings.
+  - name: Establish_Data_Link
+    aliases:
+      - "Establish Data Link"      # figc4.6 title-case spelling

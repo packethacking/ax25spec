@@ -33,7 +33,7 @@ stateDiagram-v2
     AwaitingRelease --> AwaitingRelease: t14_disc_received<br/>on: DISC_received<br/>/ · F := P<br/>/ ↓ Expedited UA
     AwaitingRelease --> Disconnected: t15_dm_received_f_eq_1<br/>on: DM_received<br/>[F_eq_1]<br/>/ ↑ DL_DISCONNECT_confirm<br/>/ · stop_T1
     AwaitingRelease --> AwaitingRelease: t16_dm_received_not_f_eq_1<br/>on: DM_received<br/>[not F_eq_1]
-    AwaitingRelease --> AwaitingRelease: t17_ui_received_p_eq_1<br/>on: UI_received<br/>[P_eq_1]<br/>/ →() UI_Check<br/>/ ↓ DM (F = 1)
+    AwaitingRelease --> AwaitingRelease: t17_ui_received_p_eq_1<br/>on: UI_received<br/>[P_eq_1]<br/>/ →() UI_Check<br/>/ ↓ DM F = 1
     AwaitingRelease --> AwaitingRelease: t18_ui_received_not_p_eq_1<br/>on: UI_received<br/>[not P_eq_1]<br/>/ →() UI_Check
-    AwaitingRelease --> AwaitingRelease: t19_i_or_s_command_p_eq_1<br/>on: i_or_s_command_received<br/>[P_eq_1]<br/>/ ↓ DM (F = 1)
+    AwaitingRelease --> AwaitingRelease: t19_i_or_s_command_p_eq_1<br/>on: i_or_s_command_received<br/>[P_eq_1]<br/>/ ↓ DM F = 1
     AwaitingRelease --> AwaitingRelease: t20_i_or_s_command_not_p_eq_1<br/>on: i_or_s_command_received<br/>[not P_eq_1]
