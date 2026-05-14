@@ -57,3 +57,26 @@ signal_lower:
   # DL_UNIT_DATA_request primitive. P/F bit consumes pending (default
   # false) — see ActionDispatcher.BuildUiFrame.
   - name: UI_command
+
+signal_upper:
+  # DL primitives raised to Layer 3 (§5.5). The dispatcher emits each as
+  # a DataLinkSignal record via the sendUpward callback. DL_DATA_indication
+  # carries the incoming I-frame's Info + PID; the others have no payload.
+  - name: DL_CONNECT_indication
+  - name: DL_CONNECT_confirm
+  - name: DL_DISCONNECT_indication
+  - name: DL_DISCONNECT_confirm
+  - name: DL_DATA_indication
+
+  # DL-ERROR-indication letter variants (§C5). Each maps to
+  # DataLinkErrorIndication("<letter>") via the suffix.
+  - name: DL_ERROR_indication_C_D
+  - name: DL_ERROR_indication_D
+  - name: DL_ERROR_indication_E
+  - name: DL_ERROR_indication_F
+  - name: DL_ERROR_indication_G
+  - name: DL_ERROR_indication_K
+  - name: DL_ERROR_indication_L
+  - name: DL_ERROR_indication_M
+  - name: DL_ERROR_indication_N
+  - name: DL_ERROR_indication_O
