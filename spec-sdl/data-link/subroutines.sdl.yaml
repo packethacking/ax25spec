@@ -195,26 +195,21 @@ subroutines:
       queue. Spec-canonical loop: backtrack V(s) to N(r), push,
       increment, repeat until back at X (the original V(s)).
     decisions:
-      - id: v_s_eq_x
-        question: "V(s) == X?"
-        predicate: v_s_eq_x
+      - id: v_s_neq_x
+        question: "V(s) != X?"
+        predicate: "not v_s_eq_x"
     paths:
       - id: t01_retransmit_loop
         path:
           - { action: "Backtrack",                       kind: processing }
           - { action: "X <- V(s)",                       kind: processing }
           - { action: "V(s) <- N(r)",                    kind: processing }
-          - loop_while: v_s_eq_x_inverted
+          - loop_while: v_s_neq_x
             body:
               - { action: "Push Old I Frame onto Queue", kind: internal_out }
               - { action: "V(s) <- V(s) + 1",            kind: processing }
         notes: |
-          The figure draws this as a diamond loop `Push... → V(s) := V(s)+1 → V(s) == X? → if No, back to Push`. Modelled as
-          `loop_while v_s_eq_x_inverted` (the predicate negated)
-          because our loop_while construct iterates while the
-          predicate is TRUE. A future codegen extension could
-          accept a `negate: true` modifier so the YAML can use the
-          figure's literal predicate; for now we encode the inverse.
+          The figure draws this as a diamond loop `Push... → V(s) := V(s)+1 → V(s) == X? → if No, back to Push`. Our `loop_while` construct iterates while its predicate is TRUE, so we encode the inverse `v_s_neq_x` (predicate `not v_s_eq_x`). A future codegen extension could accept a `negate: true` modifier so the YAML can reuse the figure's literal predicate; for now we encode the inverse.
 
   # ─── Check I Frame Acknowledged ───────────────────────────────────
   - name: Check_I_Frame_Acknowledged
