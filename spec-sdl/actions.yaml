@@ -116,6 +116,13 @@ processing:
       - "Set Version 2.0"          # figc4.6 title-case spelling
   - name: set_version_2_2
 
+  # Link-parameter assignments — Smoothed Round-Trip Time per §6.7.1.2
+  # and T1 timeout value per §6.7.1.3. Initialised at link-establishment
+  # time; refreshed by figc4.7's Select_T1_Value subroutine after each
+  # round-trip.
+  - name: "SRT := Initial Default"
+  - name: "T1V := 2 * SRT"
+
 signal_lower:
   # Link-multiplexer requests. signal_lower kind because they exit the
   # data-link state machine going downward (toward the radio).
