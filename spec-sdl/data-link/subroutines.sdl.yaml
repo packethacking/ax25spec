@@ -1,0 +1,488 @@
+# SPDX-License-Identifier: MIT
+#
+# Transcription of figc4.7 (Data Link State Machine Subroutines) per
+# the redrawn `DataLink_Subroutines.graphml`. Source-of-truth ordering
+# preserved: each path lists actions / decision steps in the exact
+# order they appear walking the corresponding column of the figure.
+#
+# Schema: spec-sdl/schema/sdl-subroutines.schema.json.
+# Codegen integration is a follow-up PR; this file is data only.
+
+machine: data_link
+source:
+  spec: "AX.25 v2.2 rev 4"
+  figure: "C4.7"
+  url: "https://github.com/packethacking/ax25spec/blob/main/doc/ax.25.2.2.4_Oct_25.md"
+
+# ─── Subroutines ────────────────────────────────────────────────────
+
+subroutines:
+
+  # ─── N(r) Error Recovery ──────────────────────────────────────────
+  - name: N_r_Error_Recovery
+    notes: |
+      Three-step recovery when an inbound frame's N(r) is invalid.
+      Signals DL-ERROR (J), calls Establish_Data_Link to restart the
+      link, then clears the Layer-3-initiated flag.
+    paths:
+      - id: t01_recover
+        path:
+          - { action: "DL-ERROR Indication (J)", kind: signal_upper }
+          - { action: "Establish Data Link",     kind: subroutine }
+          - { action: "Clear Layer 3 Initiated", kind: processing }
+
+  # ─── Clear Exception Conditions ───────────────────────────────────
+  - name: Clear_Exception_Conditions
+    notes: |
+      Six-action reset of all exception bookkeeping. Drawn as a single
+      multi-line processing box in the figure; transcribed as one
+      action per line per the runbook's multi-line-box rule.
+    paths:
+      - id: t01_clear_all
+        path:
+          - { action: "Clear Peer Receiver Busy",   kind: processing }
+          - { action: "Clear Own Receiver Busy",    kind: processing }
+          - { action: "Clear Reject Condition",     kind: processing }
+          - { action: "Clear Sreject Condition",    kind: processing }
+          - { action: "Clear Acknowledge Pending",  kind: processing }
+          - { action: "Discard I Queue Entries",    kind: processing }
+
+  # ─── Transmit Enquiry ─────────────────────────────────────────────
+  - name: Transmit_Enquiry
+    notes: |
+      Polls the peer with RR-cmd or RNR-cmd (P=1) depending on whether
+      we ourselves are in busy state.
+    decisions:
+      - id: own_receiver_busy
+        question: "Own receiver busy?"
+        predicate: own_receiver_busy
+    paths:
+      - id: t01_not_busy_sends_rr
+        path:
+          - { action: "P <- 1",                     kind: processing }
+          - { action: "N(r) <- V(r)",               kind: processing }
+          - { decision: own_receiver_busy, branch: "No" }
+          - { action: "RR Command",                 kind: signal_lower }
+          - { action: "Clear Acknowledge Pending",  kind: processing }
+          - { action: "Start T1",                   kind: processing }
+      - id: t02_busy_sends_rnr
+        path:
+          - { action: "P <- 1",                     kind: processing }
+          - { action: "N(r) <- V(r)",               kind: processing }
+          - { decision: own_receiver_busy, branch: "Yes" }
+          - { action: "RNR Command",                kind: signal_lower }
+          - { action: "Clear Acknowledge Pending",  kind: processing }
+          - { action: "Start T1",                   kind: processing }
+
+  # ─── Enquiry Response ─────────────────────────────────────────────
+  - name: Enquiry_Response
+    notes: |
+      Polled-response handler. Five chained decisions; multiple paths
+      converge on a shared "Clear Acknowledge Pending" then return.
+
+      figure-ambiguity (verification_pending below): the
+      `SREJ Enabled? = No` branch has NO outgoing edge in the
+      graphml. Logically the "No" path should join the RR-Response
+      arm, but the figure as drawn omits it. Transcribed as-is;
+      the runtime would need to either reject the path or apply a
+      heuristic default — see the verification_pending entry.
+    decisions:
+      - id: poll_supervisory_or_i
+        question: "F == 1 & (Frame==RR || Frame==RNR || Frame==I)?"
+        predicate: f_eq_1_and_supervisory_or_i
+      - id: own_receiver_busy
+        question: "Own Receiver Busy?"
+        predicate: own_receiver_busy
+      - id: srej_enabled
+        question: "SREJ Enabled?"
+        predicate: srej_enabled
+      - id: mod_8
+        question: "Mod 8?"
+        predicate: mod_8
+      - id: out_of_sequence_frames
+        question: "Out of Sequence Frames in Receive Buffer?"
+        predicate: out_of_sequence_frames_in_receive_buffer
+    paths:
+      - id: t01_not_polled_rr_response
+        notes: |
+          F==1-supervisory-or-I check fails; just send RR Response.
+        path:
+          - { action: "N(r) <- V(r)",              kind: processing }
+          - { decision: poll_supervisory_or_i, branch: "No" }
+          - { action: "RR Response",               kind: signal_lower }
+          - { action: "Clear Acknowledge Pending", kind: processing }
+      - id: t02_polled_busy_rnr
+        notes: |
+          Polled and we're busy: respond with RNR.
+        path:
+          - { action: "N(r) <- V(r)",              kind: processing }
+          - { decision: poll_supervisory_or_i, branch: "Yes" }
+          - { decision: own_receiver_busy,     branch: "Yes" }
+          - { action: "RNR Response",              kind: signal_lower }
+          - { action: "Clear Acknowledge Pending", kind: processing }
+      - id: t03_polled_srej_mod8_dl_error_then_buf_yes
+        notes: |
+          Polled, not busy, SREJ enabled, Mod 8 (so DL-ERROR add),
+          and we have stored out-of-sequence frames → emit SREJ
+          before the RR Response.
+        path:
+          - { action: "N(r) <- V(r)",                  kind: processing }
+          - { decision: poll_supervisory_or_i, branch: "Yes" }
+          - { decision: own_receiver_busy,     branch: "No"  }
+          - { decision: srej_enabled,          branch: "Yes" }
+          - { decision: mod_8,                 branch: "Yes" }
+          - { action: "DL-ERROR Indication (add)",     kind: signal_upper }
+          - { decision: out_of_sequence_frames, branch: "Yes" }
+          - { action: "SREJ",                          kind: signal_lower }
+          - { action: "RR Response",                   kind: signal_lower }
+          - { action: "Clear Acknowledge Pending",     kind: processing }
+      - id: t04_polled_srej_mod8_dl_error_then_buf_no
+        notes: |
+          Same as t03 but no stored out-of-sequence frames → straight
+          to RR Response after DL-ERROR.
+        path:
+          - { action: "N(r) <- V(r)",                  kind: processing }
+          - { decision: poll_supervisory_or_i, branch: "Yes" }
+          - { decision: own_receiver_busy,     branch: "No"  }
+          - { decision: srej_enabled,          branch: "Yes" }
+          - { decision: mod_8,                 branch: "Yes" }
+          - { action: "DL-ERROR Indication (add)",     kind: signal_upper }
+          - { decision: out_of_sequence_frames, branch: "No"  }
+          - { action: "RR Response",                   kind: signal_lower }
+          - { action: "Clear Acknowledge Pending",     kind: processing }
+      - id: t05_polled_srej_mod128_buf_yes
+        notes: |
+          Polled, not busy, SREJ enabled, Mod 128 (no DL-ERROR), and
+          stored frames present → SREJ then RR Response.
+        path:
+          - { action: "N(r) <- V(r)",                  kind: processing }
+          - { decision: poll_supervisory_or_i, branch: "Yes" }
+          - { decision: own_receiver_busy,     branch: "No"  }
+          - { decision: srej_enabled,          branch: "Yes" }
+          - { decision: mod_8,                 branch: "No"  }
+          - { decision: out_of_sequence_frames, branch: "Yes" }
+          - { action: "SREJ",                          kind: signal_lower }
+          - { action: "RR Response",                   kind: signal_lower }
+          - { action: "Clear Acknowledge Pending",     kind: processing }
+      - id: t06_polled_srej_mod128_buf_no
+        notes: |
+          Polled, not busy, SREJ enabled, Mod 128, no stored frames →
+          straight to RR Response.
+        path:
+          - { action: "N(r) <- V(r)",                  kind: processing }
+          - { decision: poll_supervisory_or_i, branch: "Yes" }
+          - { decision: own_receiver_busy,     branch: "No"  }
+          - { decision: srej_enabled,          branch: "Yes" }
+          - { decision: mod_8,                 branch: "No"  }
+          - { decision: out_of_sequence_frames, branch: "No"  }
+          - { action: "RR Response",                   kind: signal_lower }
+          - { action: "Clear Acknowledge Pending",     kind: processing }
+        references:
+          - source: verification_pending
+            note: |
+              The `SREJ Enabled? = No` branch is MISSING from the
+              redrawn figure — n22 in the graphml has only a Yes
+              outgoing edge. Logically when SREJ isn't enabled the
+              subroutine should send RR Response and return, but the
+              figure as drawn doesn't specify. Flagging for Tom: is
+              the missing edge an oversight in the redraw, or did
+              the original figc4.7 also omit it? If the latter,
+              we'll need a `spec_quirk` reference recording how each
+              of the four canonical implementations handles
+              SREJ-disabled enquiry responses.
+
+  # ─── Invoke Retransmission ────────────────────────────────────────
+  - name: Invoke_Retransmission
+    notes: |
+      Push every I-frame from N(r) up to V(s) back onto the send
+      queue. Spec-canonical loop: backtrack V(s) to N(r), push,
+      increment, repeat until back at X (the original V(s)).
+    decisions:
+      - id: v_s_eq_x
+        question: "V(s) == X?"
+        predicate: v_s_eq_x
+    paths:
+      - id: t01_retransmit_loop
+        path:
+          - { action: "Backtrack",                       kind: processing }
+          - { action: "X <- V(s)",                       kind: processing }
+          - { action: "V(s) <- N(r)",                    kind: processing }
+          - loop_while: v_s_eq_x_inverted
+            body:
+              - { action: "Push Old I Frame onto Queue", kind: internal_out }
+              - { action: "V(s) <- V(s) + 1",            kind: processing }
+        notes: |
+          The figure draws this as a diamond loop `Push... → V(s) := V(s)+1 → V(s) == X? → if No, back to Push`. Modelled as
+          `loop_while v_s_eq_x_inverted` (the predicate negated)
+          because our loop_while construct iterates while the
+          predicate is TRUE. A future codegen extension could
+          accept a `negate: true` modifier so the YAML can use the
+          figure's literal predicate; for now we encode the inverse.
+
+  # ─── Check I Frame Acknowledged ───────────────────────────────────
+  - name: Check_I_Frame_Acknowledged
+    notes: |
+      Process an incoming N(r) and update V(a) / T1 / T3 state
+      accordingly. Four chained decisions, multiple join paths.
+    decisions:
+      - id: peer_receiver_busy
+        question: "Peer Receiver Busy?"
+        predicate: peer_receiver_busy
+      - id: n_r_eq_v_s
+        question: "N(r) == V(s)?"
+        predicate: n_r_eq_v_s
+      - id: t1_running
+        question: "T1 Running?"
+        predicate: t1_running
+      - id: n_r_eq_v_a
+        question: "N(r) == V(a)?"
+        predicate: n_r_eq_v_a
+    paths:
+      - id: t01_peer_busy_t1_running
+        path:
+          - { decision: peer_receiver_busy, branch: "Yes" }
+          - { action: "V(a) <- N(r)",      kind: processing }
+          - { action: "Stop T3",           kind: processing }
+          - { decision: t1_running, branch: "Yes" }
+      - id: t02_peer_busy_t1_stopped
+        path:
+          - { decision: peer_receiver_busy, branch: "Yes" }
+          - { action: "V(a) <- N(r)",      kind: processing }
+          - { action: "Stop T3",           kind: processing }
+          - { decision: t1_running, branch: "No" }
+          - { action: "Start T1",          kind: processing }
+      - id: t03_caught_up_select_t1
+        notes: |
+          Peer not busy, N(r) == V(s): we're fully caught up. Update
+          V(a), stop T1, start T3, then run Select_T1_Value to
+          recompute the next T1.
+        path:
+          - { decision: peer_receiver_busy, branch: "No" }
+          - { decision: n_r_eq_v_s,    branch: "Yes" }
+          - { action: "V(a) <- N(r)",       kind: processing }
+          - { action: "Stop T1",            kind: processing }
+          - { action: "Start T3",           kind: processing }
+          - { action: "Select T1 Value",    kind: subroutine }
+      - id: t04_partial_ack_n_r_eq_v_a
+        notes: |
+          Peer not busy, N(r) != V(s) but N(r) == V(a): no progress;
+          drop straight to the join (no action).
+        path:
+          - { decision: peer_receiver_busy, branch: "No" }
+          - { decision: n_r_eq_v_s,    branch: "No" }
+          - { decision: n_r_eq_v_a,    branch: "Yes" }
+      - id: t05_partial_ack_progress
+        notes: |
+          Peer not busy, partial ack with progress: advance V(a) and
+          restart T1.
+        path:
+          - { decision: peer_receiver_busy, branch: "No" }
+          - { decision: n_r_eq_v_s,    branch: "No" }
+          - { decision: n_r_eq_v_a,    branch: "No" }
+          - { action: "V(a) <- N(r)",       kind: processing }
+          - { action: "Start T1",           kind: processing }
+
+  # ─── Establish Data Link / Establish Extended Data Link ───────────
+  #
+  # The redrawn figure shares one body between these two subroutine
+  # starts (n46 and n47 both flow into n48). The body decides between
+  # SABM and SABME via the `Mod 128?` test. We transcribe as two
+  # subroutines with the same path content — caller chooses by name.
+  #
+  # figure-ambiguity (verification_pending below): the `Mod 128?` Yes
+  # branch in the graphml is unlabeled (only the No → SABM edge is
+  # labeled). The other outgoing edge is therefore "Yes" by
+  # elimination, going to SABME. Flagged below.
+  - name: Establish_Data_Link
+    notes: |
+      Clear exception bookkeeping, set the retry counter and P flag,
+      send SABM or SABME depending on Mod 128 state, then start T1.
+    decisions:
+      - id: mod_128
+        question: "Mod 128?"
+        predicate: mod_128
+    paths:
+      - id: t01_mod_8_sabm
+        path:
+          - { action: "Clear Exception Conditions", kind: processing }
+          - { action: "RC <- 1",                    kind: processing }
+          - { action: "P <- 1",                     kind: processing }
+          - { decision: mod_128, branch: "No" }
+          - { action: "SABM",                       kind: signal_lower }
+          - { action: "Stop T3",                    kind: processing }
+          - { action: "Start T1",                   kind: processing }
+      - id: t02_mod_128_sabme
+        path:
+          - { action: "Clear Exception Conditions", kind: processing }
+          - { action: "RC <- 1",                    kind: processing }
+          - { action: "P <- 1",                     kind: processing }
+          - { decision: mod_128, branch: "Yes" }
+          - { action: "SABME",                      kind: signal_lower }
+          - { action: "Stop T3",                    kind: processing }
+          - { action: "Start T1",                   kind: processing }
+        references:
+          - source: verification_pending
+            note: |
+              Mod 128? Yes branch in the graphml has an unlabeled
+              outgoing edge (only No → SABM is labeled). Transcribed
+              as Yes → SABME by elimination, consistent with the
+              spec prose §4.3.3.2. Flag for Tom: is the missing label
+              an oversight, or does the redraw intend something else?
+
+  - name: Establish_Extended_Data_Link
+    notes: |
+      Shares its body with Establish_Data_Link (both subroutine-start
+      nodes in the graphml flow into the same shared body at n48).
+      Functionally identical — the body's `Mod 128?` test picks
+      SABM vs SABME so the caller's choice of name is informational.
+      Tracked separately because state-machine pages (figc4.2 vs
+      figc4.4) reference them by distinct names.
+    decisions:
+      - id: mod_128
+        question: "Mod 128?"
+        predicate: mod_128
+    paths:
+      - id: t01_mod_8_sabm
+        path:
+          - { action: "Clear Exception Conditions", kind: processing }
+          - { action: "RC <- 1",                    kind: processing }
+          - { action: "P <- 1",                     kind: processing }
+          - { decision: mod_128, branch: "No" }
+          - { action: "SABM",                       kind: signal_lower }
+          - { action: "Stop T3",                    kind: processing }
+          - { action: "Start T1",                   kind: processing }
+      - id: t02_mod_128_sabme
+        path:
+          - { action: "Clear Exception Conditions", kind: processing }
+          - { action: "RC <- 1",                    kind: processing }
+          - { action: "P <- 1",                     kind: processing }
+          - { decision: mod_128, branch: "Yes" }
+          - { action: "SABME",                      kind: signal_lower }
+          - { action: "Stop T3",                    kind: processing }
+          - { action: "Start T1",                   kind: processing }
+
+  # ─── Check Need for Response ──────────────────────────────────────
+  - name: Check_Need_For_Response
+    notes: |
+      Looks at incoming command/response role + P/F bit and either
+      sends Enquiry_Response(F=1) (when it was a poll), surfaces a
+      DL-ERROR (A) (response with F=1 when not expected), or returns
+      silently.
+    decisions:
+      - id: command_and_p_eq_1
+        question: "Command & P == 1?"
+        predicate: command_and_p_eq_1
+      - id: response_and_f_eq_1
+        question: "Response & F == 1?"
+        predicate: response_and_f_eq_1
+    paths:
+      - id: t01_command_poll_enquiry_response
+        path:
+          - { decision: command_and_p_eq_1, branch: "Yes" }
+          - { action: "Enquiry Response (F = 1)", kind: subroutine }
+      - id: t02_response_f_unexpected_dl_error
+        path:
+          - { decision: command_and_p_eq_1, branch: "No"  }
+          - { decision: response_and_f_eq_1, branch: "Yes" }
+          - { action: "DL-ERROR Indication (A)", kind: signal_upper }
+      - id: t03_neither_silent_return
+        path:
+          - { decision: command_and_p_eq_1, branch: "No"  }
+          - { decision: response_and_f_eq_1, branch: "No" }
+
+  # ─── UI Check ─────────────────────────────────────────────────────
+  - name: UI_Check
+    notes: |
+      Validates a received UI frame. Rejects if it's a response (Q
+      error), accepts if info length ≤ N1 and the content is
+      octet-aligned (DL-UNIT-DATA indication), or surfaces a K error.
+    decisions:
+      - id: ui_command
+        question: "Command?"
+        predicate: incoming_is_command
+      - id: ui_info_valid
+        question: "Info Field Length <= N1 & Content is Octet Aligned?"
+        predicate: ui_info_field_valid
+    paths:
+      - id: t01_response_dl_error_q
+        path:
+          - { decision: ui_command, branch: "No" }
+          - { action: "DL-ERROR Indication (Q)", kind: signal_upper }
+      - id: t02_command_valid_unit_data
+        path:
+          - { decision: ui_command,    branch: "Yes" }
+          - { decision: ui_info_valid, branch: "Yes" }
+          - { action: "DL-UNIT-DATA Indication", kind: signal_upper }
+      - id: t03_command_invalid_dl_error_k
+        path:
+          - { decision: ui_command,    branch: "Yes" }
+          - { decision: ui_info_valid, branch: "No"  }
+          - { action: "DL-ERROR Indication (K)", kind: signal_upper }
+
+  # ─── Select T1 ────────────────────────────────────────────────────
+  - name: Select_T1_Value
+    notes: |
+      Recompute SRT (smoothed round-trip estimate) and the next T1
+      timeout. On a fresh-ack path (RC==0) the spec's IIR-style
+      formula runs; on a retry path (RC > 0, T1 expired) we just
+      bump T1V to next-attempt. Otherwise return without change.
+
+      Canonical name `Select_T1_Value` (the figure's start label is
+      just "Select T1" but the existing registry / state pages use
+      the longer form).
+    decisions:
+      - id: rc_eq_0
+        question: "RC == 0?"
+        predicate: rc_eq_0
+      - id: t1_expired
+        question: "T1 Expired?"
+        predicate: t1_expired
+    paths:
+      - id: t01_fresh_ack_iir
+        path:
+          - { decision: rc_eq_0, branch: "Yes" }
+          - { action: "SRT <- 7(SRT)/8 + (T1)/8 - (Remaining Time on T1 When Last Stopped)/8", kind: processing }
+          - { action: "Next T1 <- 2 * SRT", kind: processing }
+      - id: t02_retry_t1_expired
+        path:
+          - { decision: rc_eq_0,     branch: "No"  }
+          - { decision: t1_expired,  branch: "Yes" }
+          - { action: "Next T1 <- (RC*0.25)+SRT*2", kind: processing }
+      - id: t03_no_change
+        path:
+          - { decision: rc_eq_0,     branch: "No" }
+          - { decision: t1_expired,  branch: "No" }
+
+  # ─── Set Version 2.0 ──────────────────────────────────────────────
+  - name: Set_Version_2_0
+    notes: |
+      Configure all v2.0-specific parameters. Single multi-line
+      processing box in the figure; transcribed as one action per
+      line.
+    paths:
+      - id: t01_v2_0_defaults
+        path:
+          - { action: "Set Half Duplex",     kind: processing }
+          - { action: "Set Implicit Reject", kind: processing }
+          - { action: "Modulo <- 8",         kind: processing }
+          - { action: "N1 <- 2048",          kind: processing }
+          - { action: "k <- 8",              kind: processing }
+          - { action: "T2 <- 3000",          kind: processing }
+          - { action: "N2 <- 10",            kind: processing }
+
+  # ─── Set Version 2.2 ──────────────────────────────────────────────
+  - name: Set_Version_2_2
+    notes: |
+      Configure all v2.2-specific parameters. Differs from v2.0 in
+      Selective Reject (vs Implicit Reject), Modulo 128 (vs 8) and
+      k = 32 (vs 8).
+    paths:
+      - id: t01_v2_2_defaults
+        path:
+          - { action: "Set Half Duplex",      kind: processing }
+          - { action: "Set Selective Reject", kind: processing }
+          - { action: "Modulo <- 128",        kind: processing }
+          - { action: "N1 <- 2048",           kind: processing }
+          - { action: "k <- 32",              kind: processing }
+          - { action: "T2 <- 3000",           kind: processing }
+          - { action: "N2 <- 10",             kind: processing }
