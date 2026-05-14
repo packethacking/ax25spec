@@ -65,6 +65,25 @@
             "items": { "type": "string" },
             "description": "Documentation-only list of context variables the subroutine reads / writes."
           },
+          "references": {
+            "type": "array",
+            "description": "Subroutine-level cross-references — typically per-implementation citations of where this subroutine's logic lives in each of the canonical reference codebases. Same shape as a transition's references.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "source":   { "type": "string" },
+                "cite":     { "type": "string" },
+                "quote":    { "type": "string" },
+                "path":     { "type": "string" },
+                "function": { "type": "string" },
+                "line":     { "type": "integer", "minimum": 1 },
+                "note":     { "type": "string" },
+                "omit":     { "type": "boolean" },
+                "reason":   { "type": "string" }
+              }
+            }
+          },
           "decisions": {
             "type": "array",
             "description": "Catalogue of decision diamonds in this subroutine. Same shape as on state-machine pages.",

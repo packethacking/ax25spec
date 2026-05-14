@@ -14,6 +14,24 @@ source:
   figure: "C4.7"
   url: "https://github.com/packethacking/ax25spec/blob/main/doc/ax.25.2.2.4_Oct_25.md"
 
+# Per-source pins for the four canonical implementations whose code
+# we cite in each subroutine's `references:` block below. Each pin
+# fixes the citation's line numbers to a specific commit so they
+# stay valid when the upstream repos refactor.
+pinned_refs:
+  linbpq:
+    repo: "https://github.com/g8bpq/linbpq"
+    commit: "88a68988b446187cc5f7a2dfdbe33d1cc3ebd46f"
+  direwolf:
+    repo: "https://github.com/wb2osz/direwolf"
+    commit: "a231971a652bfb574a4bae9a5d875fbce53d2267"
+  rax25:
+    repo: "https://github.com/ThomasHabets/rax25"
+    commit: "d97b7ab725620497d5444e7393969b8d6f9ae58d"
+  linux_oot:
+    repo: "https://github.com/jeanthom/ax25"   # the rotted out-of-tree mod
+    commit: "40188e901024be90f50fc37ba1ba3a84678dfe12"
+
 # ─── Subroutines ────────────────────────────────────────────────────
 
 subroutines:
@@ -24,6 +42,27 @@ subroutines:
       Three-step recovery when an inbound frame's N(r) is invalid.
       Signals DL-ERROR (J), calls Establish_Data_Link to restart the
       link, then clears the Layer-3-initiated flag.
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: SDNRCHK
+        line: 2936
+        note: "Sets SDREJF |= SDNRER on bad N(r); callers (SDIFRM line 2530, SFRAME line 2277) then call SDFRMR which sends FRMR and parks in state 3. No separate Z-error recovery path — linbpq inlines the diagnosis and uses FRMR rather than DL-ERROR(J)+Establish_Data_Link."
+      - source: direwolf
+        path: src/ax25_link.c
+        function: nr_error_recovery
+        line: 5730
+        note: "Direct SDL transliteration; logs Error J then calls establish_data_link and clears layer_3_initiated. Matches figc4.7 exactly."
+      - source: rax25
+        path: src/state.rs
+        function: "Data::nr_error_recovery"
+        line: 592
+        note: "Matches spec; clears layer3_initiated, returns DL-ERROR(J) and Establish_Data_Link action."
+      - source: linux_oot
+        path: net/ax25/ax25_std_subr.c
+        function: ax25_std_nr_error_recovery
+        line: 30
+        note: "Trivially delegates to ax25_std_establish_data_link; does NOT signal DL-ERROR(J) and does not save peer_busy. Materially incomplete vs the spec (note: linux_oot is known-rotted per project memory)."
     paths:
       - id: t01_recover
         path:
@@ -37,6 +76,24 @@ subroutines:
       Six-action reset of all exception bookkeeping. Drawn as a single
       multi-line processing box in the figure; transcribed as one
       action per line per the runbook's multi-line-box rule.
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: RESET2
+        line: 3059
+        note: "RESET2 wraps CLEARL2QUEUES (drops all queued I/RX/TX_Q buffers, line 3032) and RESET2X (clears reject flags, window pointers, N(r)/N(s), L2FLAGS, line 3019). Conflates 'clear exception conditions' with 'reset state to 5'."
+      - source: direwolf
+        path: src/ax25_link.c
+        function: clear_exception_conditions
+        line: 5788
+        note: "Clears peer/own receiver busy, reject_exception, acknowledge_pending and discards rxdata_by_ns; no explicit srej-exception field. Comment notes the I-queue is intentionally retained (divergence from spec wording 'discard I queue')."
+      - source: rax25
+        path: src/state.rs
+        function: "Data::clear_exception_conditions"
+        line: 792
+        note: "Clears peer_receiver_busy, reject_exception, own_receiver_busy, acknowledge_pending, sreject_exception, AND iframe_queue (queue-clear is a 2017 spec addition; rax25 author flags it as surprising in inline comment)."
+      - source: linux_oot
+        note: "omitted: no standalone routine; inlined as `ax25->condition = 0x00;` at ax25_std_subr.c:37 inside establish_data_link. Not a separable citation."
     paths:
       - id: t01_clear_all
         path:
@@ -52,6 +109,27 @@ subroutines:
     notes: |
       Polls the peer with RR-cmd or RNR-cmd (P=1) depending on whether
       we ourselves are in busy state.
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: SendSupervisCmd
+        line: 3600
+        note: "Builds RR or RNR command with P=1 (CTL |= PFBIT), N(r):=LINKNR, sets POLLSENT, calls L2SENDCOMMAND, clears L2ACKREQ. Choice of RR vs RNR is delegated to RR_OR_RNR() (line 4143) which inspects upstream session busy and buffer pool, not a discrete own_receiver_busy bit. No T1 start here — L2TIMEOUT manages L2TIMER."
+      - source: direwolf
+        path: src/ax25_link.c
+        function: transmit_enquiry
+        line: 5858
+        note: "Sends RNR-cmd if own_receiver_busy else RR-cmd, P=1, N(R)=V(R); clears acknowledge_pending; starts T1. Faithful to figc4.7."
+      - source: rax25
+        path: src/state.rs
+        function: "Data::transmit_enquiry"
+        line: 716
+        note: "Clears acknowledge_pending, starts T1 (uses t1v), sends RNR-cmd if own_receiver_busy else RR-cmd, both with P=1. Returns a single Action since exactly one frame is emitted."
+      - source: linux_oot
+        path: net/ax25/ax25_std_subr.c
+        function: ax25_std_transmit_enquiry
+        line: 52
+        note: "Sends RR/RNR command with P=1, clears ACK-pending, restarts T1. Uses backoff-based ax25_calculate_t1 rather than spec Select_T1_Value."
     decisions:
       - id: own_receiver_busy
         question: "Own receiver busy?"
@@ -76,6 +154,27 @@ subroutines:
 
   # ─── Enquiry Response ─────────────────────────────────────────────
   - name: Enquiry_Response
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: SEND_RR_RESP
+        line: 3635
+        note: "Builds RR/RNR/SREJ/REJ response via RR_OR_RNR(LINK, FALSE), N(r):=LINKNR, applies caller-supplied PF bit, sends response, then calls ACKMSG. SREJ-vs-REJ-vs-RR selection is inside RR_OR_RNR (line 4143): SREJ only emitted if Ver2point2 set."
+      - source: direwolf
+        path: src/ax25_link.c
+        function: enquiry_response
+        line: 5924
+        note: "Heavily extended beyond figc4.7. Sends RR/RNR/SREJ as response (cr_res), not command — author flags this as spec erratum at line 5918. SREJ branch is direwolf's own addition derived from X.25 2.4.6.11 (line 5936 'Detour 1'); the unaltered spec body is preserved in the #else arm at line 6039."
+      - source: rax25
+        path: src/state.rs
+        function: "Data::enquiry_response"
+        line: 640
+        note: "Simplified — does NOT implement the SREJ branches (srej_enabled / SREJ list emission). Only handles own_busy -> RNR-resp else RR-resp. Author flags as TODO at lines 642-646."
+      - source: linux_oot
+        path: net/ax25/ax25_std_subr.c
+        function: ax25_std_enquiry_response
+        line: 65
+        note: "Sends RR/RNR response with F=1, clears ACK-pending. Matches figc4.7 modulo the spec's REJ-on-rej-condition branch which linux_oot omits here (ax25_ds_enquiry_response in DAMA path handles REJ; std path does not)."
     notes: |
       Polled-response handler. Five chained decisions; multiple paths
       converge on a shared "RR Response" + "Clear Acknowledge Pending"
@@ -190,6 +289,24 @@ subroutines:
 
   # ─── Invoke Retransmission ────────────────────────────────────────
   - name: Invoke_Retransmission
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: RESETNS
+        line: 2976
+        note: "Resets LINKNS to acked N(r) and bumps framesResent stat. The actual re-pushing of I-frames onto the port queue happens later in SDETX (line 3131) which scans FRAMES[] from LINKOWS forward whenever Outstanding < window. linbpq splits the spec's loop across RESETNS (back-up V(s)) and SDETX (queue old I-frames)."
+      - source: direwolf
+        path: src/ax25_link.c
+        function: invoke_retransmission
+        line: 6075
+        note: "Uses local_vs rather than mutating V(S) (deliberate divergence from spec's 'X:=V(s); V(s):=N(r); ... V(s):=X' idiom — comment at line 6078 explains the safer rewrite). Loops local_vs from nr_input until V(s), resending each I frame."
+      - source: rax25
+        path: src/state.rs
+        function: "Data::invoke_retransmission"
+        line: 674
+        note: "Significant divergence — does NOT implement the V(s) backtrack loop. Simply resends the entire iframe_resend_queue. Parameter nr is unused (prefixed _). Author flags concern at lines 669-670."
+      - source: linux_oot
+        note: "omitted: no equivalent. linux_oot uses ax25_requeue_frames + ax25_kick (ax25_subr.c:62, ax25_out.c:251) which together approximate retransmission, but they neither take an N(r) argument nor walk V(s) backwards to N(r) as figc4.7 prescribes."
     notes: |
       Push every I-frame from N(r) up to V(s) back onto the send
       queue. Spec-canonical loop: backtrack V(s) to N(r), push,
@@ -213,6 +330,27 @@ subroutines:
 
   # ─── Check I Frame Acknowledged ───────────────────────────────────
   - name: Check_I_Frame_Acknowledged
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: ACKMSG
+        line: 3651
+        note: "Walks LINKOWS up to new LINKWS releasing acked FRAMES[] buffers, then restarts L2TIMER if any unacked remain (with IFrameRetryCounter > N2 short-circuit that forces DISC, line 3690), else stops timer. No peer_receiver_busy branch. Combined with SDNRCHK (line 2936) which advances LINKWS via 'GoodNR:' before calling ACKMSG."
+      - source: direwolf
+        path: src/ax25_link.c
+        function: check_i_frame_ackd
+        line: 6164
+        note: "Three-branch implementation matching figc4.7. peer_receiver_busy branch starts T3 and starts T1 if not running (author flags as suspect at line 6169). nr==V(s) branch stops T1, starts T3, calls select_t1_value. Else branch sets V(A) and (re)starts T1."
+      - source: rax25
+        path: src/state.rs
+        function: "Data::check_iframe_acked"
+        line: 739
+        note: "Three branches (peer_busy / nr==vs / nr!=va). Picks 2017 spec for 'stop T3' in peer_busy branch (1998 said start T3). Uses srt rather than t1v in several start() calls (author flags as TODO)."
+      - source: linux_oot
+        path: net/ax25/ax25_out.c
+        function: ax25_check_iframes_acked
+        line: 381
+        note: "Implements the V(s)==N(r) vs V(a)!=N(r) split; calls ax25_frames_acked and ax25_calculate_rtt. Does not reset RC/n2count to 0 in the all-acked branch (spec figc4.7 step), and uses backoff T1 rather than Select_T1_Value."
     notes: |
       Process an incoming N(r) and update V(a) / T1 / T3 state
       accordingly. Four chained decisions, multiple join paths.
@@ -282,6 +420,27 @@ subroutines:
   # subroutines with the same path content — caller chooses by name.
   # The Mod-128? Yes → SABME edge label was added in commit 46d3782.
   - name: Establish_Data_Link
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: SENDSABM
+        line: 3065
+        note: "One-liner: calls hookL2SessionAttempt and L2SENDCOMMAND(LINK, SABM | PFBIT). No Clear_Exception_Conditions, no RC=1, no T3 stop — callers do those out-of-band. Initial-establishment from outbound side happens in InternalL2SETUPCROSSLINK (line 1858) which sets L2STATE, L2TIME and either L2SENDXID or SENDSABM."
+      - source: direwolf
+        path: src/ax25_link.c
+        function: establish_data_link
+        line: 5759
+        note: "Combined with Establish_Extended_Data_Link (comment at 5754 documents the merge); chooses SABME vs SABM from S->modulo==128. Off-by-one erratum flagged at lines 5768-5770 — direwolf sets RC=1 (not 0 as in figc4.7) to avoid sending N2+1 SABM(E)s."
+      - source: rax25
+        path: src/state.rs
+        function: "Data::establish_data_link"
+        line: 818
+        note: "Combined with Establish_Extended_Data_Link — same function handles both. Per line 828 comment 'SendSabm actually sends SABME if modulus is 128'. Sets RC:=1 (2017 spec) rather than 0 (1998). Calls clear_exception_conditions, stops T3, restarts T1."
+      - source: linux_oot
+        path: net/ax25/ax25_std_subr.c
+        function: ax25_std_establish_data_link
+        line: 35
+        note: "Clears condition, zeros n2count, sends SABM or SABME based on ax25->modulus, stops T3/T2/idle, starts T1. NB: linux_oot conflates Establish_Data_Link and Establish_Extended_Data_Link into one modulus-dispatching function."
     notes: |
       Clear exception bookkeeping, set the retry counter and P flag,
       send SABM or SABME depending on Mod 128 state, then start T1.
@@ -310,6 +469,21 @@ subroutines:
           - { action: "Start T1",                   kind: processing }
 
   - name: Establish_Extended_Data_Link
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: SENDSABM
+        line: 3065
+        note: "linbpq does NOT distinguish SABM vs SABME on the outbound side — it always sends SABM (PFBIT) and negotiates 2.2 via prior XID exchange (L2SENDXID line 3914). Inbound SABME is accepted in L2FORUS line 687-689 with the comment 'Although some say V2.2 requires SABME I don't agree!' — treated as plain SABM. No SABME-out path."
+      - source: direwolf
+        path: src/ax25_link.c
+        function: establish_data_link
+        line: 5759
+        note: "Direwolf has no separate function — figc4.6/figc4.7's two procedures are folded into one. Modulo field selects SABME when called from a 2.2 context. See comment at 5754-5755."
+      - source: rax25
+        note: "omitted: rax25 has no separate establish_extended_data_link; Data::establish_data_link (line 818) handles both — the SendSabm action emits SABME when self.modulus == 128 (see comment at line 828)."
+      - source: linux_oot
+        note: "omitted: no separate routine; ax25_std_establish_data_link (line 35) sends SABME when ax25->modulus == AX25_EMODULUS. Already cited under Establish_Data_Link — duplicate citation would be noise."
     notes: |
       Shares its body with Establish_Data_Link (both subroutine-start
       nodes in the graphml flow into the same shared body at n48).
@@ -343,6 +517,24 @@ subroutines:
 
   # ─── Check Need for Response ──────────────────────────────────────
   - name: Check_Need_For_Response
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: SFRAME
+        line: 2413
+        note: "The CMD-with-PFBIT branch (line 2413-2442) replies with RR/RNR(F=1) — the Command+P=1 case of the spec routine. The Response+F=1 branch (line 2444-2486) resets N(s) when POLLSENT was outstanding, which collapses the spec's DL-ERROR(A) check into 'did we have a poll out?' rather than flagging an unsolicited F. No standalone Check_Need_For_Response routine; logic is inlined per frame type."
+      - source: direwolf
+        path: src/ax25_link.c
+        function: check_need_for_response
+        line: 6216
+        note: "Faithful transliteration. cr_cmd & pf==1 -> enquiry_response with F=1; cr_res & pf==1 -> DL-ERROR A (logged); other cases silently ignored."
+      - source: rax25
+        path: src/state.rs
+        function: "Data::check_need_for_response"
+        line: 605
+        note: "Matches spec — (cmd,P=1) -> enquiry_response(F=1); (resp,F=1) -> DL-ERROR(A); else silent. Returns Vec<Action>."
+      - source: linux_oot
+        note: "omitted: no equivalent subroutine. F/P-bit polarity handling is inlined at call sites (e.g. ax25_std_in.c:338 'if (pf && type == AX25_RESPONSE)'). Not factored as a routine."
     notes: |
       Looks at incoming command/response role + P/F bit and either
       sends Enquiry_Response(F=1) (when it was a poll), surfaces a
@@ -372,6 +564,21 @@ subroutines:
 
   # ─── UI Check ─────────────────────────────────────────────────────
   - name: UI_Check
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: L2FORUS
+        line: 656
+        note: "UI handling at L2FORUS line 656-678 dispatches by PID (NETROM 0xcf, IP 0xcc/0xcd/0x08) and otherwise drops — no info-field length check, no DL-UNIT-DATA Indication primitive, no DL-ERROR(K)/(Q). UI on existing session takes the same path at line 1065. Divergence: linbpq does not validate Command vs Response framing for UI nor enforce info-field bounds beyond buffer length."
+      - source: direwolf
+        note: "omitted: direwolf processes UI frames outside the data-link state machine. Comment at line 6235-6240 explicitly states 'I don't think we need this because UI frames are processed without going thru the data link state machine.' The DL-UNIT-DATA / length-validation gate of UI_Check is absent."
+      - source: rax25
+        path: src/state.rs
+        function: "Data::ui_check"
+        line: 567
+        note: "Diverges from spec wording — treats !command as DL-ERROR(Q) outright (no separate length check on response path), command + oversize as DL-ERROR(K), command + valid as DL-UNIT-DATA indication. Author flags 1998 spec bug at lines 569-575 (spec says Q applies to UI with Poll set, but 4.3.3.6 contradicts)."
+      - source: linux_oot
+        note: "omitted: UI frames bypass the LAPB state machine entirely (ax25_in.c:229 'if ((*skb->data & ~0x10) == AX25_UI) ...'). There is no DL-state-machine UI_Check."
     notes: |
       Validates a received UI frame. Rejects if it's a response (Q
       error), accepts if info length ≤ N1 and the content is
@@ -401,6 +608,24 @@ subroutines:
 
   # ─── Select T1 ────────────────────────────────────────────────────
   - name: Select_T1_Value
+    references:
+      - source: linbpq
+        note: "omitted: linbpq uses a fixed L2TIME derived from PORTT1 (FRACK) plus a per-digi increment, set once in SETUPNEWL2SESSION (line 1666-1708) and InternalL2SETUPCROSSLINK (line 1908). There is no SRT IIR smoothing, no RC*0.25 backoff, no adaptive T1 logic anywhere in L2Code.c."
+      - source: direwolf
+        path: src/ax25_link.c
+        function: select_t1_value
+        line: 6304
+        note: "Major divergence from figc4.7. RC==0 branch computes SRT via an IIR low-pass filter (line 6326) then T1V := SRT*2; flagged as erratum at 6309-6316. RC!=0 + t1_had_expired branch uses linear T1V := RC*0.25 + SRT*2 (line 6362) instead of the spec's exponential 2^(RC+1)*SRT, with rationale at 6352-6358 ('ridiculous' to retry over an hour). Adds T1V floor/ceiling guardrails (6386-6389)."
+      - source: rax25
+        path: src/state.rs
+        function: "Data::select_t1_value"
+        line: 689
+        note: "rc==0 -> srt:=srt_default (IIR formula omitted, TODO at line 695); else if t1_expired -> srt := rc*250ms + 2*srt (matches 2017 spec '(RC/4)+SRT*2' with rc in seconds-quarters). Updates only srt, not t1v (author flags TODO at line 686)."
+      - source: linux_oot
+        path: net/ax25/ax25_subr.c
+        function: ax25_calculate_t1
+        line: 220
+        note: "Materially different algorithm: linux_oot uses configurable exponential/linear/no backoff multiplied by smoothed RTT, NOT the SDL Select_T1_Value SRT-based smoothing. The companion ax25_calculate_rtt (line 245) is the closer analogue to the RC==0 smoothing branch."
     notes: |
       Recompute SRT (smoothed round-trip estimate) and the next T1
       timeout. On a fresh-ack path (RC==0) the spec's IIR-style
@@ -435,6 +660,24 @@ subroutines:
 
   # ─── Set Version 2.0 ──────────────────────────────────────────────
   - name: Set_Version_2_0
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: SETUPNEWL2SESSION
+        line: 1650
+        note: "linbpq has no Set_Version_2_0 routine. Per-port PORTWINDOW/PORTPACLEN/PORTN2/PORTT1/PORTT2 are loaded once from config and copied/derived per session in SETUPNEWL2SESSION; modulo-8 is the default and Ver2point2 is cleared at line 1219 when peer declines XID. No N1/k/T2 reset at 'go-to-2.0' time."
+      - source: direwolf
+        path: src/ax25_link.c
+        function: set_version_2_0
+        line: 6408
+        note: "Sets srej_enable=none, modulo=8, plus paclen/k_maxframe/n2_retry from config. Half-duplex and N1/T2 are not set here — author flags T2 as a spec erratum at line 6404. Direwolf uses configurable paclen rather than hard-coded N1=2048."
+      - source: rax25
+        path: src/state.rs
+        function: "Data::set_version_2"
+        line: 850
+        note: "Named set_version_2 (not _2_0). Sets modulus=8, k=4 (NOT spec's 8 — author notes 2025 spec says 8), n2=10. Half-duplex / implicit-reject / N1=2048 / T2=3000 are TODOs."
+      - source: linux_oot
+        note: "omitted: no version-set subroutine. Configured via setsockopt(AX25_EXTSEQ) in af_ax25.c:642 and inlined 'ax25->modulus = AX25_MODULUS' on connect/SABM handling. No T1V/N1/N2 retuning per figc4.7."
     notes: |
       Configure all v2.0-specific parameters. Single multi-line
       processing box in the figure; transcribed as one action per
@@ -452,6 +695,24 @@ subroutines:
 
   # ─── Set Version 2.2 ──────────────────────────────────────────────
   - name: Set_Version_2_2
+    references:
+      - source: linbpq
+        path: L2Code.c
+        function: L2_PROCESS
+        line: 952
+        note: "Setting Ver2point2 := TRUE happens at two sites: ProcessXIDCommand line 952 ('Must support 2.2 if sent XID') and L2_PROCESS line 1145 ('Must support 2.2 if responded to XID'). Modulo stays 8 (linbpq does not implement true mod-128 windows); N1/k/T2/N2 are not reset — the Ver2point2 flag only gates SREJ emission and SABME acceptance. Significant divergence: linbpq's '2.2 mode' is selective-reject support, not full mod-128."
+      - source: direwolf
+        path: src/ax25_link.c
+        function: set_version_2_2
+        line: 6425
+        note: "Sets srej_enable=single (with comment noting XID can upgrade to multi), modulo=128, plus paclen/k_maxframe/n2_retry from config. Half-duplex, N1=2048, T2=3000, N2=10 fixed-value constants from figc4.7 are not set explicitly — direwolf uses configured values throughout."
+      - source: rax25
+        path: src/state.rs
+        function: "Data::set_version_2_2"
+        line: 835
+        note: "Sets modulus=128, k=32, n2=10. Half-duplex SREJ / N1=2048 / T2=3000 are TODOs. pub(crate) visibility (unique vs other subroutines)."
+      - source: linux_oot
+        note: "omitted: same as Set_Version_2_0 — only 'ax25->modulus = AX25_EMODULUS' assignments exist (ax25_ds_in.c:42,156, af_ax25.c:482,516). figc4.7 timer/window retuning is absent."
     notes: |
       Configure all v2.2-specific parameters. Differs from v2.0 in
       Selective Reject (vs Implicit Reject), Modulo 128 (vs 8) and
