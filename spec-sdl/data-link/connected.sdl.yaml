@@ -139,7 +139,7 @@ transitions:
   #   n140 Check I Frames Acknowledged
   #     n144 Own Receiver Busy?
   #       Yes → n175 Discard Contents — n176 P==1?
-  #         Yes → F:=1; N(R):=V(r); RR; Clear Ack Pending → Connected
+  #         Yes → F:=1; N(r):=V(r); RR; Clear Ack Pending → Connected
   #         No  → Connected
   #       No → n145 N(s)==V(r)?
   #         Yes → n146 V(r):=V(r)+1; Clear Reject Exc; Decrement SREJ-exc;
@@ -147,13 +147,13 @@ transitions:
   #               n148 V(r) I Frame Stored?
   #                 (only No-path drawn — see note)
   #                 n152 P==1?
-  #                   Yes → F:=1; N(R):=V(r); RR; Clear Ack Pending → Connected
+  #                   Yes → F:=1; N(r):=V(r); RR; Clear Ack Pending → Connected
   #                   No  → n153 Ack Pending?
   #                     Yes → Connected
   #                     No  → LM-SEIZE Request; Set Ack Pending → Connected
   #         No → n161 Reject Exception?
   #           Yes → n162 Discard Contents — n163 P==1?
-  #             Yes → F:=1; N(R):=V(r); RR; Clear Ack Pending → Connected
+  #             Yes → F:=1; N(r):=V(r); RR; Clear Ack Pending → Connected
   #             No  → Connected
   #           No → n164 SREJ Enabled?
   #             Yes → n167 Save Contents — n168 SReject Exception > 0?
@@ -363,7 +363,7 @@ transitions:
       - { action: discard_contents_of_I_frame, kind: processing }
       - { decision: p_eq_1,             branch: "Yes" }
       - { action: "F := 1",             kind: processing }
-      - { action: "N(R) := V(r)",       kind: processing }
+      - { action: "N(r) := V(r)",       kind: processing }
       - { action: RR,                   kind: signal_lower }
       - { action: clear_acknowledge_pending, kind: processing }
     next: Connected
@@ -439,7 +439,7 @@ transitions:
       - { decision: vr_i_frame_stored,  branch: "No" }
       - { decision: p_eq_1,             branch: "Yes" }
       - { action: "F := 1",             kind: processing }
-      - { action: "N(R) := V(r)",       kind: processing }
+      - { action: "N(r) := V(r)",       kind: processing }
       - { action: RR,                   kind: signal_lower }
       - { action: clear_acknowledge_pending, kind: processing }
     next: Connected
@@ -571,7 +571,7 @@ transitions:
       - { action: discard_contents_of_I_frame, kind: processing }
       - { decision: p_eq_1,             branch: "Yes" }
       - { action: "F := 1",             kind: processing }
-      - { action: "N(R) := V(r)",       kind: processing }
+      - { action: "N(r) := V(r)",       kind: processing }
       - { action: RR,                   kind: signal_lower }
       - { action: clear_acknowledge_pending, kind: processing }
     next: Connected
@@ -2155,7 +2155,7 @@ transitions:
           - { action: "V(r) := V(r) + 1",          kind: processing }
       - { decision: p_eq_1,             branch: "Yes" }
       - { action: "F := 1",             kind: processing }
-      - { action: "N(R) := V(r)",       kind: processing }
+      - { action: "N(r) := V(r)",       kind: processing }
       - { action: RR,                   kind: signal_lower }
       - { action: clear_acknowledge_pending, kind: processing }
     next: Connected
