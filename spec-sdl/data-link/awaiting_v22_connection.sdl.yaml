@@ -492,7 +492,7 @@ transitions:
       - { decision: ua_layer_3_initiated, branch: "No" }
       - { decision: ua_vs_eq_va,          branch: "No" }
       - { action: "SRT := Initial Default", kind: processing }
-      - { action: "T1V := 2*SRT",           kind: processing }
+      - { action: "T1V := 2 * SRT",         kind: processing }
       - { action: start_T3,                 kind: processing }
       - { action: DL_CONNECT_confirm,       kind: signal_upper }
       - { action: stop_T1,                  kind: processing }
