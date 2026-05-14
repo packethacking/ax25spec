@@ -78,14 +78,12 @@ subroutines:
   - name: Enquiry_Response
     notes: |
       Polled-response handler. Five chained decisions; multiple paths
-      converge on a shared "Clear Acknowledge Pending" then return.
+      converge on a shared "RR Response" + "Clear Acknowledge Pending"
+      tail before return.
 
-      figure-ambiguity (verification_pending below): the
-      `SREJ Enabled? = No` branch has NO outgoing edge in the
-      graphml. Logically the "No" path should join the RR-Response
-      arm, but the figure as drawn omits it. Transcribed as-is;
-      the runtime would need to either reject the path or apply a
-      heuristic default — see the verification_pending entry.
+      Both figure ambiguities flagged on the original transcription
+      (commit caa7326) were resolved upstream in commit 46d3782:
+      n22 SREJ-Enabled?=No now explicitly routes to RR Response.
     decisions:
       - id: poll_supervisory_or_i
         question: "F == 1 & (Frame==RR || Frame==RNR || Frame==I)?"
@@ -120,7 +118,19 @@ subroutines:
           - { decision: own_receiver_busy,     branch: "Yes" }
           - { action: "RNR Response",              kind: signal_lower }
           - { action: "Clear Acknowledge Pending", kind: processing }
-      - id: t03_polled_srej_mod8_dl_error_then_buf_yes
+      - id: t03_polled_srej_disabled_rr
+        notes: |
+          Polled, not busy, SREJ not enabled → just RR Response.
+          (Added in commit 46d3782 after the original redraw omitted
+          this edge.)
+        path:
+          - { action: "N(r) <- V(r)",              kind: processing }
+          - { decision: poll_supervisory_or_i, branch: "Yes" }
+          - { decision: own_receiver_busy,     branch: "No"  }
+          - { decision: srej_enabled,          branch: "No"  }
+          - { action: "RR Response",               kind: signal_lower }
+          - { action: "Clear Acknowledge Pending", kind: processing }
+      - id: t04_polled_srej_mod8_dl_error_then_buf_yes
         notes: |
           Polled, not busy, SREJ enabled, Mod 8 (so DL-ERROR add),
           and we have stored out-of-sequence frames → emit SREJ
@@ -136,9 +146,9 @@ subroutines:
           - { action: "SREJ",                          kind: signal_lower }
           - { action: "RR Response",                   kind: signal_lower }
           - { action: "Clear Acknowledge Pending",     kind: processing }
-      - id: t04_polled_srej_mod8_dl_error_then_buf_no
+      - id: t05_polled_srej_mod8_dl_error_then_buf_no
         notes: |
-          Same as t03 but no stored out-of-sequence frames → straight
+          Same as t04 but no stored out-of-sequence frames → straight
           to RR Response after DL-ERROR.
         path:
           - { action: "N(r) <- V(r)",                  kind: processing }
@@ -150,7 +160,7 @@ subroutines:
           - { decision: out_of_sequence_frames, branch: "No"  }
           - { action: "RR Response",                   kind: signal_lower }
           - { action: "Clear Acknowledge Pending",     kind: processing }
-      - id: t05_polled_srej_mod128_buf_yes
+      - id: t06_polled_srej_mod128_buf_yes
         notes: |
           Polled, not busy, SREJ enabled, Mod 128 (no DL-ERROR), and
           stored frames present → SREJ then RR Response.
@@ -164,7 +174,7 @@ subroutines:
           - { action: "SREJ",                          kind: signal_lower }
           - { action: "RR Response",                   kind: signal_lower }
           - { action: "Clear Acknowledge Pending",     kind: processing }
-      - id: t06_polled_srej_mod128_buf_no
+      - id: t07_polled_srej_mod128_buf_no
         notes: |
           Polled, not busy, SREJ enabled, Mod 128, no stored frames →
           straight to RR Response.
@@ -177,19 +187,6 @@ subroutines:
           - { decision: out_of_sequence_frames, branch: "No"  }
           - { action: "RR Response",                   kind: signal_lower }
           - { action: "Clear Acknowledge Pending",     kind: processing }
-        references:
-          - source: verification_pending
-            note: |
-              The `SREJ Enabled? = No` branch is MISSING from the
-              redrawn figure — n22 in the graphml has only a Yes
-              outgoing edge. Logically when SREJ isn't enabled the
-              subroutine should send RR Response and return, but the
-              figure as drawn doesn't specify. Flagging for Tom: is
-              the missing edge an oversight in the redraw, or did
-              the original figc4.7 also omit it? If the latter,
-              we'll need a `spec_quirk` reference recording how each
-              of the four canonical implementations handles
-              SREJ-disabled enquiry responses.
 
   # ─── Invoke Retransmission ────────────────────────────────────────
   - name: Invoke_Retransmission
@@ -288,11 +285,7 @@ subroutines:
   # starts (n46 and n47 both flow into n48). The body decides between
   # SABM and SABME via the `Mod 128?` test. We transcribe as two
   # subroutines with the same path content — caller chooses by name.
-  #
-  # figure-ambiguity (verification_pending below): the `Mod 128?` Yes
-  # branch in the graphml is unlabeled (only the No → SABM edge is
-  # labeled). The other outgoing edge is therefore "Yes" by
-  # elimination, going to SABME. Flagged below.
+  # The Mod-128? Yes → SABME edge label was added in commit 46d3782.
   - name: Establish_Data_Link
     notes: |
       Clear exception bookkeeping, set the retry counter and P flag,
@@ -320,14 +313,6 @@ subroutines:
           - { action: "SABME",                      kind: signal_lower }
           - { action: "Stop T3",                    kind: processing }
           - { action: "Start T1",                   kind: processing }
-        references:
-          - source: verification_pending
-            note: |
-              Mod 128? Yes branch in the graphml has an unlabeled
-              outgoing edge (only No → SABM is labeled). Transcribed
-              as Yes → SABME by elimination, consistent with the
-              spec prose §4.3.3.2. Flag for Tom: is the missing label
-              an oversight, or does the redraw intend something else?
 
   - name: Establish_Extended_Data_Link
     notes: |
