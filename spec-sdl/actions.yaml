@@ -27,3 +27,14 @@ signal_lower:
     aliases:
       - "DM F=1"        # figc4.2 spelling
       - "DM F = 1"      # figc4.3 spelling
+
+  # Supervisory-frame verbs (figc4.4 only). Naming convention from the
+  # figure: the `_command` and `_response` suffixes mark explicit role;
+  # bare verbs (RR, REJ, SREJ) are response-form per SDL convention.
+  # Each emission consumes pending Nr + PfBit (defaults: Nr := V(R),
+  # PfBit := false) — see ActionDispatcher.BuildSFrame.
+  - name: RR_command
+  - name: RR
+  - name: RNR_response
+  - name: REJ
+  - name: SREJ
