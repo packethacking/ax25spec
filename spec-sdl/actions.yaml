@@ -1,0 +1,29 @@
+# Canonical action verb catalog. Entries here normalise figure-verbatim
+# verb spellings to a single canonical form used in the generated state
+# machine code. Verbs not listed are passed through verbatim (soft mode).
+#
+# Why this file exists: the AX.25 SDL figures sometimes spell the same
+# verb differently on different pages — e.g. figc4.2 draws `DM F=1`,
+# figc4.3 draws `DM F = 1`, figc4.6 draws `DM (F = 1)`. Trust-the-figure
+# requires the YAML transcriptions stay verbatim, but the runtime
+# dispatcher needs a single canonical spelling per semantic verb.
+#
+# `actions.yaml` is the bridge: codegen reads it, substitutes aliases for
+# the canonical `name:`, and emits the canonical into `.g.cs` files. The
+# dispatcher's switch arms then only ever see canonical verbs.
+#
+# Grouped by SDL action kind (signal_upper, signal_lower, processing,
+# subroutine, internal_out) — the kind both documents which figc1.1
+# shape class the verb is drawn with, and lets the validator catch
+# cases where the same canonical verb is drawn with different shape
+# classes on different pages (which would be a transcription error).
+#
+# When to add an entry: when a single semantic action is spelled two or
+# more different ways across pages. When only one spelling exists across
+# every page, an entry is harmless but unnecessary.
+
+signal_lower:
+  - name: "DM (F = 1)"
+    aliases:
+      - "DM F=1"        # figc4.2 spelling
+      - "DM F = 1"      # figc4.3 spelling

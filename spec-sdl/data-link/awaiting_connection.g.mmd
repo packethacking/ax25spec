@@ -34,7 +34,7 @@ stateDiagram-v2
     AwaitingConnection --> AwaitingConnection: t15_i_frame_pops_off_queue_layer_3_initiated<br/>on: I_frame_pops_off_queue<br/>[layer_3_initiated]<br/>/ ⇢ push_frame_on_queue
     AwaitingConnection --> AwaitingConnection: t16_i_frame_pops_off_queue_not_layer_3_initiated<br/>on: I_frame_pops_off_queue<br/>[not layer_3_initiated]
     AwaitingConnection --> AwaitingConnection: t17_all_other_primitives_from_lower_layer<br/>on: all_other_primitives__from_lower_layer
-    AwaitingConnection --> AwaitingConnection: t18_ui_received_p_eq_1<br/>on: UI_received<br/>[P_eq_1]<br/>/ →() UI_Check<br/>/ ↓ DM F=1
+    AwaitingConnection --> AwaitingConnection: t18_ui_received_p_eq_1<br/>on: UI_received<br/>[P_eq_1]<br/>/ →() UI_Check<br/>/ ↓ DM (F = 1)
     AwaitingConnection --> AwaitingConnection: t19_ui_received_p_eq_0<br/>on: UI_received<br/>[not P_eq_1]<br/>/ →() UI_Check
     AwaitingConnection --> AwaitingConnection: t20_control_field_error<br/>on: control_field_error<br/>/ ↑ DL_ERROR_indication_L
     AwaitingConnection --> AwaitingConnection: t21_info_not_permitted_in_frame<br/>on: info_not_permitted_in_frame<br/>/ ↑ DL_ERROR_indication_M
