@@ -139,10 +139,20 @@ internal_out:
   - name: MDL_NEGOTIATE_request
 
 subroutine:
-  # Subroutine calls — figc4.7 territory. The dispatcher will stub
-  # these in a later PR (no-op or wired against a registry). For now
-  # they're catalogued so the alias mechanism normalises figc4.6's
-  # title-case spellings.
+  # Subroutine calls — figc4.7 territory. The dispatcher routes each
+  # through a registry; DefaultSubroutineRegistry pre-populates with
+  # no-op stubs that get replaced once figc4.7 is transcribed.
   - name: Establish_Data_Link
     aliases:
       - "Establish Data Link"      # figc4.6 title-case spelling
+  - name: Clear_Exception_Conditions
+  - name: UI_Check
+  - name: Select_T1_Value
+  - name: Check_I_Frame_Acknowledged
+  - name: Check_I_Frames_Acknowledged
+  - name: Check_Need_For_Response
+  - name: Transmit_Enquiry
+  - name: Invoke_Retransmission
+  - name: N_r_Error_Recovery
+  - name: Enquiry_Response_F_0
+  - name: Enquiry_Response_F_1
