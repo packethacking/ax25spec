@@ -38,3 +38,16 @@ signal_lower:
   - name: RNR_response
   - name: REJ
   - name: SREJ
+
+  # Unnumbered-frame verbs. Bare verbs (UA, DM, Expedited UA,
+  # Expedited DM) consume pending PfBit; the rest force PfBit via the
+  # explicit `(P = 1)` / `(P == 1)` / `(F = 1)` qualifier in the name.
+  # Expedited variants set UFrameSpec.IsExpedited=true as a TX priority
+  # hint. See ActionDispatcher.BuildUFrame.
+  - name: UA
+  - name: DM
+  - name: "Expedited UA"
+  - name: "Expedited DM"
+  - name: "SABM (P == 1)"
+  - name: "SABME (P = 1)"
+  - name: "DISC (P = 1)"
