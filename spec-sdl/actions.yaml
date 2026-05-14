@@ -51,3 +51,9 @@ signal_lower:
   - name: "SABM (P == 1)"
   - name: "SABME (P = 1)"
   - name: "DISC (P = 1)"
+
+  # UI-frame verb. Drawn in every state's DL_UNIT_DATA_request column
+  # (figc4.1/4.2/4.3/4.4/4.6). Payload + PID come from the triggering
+  # DL_UNIT_DATA_request primitive. P/F bit consumes pending (default
+  # false) — see ActionDispatcher.BuildUiFrame.
+  - name: UI_command
