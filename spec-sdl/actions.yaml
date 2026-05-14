@@ -58,6 +58,13 @@ signal_lower:
   # false) — see ActionDispatcher.BuildUiFrame.
   - name: UI_command
 
+  # I-frame verb. Drawn in figc4.4 t19/t20 and the SREJ retransmit
+  # paths. Payload + PID come from the triggering I_frame_pops_off_queue
+  # event; N(s)/N(r)/P consume pending. Emitted frame is also stashed
+  # in ctx.SentIFrames for potential retransmission. See
+  # ActionDispatcher.EmitIFrame.
+  - name: I_command
+
 signal_upper:
   # DL primitives raised to Layer 3 (§5.5). The dispatcher emits each as
   # a DataLinkSignal record via the sendUpward callback. DL_DATA_indication
