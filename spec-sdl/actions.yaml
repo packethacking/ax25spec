@@ -168,5 +168,11 @@ subroutine:
   - name: Transmit_Enquiry
   - name: Invoke_Retransmission
   - name: N_r_Error_Recovery
+  - name: Establish_Extended_Data_Link    # figc4.7 redraw added
+  - name: Set_Version_2_0                 # figc4.7 redraw added
+  - name: Set_Version_2_2                 # figc4.7 redraw added
+  - name: Enquiry_Response                # figc4.7 redraw — unified body
   - name: Enquiry_Response_F_0
   - name: Enquiry_Response_F_1
+    aliases:
+      - "Enquiry Response (F = 1)"        # figc4.7 Check_Need_For_Response subroutine-call label
