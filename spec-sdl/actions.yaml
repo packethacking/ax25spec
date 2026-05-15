@@ -107,6 +107,13 @@ processing:
   - name: discard_contents_of_I_frame
   - name: discard_primitive
 
+  # Peer-busy flag (the same operation under two figure spellings —
+  # figc4.4 drops "receiver" from the verb; figc4.2 keeps it). Canonical
+  # form follows the dispatcher's binding.
+  - name: clear_peer_receiver_busy
+    aliases:
+      - clear_peer_busy            # figc4.4 spelling
+
   # Reject / SREJ exception bookkeeping.
   - name: set_reject_exception
   - name: clear_reject_exception
@@ -162,8 +169,11 @@ subroutine:
   - name: Clear_Exception_Conditions
   - name: UI_Check
   - name: Select_T1_Value
+    aliases:
+      - "Select T1 Value"          # figc4.7 internal call shape
   - name: Check_I_Frame_Acknowledged
-  - name: Check_I_Frames_Acknowledged
+    aliases:
+      - Check_I_Frames_Acknowledged  # figc4.4 plural spelling — same subroutine
   - name: Check_Need_For_Response
   - name: Transmit_Enquiry
   - name: Invoke_Retransmission
