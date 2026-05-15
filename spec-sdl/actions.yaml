@@ -120,6 +120,17 @@ processing:
   - name: increment_srej_exception
   - name: decrement_srej_exception_if_gt_0
 
+  # Acknowledge-pending flag (figc4.4 ctx.AcknowledgePending). The figure
+  # uses "set_acknowledgement_pending" on the set verb (with the "ment"
+  # in "acknowledgement") but "clear_acknowledge_pending" on the clear
+  # verb — same operation, inconsistent spelling within the same figure.
+  # Canonical is the dispatcher's `set_acknowledge_pending`; the alias
+  # captures the set-form's "ment" suffix.
+  - name: set_acknowledge_pending
+    aliases:
+      - set_acknowledgement_pending  # figc4.4 set-verb spelling
+  - name: clear_acknowledge_pending
+
   # Out-of-sequence I-frame storage.
   - name: save_contents_of_I_frame
   - name: retrieve_stored_V_r_I_frame
