@@ -65,6 +65,17 @@ signal_lower:
   # ActionDispatcher.EmitIFrame.
   - name: I_command
 
+  # Link-multiplexer requests. signal_lower kind because they exit the
+  # data-link state machine going downward (toward the radio).
+  # NB: these used to live in a separate `signal_lower:` block lower in
+  # the file. YAML's duplicate-key semantics mean the second block
+  # silently overrode the first, dropping the DM-alias entries above.
+  # Folded into the single signal_lower block so all signal_lower verbs
+  # live together and the catalog loads as intended.
+  - name: LM_seize_request
+  - name: LM_release_request
+  - name: LM_data_request
+
 signal_upper:
   # DL primitives raised to Layer 3 (§5.5). The dispatcher emits each as
   # a DataLinkSignal record via the sendUpward callback. DL_DATA_indication
@@ -113,6 +124,9 @@ processing:
   - name: clear_peer_receiver_busy
     aliases:
       - clear_peer_busy            # figc4.4 spelling
+  - name: set_peer_receiver_busy
+    aliases:
+      - set_peer_busy              # figc4.4 spelling
 
   # Reject / SREJ exception bookkeeping.
   - name: set_reject_exception
@@ -147,13 +161,6 @@ processing:
   # round-trip.
   - name: "SRT := Initial Default"
   - name: "T1V := 2 * SRT"
-
-signal_lower:
-  # Link-multiplexer requests. signal_lower kind because they exit the
-  # data-link state machine going downward (toward the radio).
-  - name: LM_seize_request
-  - name: LM_release_request
-  - name: LM_data_request
 
 internal_out:
   # Push to the internal I-frame transmission queue. Three figure
