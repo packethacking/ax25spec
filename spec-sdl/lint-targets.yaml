@@ -45,7 +45,7 @@ targets:
 
   - language: typescript
     bindings:
-      path: web/ax25-ts/src/sdl/session-bindings.ts
+      path: web/ax25/src/sdl/session-bindings.ts
       # Match `bindings.set("name"` — including multi-line forms
       # where `set(` is on one line and the string literal sits on
       # the next (`\s*` covers newlines because .NET Regex defaults
@@ -55,7 +55,7 @@ targets:
       # `out_of_sequence_frames_in_receive_buffer`, `v_s_eq_x`).
       regex: 'bindings\.set\(\s*"([A-Za-z_][A-Za-z0-9_]*)"'
     dispatcher:
-      path: web/ax25-ts/src/sdl/action-dispatcher.ts
+      path: web/ax25/src/sdl/action-dispatcher.ts
       # TS uses the same `case "literal":` syntax as C#. The TS
       # dispatcher has 146 case arms today, same shape as the C#
       # dispatcher.
