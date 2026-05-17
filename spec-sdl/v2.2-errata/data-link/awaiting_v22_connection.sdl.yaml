@@ -2,7 +2,7 @@
 #
 # Source: AX.25 v2.2 rev 4 (Oct 2025), figure C4.6 "Data Link Awaiting
 # 2.2 Connection State" (pages a + b — single state, two figure pages).
-# Transcribed from spec-sdl/data-link/DataLink_AwaitingV22Connection.graphml.
+# Transcribed from spec-sdl/v2.2-errata/data-link/DataLink_AwaitingV22Connection.graphml.
 #
 # 18 input columns → 25 transitions after enumerating decision branches,
 # plus 1 page-level `save:` entry (DL-DISCONNECT request, drawn with the

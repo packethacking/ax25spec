@@ -1,7 +1,7 @@
 # Data-Link state machine: Disconnected state.
 #
 # Source: AX.25 v2.2 rev 4 (Oct 2025), figure C4.1 "Data Link Disconnected
-# State". Transcribed from spec-sdl/data-link/DataLink_Disconnected.graphml.
+# State". Transcribed from spec-sdl/v2.2-errata/data-link/DataLink_Disconnected.graphml.
 #
 # 14 input columns → 17 transitions after enumerating the binary decision
 # branches (UI's "P == 1?", and one "Able to Establish?" per SABM/SABME).

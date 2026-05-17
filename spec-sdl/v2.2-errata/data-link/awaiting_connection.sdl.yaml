@@ -2,7 +2,7 @@
 #
 # Source: AX.25 v2.2 rev 4 (Oct 2025), figure C4.2 "Data Link Awaiting
 # Connection State". Transcribed from
-# spec-sdl/data-link/DataLink_AwaitingConnection.graphml.
+# spec-sdl/v2.2-errata/data-link/DataLink_AwaitingConnection.graphml.
 #
 # 17 input columns → 24 transitions after enumerating decision branches.
 # 1 column drawn with the SDL Save shape becomes a page-level `save:` entry

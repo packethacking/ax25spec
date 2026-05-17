@@ -1,7 +1,7 @@
 # Data-Link state machine: Connected state.
 #
 # Source: AX.25 v2.2 rev 4 (Oct 2025), figure C4.4 "Data Link Connected
-# State". Transcribed from spec-sdl/data-link/DataLink_Connected.graphml.
+# State". Transcribed from spec-sdl/v2.2-errata/data-link/DataLink_Connected.graphml.
 #
 # 26 input columns → 66 transitions after enumerating decision branches.
 # This is the biggest figure in the AX.25 spec — the connected state has

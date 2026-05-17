@@ -2,7 +2,7 @@
 #
 # Source: AX.25 v2.2 rev 4 (Oct 2025), figure C4.3 "Data Link Awaiting
 # Release State". Transcribed from
-# spec-sdl/data-link/DataLink_AwaitingRelease.graphml.
+# spec-sdl/v2.2-errata/data-link/DataLink_AwaitingRelease.graphml.
 #
 # 15 input columns → 20 transitions after enumerating decision branches.
 # AwaitingRelease is the "we sent DISC, waiting for UA or DM" state —
