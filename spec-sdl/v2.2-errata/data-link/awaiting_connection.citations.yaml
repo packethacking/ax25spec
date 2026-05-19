@@ -8,7 +8,7 @@
 # notes + per-implementation citations live here so they survive
 # regeneration.
 #
-# Schema: spec-sdl/schema/sdl-citations.schema.json (TODO).
+# Schema: spec-sdl/schema/sdl-citations.schema.json.
 #
 # Keys under transitions:/subroutines: are the transition ids /
 # subroutine names from the matching awaiting_connection.sdl.yaml. When the tool
