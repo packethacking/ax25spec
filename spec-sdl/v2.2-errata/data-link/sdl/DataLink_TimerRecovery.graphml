@@ -1832,7 +1832,7 @@ RC &lt;- 0</y:NodeLabel>
           <y:Geometry height="71.89795918367352" width="120.0" x="3371.3976562499956" y="338.7153907308773"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="node_width" bottomInset="0" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.1875" horizontalTextPosition="center" iconTextGap="4" leftInset="0" modelName="internal" modelPosition="c" rightInset="20" textColor="#000000" topInset="0" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="19.855229591836746">LM-SIEZE Confirm</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" bottomInset="0" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.1875" horizontalTextPosition="center" iconTextGap="4" leftInset="0" modelName="internal" modelPosition="c" rightInset="20" textColor="#000000" topInset="0" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="19.855229591836746">LM-SEIZE Confirm</y:NodeLabel>
           <y:SVGNodeProperties usingVisualBounds="true"/>
           <y:SVGModel svgBoundsPolicy="0">
             <y:SVGContent refid="4"/>
