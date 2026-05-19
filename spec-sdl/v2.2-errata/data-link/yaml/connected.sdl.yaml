@@ -124,6 +124,7 @@ transitions:
 
   - id: t01_dl_disconnect_request
     on: DL_DISCONNECT_request
+    on_label: DL-DISCONNECT Request
     path:
       - { action: Discard I Frame Queue, kind: processing }
       - { action: "RC := 0", kind: processing }
@@ -134,12 +135,14 @@ transitions:
 
   - id: t02_dl_data_request
     on: DL_DATA_request
+    on_label: DL-DATA Request
     path:
       - { action: "Push on I Frame Queue (note: word order?)", kind: internal_out }
     next: Connected
 
   - id: t03_i_frame_pops_off_queue_yes
     on: I_frame_pops_off_queue
+    on_label: I Frame Pops Off Queue
     path:
       - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: Yes }
       - { action: Push on I Frame Queue, kind: internal_out }
@@ -147,6 +150,7 @@ transitions:
 
   - id: t03_i_frame_pops_off_queue_no_yes
     on: I_frame_pops_off_queue
+    on_label: I Frame Pops Off Queue
     path:
       - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
       - { decision: i_frame_pops_off_queue_vs_eq_va_+_k, branch: Yes }
@@ -155,6 +159,7 @@ transitions:
 
   - id: t03_i_frame_pops_off_queue_no_no_no
     on: I_frame_pops_off_queue
+    on_label: I Frame Pops Off Queue
     path:
       - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
       - { decision: i_frame_pops_off_queue_vs_eq_va_+_k, branch: No }
@@ -171,6 +176,7 @@ transitions:
 
   - id: t03_i_frame_pops_off_queue_no_no_yes
     on: I_frame_pops_off_queue
+    on_label: I Frame Pops Off Queue
     path:
       - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
       - { decision: i_frame_pops_off_queue_vs_eq_va_+_k, branch: No }
@@ -185,12 +191,14 @@ transitions:
 
   - id: t04_dl_unit_data_request
     on: DL_UNIT_DATA_request
+    on_label: DL-UNIT-DATA Request
     path:
       - { action: UI Command, kind: signal_lower }
     next: Connected
 
   - id: t05_dl_flow_off_request_yes
     on: DL_FLOW_OFF_request
+    on_label: DL-FLOW-OFF Request
     path:
       - { decision: dl_flow_off_own_receiver_busy, branch: Yes }
       - { action: Set Own Receiver Busy, kind: processing }
@@ -200,18 +208,21 @@ transitions:
 
   - id: t05_dl_flow_off_request_no
     on: DL_FLOW_OFF_request
+    on_label: DL-FLOW-OFF Request
     path:
       - { decision: dl_flow_off_own_receiver_busy, branch: No }
     next: Connected
 
   - id: t06_dl_flow_on_request_no
     on: DL_FLOW_ON_request
+    on_label: DL-FLOW-ON Request
     path:
       - { decision: dl_flow_on_own_receiver_busy, branch: No }
     next: Connected
 
   - id: t06_dl_flow_on_request_yes_yes
     on: DL_FLOW_ON_request
+    on_label: DL-FLOW-ON Request
     path:
       - { decision: dl_flow_on_own_receiver_busy, branch: Yes }
       - { action: Clear Own Receiver Busy, kind: processing }
@@ -222,6 +233,7 @@ transitions:
 
   - id: t06_dl_flow_on_request_yes_no
     on: DL_FLOW_ON_request
+    on_label: DL-FLOW-ON Request
     path:
       - { decision: dl_flow_on_own_receiver_busy, branch: Yes }
       - { action: Clear Own Receiver Busy, kind: processing }
@@ -234,6 +246,7 @@ transitions:
 
   - id: t07_dl_connect_request_no
     on: DL_CONNECT_request
+    on_label: DL-CONNECT Request
     path:
       - { action: Discard I Frame Queue, kind: processing }
       - { action: Establish Data Link, kind: subroutine }
@@ -243,6 +256,7 @@ transitions:
 
   - id: t07_dl_connect_request_yes
     on: DL_CONNECT_request
+    on_label: DL-CONNECT Request
     path:
       - { action: Discard I Frame Queue, kind: processing }
       - { action: Establish Data Link, kind: subroutine }
@@ -252,11 +266,13 @@ transitions:
 
   - id: t08_all_other_primitives__from_lower_layer
     on: all_other_primitives__from_lower_layer
+    on_label: All Other Primitives
     path: []
     next: Connected
 
   - id: t09_control_field_error_no
     on: control_field_error
+    on_label: Control Field Error
     path:
       - { action: DL-ERROR Indication (L), kind: signal_upper }
       - { action: Discard I Frame Queue, kind: processing }
@@ -267,6 +283,7 @@ transitions:
 
   - id: t09_control_field_error_yes
     on: control_field_error
+    on_label: Control Field Error
     path:
       - { action: DL-ERROR Indication (L), kind: signal_upper }
       - { action: Discard I Frame Queue, kind: processing }
@@ -277,6 +294,7 @@ transitions:
 
   - id: t10_info_not_permitted_in_frame_no
     on: info_not_permitted_in_frame
+    on_label: Info Not Permitted in Frame
     path:
       - { action: DL-ERROR Indication (M), kind: signal_upper }
       - { action: Discard I Frame Queue, kind: processing }
@@ -287,6 +305,7 @@ transitions:
 
   - id: t10_info_not_permitted_in_frame_yes
     on: info_not_permitted_in_frame
+    on_label: Info Not Permitted in Frame
     path:
       - { action: DL-ERROR Indication (M), kind: signal_upper }
       - { action: Discard I Frame Queue, kind: processing }
@@ -297,6 +316,7 @@ transitions:
 
   - id: t11_u_or_s_frame_length_error_no
     on: u_or_s_frame_length_error
+    on_label: U or S Frame Length Error
     path:
       - { action: DL-ERROR Indication (N), kind: signal_upper }
       - { action: Discard I Frame Queue, kind: processing }
@@ -307,6 +327,7 @@ transitions:
 
   - id: t11_u_or_s_frame_length_error_yes
     on: u_or_s_frame_length_error
+    on_label: U or S Frame Length Error
     path:
       - { action: DL-ERROR Indication (N), kind: signal_upper }
       - { action: Discard I Frame Queue, kind: processing }
@@ -317,6 +338,7 @@ transitions:
 
   - id: t12_t1_expiry
     on: T1_expiry
+    on_label: Timer T1 Expiry
     path:
       - { action: "RC := 1", kind: processing }
       - { action: Transmit Enquery, kind: subroutine }
@@ -324,6 +346,7 @@ transitions:
 
   - id: t13_t3_expiry
     on: T3_expiry
+    on_label: Timer T3 Expiry
     path:
       - { action: "RC := 1", kind: processing }
       - { action: Transmit Enquery, kind: subroutine }
@@ -331,6 +354,7 @@ transitions:
 
   - id: t14_sabm_received_yes
     on: SABM_received
+    on_label: SABM
     path:
       - { action: "F := P", kind: processing }
       - { action: Set Version 2.0, kind: processing }
@@ -348,6 +372,7 @@ transitions:
 
   - id: t14_sabm_received_no
     on: SABM_received
+    on_label: SABM
     path:
       - { action: "F := P", kind: processing }
       - { action: Set Version 2.0, kind: processing }
@@ -367,6 +392,7 @@ transitions:
 
   - id: t15_sabme_received_yes
     on: SABME_received
+    on_label: SABME
     path:
       - { action: "F := P", kind: processing }
       - { action: Set Version 2.2, kind: processing }
@@ -384,6 +410,7 @@ transitions:
 
   - id: t15_sabme_received_no
     on: SABME_received
+    on_label: SABME
     path:
       - { action: "F := P", kind: processing }
       - { action: Set Version 2.2, kind: processing }
@@ -403,6 +430,7 @@ transitions:
 
   - id: t16_frmr_received_no
     on: FRMR_received
+    on_label: FRMR
     path:
       - { action: DL-ERROR Indication (K), kind: signal_upper }
       - { action: Establish Data Link, kind: subroutine }
@@ -412,6 +440,7 @@ transitions:
 
   - id: t16_frmr_received_yes
     on: FRMR_received
+    on_label: FRMR
     path:
       - { action: DL-ERROR Indication (K), kind: signal_upper }
       - { action: Establish Data Link, kind: subroutine }
@@ -421,6 +450,7 @@ transitions:
 
   - id: t17_ua_received_no
     on: UA_received
+    on_label: UA
     path:
       - { action: DL-ERROR Indication (K), kind: signal_upper }
       - { action: Establish Data Link, kind: subroutine }
@@ -430,6 +460,7 @@ transitions:
 
   - id: t17_ua_received_yes
     on: UA_received
+    on_label: UA
     path:
       - { action: DL-ERROR Indication (K), kind: signal_upper }
       - { action: Establish Data Link, kind: subroutine }
@@ -439,6 +470,7 @@ transitions:
 
   - id: t18_ui_received_yes
     on: UI_received
+    on_label: UI
     path:
       - { action: UI Check, kind: subroutine }
       - { decision: ui_p_eq_1, branch: Yes }
@@ -447,6 +479,7 @@ transitions:
 
   - id: t18_ui_received_no
     on: UI_received
+    on_label: UI
     path:
       - { action: UI Check, kind: subroutine }
       - { decision: ui_p_eq_1, branch: No }
@@ -454,6 +487,7 @@ transitions:
 
   - id: t19_disc_received
     on: DISC_received
+    on_label: DISC
     path:
       - { action: Discard I Frame Queue, kind: processing }
       - { action: "F := P", kind: processing }
@@ -465,6 +499,7 @@ transitions:
 
   - id: t20_dm_received
     on: DM_received
+    on_label: DM
     path:
       - { action: DL-ERROR Indication (E), kind: signal_upper }
       - { action: DL-DISCONNECT Indication, kind: signal_upper }
@@ -475,6 +510,7 @@ transitions:
 
   - id: t21_rr_received_yes
     on: RR_received
+    on_label: RR
     path:
       - { action: Clear Peer Busy, kind: processing }
       - { action: Check Need For Response, kind: subroutine }
@@ -484,6 +520,7 @@ transitions:
 
   - id: t21_rr_received_no_no
     on: RR_received
+    on_label: RR
     path:
       - { action: Clear Peer Busy, kind: processing }
       - { action: Check Need For Response, kind: subroutine }
@@ -494,6 +531,7 @@ transitions:
 
   - id: t21_rr_received_no_yes
     on: RR_received
+    on_label: RR
     path:
       - { action: Clear Peer Busy, kind: processing }
       - { action: Check Need For Response, kind: subroutine }
@@ -504,6 +542,7 @@ transitions:
 
   - id: t22_rnr_received_yes
     on: RNR_received
+    on_label: RNR
     path:
       - { action: Set Peer Busy, kind: processing }
       - { action: Check Need For Response, kind: subroutine }
@@ -513,6 +552,7 @@ transitions:
 
   - id: t22_rnr_received_no_no
     on: RNR_received
+    on_label: RNR
     path:
       - { action: Set Peer Busy, kind: processing }
       - { action: Check Need For Response, kind: subroutine }
@@ -523,6 +563,7 @@ transitions:
 
   - id: t22_rnr_received_no_yes
     on: RNR_received
+    on_label: RNR
     path:
       - { action: Set Peer Busy, kind: processing }
       - { action: Check Need For Response, kind: subroutine }
@@ -533,6 +574,7 @@ transitions:
 
   - id: t23_lm_seize_confirm_yes
     on: LM_SEIZE_confirm
+    on_label: LM-SEIZE Confirm
     path:
       - { decision: lm_seize_ack_pending, branch: Yes }
       - { action: Clear Acknowledge Pending, kind: processing }
@@ -542,6 +584,7 @@ transitions:
 
   - id: t23_lm_seize_confirm_no
     on: LM_SEIZE_confirm
+    on_label: LM-SEIZE Confirm
     path:
       - { decision: lm_seize_ack_pending, branch: No }
       - { action: LM-RELEASE Request, kind: signal_lower }
@@ -549,6 +592,7 @@ transitions:
 
   - id: t24_srej_received_yes_yes
     on: SREJ_received
+    on_label: SREJ
     path:
       - { action: Clear Peer Busy, kind: processing }
       - { action: Check Need For Response, kind: subroutine }
@@ -567,6 +611,7 @@ transitions:
 
   - id: t24_srej_received_yes_no
     on: SREJ_received
+    on_label: SREJ
     path:
       - { action: Clear Peer Busy, kind: processing }
       - { action: Check Need For Response, kind: subroutine }
@@ -584,6 +629,7 @@ transitions:
 
   - id: t24_srej_received_no_no
     on: SREJ_received
+    on_label: SREJ
     path:
       - { action: Clear Peer Busy, kind: processing }
       - { action: Check Need For Response, kind: subroutine }
@@ -594,6 +640,7 @@ transitions:
 
   - id: t24_srej_received_no_yes
     on: SREJ_received
+    on_label: SREJ
     path:
       - { action: Clear Peer Busy, kind: processing }
       - { action: Check Need For Response, kind: subroutine }
@@ -604,6 +651,7 @@ transitions:
 
   - id: t25_rej_received_no_no
     on: REJ_received
+    on_label: REJ
     path:
       - { action: Clear Peer Busy, kind: processing }
       - { action: Check Need For Response, kind: subroutine }
@@ -614,6 +662,7 @@ transitions:
 
   - id: t25_rej_received_no_yes
     on: REJ_received
+    on_label: REJ
     path:
       - { action: Clear Peer Busy, kind: processing }
       - { action: Check Need For Response, kind: subroutine }
@@ -624,6 +673,7 @@ transitions:
 
   - id: t25_rej_received_yes
     on: REJ_received
+    on_label: REJ
     path:
       - { action: Clear Peer Busy, kind: processing }
       - { action: Check Need For Response, kind: subroutine }
@@ -638,6 +688,7 @@ transitions:
 
   - id: t26_i_received_no_no_no
     on: I_received
+    on_label: I
     path:
       - { decision: i_command, branch: No }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: No }
@@ -649,6 +700,7 @@ transitions:
 
   - id: t26_i_received_no_no_yes
     on: I_received
+    on_label: I
     path:
       - { decision: i_command, branch: No }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: No }
@@ -660,6 +712,7 @@ transitions:
 
   - id: t26_i_received_no_yes_no_no
     on: I_received
+    on_label: I
     path:
       - { decision: i_command, branch: No }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
@@ -670,6 +723,7 @@ transitions:
 
   - id: t26_i_received_no_yes_no_yes
     on: I_received
+    on_label: I
     path:
       - { decision: i_command, branch: No }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
@@ -680,6 +734,7 @@ transitions:
 
   - id: t26_i_received_no_yes_yes_no_yes_no_no_no
     on: I_received
+    on_label: I
     path:
       - { decision: i_command, branch: No }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
@@ -699,6 +754,7 @@ transitions:
 
   - id: t26_i_received_no_yes_yes_no_yes_no_no_yes
     on: I_received
+    on_label: I
     path:
       - { decision: i_command, branch: No }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
@@ -716,6 +772,7 @@ transitions:
 
   - id: t26_i_received_no_yes_yes_no_yes_no_yes
     on: I_received
+    on_label: I
     path:
       - { decision: i_command, branch: No }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
@@ -736,6 +793,7 @@ transitions:
 
   - id: t26_i_received_no_yes_yes_no_no_yes_yes
     on: I_received
+    on_label: I
     path:
       - { decision: i_command, branch: No }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
@@ -754,6 +812,7 @@ transitions:
 
   - id: t26_i_received_no_yes_yes_no_no_yes_no
     on: I_received
+    on_label: I
     path:
       - { decision: i_command, branch: No }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
@@ -768,6 +827,7 @@ transitions:
 
   - id: t26_i_received_no_yes_yes_no_no_no_no
     on: I_received
+    on_label: I
     path:
       - { decision: i_command, branch: No }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
@@ -787,6 +847,7 @@ transitions:
 
   - id: t26_i_received_no_yes_yes_no_no_no_yes_yes
     on: I_received
+    on_label: I
     path:
       - { decision: i_command, branch: No }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
@@ -806,6 +867,7 @@ transitions:
 
   - id: t26_i_received_no_yes_yes_no_no_no_yes_no_yes
     on: I_received
+    on_label: I
     path:
       - { decision: i_command, branch: No }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
@@ -828,6 +890,7 @@ transitions:
 
   - id: t26_i_received_no_yes_yes_no_no_no_yes_no_no
     on: I_received
+    on_label: I
     path:
       - { decision: i_command, branch: No }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
@@ -848,6 +911,7 @@ transitions:
 
   - id: t26_i_received_no_yes_yes_yes_yes
     on: I_received
+    on_label: I
     path:
       - { decision: i_command, branch: No }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
@@ -864,6 +928,7 @@ transitions:
 
   - id: t26_i_received_no_yes_yes_yes_no
     on: I_received
+    on_label: I
     path:
       - { decision: i_command, branch: No }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
@@ -876,6 +941,7 @@ transitions:
 
   - id: t26_i_received_yes
     on: I_received
+    on_label: I
     path:
       - { decision: i_command, branch: Yes }
       - { action: DL-ERROR Indication (O), kind: signal_upper }

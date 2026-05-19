@@ -1,0 +1,1278 @@
+# Auto-generated from DataLink_TimerRecovery.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: data_link
+state: TimerRecovery
+coverage: partial
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc4.5
+
+decisions:
+  - id: i_frame_pops_off_queue_peer_receiver_busy
+    question: "Peer Receiver Busy?"
+    predicate: peer_receiver_busy
+  - id: i_frame_pops_off_queue_vseqva+k
+    question: "V(s)==V(a)+k?"
+    predicate: vseqva+k
+  - id: i_frame_pops_off_queue_t1_running
+    question: "T1 Running?"
+    predicate: T1_running
+  - id: dl_flow_off_own_receiver_busy
+    question: "Own Receiver Busy?"
+    predicate: own_receiver_busy
+  - id: dl_flow_on_own_receiver_busy
+    question: "Own Receiver Busy?"
+    predicate: own_receiver_busy
+  - id: dl_flow_on_t1_running
+    question: "T1 Running?"
+    predicate: T1_running
+  - id: sabm_vs_eq_va
+    question: "V(s) == V(a)?"
+    predicate: vs_eq_va
+  - id: sabme_vs_eq_va
+    question: "V(s) == V(a)?"
+    predicate: vs_eq_va
+  - id: ui_p_eq_1
+    question: "P == 1?"
+    predicate: P_eq_1
+  - id: rr_response_&_f_eq_1
+    question: "Response & F == 1?"
+    predicate: response_&_F_eq_1
+  - id: rr_command_&_p_eq_1
+    question: "Command & P == 1?"
+    predicate: command_&_P_eq_1
+  - id: rr_va_le_nr_le_vs
+    question: "V(a) <= N(r) <= V(s)?"
+    predicate: va_le_nr_le_vs
+  - id: rr_version_2.2
+    question: "Version 2.2?"
+    predicate: version_2.2
+  - id: rr_vs_eq_va
+    question: "V(s) == V(a)?"
+    predicate: vs_eq_va
+  - id: rnr_response_&_f_eq_1
+    question: "Response & F == 1?"
+    predicate: response_&_F_eq_1
+  - id: rnr_command_&_p_eq_1
+    question: "Command & P == 1?"
+    predicate: command_&_P_eq_1
+  - id: rnr_va_le_nr_le_vs
+    question: "V(a) <= N(r) <= V(s)?"
+    predicate: va_le_nr_le_vs
+  - id: rnr_version_2.2
+    question: "Version 2.2?"
+    predicate: version_2.2
+  - id: rnr_vs_eq_va
+    question: "V(s) == V(a)?"
+    predicate: vs_eq_va
+  - id: lm_seize_ack_pending
+    question: "ACK Pending?"
+    predicate: ACK_pending
+  - id: t1_expiry_rc_eq_n2
+    question: "RC == N2?"
+    predicate: RC_eq_N2
+  - id: t1_expiry_vs_eq_va
+    question: "V(s) == V(a)?"
+    predicate: vs_eq_va
+  - id: t1_expiry_peer_busy
+    question: "Peer Busy?"
+    predicate: peer_busy
+  - id: i_command
+    question: "Command?"
+    predicate: command
+  - id: i_info_field_length_le_n1_&_content_is_octet_aligned
+    question: "Info Field Length <= N1 & Content Is Octet Aligned?"
+    predicate: info_field_length_le_N1_&_content_is_octet_aligned
+  - id: i_va_le_nr_le_vs
+    question: "V(a) <= N(r) <= V(s)"
+    predicate: va_le_nr_le_vs
+  - id: i_own_receive_busy
+    question: "Own Receive Busy?"
+    predicate: own_receive_busy
+  - id: i_p_eq_1
+    question: "P == 1?"
+    predicate: P_eq_1
+  - id: i_ns_eq_vr
+    question: "N(s) == V(r)?"
+    predicate: ns_eq_vr
+  - id: i_ack_pending
+    question: "Ack Pending?"
+    predicate: ack_pending
+  - id: i_reject_exception
+    question: "Reject Exception?"
+    predicate: reject_exception
+  - id: i_srej_enabled
+    question: "SREJ Enabled"
+    predicate: SREJ_enabled
+  - id: i_sreject_exception_gt0
+    question: "Sreject Exception  >0?"
+    predicate: sreject_exception_gt0
+  - id: i_ns_gt_vr+1
+    question: "N(s) > V(r)+1?"
+    predicate: ns_gt_vr+1
+  - id: rej_response_&_f_eq_1
+    question: "Response & F == 1?"
+    predicate: response_&_F_eq_1
+  - id: rej_command_&_p_eq_1
+    question: "Command & P == 1?"
+    predicate: command_&_P_eq_1
+  - id: rej_va_le_nr_le_vs
+    question: "V(a) <= N(r) <= V(s)"
+    predicate: va_le_nr_le_vs
+  - id: rej_vs_eq_va
+    question: "V(s) == V(a)?"
+    predicate: vs_eq_va
+  - id: rej_version_2.2
+    question: "Version 2.2?"
+    predicate: version_2.2
+  - id: srej_response
+    question: "Response?"
+    predicate: response
+  - id: srej_va_le_nr_le_vs
+    question: "V(a) <= N(r) <= V(s)"
+    predicate: va_le_nr_le_vs
+  - id: srej_p_eq_1
+    question: "P == 1?"
+    predicate: P_eq_1
+  - id: srej_vs_eq_va
+    question: "V(s) == V(a)?"
+    predicate: vs_eq_va
+  - id: srej_version_2.2
+    question: "Version 2.2?"
+    predicate: version_2.2
+  - id: srej_f_eq_1
+    question: "F == 1?"
+    predicate: F_eq_1
+
+transitions:
+
+  - id: t01_dl_disconnect_request
+    on: DL_DISCONNECT_request
+    on_label: DL-DISCONNECT Request
+    path:
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: "RC := 0", kind: processing }
+      - { action: DISC (P = 1), kind: signal_lower }
+      - { action: Stop T3, kind: processing }
+      - { action: Start T1, kind: processing }
+    next: AwaitingRelease
+
+  - id: t02_dl_data_request
+    on: DL_DATA_request
+    on_label: DL-DATA Request
+    path:
+      - { action: Push on I Frame Queue, kind: internal_out }
+    next: TimerRecovery
+
+  - id: t03_i_frame_pops_off_queue_yes
+    on: I_frame_pops_off_queue
+    on_label: I Frame Pops Off Queue
+    path:
+      - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: Yes }
+      - { action: Push I Frame on I Queue, kind: internal_out }
+    next: TimerRecovery
+
+  - id: t03_i_frame_pops_off_queue_no_yes
+    on: I_frame_pops_off_queue
+    on_label: I Frame Pops Off Queue
+    path:
+      - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
+      - { decision: i_frame_pops_off_queue_vseqva+k, branch: Yes }
+      - { action: Push I Frame on I Queue, kind: internal_out }
+    next: TimerRecovery
+
+  - id: t03_i_frame_pops_off_queue_no_no_yes
+    on: I_frame_pops_off_queue
+    on_label: I Frame Pops Off Queue
+    path:
+      - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
+      - { decision: i_frame_pops_off_queue_vseqva+k, branch: No }
+      - { action: "N(s) := V(s)", kind: processing }
+      - { action: "N(R) := V(r)", kind: processing }
+      - { action: "P := 0", kind: processing }
+      - { action: I Command, kind: signal_lower }
+      - { action: "V(s) := V(s) + 1", kind: processing }
+      - { action: Clear Acknowledge Pending, kind: processing }
+      - { decision: i_frame_pops_off_queue_t1_running, branch: Yes }
+    next: TimerRecovery
+
+  - id: t03_i_frame_pops_off_queue_no_no_no
+    on: I_frame_pops_off_queue
+    on_label: I Frame Pops Off Queue
+    path:
+      - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
+      - { decision: i_frame_pops_off_queue_vseqva+k, branch: No }
+      - { action: "N(s) := V(s)", kind: processing }
+      - { action: "N(R) := V(r)", kind: processing }
+      - { action: "P := 0", kind: processing }
+      - { action: I Command, kind: signal_lower }
+      - { action: "V(s) := V(s) + 1", kind: processing }
+      - { action: Clear Acknowledge Pending, kind: processing }
+      - { decision: i_frame_pops_off_queue_t1_running, branch: No }
+      - { action: Stop T3, kind: processing }
+      - { action: Start T1, kind: processing }
+    next: TimerRecovery
+
+  - id: t04_dl_unit_data_request
+    on: DL_UNIT_DATA_request
+    on_label: DL-UNIT-DATA Request
+    path:
+      - { action: UI Command, kind: signal_lower }
+    next: TimerRecovery
+
+  - id: t05_dl_flow_off_request_yes
+    on: DL_FLOW_OFF_request
+    on_label: DL-FLOW-OFF Request
+    path:
+      - { decision: dl_flow_off_own_receiver_busy, branch: Yes }
+      - { action: Set Own Receiver Busy, kind: processing }
+      - { action: RNR Response (F = 0), kind: signal_lower }
+      - { action: Clear Acknowledge Pending, kind: processing }
+    next: TimerRecovery
+
+  - id: t05_dl_flow_off_request_no
+    on: DL_FLOW_OFF_request
+    on_label: DL-FLOW-OFF Request
+    path:
+      - { decision: dl_flow_off_own_receiver_busy, branch: No }
+    next: TimerRecovery
+
+  - id: t06_dl_flow_on_request_yes_no
+    on: DL_FLOW_ON_request
+    on_label: DL-FLOW-ON Request
+    path:
+      - { decision: dl_flow_on_own_receiver_busy, branch: Yes }
+      - { action: Clear Own Receiver Busy, kind: processing }
+      - { action: RR Command (P = 0), kind: signal_lower }
+      - { action: Clear Acknowledge Pending, kind: processing }
+      - { decision: dl_flow_on_t1_running, branch: No }
+      - { action: Stop T3, kind: processing }
+      - { action: Start T1, kind: processing }
+    next: TimerRecovery
+
+  - id: t06_dl_flow_on_request_yes_yes
+    on: DL_FLOW_ON_request
+    on_label: DL-FLOW-ON Request
+    path:
+      - { decision: dl_flow_on_own_receiver_busy, branch: Yes }
+      - { action: Clear Own Receiver Busy, kind: processing }
+      - { action: RR Command (P = 0), kind: signal_lower }
+      - { action: Clear Acknowledge Pending, kind: processing }
+      - { decision: dl_flow_on_t1_running, branch: Yes }
+    next: TimerRecovery
+
+  - id: t06_dl_flow_on_request_no
+    on: DL_FLOW_ON_request
+    on_label: DL-FLOW-ON Request
+    path:
+      - { decision: dl_flow_on_own_receiver_busy, branch: No }
+    next: TimerRecovery
+
+  - id: t07_dl_connect_request
+    on: DL_CONNECT_request
+    on_label: DL-CONNECT Request
+    path:
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Set Layer 3 Initiated, kind: processing }
+    next: TimerRecovery
+
+  - id: t08_control_field_error
+    on: control_field_error
+    on_label: Control Field Error
+    path:
+      - { action: DL-ERROR Indication (L), kind: signal_upper }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Set Layer 3 Initiated, kind: processing }
+    next: TimerRecovery
+
+  - id: t09_info_not_permitted_in_frame
+    on: info_not_permitted_in_frame
+    on_label: Info Not Permitted In Frame
+    path:
+      - { action: DL-ERROR Indication (M), kind: signal_upper }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Set Layer 3 Initiated, kind: processing }
+    next: TimerRecovery
+
+  - id: t10_u_or_s_frame_length_error
+    on: u_or_s_frame_length_error
+    on_label: U or S Frame Length Error
+    path:
+      - { action: DL-ERROR Indication (N), kind: signal_upper }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Set Layer 3 Initiated, kind: processing }
+    next: TimerRecovery
+
+  - id: t11_ua_received
+    on: UA_received
+    on_label: UA
+    path:
+      - { action: DL-ERROR Indication (N), kind: signal_upper }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Clear Layer 3 Initiated, kind: processing }
+    next: AwaitingConnection
+
+  - id: t12_dm_received
+    on: DM_received
+    on_label: DM
+    path:
+      - { action: DL-ERROR Indication (E), kind: signal_upper }
+      - { action: DL-DISCONNECT Indication, kind: signal_upper }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: Stop T1, kind: processing }
+      - { action: Stop T3, kind: processing }
+    next: Disconnected
+
+  - id: t13_sabm_received_no
+    on: SABM_received
+    on_label: SABM
+    path:
+      - { action: "F := P", kind: processing }
+      - { action: Set Version 2.0, kind: processing }
+      - { action: UA, kind: signal_lower }
+      - { action: Clear Exception Conditions, kind: subroutine }
+      - { action: DL-ERROR Indication (F), kind: signal_upper }
+      - { decision: sabm_vs_eq_va, branch: No }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: DL-CONNECT Indication, kind: signal_upper }
+      - { action: Stop T1, kind: processing }
+      - { action: Stop T3, kind: processing }
+      - { action: "V(s) := 0", kind: processing }
+      - { action: "V(a) := 0", kind: processing }
+      - { action: "V(r) := 0", kind: processing }
+    next: Connected
+
+  - id: t13_sabm_received_yes
+    on: SABM_received
+    on_label: SABM
+    path:
+      - { action: "F := P", kind: processing }
+      - { action: Set Version 2.0, kind: processing }
+      - { action: UA, kind: signal_lower }
+      - { action: Clear Exception Conditions, kind: subroutine }
+      - { action: DL-ERROR Indication (F), kind: signal_upper }
+      - { decision: sabm_vs_eq_va, branch: Yes }
+    next: Connected
+
+  - id: t14_sabme_received_no
+    on: SABME_received
+    on_label: SABME
+    path:
+      - { action: "F := P", kind: processing }
+      - { action: Set Version 2.2, kind: processing }
+      - { action: UA, kind: signal_lower }
+      - { action: Clear Exception Conditions, kind: subroutine }
+      - { action: DL-ERROR Indication (F), kind: signal_upper }
+      - { decision: sabme_vs_eq_va, branch: No }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: DL-CONNECT Indication, kind: signal_upper }
+      - { action: Stop T1, kind: processing }
+      - { action: Stop T3, kind: processing }
+      - { action: "V(s) := 0", kind: processing }
+      - { action: "V(a) := 0", kind: processing }
+      - { action: "V(r) := 0", kind: processing }
+    next: Connected
+
+  - id: t14_sabme_received_yes
+    on: SABME_received
+    on_label: SABME
+    path:
+      - { action: "F := P", kind: processing }
+      - { action: Set Version 2.2, kind: processing }
+      - { action: UA, kind: signal_lower }
+      - { action: Clear Exception Conditions, kind: subroutine }
+      - { action: DL-ERROR Indication (F), kind: signal_upper }
+      - { decision: sabme_vs_eq_va, branch: Yes }
+    next: Connected
+
+  - id: t15_frmr_received
+    on: FRMR_received
+    on_label: FRMR
+    path:
+      - { action: DL-ERROR Indication (K), kind: signal_upper }
+      - { action: Set Version 2.0, kind: processing }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Clear Layer 3 Initiated, kind: processing }
+    next: AwaitingConnection
+
+  - id: t16_ui_received_yes
+    on: UI_received
+    on_label: UI
+    path:
+      - { action: UI Check, kind: subroutine }
+      - { decision: ui_p_eq_1, branch: Yes }
+      - { action: Enquiry Response (F = 1), kind: subroutine }
+    next: TimerRecovery
+
+  - id: t16_ui_received_no
+    on: UI_received
+    on_label: UI
+    path:
+      - { action: UI Check, kind: subroutine }
+      - { decision: ui_p_eq_1, branch: No }
+    next: TimerRecovery
+
+  - id: t17_disc_received
+    on: DISC_received
+    on_label: DISC
+    path:
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: "F := P", kind: processing }
+      - { action: UA, kind: signal_lower }
+      - { action: DL-DISCONNECT Indication, kind: signal_upper }
+      - { action: Stop T1, kind: processing }
+      - { action: Stop T3, kind: processing }
+    next: Disconnected
+
+  - id: t18_rr_received_no_no
+    on: RR_received
+    on_label: RR
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: rr_response_&_f_eq_1, branch: No }
+      - { decision: rr_command_&_p_eq_1, branch: No }
+    next: Undefined
+
+  - id: t18_rr_received_no_yes_yes
+    on: RR_received
+    on_label: RR
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: rr_response_&_f_eq_1, branch: No }
+      - { decision: rr_command_&_p_eq_1, branch: Yes }
+      - { action: Enquiry Response (F = 1), kind: subroutine }
+      - { decision: rr_va_le_nr_le_vs, branch: Yes }
+      - { action: "V(a) := N(r)", kind: processing }
+    next: TimerRecovery
+
+  - id: t18_rr_received_no_yes_no_no
+    on: RR_received
+    on_label: RR
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: rr_response_&_f_eq_1, branch: No }
+      - { decision: rr_command_&_p_eq_1, branch: Yes }
+      - { action: Enquiry Response (F = 1), kind: subroutine }
+      - { decision: rr_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: rr_version_2.2, branch: No }
+    next: AwaitingConnection
+
+  - id: t18_rr_received_no_yes_no_yes
+    on: RR_received
+    on_label: RR
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: rr_response_&_f_eq_1, branch: No }
+      - { decision: rr_command_&_p_eq_1, branch: Yes }
+      - { action: Enquiry Response (F = 1), kind: subroutine }
+      - { decision: rr_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: rr_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
+
+  - id: t18_rr_received_yes_no_no
+    on: RR_received
+    on_label: RR
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: rr_response_&_f_eq_1, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { decision: rr_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: rr_version_2.2, branch: No }
+    next: AwaitingConnection
+
+  - id: t18_rr_received_yes_no_yes
+    on: RR_received
+    on_label: RR
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: rr_response_&_f_eq_1, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { decision: rr_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: rr_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
+
+  - id: t18_rr_received_yes_yes_no
+    on: RR_received
+    on_label: RR
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: rr_response_&_f_eq_1, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { decision: rr_va_le_nr_le_vs, branch: Yes }
+      - { action: "V(a) := N(r)", kind: processing }
+      - { decision: rr_vs_eq_va, branch: No }
+      - { action: Invoke Retransmission, kind: subroutine }
+      - { action: Stop T3, kind: processing }
+      - { action: Start T1, kind: processing }
+      - { action: Set Acknowledge Pending, kind: processing }
+    next: TimerRecovery
+
+  - id: t18_rr_received_yes_yes_yes
+    on: RR_received
+    on_label: RR
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: rr_response_&_f_eq_1, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { decision: rr_va_le_nr_le_vs, branch: Yes }
+      - { action: "V(a) := N(r)", kind: processing }
+      - { decision: rr_vs_eq_va, branch: Yes }
+      - { action: Start T3, kind: processing }
+      - { action: "RC := 0", kind: processing }
+    next: Connected
+
+  - id: t19_rnr_received_no_no
+    on: RNR_received
+    on_label: RNR
+    path:
+      - { action: Set Peer Busy, kind: processing }
+      - { decision: rnr_response_&_f_eq_1, branch: No }
+      - { decision: rnr_command_&_p_eq_1, branch: No }
+    next: Undefined
+
+  - id: t19_rnr_received_no_yes_yes
+    on: RNR_received
+    on_label: RNR
+    path:
+      - { action: Set Peer Busy, kind: processing }
+      - { decision: rnr_response_&_f_eq_1, branch: No }
+      - { decision: rnr_command_&_p_eq_1, branch: Yes }
+      - { action: Enquiry Response (F = 1), kind: subroutine }
+      - { decision: rnr_va_le_nr_le_vs, branch: Yes }
+      - { action: "V(a) := N(r)", kind: processing }
+    next: TimerRecovery
+
+  - id: t19_rnr_received_no_yes_no_no
+    on: RNR_received
+    on_label: RNR
+    path:
+      - { action: Set Peer Busy, kind: processing }
+      - { decision: rnr_response_&_f_eq_1, branch: No }
+      - { decision: rnr_command_&_p_eq_1, branch: Yes }
+      - { action: Enquiry Response (F = 1), kind: subroutine }
+      - { decision: rnr_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: rnr_version_2.2, branch: No }
+    next: AwaitingConnection
+
+  - id: t19_rnr_received_no_yes_no_yes
+    on: RNR_received
+    on_label: RNR
+    path:
+      - { action: Set Peer Busy, kind: processing }
+      - { decision: rnr_response_&_f_eq_1, branch: No }
+      - { decision: rnr_command_&_p_eq_1, branch: Yes }
+      - { action: Enquiry Response (F = 1), kind: subroutine }
+      - { decision: rnr_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: rnr_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
+
+  - id: t19_rnr_received_yes_no_no
+    on: RNR_received
+    on_label: RNR
+    path:
+      - { action: Set Peer Busy, kind: processing }
+      - { decision: rnr_response_&_f_eq_1, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { decision: rnr_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: rnr_version_2.2, branch: No }
+    next: AwaitingConnection
+
+  - id: t19_rnr_received_yes_no_yes
+    on: RNR_received
+    on_label: RNR
+    path:
+      - { action: Set Peer Busy, kind: processing }
+      - { decision: rnr_response_&_f_eq_1, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { decision: rnr_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: rnr_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
+
+  - id: t19_rnr_received_yes_yes_no
+    on: RNR_received
+    on_label: RNR
+    path:
+      - { action: Set Peer Busy, kind: processing }
+      - { decision: rnr_response_&_f_eq_1, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { decision: rnr_va_le_nr_le_vs, branch: Yes }
+      - { action: "V(a) := N(r)", kind: processing }
+      - { decision: rnr_vs_eq_va, branch: No }
+      - { action: Invoke Retransmission, kind: subroutine }
+      - { action: Stop T3, kind: processing }
+      - { action: Start T1, kind: processing }
+      - { action: Set Acknowledge Pending, kind: processing }
+    next: TimerRecovery
+
+  - id: t19_rnr_received_yes_yes_yes
+    on: RNR_received
+    on_label: RNR
+    path:
+      - { action: Set Peer Busy, kind: processing }
+      - { decision: rnr_response_&_f_eq_1, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { decision: rnr_va_le_nr_le_vs, branch: Yes }
+      - { action: "V(a) := N(r)", kind: processing }
+      - { decision: rnr_vs_eq_va, branch: Yes }
+      - { action: Start T3, kind: processing }
+      - { action: "RC := 0", kind: processing }
+    next: Connected
+
+  - id: t20_lm_seize_confirm_yes
+    on: LM_SEIZE_confirm
+    on_label: LM-SEIZE Confirm
+    path:
+      - { decision: lm_seize_ack_pending, branch: Yes }
+      - { action: Clear Acknowledge Pending, kind: processing }
+      - { action: Enquiry Response (F = 0), kind: subroutine }
+      - { action: LM_RELEASE Request, kind: signal_lower }
+    next: TimerRecovery
+
+  - id: t20_lm_seize_confirm_no
+    on: LM_SEIZE_confirm
+    on_label: LM-SEIZE Confirm
+    path:
+      - { decision: lm_seize_ack_pending, branch: No }
+      - { action: LM_RELEASE Request, kind: signal_lower }
+    next: TimerRecovery
+
+  - id: t21_t1_expiry_no
+    on: T1_expiry
+    on_label: Timer T1 Expiry
+    path:
+      - { decision: t1_expiry_rc_eq_n2, branch: No }
+      - { action: Transmit Enquiry, kind: subroutine }
+      - { action: "RC := RC + 1", kind: processing }
+    next: TimerRecovery
+
+  - id: t21_t1_expiry_yes_yes_yes
+    on: T1_expiry
+    on_label: Timer T1 Expiry
+    path:
+      - { decision: t1_expiry_rc_eq_n2, branch: Yes }
+      - { decision: t1_expiry_vs_eq_va, branch: Yes }
+      - { decision: t1_expiry_peer_busy, branch: Yes }
+      - { action: DL-ERROR Indication (U), kind: signal_upper }
+      - { action: DL-DISCONNECT Indication, kind: signal_upper }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: DM Response (F = 0), kind: signal_lower }
+    next: Disconnected
+
+  - id: t21_t1_expiry_yes_yes_no
+    on: T1_expiry
+    on_label: Timer T1 Expiry
+    path:
+      - { decision: t1_expiry_rc_eq_n2, branch: Yes }
+      - { decision: t1_expiry_vs_eq_va, branch: Yes }
+      - { decision: t1_expiry_peer_busy, branch: No }
+      - { action: DL-ERROR Indication (T), kind: signal_upper }
+      - { action: DL-DISCONNECT Indication, kind: signal_upper }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: DM Response (F = 0), kind: signal_lower }
+    next: Disconnected
+
+  - id: t21_t1_expiry_yes_no
+    on: T1_expiry
+    on_label: Timer T1 Expiry
+    path:
+      - { decision: t1_expiry_rc_eq_n2, branch: Yes }
+      - { decision: t1_expiry_vs_eq_va, branch: No }
+      - { action: DL-ERROR Indication (I), kind: signal_upper }
+      - { action: DL-DISCONNECT Indication, kind: signal_upper }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: DM Response (F = 0), kind: signal_lower }
+    next: Disconnected
+
+  - id: t22_i_received_undefined
+    on: I_received
+    on_label: I Frame
+    path:
+      - { decision: i_command, branch: Undefined }
+      - { action: DL-ERROR Indication (O), kind: signal_upper }
+      - { action: Discard I Frame, kind: processing }
+    next: Connected
+
+  - id: t22_i_received_undefined_no
+    on: I_received
+    on_label: I Frame
+    path:
+      - { decision: i_command, branch: Undefined }
+      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: No }
+      - { action: DL-ERROR Indication (O), kind: signal_upper }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Clear Layer 3 Initiated, kind: processing }
+    next: AwaitingConnection
+
+  - id: t22_i_received_undefined_yes_no
+    on: I_received
+    on_label: I Frame
+    path:
+      - { decision: i_command, branch: Undefined }
+      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Recovery, kind: subroutine }
+    next: AwaitingConnection
+
+  - id: t22_i_received_undefined_yes_yes_yes_yes
+    on: I_received
+    on_label: I Frame
+    path:
+      - { decision: i_command, branch: Undefined }
+      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receive_busy, branch: Yes }
+      - { action: Discard Contents of I Frame, kind: processing }
+      - { decision: i_p_eq_1, branch: Yes }
+      - { action: "F := 1", kind: processing }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: RNR, kind: signal_lower }
+      - { action: Clear Acknowledge Pending, kind: processing }
+    next: TimerRecovery
+
+  - id: t22_i_received_undefined_yes_yes_yes_no
+    on: I_received
+    on_label: I Frame
+    path:
+      - { decision: i_command, branch: Undefined }
+      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receive_busy, branch: Yes }
+      - { action: Discard Contents of I Frame, kind: processing }
+      - { decision: i_p_eq_1, branch: No }
+    next: TimerRecovery
+
+  - id: t22_i_received_undefined_yes_yes_no_yes_no_yes
+    on: I_received
+    on_label: I Frame
+    path:
+      - { decision: i_command, branch: Undefined }
+      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receive_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: Yes }
+      - { action: "V(r) := V(r) + 1", kind: processing }
+      - { action: Clear Reject Exception, kind: processing }
+      - { action: "Decrement Sreject Exception if > 0", kind: processing }
+      - { action: DL-DATA Indication, kind: signal_upper }
+      - { decision: i_p_eq_1, branch: Yes }
+      - { action: "F := 1", kind: processing }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: RR, kind: signal_lower }
+      - { action: Clear Acknowledge Pending, kind: processing }
+    next: TimerRecovery
+
+  - id: t22_i_received_undefined_yes_yes_no_yes_no_no_no
+    on: I_received
+    on_label: I Frame
+    path:
+      - { decision: i_command, branch: Undefined }
+      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receive_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: Yes }
+      - { action: "V(r) := V(r) + 1", kind: processing }
+      - { action: Clear Reject Exception, kind: processing }
+      - { action: "Decrement Sreject Exception if > 0", kind: processing }
+      - { action: DL-DATA Indication, kind: signal_upper }
+      - { decision: i_p_eq_1, branch: No }
+      - { decision: i_ack_pending, branch: No }
+      - { action: Set Acknowledge Pending, kind: processing }
+      - { action: LM-SIEZE Request, kind: signal_lower }
+    next: TimerRecovery
+
+  - id: t22_i_received_undefined_yes_yes_no_yes_no_no_yes
+    on: I_received
+    on_label: I Frame
+    path:
+      - { decision: i_command, branch: Undefined }
+      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receive_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: Yes }
+      - { action: "V(r) := V(r) + 1", kind: processing }
+      - { action: Clear Reject Exception, kind: processing }
+      - { action: "Decrement Sreject Exception if > 0", kind: processing }
+      - { action: DL-DATA Indication, kind: signal_upper }
+      - { decision: i_p_eq_1, branch: No }
+      - { decision: i_ack_pending, branch: Yes }
+    next: TimerRecovery
+
+  - id: t22_i_received_undefined_yes_yes_no_no_yes_yes
+    on: I_received
+    on_label: I Frame
+    path:
+      - { decision: i_command, branch: Undefined }
+      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receive_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_reject_exception, branch: Yes }
+      - { action: Discard Contents of I Frame, kind: processing }
+      - { decision: i_p_eq_1, branch: Yes }
+      - { action: "F := 1", kind: processing }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: RR, kind: signal_lower }
+      - { action: Clear Acknowledge Pending, kind: processing }
+    next: TimerRecovery
+
+  - id: t22_i_received_undefined_yes_yes_no_no_yes_no
+    on: I_received
+    on_label: I Frame
+    path:
+      - { decision: i_command, branch: Undefined }
+      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receive_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_reject_exception, branch: Yes }
+      - { action: Discard Contents of I Frame, kind: processing }
+      - { decision: i_p_eq_1, branch: No }
+    next: TimerRecovery
+
+  - id: t22_i_received_undefined_yes_yes_no_no_no_no
+    on: I_received
+    on_label: I Frame
+    path:
+      - { decision: i_command, branch: Undefined }
+      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receive_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_reject_exception, branch: No }
+      - { decision: i_srej_enabled, branch: No }
+      - { action: Discard Contents of I Frame, kind: processing }
+      - { action: Set Reject Exception, kind: processing }
+      - { action: "F := P", kind: processing }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: REJ, kind: signal_lower }
+      - { action: Set Acknowledge Pending, kind: processing }
+    next: TimerRecovery
+
+  - id: t22_i_received_undefined_yes_yes_no_no_no_yes_no_yes
+    on: I_received
+    on_label: I Frame
+    path:
+      - { decision: i_command, branch: Undefined }
+      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receive_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_reject_exception, branch: No }
+      - { decision: i_srej_enabled, branch: Yes }
+      - { action: Save Contents of I Frame, kind: processing }
+      - { decision: i_sreject_exception_gt0, branch: No }
+      - { decision: i_ns_gt_vr+1, branch: Yes }
+      - { action: Discard Contents of I Frame, kind: processing }
+      - { action: Set Reject Exception, kind: processing }
+      - { action: "F := P", kind: processing }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: REJ, kind: signal_lower }
+      - { action: Set Acknowledge Pending, kind: processing }
+    next: TimerRecovery
+
+  - id: t22_i_received_undefined_yes_yes_no_no_no_yes_no_no
+    on: I_received
+    on_label: I Frame
+    path:
+      - { decision: i_command, branch: Undefined }
+      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receive_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_reject_exception, branch: No }
+      - { decision: i_srej_enabled, branch: Yes }
+      - { action: Save Contents of I Frame, kind: processing }
+      - { decision: i_sreject_exception_gt0, branch: No }
+      - { decision: i_ns_gt_vr+1, branch: No }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: "F := 1", kind: processing }
+      - { action: "Sreject := Sreject + 1", kind: processing }
+      - { action: SREJ, kind: signal_lower }
+    next: TimerRecovery
+
+  - id: t22_i_received_undefined_yes_yes_no_no_no_yes_yes
+    on: I_received
+    on_label: I Frame
+    path:
+      - { decision: i_command, branch: Undefined }
+      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receive_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_reject_exception, branch: No }
+      - { decision: i_srej_enabled, branch: Yes }
+      - { action: Save Contents of I Frame, kind: processing }
+      - { decision: i_sreject_exception_gt0, branch: Yes }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: "F := 0", kind: processing }
+      - { action: "Sreject := Sreject + 1", kind: processing }
+      - { action: SREJ, kind: signal_lower }
+    next: TimerRecovery
+
+  - id: t23_rej_received_no_yes_yes_yes
+    on: REJ_received
+    on_label: REJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: rej_response_&_f_eq_1, branch: No }
+      - { decision: rej_command_&_p_eq_1, branch: Yes }
+      - { action: Enquiry Response (F = 1), kind: subroutine }
+      - { decision: rej_va_le_nr_le_vs, branch: Yes }
+      - { action: "V(a) := N(r)", kind: processing }
+      - { decision: rej_vs_eq_va, branch: Yes }
+    next: TimerRecovery
+
+  - id: t23_rej_received_no_yes_yes_no
+    on: REJ_received
+    on_label: REJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: rej_response_&_f_eq_1, branch: No }
+      - { decision: rej_command_&_p_eq_1, branch: Yes }
+      - { action: Enquiry Response (F = 1), kind: subroutine }
+      - { decision: rej_va_le_nr_le_vs, branch: Yes }
+      - { action: "V(a) := N(r)", kind: processing }
+      - { decision: rej_vs_eq_va, branch: No }
+      - { action: Invoke Retransmission, kind: subroutine }
+      - { action: Stop T3, kind: processing }
+      - { action: Start T1, kind: processing }
+      - { action: Clear Acknowledge Pending, kind: processing }
+    next: TimerRecovery
+
+  - id: t23_rej_received_no_yes_no_yes
+    on: REJ_received
+    on_label: REJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: rej_response_&_f_eq_1, branch: No }
+      - { decision: rej_command_&_p_eq_1, branch: Yes }
+      - { action: Enquiry Response (F = 1), kind: subroutine }
+      - { decision: rej_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Recovery, kind: subroutine }
+      - { decision: rej_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
+
+  - id: t23_rej_received_no_yes_no_no
+    on: REJ_received
+    on_label: REJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: rej_response_&_f_eq_1, branch: No }
+      - { decision: rej_command_&_p_eq_1, branch: Yes }
+      - { action: Enquiry Response (F = 1), kind: subroutine }
+      - { decision: rej_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Recovery, kind: subroutine }
+      - { decision: rej_version_2.2, branch: No }
+    next: AwaitingConnection
+
+  - id: t23_rej_received_no_no_yes_yes
+    on: REJ_received
+    on_label: REJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: rej_response_&_f_eq_1, branch: No }
+      - { decision: rej_command_&_p_eq_1, branch: No }
+      - { decision: rej_va_le_nr_le_vs, branch: Yes }
+      - { action: "V(a) := N(r)", kind: processing }
+      - { decision: rej_vs_eq_va, branch: Yes }
+    next: TimerRecovery
+
+  - id: t23_rej_received_no_no_yes_no
+    on: REJ_received
+    on_label: REJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: rej_response_&_f_eq_1, branch: No }
+      - { decision: rej_command_&_p_eq_1, branch: No }
+      - { decision: rej_va_le_nr_le_vs, branch: Yes }
+      - { action: "V(a) := N(r)", kind: processing }
+      - { decision: rej_vs_eq_va, branch: No }
+      - { action: Invoke Retransmission, kind: subroutine }
+      - { action: Stop T3, kind: processing }
+      - { action: Start T1, kind: processing }
+      - { action: Clear Acknowledge Pending, kind: processing }
+    next: TimerRecovery
+
+  - id: t23_rej_received_no_no_no_yes
+    on: REJ_received
+    on_label: REJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: rej_response_&_f_eq_1, branch: No }
+      - { decision: rej_command_&_p_eq_1, branch: No }
+      - { decision: rej_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Recovery, kind: subroutine }
+      - { decision: rej_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
+
+  - id: t23_rej_received_no_no_no_no
+    on: REJ_received
+    on_label: REJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: rej_response_&_f_eq_1, branch: No }
+      - { decision: rej_command_&_p_eq_1, branch: No }
+      - { decision: rej_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Recovery, kind: subroutine }
+      - { decision: rej_version_2.2, branch: No }
+    next: AwaitingConnection
+
+  - id: t23_rej_received_yes_no_yes
+    on: REJ_received
+    on_label: REJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: rej_response_&_f_eq_1, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { decision: rej_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Recovery, kind: subroutine }
+      - { decision: rej_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
+
+  - id: t23_rej_received_yes_no_no
+    on: REJ_received
+    on_label: REJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: rej_response_&_f_eq_1, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { decision: rej_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Recovery, kind: subroutine }
+      - { decision: rej_version_2.2, branch: No }
+    next: AwaitingConnection
+
+  - id: t23_rej_received_yes_yes_undefined_via_start_t3
+    on: REJ_received
+    on_label: REJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: rej_response_&_f_eq_1, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { decision: rej_va_le_nr_le_vs, branch: Yes }
+      - { action: "V(a) := N(r)", kind: processing }
+      - { decision: rej_vs_eq_va, branch: Undefined }
+      - { action: Start T3, kind: processing }
+      - { action: "RC := 0", kind: processing }
+    next: Connected
+
+  - id: t23_rej_received_yes_yes_undefined_via_invoke_retransmission
+    on: REJ_received
+    on_label: REJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: rej_response_&_f_eq_1, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { decision: rej_va_le_nr_le_vs, branch: Yes }
+      - { action: "V(a) := N(r)", kind: processing }
+      - { decision: rej_vs_eq_va, branch: Undefined }
+      - { action: Invoke Retransmission, kind: subroutine }
+      - { action: Stop T3, kind: processing }
+      - { action: Start T1, kind: processing }
+      - { action: Clear Acknowledge Pending, kind: processing }
+    next: TimerRecovery
+
+  - id: t24_srej_received_no_yes_yes_yes
+    on: SREJ_received
+    on_label: SREJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: srej_response, branch: No }
+      - { decision: srej_va_le_nr_le_vs, branch: Yes }
+      - { decision: srej_p_eq_1, branch: Yes }
+      - { action: "V(a) := N(r)", kind: processing }
+      - { action: Check I Frame Acknowledged, kind: subroutine }
+      - { decision: srej_vs_eq_va, branch: Yes }
+    next: TimerRecovery
+
+  - id: t24_srej_received_no_yes_yes_no
+    on: SREJ_received
+    on_label: SREJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: srej_response, branch: No }
+      - { decision: srej_va_le_nr_le_vs, branch: Yes }
+      - { decision: srej_p_eq_1, branch: Yes }
+      - { action: "V(a) := N(r)", kind: processing }
+      - { action: Check I Frame Acknowledged, kind: subroutine }
+      - { decision: srej_vs_eq_va, branch: No }
+      - { action: Invoke Retransmission, kind: subroutine }
+    next: TimerRecovery
+
+  - id: t24_srej_received_no_yes_no_yes
+    on: SREJ_received
+    on_label: SREJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: srej_response, branch: No }
+      - { decision: srej_va_le_nr_le_vs, branch: Yes }
+      - { decision: srej_p_eq_1, branch: No }
+      - { decision: srej_vs_eq_va, branch: Yes }
+    next: TimerRecovery
+
+  - id: t24_srej_received_no_yes_no_no
+    on: SREJ_received
+    on_label: SREJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: srej_response, branch: No }
+      - { decision: srej_va_le_nr_le_vs, branch: Yes }
+      - { decision: srej_p_eq_1, branch: No }
+      - { decision: srej_vs_eq_va, branch: No }
+      - { action: Invoke Retransmission, kind: subroutine }
+    next: TimerRecovery
+
+  - id: t24_srej_received_no_no_no
+    on: SREJ_received
+    on_label: SREJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: srej_response, branch: No }
+      - { decision: srej_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Recovery, kind: subroutine }
+      - { decision: srej_version_2.2, branch: No }
+    next: AwaitingConnection
+
+  - id: t24_srej_received_no_no_yes
+    on: SREJ_received
+    on_label: SREJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: srej_response, branch: No }
+      - { decision: srej_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Recovery, kind: subroutine }
+      - { decision: srej_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
+
+  - id: t24_srej_received_yes_no_no
+    on: SREJ_received
+    on_label: SREJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: srej_response, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { decision: srej_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Recovery, kind: subroutine }
+      - { decision: srej_version_2.2, branch: No }
+    next: AwaitingConnection
+
+  - id: t24_srej_received_yes_no_yes
+    on: SREJ_received
+    on_label: SREJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: srej_response, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { decision: srej_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Recovery, kind: subroutine }
+      - { decision: srej_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
+
+  - id: t24_srej_received_yes_yes_yes_yes
+    on: SREJ_received
+    on_label: SREJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: srej_response, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { decision: srej_va_le_nr_le_vs, branch: Yes }
+      - { decision: srej_f_eq_1, branch: Yes }
+      - { action: "V(a) := N(r)", kind: processing }
+      - { action: Check I Frame Acknowledged, kind: subroutine }
+      - { decision: srej_vs_eq_va, branch: Yes }
+      - { action: Start T3, kind: processing }
+      - { action: "RC := 0", kind: processing }
+    next: Connected
+
+  - id: t24_srej_received_yes_yes_yes_no
+    on: SREJ_received
+    on_label: SREJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: srej_response, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { decision: srej_va_le_nr_le_vs, branch: Yes }
+      - { decision: srej_f_eq_1, branch: Yes }
+      - { action: "V(a) := N(r)", kind: processing }
+      - { action: Check I Frame Acknowledged, kind: subroutine }
+      - { decision: srej_vs_eq_va, branch: No }
+      - { action: Push Frame Onto Queue, kind: internal_out }
+      - { action: LM-DATA Request, kind: signal_lower }
+      - { action: Stop T3, kind: processing }
+      - { action: Start T1, kind: processing }
+      - { action: Clear Acknowledge Pending, kind: processing }
+      - { action: Invoke Retransmission, kind: subroutine }
+    next: TimerRecovery
+
+  - id: t24_srej_received_yes_yes_no_yes
+    on: SREJ_received
+    on_label: SREJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: srej_response, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { decision: srej_va_le_nr_le_vs, branch: Yes }
+      - { decision: srej_f_eq_1, branch: No }
+      - { decision: srej_vs_eq_va, branch: Yes }
+      - { action: Start T3, kind: processing }
+      - { action: "RC := 0", kind: processing }
+    next: Connected
+
+  - id: t24_srej_received_yes_yes_no_no
+    on: SREJ_received
+    on_label: SREJ
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { decision: srej_response, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { decision: srej_va_le_nr_le_vs, branch: Yes }
+      - { decision: srej_f_eq_1, branch: No }
+      - { decision: srej_vs_eq_va, branch: No }
+      - { action: Push Frame Onto Queue, kind: internal_out }
+      - { action: LM-DATA Request, kind: signal_lower }
+      - { action: Stop T3, kind: processing }
+      - { action: Start T1, kind: processing }
+      - { action: Clear Acknowledge Pending, kind: processing }
+      - { action: Invoke Retransmission, kind: subroutine }
+    next: TimerRecovery

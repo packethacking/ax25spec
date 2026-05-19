@@ -40,6 +40,7 @@ transitions:
 
   - id: t02_dl_connect_request
     on: DL_CONNECT_request
+    on_label: DL-CONNECT Request
     path:
       - { action: Discard Queue, kind: processing }
       - { action: Set Layer 3 Initiated, kind: processing }
@@ -47,18 +48,21 @@ transitions:
 
   - id: t03_dl_unit_data_request
     on: DL_UNIT_DATA_request
+    on_label: DL-UNIT-DATA Request
     path:
       - { action: UI Command, kind: signal_lower }
     next: AwaitingV22Connection
 
   - id: t04_dl_data_request_yes
     on: DL_DATA_request
+    on_label: DL-DATA Request
     path:
       - { decision: dl_data_layer_3_initiated, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t04_dl_data_request_no
     on: DL_DATA_request
+    on_label: DL-DATA Request
     path:
       - { decision: dl_data_layer_3_initiated, branch: No }
       - { action: Push Frame Onto Queue, kind: internal_out }
@@ -66,12 +70,14 @@ transitions:
 
   - id: t05_i_frame_pops_off_queue_yes
     on: I_frame_pops_off_queue
+    on_label: I Frame Pops Off Queue
     path:
       - { decision: i_frame_pops_off_queue_layer_3_initiated, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t05_i_frame_pops_off_queue_no
     on: I_frame_pops_off_queue
+    on_label: I Frame Pops Off Queue
     path:
       - { decision: i_frame_pops_off_queue_layer_3_initiated, branch: No }
       - { action: Push Frame Onto Queue, kind: internal_out }
@@ -79,29 +85,34 @@ transitions:
 
   - id: t06_all_other_primitives__from_lower_layer
     on: all_other_primitives__from_lower_layer
+    on_label: All Other Primitives
     path: []
     next: AwaitingV22Connection
 
   - id: t07_control_field_error
     on: control_field_error
+    on_label: Control Field Error
     path:
       - { action: DL-ERROR Indication (L), kind: signal_upper }
     next: AwaitingV22Connection
 
   - id: t08_info_field_permitted_in_frame
     on: info_field_permitted_in_frame
+    on_label: Info Field Permitted In Frame
     path:
       - { action: DL-ERROR Indication (M), kind: signal_upper }
     next: AwaitingV22Connection
 
   - id: t09_u_or_s_frame_length_error
     on: u_or_s_frame_length_error
+    on_label: U or S Frame Length Error
     path:
       - { action: DL-ERROR Indication (N), kind: signal_upper }
     next: AwaitingV22Connection
 
   - id: t10_ui_received_no
     on: UI_received
+    on_label: UI
     path:
       - { action: UI Check, kind: subroutine }
       - { decision: ui_p_eq_1, branch: No }
@@ -110,6 +121,7 @@ transitions:
 
   - id: t10_ui_received_yes
     on: UI_received
+    on_label: UI
     path:
       - { action: UI Check, kind: subroutine }
       - { decision: ui_p_eq_1, branch: Yes }
@@ -117,12 +129,14 @@ transitions:
 
   - id: t11_dm_received_no
     on: DM_received
+    on_label: DM
     path:
       - { decision: dm_f_eq_1, branch: No }
     next: AwaitingConnection
 
   - id: t11_dm_received_yes
     on: DM_received
+    on_label: DM
     path:
       - { decision: dm_f_eq_1, branch: Yes }
       - { action: Discard I Frame Queue, kind: processing }
@@ -132,6 +146,7 @@ transitions:
 
   - id: t12_ua_received_no
     on: UA_received
+    on_label: UA
     path:
       - { decision: ua_f_eq_1, branch: No }
       - { action: DL-ERROR Indication (D), kind: signal_upper }
@@ -139,6 +154,7 @@ transitions:
 
   - id: t12_ua_received_yes_yes
     on: UA_received
+    on_label: UA
     path:
       - { decision: ua_f_eq_1, branch: Yes }
       - { decision: ua_layer_3_initiated, branch: Yes }
@@ -154,6 +170,7 @@ transitions:
 
   - id: t12_ua_received_yes_no_no
     on: UA_received
+    on_label: UA
     path:
       - { decision: ua_f_eq_1, branch: Yes }
       - { decision: ua_layer_3_initiated, branch: No }
@@ -173,6 +190,7 @@ transitions:
 
   - id: t12_ua_received_yes_no_yes
     on: UA_received
+    on_label: UA
     path:
       - { decision: ua_f_eq_1, branch: Yes }
       - { decision: ua_layer_3_initiated, branch: No }
@@ -188,6 +206,7 @@ transitions:
 
   - id: t13_t1_expiry_yes
     on: T1_expiry
+    on_label: Timer T1 Expiry
     path:
       - { decision: t1_expiry_rc_eq_n2, branch: Yes }
       - { action: Discard Frame Queue, kind: processing }
@@ -197,6 +216,7 @@ transitions:
 
   - id: t13_t1_expiry_no
     on: T1_expiry
+    on_label: Timer T1 Expiry
     path:
       - { decision: t1_expiry_rc_eq_n2, branch: No }
       - { action: "RC := RC + 1", kind: processing }
@@ -207,6 +227,7 @@ transitions:
 
   - id: t14_frmr_received
     on: FRMR_received
+    on_label: FRMR
     path:
       - { action: "SRT := Initial Default", kind: processing }
       - { action: "T1V := 2 * SRT", kind: processing }
@@ -217,6 +238,7 @@ transitions:
 
   - id: t15_sabme_received
     on: SABME_received
+    on_label: SABME
     path:
       - { action: "F := P", kind: processing }
       - { action: UA, kind: signal_lower }
@@ -224,6 +246,7 @@ transitions:
 
   - id: t16_sabm_received
     on: SABM_received
+    on_label: SABM
     path:
       - { action: "F := P", kind: processing }
       - { action: UA, kind: signal_lower }
@@ -232,6 +255,7 @@ transitions:
 
   - id: t17_disc_received
     on: DISC_received
+    on_label: DISC
     path:
       - { action: "F := P", kind: processing }
       - { action: DM, kind: signal_lower }
@@ -239,5 +263,6 @@ transitions:
 
   - id: t18_all_other_primitives__from_upper_layer
     on: all_other_primitives__from_upper_layer
+    on_label: All Other Primitives
     path: []
     next: AwaitingV22Connection
