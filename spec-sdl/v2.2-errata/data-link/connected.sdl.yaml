@@ -1,2279 +1,883 @@
-# Data-Link state machine: Connected state.
-#
-# Source: AX.25 v2.2 rev 4 (Oct 2025), figure C4.4 "Data Link Connected
-# State". Transcribed from spec-sdl/v2.2-errata/data-link/DataLink_Connected.graphml.
-#
-# 26 input columns → 66 transitions after enumerating decision branches.
-# This is the biggest figure in the AX.25 spec — the connected state has
-# to handle the full set of frame types, flow control, error events, and
-# user-initiated primitives.
-#
-# Decision naming convention on this page: predicate-canonical with no
-# context prefix. Where a predicate (e.g. P_eq_1, Version 2.2?, V(a) <=
-# N(r) <= V(s)?) appears in multiple drawn diamonds across columns, the
-# YAML deduplicates to one `decisions:` entry — different columns'
-# transitions reference the same id. This is canonicalisation, not loss
-# of fidelity: the predicate is the same, only the figure-position
-# differs.
+# Auto-generated from DataLink_Connected.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
 machine: data_link
 state: Connected
-coverage: complete
 source:
   spec: ax.25.2.2.4_Oct_25
   figure: figc4.4
-  url: https://raw.githubusercontent.com/packethacking/ax25spec/main/doc/media/figc4.4a.png
-
-# Per-source commit pins for cross-reference citations in transitions[].references[].
-# Notable patterns surfaced across all four implementations on this page:
-# - rax25 and direwolf both fuse Connected (state 3) with TimerRecovery (state 4)
-#   into a single handler discriminated by an internal flag/enum. figc4.5's
-#   transcription will share many code paths with this page.
-# - All four implementations bypass DL-UNIT-DATA Request (t23) — UI is sent via
-#   APRS/KISS/socket layers rather than through the LAPB state machine.
-# - LinBPQ disables spec-compliant FRMR recovery via the FRMRHACK macro
-#   (L2Code.c:24) — treats FRMR as DM (link drop). Original spec-compliant code
-#   is commented out at L2Code.c:2192-2202.
-# - Linux silently drops AX25_SREJ as AX25_ILLEGAL (no SREJ implementation at all).
-# - DL-ERROR codes (A/C/D/F/K/L/M/N/O) are inconsistently surfaced — direwolf
-#   logs them as text messages, rax25 emits typed DlError variants for some,
-#   LinBPQ and Linux mostly omit.
-pinned_refs:
-  linbpq:
-    repo: https://github.com/M0LTE/linbpq
-    commit: 88a68988b446187cc5f7a2dfdbe33d1cc3ebd46f
-  direwolf:
-    repo: https://github.com/wb2osz/direwolf
-    commit: a231971a652bfb574a4bae9a5d875fbce53d2267
-  rax25:
-    repo: https://github.com/ThomasHabets/rax25
-    commit: d97b7ab725620497d5444e7393969b8d6f9ae58d
-  linux_oot:
-    repo: https://github.com/linux-netdev/mod-orphan
-    commit: 40188e901024be90f50fc37ba1ba3a84678dfe12
 
 decisions:
-  # ─── Frame-reception predicates (used on I-received column) ─────────
-  - id: command
-    question: "Command?"
-    predicate: command
-  - id: info_field_valid
-    question: "Info Field Length <= N1 and Content is Octet Aligned?"
-    predicate: info_field_valid
-
-  # ─── Sequence-number predicates ─────────────────────────────────────
-  - id: nr_in_window
-    question: "V(a) <= N(r) <= V(s)?"
-    predicate: V_a_le_N_r_le_V_s
-  - id: ns_eq_vr
-    question: "N(s) == V(r)?"
-    predicate: N_s_eq_V_r
-  - id: ns_gt_vr_plus_1
-    question: "N(s) > V(r) + 1?"
-    predicate: N_s_gt_V_r_plus_1
-  - id: vs_eq_va
-    question: "V(s) == V(a)?"
-    predicate: V_s_eq_V_a
-  - id: vs_eq_va_plus_k
-    question: "V(s) == V(a) + k?"
-    predicate: V_s_eq_V_a_plus_k
-
-  # ─── Flag predicates ────────────────────────────────────────────────
-  - id: own_receiver_busy
-    question: "Own Receiver Busy?"
-    predicate: own_receiver_busy
-  - id: peer_receiver_busy
+  - id: i_frame_pops_off_queue_peer_receiver_busy
     question: "Peer Receiver Busy?"
     predicate: peer_receiver_busy
-  - id: reject_exception
-    question: "Reject Exception?"
-    predicate: reject_exception
-  - id: srej_enabled
-    question: "SREJ Enabled?"
-    predicate: srej_enabled
-  - id: srej_exception_gt_0
-    question: "SReject Exception > 0?"
-    predicate: srej_exception_gt_0
-  - id: ack_pending
-    question: "Ack Pending?"
-    predicate: acknowledge_pending
-  - id: vr_i_frame_stored
-    question: "V(r) I Frame Stored?"
-    predicate: V_r_I_frame_stored
-  - id: version_2_2
-    question: "Version 2.2?"
-    predicate: version_2_2
-
-  # ─── Frame-bit predicates ───────────────────────────────────────────
-  - id: p_eq_1
-    question: "P == 1?"
-    predicate: P_eq_1
-  - id: p_or_f_eq_1
-    question: "P/F == 1?"
-    predicate: P_or_F_eq_1
-
-  # ─── Timer predicates ───────────────────────────────────────────────
-  - id: t1_running
+  - id: i_frame_pops_off_queue_vs_eq_va_+_k
+    question: "V(s) == V(a) + k?"
+    predicate: vs_eq_va_+_k
+  - id: i_frame_pops_off_queue_t1_running
     question: "T1 Running?"
     predicate: T1_running
+  - id: dl_flow_off_own_receiver_busy
+    question: "Own Receiver Busy?"
+    predicate: own_receiver_busy
+  - id: dl_flow_on_own_receiver_busy
+    question: "Own Receiver Busy?"
+    predicate: own_receiver_busy
+  - id: dl_flow_on_t1_running
+    question: "T1 Running?"
+    predicate: T1_running
+  - id: dl_connect_version_2.2
+    question: "Version 2.2?"
+    predicate: version_2.2
+  - id: control_field_error_version_2.2
+    question: "Version 2.2?"
+    predicate: version_2.2
+  - id: info_not_permitted_in_frame_version_2.2
+    question: "Version 2.2?"
+    predicate: version_2.2
+  - id: u_or_s_frame_length_error_version_2.2
+    question: "Version 2.2?"
+    predicate: version_2.2
+  - id: sabm_vs_eq_va
+    question: "V(s) == V(a)?"
+    predicate: vs_eq_va
+  - id: sabme_vs_eq_va
+    question: "V(s) == V(a)?"
+    predicate: vs_eq_va
+  - id: frmr_version_2.2
+    question: "Version 2.2?"
+    predicate: version_2.2
+  - id: ua_version_2.2
+    question: "Version 2.2?"
+    predicate: version_2.2
+  - id: ui_p_eq_1
+    question: "P == 1?"
+    predicate: P_eq_1
+  - id: rr_va_le_nr_le_vs
+    question: "V(a) <= N(r) <= V(s)?"
+    predicate: va_le_nr_le_vs
+  - id: rr_version_2.2
+    question: "Version 2.2?"
+    predicate: version_2.2
+  - id: rnr_va_le_nr_le_vs
+    question: "V(a) <= N(r) <= V(s)?"
+    predicate: va_le_nr_le_vs
+  - id: rnr_version_2.2
+    question: "Version 2.2?"
+    predicate: version_2.2
+  - id: lm_seize_ack_pending
+    question: "Ack Pending?"
+    predicate: ack_pending
+  - id: srej_va_le_nr_le_vs
+    question: "V(a) <= N(r) <= V(s)?"
+    predicate: va_le_nr_le_vs
+  - id: srej_p/f_eq_1
+    question: "P/F == 1?"
+    predicate: p/f_eq_1
+  - id: srej_version_2.2
+    question: "Version 2.2?"
+    predicate: version_2.2
+  - id: rej_va_le_nr_le_vs
+    question: "V(a) <= N(r) <= V(s)?"
+    predicate: va_le_nr_le_vs
+  - id: rej_version_2.2
+    question: "Version 2.2?"
+    predicate: version_2.2
+  - id: i_command
+    question: "Command?"
+    predicate: command
+  - id: i_info_field_length_le_n1_and_content_is_octet_aligned
+    question: "Info Field Length <= N1 and Content is Octet Aligned?"
+    predicate: info_field_length_le_N1_and_content_is_octet_aligned
+  - id: i_version_2.2
+    question: "Version 2.2?"
+    predicate: version_2.2
+  - id: i_va_le_nr_le_vs
+    question: "V(a) <= N(r) <= V(s)?"
+    predicate: va_le_nr_le_vs
+  - id: i_own_receiver_busy
+    question: "Own Receiver Busy?"
+    predicate: own_receiver_busy
+  - id: i_ns_eq_vr
+    question: "N(s) == V(r)?"
+    predicate: ns_eq_vr
+  - id: i_p_eq_1
+    question: "P == 1?"
+    predicate: P_eq_1
+  - id: i_ack_pending
+    question: "Ack Pending?"
+    predicate: ack_pending
+  - id: i_reject_exception
+    question: "Reject Exception?"
+    predicate: reject_exception
+  - id: i_srej_enabled
+    question: "SREJ Enabled?"
+    predicate: SREJ_enabled
+  - id: i_sreject_exception_gt_0
+    question: "SReject Exception > 0?"
+    predicate: sreject_exception_gt_0
+  - id: i_ns_gt_vr_+_1
+    question: "N(s) > V(r) + 1?"
+    predicate: ns_gt_vr_+_1
 
 transitions:
-  # ─── Column 1: DL-DISCONNECT Request ────────────────────────────────
 
   - id: t01_dl_disconnect_request
     on: DL_DISCONNECT_request
     path:
-      - { action: discard_I_frame_queue, kind: processing }
-      - { action: "RC := 0",              kind: processing }
-      - { action: "DISC (P = 1)",         kind: signal_lower }
-      - { action: stop_T3,                kind: processing }
-      - { action: start_T1,               kind: processing }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: "RC := 0", kind: processing }
+      - { action: DISC (P = 1), kind: signal_lower }
+      - { action: Stop T3, kind: processing }
+      - { action: Start T1, kind: processing }
     next: AwaitingRelease
-    notes: |
-      Upper layer requests disconnect. Tear down: discard pending I
-      frames, reset retry counter, send DISC with P=1, swap timers
-      (stop T3, start T1 for the DISC ack wait), → AwaitingRelease.
 
-  # ─── Column 2: I received (16 paths — the biggest in figc4.4) ───────
-  #
-  # n134 Command? — n135 Info Field Length valid? — n139 V(a)<=N(r)<=V(s)?
-  #   n140 Check I Frames Acknowledged
-  #     n144 Own Receiver Busy?
-  #       Yes → n175 Discard Contents — n176 P==1?
-  #         Yes → F:=1; N(r):=V(r); RR; Clear Ack Pending → Connected
-  #         No  → Connected
-  #       No → n145 N(s)==V(r)?
-  #         Yes → n146 V(r):=V(r)+1; Clear Reject Exc; Decrement SREJ-exc;
-  #               DL-DATA Indication;
-  #               n148 V(r) I Frame Stored?
-  #                 (only No-path drawn — see note)
-  #                 n152 P==1?
-  #                   Yes → F:=1; N(r):=V(r); RR; Clear Ack Pending → Connected
-  #                   No  → n153 Ack Pending?
-  #                     Yes → Connected
-  #                     No  → LM-SEIZE Request; Set Ack Pending → Connected
-  #         No → n161 Reject Exception?
-  #           Yes → n162 Discard Contents — n163 P==1?
-  #             Yes → F:=1; N(r):=V(r); RR; Clear Ack Pending → Connected
-  #             No  → Connected
-  #           No → n164 SREJ Enabled?
-  #             Yes → n167 Save Contents — n168 SReject Exception > 0?
-  #               Yes → n169 N(r):=N(s); F:=0; n170 Increment SREJ-exc; SREJ → Connected
-  #               No  → n173 N(s) > V(r)+1?
-  #                 Yes → n165 Discard Contents; Set Reject Exc; F:=P; N(r):=V(r); REJ; Clear Ack Pending → Connected
-  #                 No  → n174 N(r):=V(r); F:=1; n170 Increment SREJ-exc; SREJ → Connected
-  #             No → n165 Discard Contents; Set Reject Exc; F:=P; N(r):=V(r); REJ; Clear Ack Pending → Connected
-  #   No (N(r) outside V(a)..V(s)) → n116 N(r) Error Recovery — n124 Version 2.2?
-  #     Yes → Awaiting 2.2 Connection
-  #     No  → Awaiting Connection
-  # No (Info Field Length invalid) → DL-ERROR(O); Establish Data Link; Clear L3 Initiated; n124 Version 2.2?
-  #   Yes → Awaiting 2.2 Connection
-  #   No  → Awaiting Connection
-  # No (not a command) → DL-ERROR(O); Discard I Frame → Connected
-
-    references:
-      - source: spec_prose
-        cite: "§6.3.4 ¶1"
-        quote: "While in the information-transfer state, either TNC may indicate a request to disconnect the link by transmitting a DISC command frame and starting timer T1."
-      - source: linbpq
-        path: L4Code.c
-        function: "CLOSECURRENTSESSION"
-        line: 1086
-        note: "sets DISCPENDING if TX_Q non-empty; immediate state 4 + T1=1 otherwise — figure says always discard + DISC(P=1)"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "dl_disconnect_request"
-        line: 1170
-        note: "state_3/state_4 fall-through: discard queue, DISC cmd P=1, STOP_T3 / START_T1, → state_2"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::disconnect"
-        line: 1472
-        note: "fused Connected+TimerRecovery; clears iframe queue, rc=0, sends DISC, → AwaitingRelease. Author TODO flag on timer choice."
-      - source: linux_oot
-        path: net/ax25/af_ax25.c
-        function: "ax25_release"
-        line: 1031
-        note: "STATE_3/STATE_4 branch — Linux collapses Connected and TimerRecovery into one DISC path"
-  - id: t02_i_received_not_command
-    on: I_received
-    path:
-      - { decision: command, branch: "No" }
-      - { action: DL_ERROR_indication_O, kind: signal_upper }
-      - { action: discard_I_frame,        kind: processing }
-    next: Connected
-    notes: |
-      I frame received as a response rather than a command — protocol
-      error. DL-ERROR(O), discard, stay.
-
-    references:
-      - source: linbpq
-        path: L2Code.c
-        function: "SDIFRM"
-        line: 2641
-        note: "in-sequence path; LinBPQ funnels all I-frame logic through SDIFRM → PROC_I_FRAME → no spec_prose-mapped command check"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame"
-        line: 2648
-        note: "state_3/state_4 entry. States 3 & 4 share body — divergence from figure"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::iframe"
-        line: 1553
-        note: "Author rejects spec's DlError::O on non-command I: \"not even remotely correct, since O means packet too big\" — emits DlError::S instead"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 254
-        note: "no separate command-check; non-I frames fall to default (silent drop)"
-  - id: t03_i_received_command_info_field_invalid_v22
-    on: I_received
-    path:
-      - { decision: command,          branch: "Yes" }
-      - { decision: info_field_valid, branch: "No" }
-      - { action: DL_ERROR_indication_O,     kind: signal_upper }
-      - { action: Establish_Data_Link,        kind: subroutine }
-      - { action: clear_layer_3_initiated,    kind: processing }
-      - { decision: version_2_2,      branch: "Yes" }
-    next: AwaitingConnection22
-    notes: |
-      Bad I-frame info field (length > N1 or not octet-aligned), v2.2 peer.
-      Re-establish link via the v2.2 path.
-
-    references:
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame"
-        line: 2754
-        note: "bad-info-length path: DL-ERROR(O) message, establish_data_link, state→1 or 5 (modulo-128 author enhancement)"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::iframe"
-        line: 1561
-        note: "Payload>N1 → establish_data_link + DlError::O + AwaitingConnection. Author TODO: \"should we discard it?\""
-      - source: linbpq
-        path: L2Code.c
-        function: "PROC_I_FRAME"
-        line: 2914
-        note: "Length<1 or >257 → silent ReleaseBuffer. No DL-ERROR(O), no Establish — diverges from figure"
-  - id: t04_i_received_command_info_field_invalid_v20
-    on: I_received
-    path:
-      - { decision: command,          branch: "Yes" }
-      - { decision: info_field_valid, branch: "No" }
-      - { action: DL_ERROR_indication_O,     kind: signal_upper }
-      - { action: Establish_Data_Link,        kind: subroutine }
-      - { action: clear_layer_3_initiated,    kind: processing }
-      - { decision: version_2_2,      branch: "No" }
-    next: AwaitingConnection
-    notes: |
-      Bad I-frame info field, v2.0 peer. Re-establish via v2.0 path.
-
-    references:
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame"
-        line: 2754
-        note: "same code path as t03 — direwolf has no v2.0/v2.2 split for bad info length"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::iframe"
-        line: 1561
-        note: "same as t03"
-      - source: linbpq
-        path: L2Code.c
-        function: "PROC_I_FRAME"
-        line: 2914
-        note: "same as t03 — LinBPQ has no v22/v20 distinction for info-field length"
-  - id: t05_i_received_command_info_valid_nr_out_of_window_v22
-    on: I_received
-    path:
-      - { decision: command,          branch: "Yes" }
-      - { decision: info_field_valid, branch: "Yes" }
-      - { decision: nr_in_window,     branch: "No" }
-      - { action: N_r_Error_Recovery, kind: subroutine }
-      - { decision: version_2_2,      branch: "Yes" }
-    next: AwaitingConnection22
-    notes: |
-      N(r) outside the V(a)..V(s) window — peer ACK is invalid. Recover
-      via re-establish on v2.2 path.
-
-    references:
-      - source: linbpq
-        path: L2Code.c
-        function: "SDNRCHK"
-        line: 2968
-        note: "LinBPQ collapse: all N(r) errors → SDFRMR/FRMR state. No N(r) Error Recovery → AwaitingConnection22"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame"
-        line: 2747
-        note: "is_good_nr false → nr_error_recovery, → state 1 or 5 (author enhancement: modulo==128 ? state_5 : state_1)"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::iframe"
-        line: 1571
-        note: "N(R) out of range → nr_error_recovery + transition AwaitingConnection"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 209
-        note: "ax25_validate_nr fails → nr_error_recovery + STATE_1"
-  - id: t06_i_received_command_info_valid_nr_out_of_window_v20
-    on: I_received
-    path:
-      - { decision: command,          branch: "Yes" }
-      - { decision: info_field_valid, branch: "Yes" }
-      - { decision: nr_in_window,     branch: "No" }
-      - { action: N_r_Error_Recovery, kind: subroutine }
-      - { decision: version_2_2,      branch: "No" }
-    next: AwaitingConnection
-    notes: |
-      As t05 but v2.0 peer.
-
-    references:
-      - source: linbpq
-        path: L2Code.c
-        function: "SDNRCHK"
-        line: 2968
-        note: "same path as t05 — no v22/v20 split"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame"
-        line: 2747
-        note: "same as t05"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::iframe"
-        line: 1571
-        note: "same as t05"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 209
-        note: "same as t05"
-  - id: t07_i_received_own_busy_p_eq_1
-    on: I_received
-    path:
-      - { decision: command,            branch: "Yes" }
-      - { decision: info_field_valid,   branch: "Yes" }
-      - { decision: nr_in_window,       branch: "Yes" }
-      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
-      - { decision: own_receiver_busy,  branch: "Yes" }
-      - { action: discard_contents_of_I_frame, kind: processing }
-      - { decision: p_eq_1,             branch: "Yes" }
-      - { action: "F := 1",             kind: processing }
-      - { action: "N(r) := V(r)",       kind: processing }
-      - { action: RR,                   kind: signal_lower }
-      - { action: clear_acknowledge_pending, kind: processing }
-    next: Connected
-    notes: |
-      Own receiver is busy — drop the I-frame's contents. Peer polled
-      (P=1) so we owe a status response: RR with F=1.
-
-    references:
-      - source: spec_prose
-        cite: "§6.4.2.2"
-        quote: "If the TNC is in a busy condition, it ignores any received I frames without reporting this condition, other than repeating the indication of the busy condition."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame"
-        line: 2711
-        note: "own_receiver_busy && p==1: send RNR response. Author flags \"should be unreachable because we currently don't have a way to set own_receiver_busy\" — figure path effectively dead in direwolf"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::iframe"
-        line: 1604
-        note: "own_receiver_busy: discard iframe (implicit), optionally send RNR if polled. Author note \"discord (implicit)\" typo"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 219
-        note: "OWN_RX_BUSY: discard, send enquiry_response only if P=1, no V(r) advance"
-      - source: linbpq
-        path: L2Code.c
-        function: "RR_OR_RNR"
-        line: 4173
-        note: "no separate own-busy-discard inside SDIFRM — busy decided dynamically at response-send time (QCOUNT<20)"
-  - id: t08_i_received_own_busy_p_eq_0
-    on: I_received
-    path:
-      - { decision: command,            branch: "Yes" }
-      - { decision: info_field_valid,   branch: "Yes" }
-      - { decision: nr_in_window,       branch: "Yes" }
-      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
-      - { decision: own_receiver_busy,  branch: "Yes" }
-      - { action: discard_contents_of_I_frame, kind: processing }
-      - { decision: p_eq_1,             branch: "No" }
-    next: Connected
-    notes: |
-      Own busy and not polled — just drop the frame, stay.
-
-    references:
-      - source: spec_prose
-        cite: "§6.4.2.2"
-        quote: "If the TNC is in a busy condition, it ignores any received I frames without reporting this condition, other than repeating the indication of the busy condition."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame"
-        line: 2707
-        note: "own_receiver_busy with !P=1: implicit no-op. See t07 note about unreachable code."
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 219
-        note: "same OWN_RX_BUSY branch; P=0 takes the no-response path"
-  - id: t09_i_received_in_seq_no_stored_p_eq_1
-    on: I_received
-    path:
-      - { decision: command,            branch: "Yes" }
-      - { decision: info_field_valid,   branch: "Yes" }
-      - { decision: nr_in_window,       branch: "Yes" }
-      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
-      - { decision: own_receiver_busy,  branch: "No" }
-      - { decision: ns_eq_vr,           branch: "Yes" }
-      - { action: "V(r) := V(r) + 1",            kind: processing }
-      - { action: clear_reject_exception,         kind: processing }
-      - { action: "decrement_srej_exception_if_gt_0", kind: processing }
-      - { action: DL_DATA_indication,             kind: signal_upper }
-      - { decision: vr_i_frame_stored,  branch: "No" }
-      - { decision: p_eq_1,             branch: "Yes" }
-      - { action: "F := 1",             kind: processing }
-      - { action: "N(r) := V(r)",       kind: processing }
-      - { action: RR,                   kind: signal_lower }
-      - { action: clear_acknowledge_pending, kind: processing }
-    next: Connected
-    notes: |
-      In-sequence I frame received, no stored frame for V(r), peer
-      polled. Deliver data, advance V(r), respond RR(F=1).
-
-    references:
-      - source: spec_prose
-        cite: "§6.4.2.1"
-        quote: "If a TNC receives a valid I frame...it accepts the received I frame, increments its receive state variable, and acts in one of the following manners: …the receiving TNC sends an RR frame with N(R) equal to V(R)."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame_continued"
-        line: 2927
-        note: "P=1 path: send RR response with F=1 after in-order delivery"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::iframe"
-        line: 1635
-        note: "After in-order delivery with poll: send RR F=1, clear acknowledge_pending"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 229
-        note: "ns==vr with pf=1: send enquiry_response (RR/RNR F=1) instead of arming T2"
-      - source: linbpq
-        path: L2Code.c
-        function: "SDIFRM"
-        line: 2688
-        note: "P-bit set → SEND_RR_RESP(LINK, PFBIT) at 2708"
-  - id: t10_i_received_in_seq_no_stored_p_eq_0_ack_pending
-    on: I_received
-    path:
-      - { decision: command,            branch: "Yes" }
-      - { decision: info_field_valid,   branch: "Yes" }
-      - { decision: nr_in_window,       branch: "Yes" }
-      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
-      - { decision: own_receiver_busy,  branch: "No" }
-      - { decision: ns_eq_vr,           branch: "Yes" }
-      - { action: "V(r) := V(r) + 1",            kind: processing }
-      - { action: clear_reject_exception,         kind: processing }
-      - { action: "decrement_srej_exception_if_gt_0", kind: processing }
-      - { action: DL_DATA_indication,             kind: signal_upper }
-      - { decision: vr_i_frame_stored,  branch: "No" }
-      - { decision: p_eq_1,             branch: "No" }
-      - { decision: ack_pending,        branch: "Yes" }
-    next: Connected
-    notes: |
-      In-sequence data; not polled; ack already pending — let it batch.
-
-    references:
-      - source: spec_prose
-        cite: "§6.4.2.1"
-        quote: "If there are no outstanding I frames, the receiving TNC sends an RR frame with N(R) equal to V(R). The receiving TNC may wait a small period of time before sending the RR frame to be sure additional I frames are not being transmitted."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame_continued"
-        line: 2956
-        note: "P=0, ack_pending: no-op; will piggyback or T2-fire later"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::iframe"
-        line: 1644
-        note: "In-order, no poll: set acknowledge_pending. Comment \"LM seize request (?)\""
-      - source: linbpq
-        path: L2Code.c
-        function: "PROC_I_FRAME"
-        line: 2930
-        note: "Sets L2ACKREQ = PORTT2 (delayed-ack) — equivalent to ack-pending; sent later via L2TimerProc:3533"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 232
-        note: "ACK_PENDING set + T2 started when pf=0 — T2 is Linux's deferred-ack timer (figc4.4 LM-SEIZE-request analogue)"
-  - id: t11_i_received_in_seq_no_stored_p_eq_0_no_ack_pending
-    on: I_received
-    path:
-      - { decision: command,            branch: "Yes" }
-      - { decision: info_field_valid,   branch: "Yes" }
-      - { decision: nr_in_window,       branch: "Yes" }
-      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
-      - { decision: own_receiver_busy,  branch: "No" }
-      - { decision: ns_eq_vr,           branch: "Yes" }
-      - { action: "V(r) := V(r) + 1",            kind: processing }
-      - { action: clear_reject_exception,         kind: processing }
-      - { action: "decrement_srej_exception_if_gt_0", kind: processing }
-      - { action: DL_DATA_indication,             kind: signal_upper }
-      - { decision: vr_i_frame_stored,  branch: "No" }
-      - { decision: p_eq_1,             branch: "No" }
-      - { decision: ack_pending,        branch: "No" }
-      - { action: LM_seize_request,     kind: signal_lower }
-      - { action: set_acknowledgement_pending, kind: processing }
-    next: Connected
-    notes: |
-      In-sequence data; not polled; no ack pending — arrange to send
-      one: seize the medium and set ack-pending so we know to RR when
-      we get LM-SEIZE Confirm (see column 24).
-
-    references:
-      - source: spec_prose
-        cite: "§6.4.2.1"
-        quote: "If there are no outstanding I frames, the receiving TNC sends an RR frame with N(R) equal to V(R). The receiving TNC may wait a small period of time before sending the RR frame…"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame_continued"
-        line: 2942
-        note: "!ack_pending branch: set ack_pending=1, lm_seize_request"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::iframe"
-        line: 1644
-        note: "same handler as t10 — ack_pending flag set but no concrete LM seize emitted"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 232
-        note: "same path as t10 via T2 timer"
-  - id: t12_i_received_out_of_seq_reject_exception_p_eq_1
-    on: I_received
-    path:
-      - { decision: command,            branch: "Yes" }
-      - { decision: info_field_valid,   branch: "Yes" }
-      - { decision: nr_in_window,       branch: "Yes" }
-      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
-      - { decision: own_receiver_busy,  branch: "No" }
-      - { decision: ns_eq_vr,           branch: "No" }
-      - { decision: reject_exception,   branch: "Yes" }
-      - { action: discard_contents_of_I_frame, kind: processing }
-      - { decision: p_eq_1,             branch: "Yes" }
-      - { action: "F := 1",             kind: processing }
-      - { action: "N(r) := V(r)",       kind: processing }
-      - { action: RR,                   kind: signal_lower }
-      - { action: clear_acknowledge_pending, kind: processing }
-    next: Connected
-
-    references:
-      - source: spec_prose
-        cite: "§6.4.4.1"
-        quote: "When an I frame is received with a correct FCS, but its send sequence number N(S) does not match the current receiver's receive state variable, the frame is discarded."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame_continued"
-        line: 2974
-        note: "srej_enable==srej_none path: set reject_exception, REJ response, F=P"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::iframe"
-        line: 1651
-        note: "reject_exception already set: discard frame; respond RR only if polled"
-      - source: linbpq
-        path: L2Code.c
-        function: "SDIFRM"
-        line: 2670
-        note: "L2STATE==6 (REJ Sent) drops out of REJ when in-sequence frame arrives"
-  - id: t13_i_received_out_of_seq_reject_exception_p_eq_0
-    on: I_received
-    path:
-      - { decision: command,            branch: "Yes" }
-      - { decision: info_field_valid,   branch: "Yes" }
-      - { decision: nr_in_window,       branch: "Yes" }
-      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
-      - { decision: own_receiver_busy,  branch: "No" }
-      - { decision: ns_eq_vr,           branch: "No" }
-      - { decision: reject_exception,   branch: "Yes" }
-      - { action: discard_contents_of_I_frame, kind: processing }
-      - { decision: p_eq_1,             branch: "No" }
-    next: Connected
-
-    references:
-      - source: spec_prose
-        cite: "§6.4.4.1"
-        quote: "When an I frame is received with a correct FCS, but its send sequence number N(S) does not match the current receiver's receive state variable, the frame is discarded."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame_continued"
-        line: 2956
-        note: "REJ outstanding + P=0: no response, stay"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::iframe"
-        line: 1651
-        note: "same handler as t12"
-  - id: t14_i_received_out_of_seq_srej_enabled_no_excep_in_range
-    on: I_received
-    path:
-      - { decision: command,            branch: "Yes" }
-      - { decision: info_field_valid,   branch: "Yes" }
-      - { decision: nr_in_window,       branch: "Yes" }
-      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
-      - { decision: own_receiver_busy,  branch: "No" }
-      - { decision: ns_eq_vr,           branch: "No" }
-      - { decision: reject_exception,   branch: "No" }
-      - { decision: srej_enabled,       branch: "Yes" }
-      - { action: save_contents_of_I_frame, kind: processing }
-      - { decision: srej_exception_gt_0, branch: "No" }
-      - { decision: ns_gt_vr_plus_1,    branch: "No" }
-      - { action: "N(r) := V(r)",       kind: processing }
-      - { action: "F := 1",             kind: processing }
-      - { action: increment_srej_exception, kind: processing }
-      - { action: SREJ,                 kind: signal_lower }
-    next: Connected
-
-    references:
-      - source: spec_prose
-        cite: "§6.4.4.2"
-        quote: "When an I frame is received…the frame is retained. SREJ frames are sent with a receive sequence number equal to the value N(R) of the missing frame, and P=1 if an uncleared SREJ condition has not been previously established."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame_continued"
-        line: 3018
-        note: "SREJ-enabled and is_ns_in_window. Author Erratum 3014: \"AX.25 protocol spec did not handle SREJ very well. Based on X.25 section 2.4.6.4.\" Major divergence — direwolf follows X.25 rather than AX.25 SDL"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::iframe"
-        line: 1697
-        note: "Single-frame gap with SREJ enabled: sreject_exception++, ack_pending=false. TODO: SendSrej action not implemented"
-      - source: linbpq
-        path: L2Code.c
-        function: "SDIFRM"
-        line: 2636
-        note: "Out-of-sequence stored in RXFRAMES[NS]; SREJ vs REJ chosen in RR_OR_RNR:4230"
-  - id: t15_i_received_out_of_seq_srej_enabled_no_excep_far_skip
-    on: I_received
-    path:
-      - { decision: command,            branch: "Yes" }
-      - { decision: info_field_valid,   branch: "Yes" }
-      - { decision: nr_in_window,       branch: "Yes" }
-      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
-      - { decision: own_receiver_busy,  branch: "No" }
-      - { decision: ns_eq_vr,           branch: "No" }
-      - { decision: reject_exception,   branch: "No" }
-      - { decision: srej_enabled,       branch: "Yes" }
-      - { action: save_contents_of_I_frame, kind: processing }
-      - { decision: srej_exception_gt_0, branch: "No" }
-      - { decision: ns_gt_vr_plus_1,    branch: "Yes" }
-      - { action: discard_contents_of_I_frame, kind: processing }
-      - { action: set_reject_exception, kind: processing }
-      - { action: "F := P",             kind: processing }
-      - { action: "N(r) := V(r)",       kind: processing }
-      - { action: REJ,                  kind: signal_lower }
-      - { action: clear_acknowledge_pending, kind: processing }
-    next: Connected
-
-    references:
-      - source: spec_prose
-        cite: "§6.4.4.2"
-        quote: "SREJ frames are sent with a receive sequence number equal to the value N(R) of the missing frame, and P=1 if an uncleared SREJ condition has not been previously established."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame_continued"
-        line: 3102
-        note: "X.25 2.4.6.4 (a) — N(S) out of window, discard, respond if P=1"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::iframe"
-        line: 1688
-        note: "p.ns != (vr+1) % modulus: SendRej path (gap > 1). Comment \"Maybe a version of if in_range(p.ns)\" TODO"
-  - id: t16_i_received_out_of_seq_srej_enabled_existing_excep
-    on: I_received
-    path:
-      - { decision: command,            branch: "Yes" }
-      - { decision: info_field_valid,   branch: "Yes" }
-      - { decision: nr_in_window,       branch: "Yes" }
-      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
-      - { decision: own_receiver_busy,  branch: "No" }
-      - { decision: ns_eq_vr,           branch: "No" }
-      - { decision: reject_exception,   branch: "No" }
-      - { decision: srej_enabled,       branch: "Yes" }
-      - { action: save_contents_of_I_frame, kind: processing }
-      - { decision: srej_exception_gt_0, branch: "Yes" }
-      - { action: "N(r) := N(s)",       kind: processing }
-      - { action: "F := 0",             kind: processing }
-      - { action: increment_srej_exception, kind: processing }
-      - { action: SREJ,                 kind: signal_lower }
-    next: Connected
-
-    references:
-      - source: spec_prose
-        cite: "§6.4.4.2"
-        quote: "If an SREJ condition is already pending, an SREJ will be sent with P=0."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame_continued"
-        line: 3018
-        note: "same SREJ-in-window path as t14 with existing exception"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::iframe"
-        line: 1680
-        note: "sreject_exception > 0: increment + clear ack_pending. TODO: actual SendSrej not implemented"
-  - id: t17_i_received_out_of_seq_srej_disabled
-    on: I_received
-    path:
-      - { decision: command,            branch: "Yes" }
-      - { decision: info_field_valid,   branch: "Yes" }
-      - { decision: nr_in_window,       branch: "Yes" }
-      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
-      - { decision: own_receiver_busy,  branch: "No" }
-      - { decision: ns_eq_vr,           branch: "No" }
-      - { decision: reject_exception,   branch: "No" }
-      - { decision: srej_enabled,       branch: "No" }
-      - { action: discard_contents_of_I_frame, kind: processing }
-      - { action: set_reject_exception, kind: processing }
-      - { action: "F := P",             kind: processing }
-      - { action: "N(r) := V(r)",       kind: processing }
-      - { action: REJ,                  kind: signal_lower }
-      - { action: clear_acknowledge_pending, kind: processing }
-    next: Connected
-
-  # ─── Column 3: DL-DATA Request ──────────────────────────────────────
-
-    references:
-      - source: spec_prose
-        cite: "§6.4.4.1"
-        quote: "A REJ frame is sent with a receive sequence number equal to one higher than the last correctly received I frame if an uncleared N(S) sequence error condition has not been previously established."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame_continued"
-        line: 2974
-        note: "SREJ disabled: set reject_exception, REJ response, F=P. Same as t12"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::iframe"
-        line: 1663
-        note: "SREJ disabled path: set reject_exception, SendRej. Author TODO: \"should we maybe wait a bit with sending a REJ?\""
-      - source: linbpq
-        path: L2Code.c
-        function: "SDIFRM"
-        line: 2605
-        note: "L2OUTOFSEQ++; L2STATE=6 (REJ state). REJ sent later when L2ACKREQ expires"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 242
-        note: "REJ F=pf RESPONSE on first out-of-sequence I, ACK_PENDING cleared. Linux: go-back-N only — no SREJ alternative"
-  - id: t18_dl_data_request
+  - id: t02_dl_data_request
     on: DL_DATA_request
     path:
-      - { action: push_on_I_frame_queue, kind: internal_out }
+      - { action: "Push on I Frame Queue (note: word order?)", kind: internal_out }
     next: Connected
-    notes: |
-      verification_pending: graphml label is 'Push on I Frame Queue
-      (note: word order?)' — Tom flagged uncertainty about whether the
-      spec text is "Push on I Frame Queue" vs "Push I Frame on Queue"
-      (or similar word order). Canonical verb chosen here is
-      push_on_I_frame_queue. Worth a spec re-read.
 
-  # ─── Column 4: I Frame Pops Off Queue ───────────────────────────────
-
-    references:
-      - source: spec_prose
-        cite: "§6.4.1"
-        quote: "Whenever a TNC has an I frame to transmit, it sends the I frame with the N(S) of the control field equal to its current send state variable V(S)."
-      - source: linbpq
-        path: L4Code.c
-        function: "SendL4Data"
-        line: 919
-        note: "C_Q_ADD(&LINK->TX_Q, Msg). Multiple L4 paths (637/908/919/1846/1950/1980) all push to TX_Q"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "data_request_good_size"
-        line: 1480
-        note: "state_3/state_4 fall-through: append to I-frame queue, then lm_seize_request if within window. v1.5 change at 1502-1506"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::data"
-        line: 1491
-        note: "Appends to obuf — \"deliberately doesn't preserve the application's frame boundaries\" — then calls Data::flush()"
-      - source: linux_oot
-        path: net/ax25/af_ax25.c
-        function: "ax25_sendmsg"
-        line: 1630
-        note: "SOCK_SEQPACKET path: ax25_output() → ax25_kick(). No explicit DL-DATA primitive"
-  - id: t19_i_frame_pops_off_queue_send_now_t1_running
+  - id: t03_i_frame_pops_off_queue_yes
     on: I_frame_pops_off_queue
     path:
-      - { decision: peer_receiver_busy,  branch: "No" }
-      - { decision: vs_eq_va_plus_k,     branch: "No" }
-      - { action: "N(s) := V(s)",        kind: processing }
-      - { action: "N(r) := V(r)",        kind: processing }
-      - { action: "p := 0",              kind: processing }
-      - { action: I_command,             kind: signal_lower }
-      - { action: "V(s) := V(s) + 1",    kind: processing }
-      - { action: clear_acknowledge_pending, kind: processing }
-      - { decision: t1_running,          branch: "Yes" }
+      - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: Yes }
+      - { action: Push on I Frame Queue, kind: internal_out }
     next: Connected
 
-    references:
-      - source: spec_prose
-        cite: "§6.4.1"
-        quote: "After the I frame is sent, the send state variable is incremented by one. If timer T1 is not running, it is started. If timer T1 is running, it is restarted."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame_pop_off_queue"
-        line: 6591
-        note: "Build I frame, V(s)++, ack_pending=0. Author erratum 6621: \"always want to restart T1 when an I frame is sent\" — unconditional STOP_T3/START_T1"
-      - source: rax25
-        path: src/state.rs
-        function: "Data::flush"
-        line: 882
-        note: "Drains mtu_out bytes, builds Iframe, vs++, emits SendIframe. TODO on Direwolf advice \"always restart T1\""
-      - source: linux_oot
-        path: net/ax25/ax25_out.c
-        function: "ax25_kick"
-        line: 251
-        note: "Window-bounded TX loop. Sends with P=1 only on last frame of window (308). Stops T3 / starts T1 at end (330-332). Handles t19-t22 uniformly"
-      - source: linbpq
-        path: L2Code.c
-        function: "SDETX"
-        line: 3195
-        note: "Drains TX_Q, sends from FRAMES[LINKNS], V(s)++. T1 reset to ONEMINUTE unconditionally — no distinction t19/t20"
-  - id: t20_i_frame_pops_off_queue_send_now_t1_not_running
+  - id: t03_i_frame_pops_off_queue_no_yes
     on: I_frame_pops_off_queue
     path:
-      - { decision: peer_receiver_busy,  branch: "No" }
-      - { decision: vs_eq_va_plus_k,     branch: "No" }
-      - { action: "N(s) := V(s)",        kind: processing }
-      - { action: "N(r) := V(r)",        kind: processing }
-      - { action: "p := 0",              kind: processing }
-      - { action: I_command,             kind: signal_lower }
-      - { action: "V(s) := V(s) + 1",    kind: processing }
-      - { action: clear_acknowledge_pending, kind: processing }
-      - { decision: t1_running,          branch: "No" }
-      - { action: stop_T3,               kind: processing }
-      - { action: start_T1,              kind: processing }
+      - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
+      - { decision: i_frame_pops_off_queue_vs_eq_va_+_k, branch: Yes }
+      - { action: Push on I Frame Queue, kind: internal_out }
     next: Connected
 
-    references:
-      - source: spec_prose
-        cite: "§6.4.1"
-        quote: "If timer T1 is not running, it is started. If timer T1 is running, it is restarted."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame_pop_off_queue"
-        line: 6624
-        note: "unconditional STOP_T3/START_T1 (covers t19 and t20)"
-      - source: rax25
-        path: src/state.rs
-        function: "Data::flush"
-        line: 891
-        note: "if T1 not running: stop T3, start T1(srt)"
-      - source: linbpq
-        path: L2Code.c
-        function: "SDETX"
-        line: 3431
-        note: "same as t19 — no T1-state branch"
-  - id: t21_i_frame_pops_off_queue_window_full
+  - id: t03_i_frame_pops_off_queue_no_no_no
     on: I_frame_pops_off_queue
     path:
-      - { decision: peer_receiver_busy,  branch: "No" }
-      - { decision: vs_eq_va_plus_k,     branch: "Yes" }
-      - { action: push_on_I_frame_queue, kind: internal_out }
+      - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
+      - { decision: i_frame_pops_off_queue_vs_eq_va_+_k, branch: No }
+      - { action: "N(s) := V(s)", kind: processing }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: "p := 0", kind: processing }
+      - { action: I Command, kind: signal_lower }
+      - { action: "V(s) := V(s) + 1", kind: processing }
+      - { action: Clear Acknowledge Pending, kind: processing }
+      - { decision: i_frame_pops_off_queue_t1_running, branch: No }
+      - { action: Stop T3, kind: processing }
+      - { action: Start T1, kind: processing }
     next: Connected
-    notes: |
-      Window full (V(s) reached V(a)+k) — push back on queue and wait.
 
-    references:
-      - source: spec_prose
-        cite: "§6.4.1"
-        quote: "The TNC does not transmit any more I frames if its send state variable equals the last received N(R) from the other side of the link plus k. If the TNC sent more I frames, the flow control window would be exceeded."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame_pop_off_queue"
-        line: 6581
-        note: "while-loop guard exits when window full (WITHIN_WINDOW_SIZE false)"
-      - source: rax25
-        path: src/state.rs
-        function: "Data::flush"
-        line: 875
-        note: "vs == (va+k) mod modulus: window full, leaves obuf intact"
-      - source: linbpq
-        path: L2Code.c
-        function: "SDETX"
-        line: 3190
-        note: "Window check Outstanding >= LINKWINDOW; frames stay on TX_Q. No \"push back\" — never popped"
-  - id: t22_i_frame_pops_off_queue_peer_busy
+  - id: t03_i_frame_pops_off_queue_no_no_yes
     on: I_frame_pops_off_queue
     path:
-      - { decision: peer_receiver_busy,  branch: "Yes" }
-      - { action: push_on_I_frame_queue, kind: internal_out }
+      - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
+      - { decision: i_frame_pops_off_queue_vs_eq_va_+_k, branch: No }
+      - { action: "N(s) := V(s)", kind: processing }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: "p := 0", kind: processing }
+      - { action: I Command, kind: signal_lower }
+      - { action: "V(s) := V(s) + 1", kind: processing }
+      - { action: Clear Acknowledge Pending, kind: processing }
+      - { decision: i_frame_pops_off_queue_t1_running, branch: Yes }
     next: Connected
-    notes: |
-      Peer busy — push back on queue.
 
-  # ─── Column 5: DL-UNIT-DATA Request ─────────────────────────────────
-
-    references:
-      - source: spec_prose
-        cite: "§6.4.1"
-        quote: "If a TNC is in a busy condition, it may still send I frames as long as the distant TNC is not also busy."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame_pop_off_queue"
-        line: 6581
-        note: "same loop guard handles peer_busy"
-      - source: rax25
-        path: src/state.rs
-        function: "Data::flush"
-        line: 867
-        note: "Peer receiver busy → returns empty (no send)"
-      - source: linux_oot
-        path: net/ax25/ax25_out.c
-        function: "ax25_kick"
-        line: 260
-        note: "PEER_RX_BUSY guard at line 260; loop skips"
-      - source: linbpq
-        path: L2Code.c
-        function: "SDETX"
-        line: 3360
-        note: "send loop guarded by POLLSENT not peer-busy; RNRSET consulted via timer policy"
-  - id: t23_dl_unit_data_request
+  - id: t04_dl_unit_data_request
     on: DL_UNIT_DATA_request
     path:
-      - { action: UI_command, kind: signal_lower }
+      - { action: UI Command, kind: signal_lower }
     next: Connected
 
-  # ─── Column 6: DL-FLOW-OFF Request ──────────────────────────────────
-
-    references:
-      - source: spec_prose
-        cite: "§6.3.7"
-        quote: "AX.25 uses a special frame for this operation, the Unnumbered Information (UI) frame."
-      - source: linux_oot
-        path: net/ax25/af_ax25.c
-        function: "ax25_sendmsg"
-        line: 1645
-        note: "SOCK_DGRAM path: builds UI directly, bypasses LAPB state machine. Same path in any state"
-  - id: t24_dl_flow_off_when_not_busy
+  - id: t05_dl_flow_off_request_yes
     on: DL_FLOW_OFF_request
     path:
-      - { decision: own_receiver_busy,    branch: "Yes" }
-      - { action: set_own_receiver_busy,  kind: processing }
-      - { action: RNR_response,           kind: signal_lower }
-      - { action: clear_acknowledge_pending, kind: processing }
+      - { decision: dl_flow_off_own_receiver_busy, branch: Yes }
+      - { action: Set Own Receiver Busy, kind: processing }
+      - { action: RNR Response, kind: signal_lower }
+      - { action: Clear Acknowledge Pending, kind: processing }
     next: Connected
 
-    references:
-      - source: spec_prose
-        cite: "§6.4.10"
-        quote: "Whenever a TNC enters a busy condition, it indicates this by sending an RNR response at the next opportunity."
-      - source: linbpq
-        path: L2Code.c
-        function: "RR_OR_RNR"
-        line: 4238
-        note: "RNR decided dynamically at supervisory-send time (QCOUNT<20 or session busy). No explicit DL-FLOW-OFF primitive"
-  - id: t25_dl_flow_off_when_already_busy
+  - id: t05_dl_flow_off_request_no
     on: DL_FLOW_OFF_request
     path:
-      - { decision: own_receiver_busy, branch: "No" }
+      - { decision: dl_flow_off_own_receiver_busy, branch: No }
     next: Connected
 
-  # ─── Column 7: DL-FLOW-ON Request ───────────────────────────────────
-
-    references: []
-  - id: t26_dl_flow_on_when_busy_and_t1_not_running
+  - id: t06_dl_flow_on_request_no
     on: DL_FLOW_ON_request
     path:
-      - { decision: own_receiver_busy,     branch: "Yes" }
-      - { action: clear_own_receiver_busy, kind: processing }
-      - { action: RR_command,              kind: signal_lower }
-      - { action: clear_acknowledge_pending, kind: processing }
-      - { decision: t1_running,            branch: "No" }
-      - { action: stop_T3,                 kind: processing }
-      - { action: start_T1,                kind: processing }
+      - { decision: dl_flow_on_own_receiver_busy, branch: No }
     next: Connected
 
-    references:
-      - source: linbpq
-        path: L2Code.c
-        function: "L2TimerProc"
-        line: 3505
-        note: "RNRSENT clears when no longer busy → SendSupervisCmd; closest analog to DL-FLOW-ON"
-  - id: t27_dl_flow_on_when_busy_and_t1_running
+  - id: t06_dl_flow_on_request_yes_yes
     on: DL_FLOW_ON_request
     path:
-      - { decision: own_receiver_busy,     branch: "Yes" }
-      - { action: clear_own_receiver_busy, kind: processing }
-      - { action: RR_command,              kind: signal_lower }
-      - { action: clear_acknowledge_pending, kind: processing }
-      - { decision: t1_running,            branch: "Yes" }
+      - { decision: dl_flow_on_own_receiver_busy, branch: Yes }
+      - { action: Clear Own Receiver Busy, kind: processing }
+      - { action: RR Command, kind: signal_lower }
+      - { action: Clear Acknowledge Pending, kind: processing }
+      - { decision: dl_flow_on_t1_running, branch: Yes }
     next: Connected
 
-    references: []
-  - id: t28_dl_flow_on_when_not_busy
+  - id: t06_dl_flow_on_request_yes_no
     on: DL_FLOW_ON_request
     path:
-      - { decision: own_receiver_busy, branch: "No" }
+      - { decision: dl_flow_on_own_receiver_busy, branch: Yes }
+      - { action: Clear Own Receiver Busy, kind: processing }
+      - { action: RR Command, kind: signal_lower }
+      - { action: Clear Acknowledge Pending, kind: processing }
+      - { decision: dl_flow_on_t1_running, branch: No }
+      - { action: Stop T3, kind: processing }
+      - { action: Start T1, kind: processing }
     next: Connected
 
-  # ─── Column 8: DL-CONNECT Request ───────────────────────────────────
-
-    references:
-      - source: linbpq
-        path: L2Code.c
-        function: "SendSupervisCmd"
-        line: 3621
-        note: "RR(P) sent with PFBIT, L2TIMER restart via L2SENDCOMMAND"
-  - id: t29_dl_connect_request_v22
+  - id: t07_dl_connect_request_no
     on: DL_CONNECT_request
     path:
-      - { action: discard_I_frame_queue,   kind: processing }
-      - { action: Establish_Data_Link,     kind: subroutine }
-      - { action: set_layer_3_initiated,   kind: processing }
-      - { decision: version_2_2,           branch: "Yes" }
-    next: AwaitingConnection22
-
-    references:
-      - source: spec_prose
-        cite: "§6.3.6.2"
-        quote: "If sent and received SABM(E) or DISC command frames are the same, both TNCs send a UA response at the earliest opportunity, and both devices enter the indicated state."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "dl_connect_request"
-        line: 1052
-        note: "state_3/state_4 fall-through: discard_i_queue, establish_data_link, layer_3_initiated=1. Author enhancement at 1058-1060: state_5 if modulo==128 else state_1"
-      - source: linux_oot
-        path: net/ax25/af_ax25.c
-        function: "ax25_connect"
-        line: 1227
-        note: "Already STATE_3: rejects with -EISCONN. Linux does NOT implement re-establishment"
-  - id: t30_dl_connect_request_v20
-    on: DL_CONNECT_request
-    path:
-      - { action: discard_I_frame_queue,   kind: processing }
-      - { action: Establish_Data_Link,     kind: subroutine }
-      - { action: set_layer_3_initiated,   kind: processing }
-      - { decision: version_2_2,           branch: "No" }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Set Layer 3 Initiated, kind: processing }
+      - { decision: dl_connect_version_2.2, branch: No }
     next: AwaitingConnection
 
-  # ─── Column 9: All Other Primitives (d5: "Signal reception from Lower Layer") ─────
+  - id: t07_dl_connect_request_yes
+    on: DL_CONNECT_request
+    path:
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Set Layer 3 Initiated, kind: processing }
+      - { decision: dl_connect_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
 
-    references:
-      - source: spec_prose
-        cite: "§6.3.6.2"
-        quote: "If sent and received SABM(E) or DISC command frames are the same, both TNCs send a UA response at the earliest opportunity, and both devices enter the indicated state."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "dl_connect_request"
-        line: 1060
-        note: "modulo!=128 branch → state_1"
-  - id: t31_all_other_primitives_from_lower_layer
+  - id: t08_all_other_primitives__from_lower_layer
     on: all_other_primitives__from_lower_layer
     path: []
     next: Connected
 
-  # ─── Column 10: Control Field Error ─────────────────────────────────
-
-    references:
-      - source: linbpq
-        path: L2Code.c
-        function: "L2_PROCESS"
-        line: 2203
-        note: "default → ReleaseBuffer"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 254
-        note: "default case silently no-ops"
-  - id: t32_control_field_error_v22
+  - id: t09_control_field_error_no
     on: control_field_error
     path:
-      - { action: DL_ERROR_indication_L,   kind: signal_upper }
-      - { action: discard_I_frame_queue,   kind: processing }
-      - { action: Establish_Data_Link,     kind: subroutine }
-      - { action: set_layer_3_initiated,   kind: processing }
-      - { decision: version_2_2,           branch: "Yes" }
-    next: AwaitingConnection22
+      - { action: DL-ERROR Indication (L), kind: signal_upper }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Set Layer 3 Initiated, kind: processing }
+      - { decision: control_field_error_version_2.2, branch: No }
+    next: AwaitingConnection
 
-    references:
-      - source: spec_prose
-        cite: "§6.4.5"
-        quote: "When a TNC receives a frame with an incorrect FCS, an invalid frame, or a frame with an improper address, that frame is discarded."
-      - source: linbpq
-        path: L2Code.c
-        function: "L2_PROCESS"
-        line: 2049
-        note: "default in S-frame switch → SDFRMR (FRMR state). NO Establish Data Link — sends FRMR instead"
-  - id: t33_control_field_error_v20
+  - id: t09_control_field_error_yes
     on: control_field_error
     path:
-      - { action: DL_ERROR_indication_L,   kind: signal_upper }
-      - { action: discard_I_frame_queue,   kind: processing }
-      - { action: Establish_Data_Link,     kind: subroutine }
-      - { action: set_layer_3_initiated,   kind: processing }
-      - { decision: version_2_2,           branch: "No" }
-    next: AwaitingConnection
+      - { action: DL-ERROR Indication (L), kind: signal_upper }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Set Layer 3 Initiated, kind: processing }
+      - { decision: control_field_error_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
 
-  # ─── Column 11: Info Not Permitted in Frame ─────────────────────────
-
-    references:
-      - source: spec_prose
-        cite: "§6.4.5"
-        quote: "When a TNC receives a frame with an incorrect FCS, an invalid frame, or a frame with an improper address, that frame is discarded."
-      - source: linbpq
-        path: L2Code.c
-        function: "L2_PROCESS"
-        line: 2049
-        note: "same as t32 — no v22/v20 split"
-  - id: t34_info_not_permitted_in_frame_v22
+  - id: t10_info_not_permitted_in_frame_no
     on: info_not_permitted_in_frame
     path:
-      - { action: DL_ERROR_indication_M,   kind: signal_upper }
-      - { action: discard_I_frame_queue,   kind: processing }
-      - { action: Establish_Data_Link,     kind: subroutine }
-      - { action: set_layer_3_initiated,   kind: processing }
-      - { decision: version_2_2,           branch: "Yes" }
-    next: AwaitingConnection22
-    references:
-      - source: spec_prose
-        cite: "§6.4.5"
-        quote: "When a TNC receives a frame with an incorrect FCS, an invalid frame, or a frame with an improper address, that frame is discarded."
+      - { action: DL-ERROR Indication (M), kind: signal_upper }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Set Layer 3 Initiated, kind: processing }
+      - { decision: info_not_permitted_in_frame_version_2.2, branch: No }
+    next: AwaitingConnection
 
-  - id: t35_info_not_permitted_in_frame_v20
+  - id: t10_info_not_permitted_in_frame_yes
     on: info_not_permitted_in_frame
     path:
-      - { action: DL_ERROR_indication_M,   kind: signal_upper }
-      - { action: discard_I_frame_queue,   kind: processing }
-      - { action: Establish_Data_Link,     kind: subroutine }
-      - { action: set_layer_3_initiated,   kind: processing }
-      - { decision: version_2_2,           branch: "No" }
-    next: AwaitingConnection
-    references:
-      - source: spec_prose
-        cite: "§6.4.5"
-        quote: "When a TNC receives a frame with an incorrect FCS, an invalid frame, or a frame with an improper address, that frame is discarded."
+      - { action: DL-ERROR Indication (M), kind: signal_upper }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Set Layer 3 Initiated, kind: processing }
+      - { decision: info_not_permitted_in_frame_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
 
-  # ─── Column 12: U or S Frame Length Error ───────────────────────────
-  - id: t36_u_or_s_frame_length_error_v22
+  - id: t11_u_or_s_frame_length_error_no
     on: u_or_s_frame_length_error
     path:
-      - { action: DL_ERROR_indication_N,   kind: signal_upper }
-      - { action: discard_I_frame_queue,   kind: processing }
-      - { action: Establish_Data_Link,     kind: subroutine }
-      - { action: set_layer_3_initiated,   kind: processing }
-      - { decision: version_2_2,           branch: "Yes" }
-    next: AwaitingConnection22
-
-    references:
-      - source: spec_prose
-        cite: "§6.4.5"
-        quote: "When a TNC receives a frame with an incorrect FCS, an invalid frame, or a frame with an improper address, that frame is discarded."
-      - source: linbpq
-        path: L2Code.c
-        function: "PROC_I_FRAME"
-        line: 2914
-        note: "Length<1 or >257 → drop. No DL-ERROR(N)"
-  - id: t37_u_or_s_frame_length_error_v20
-    on: u_or_s_frame_length_error
-    path:
-      - { action: DL_ERROR_indication_N,   kind: signal_upper }
-      - { action: discard_I_frame_queue,   kind: processing }
-      - { action: Establish_Data_Link,     kind: subroutine }
-      - { action: set_layer_3_initiated,   kind: processing }
-      - { decision: version_2_2,           branch: "No" }
+      - { action: DL-ERROR Indication (N), kind: signal_upper }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Set Layer 3 Initiated, kind: processing }
+      - { decision: u_or_s_frame_length_error_version_2.2, branch: No }
     next: AwaitingConnection
 
-  # ─── Column 13: Timer T1 Expiry ─────────────────────────────────────
+  - id: t11_u_or_s_frame_length_error_yes
+    on: u_or_s_frame_length_error
+    path:
+      - { action: DL-ERROR Indication (N), kind: signal_upper }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Set Layer 3 Initiated, kind: processing }
+      - { decision: u_or_s_frame_length_error_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
 
-    references:
-      - source: spec_prose
-        cite: "§6.4.5"
-        quote: "When a TNC receives a frame with an incorrect FCS, an invalid frame, or a frame with an improper address, that frame is discarded."
-      - source: linbpq
-        path: L2Code.c
-        function: "PROC_I_FRAME"
-        line: 2914
-        note: "same as t36"
-  - id: t38_t1_expiry
+  - id: t12_t1_expiry
     on: T1_expiry
     path:
-      - { action: "RC := 1",       kind: processing }
-      - { action: Transmit_Enquiry, kind: subroutine }
+      - { action: "RC := 1", kind: processing }
+      - { action: Transmit Enquery, kind: subroutine }
     next: TimerRecovery
-    notes: |
-      T1 expired — start the timer-recovery procedure. Note: figure
-      labels the subroutine "Transmit Enquery" (sic) — preserved
-      verbatim but the canonical verb here is the spec's
-      "Transmit Enquiry" routine.
 
-  # ─── Column 14: Timer T3 Expiry ─────────────────────────────────────
-
-    references:
-      - source: spec_prose
-        cite: "§6.4.11"
-        quote: "If the originating TNC's timer T1 expires while awaiting the distant TNC's acknowledgement of an I frame transmitted, the originating TNC restarts timer T1 and transmits an appropriate supervisory command frame (RR or RNR) with the P bit set."
-      - source: linbpq
-        path: L2Code.c
-        function: "L2TIMEOUT"
-        line: 3826
-        note: "State>=5: L2RETRIES++; sends DISC at N2 (3839) or SendSupervisCmd (3843). No separate TimerRecovery state in LinBPQ"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "t1_expiry"
-        line: 5514
-        note: "state_3: SET_RC(1), transmit_enquiry, → state_4"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::t1"
-        line: 1704
-        note: "Single method handles Connected (rc=1) and TimerRecovery (rc++). Author: \"1998 spec doesn't say if it should be true or false. 2017 spec adds that pf should be false\""
-      - source: linux_oot
-        path: net/ax25/ax25_std_timer.c
-        function: "ax25_std_t1timer_expiry"
-        line: 155
-        note: "STATE_3: n2count=1, transmit_enquiry, → STATE_4"
-  - id: t39_t3_expiry
+  - id: t13_t3_expiry
     on: T3_expiry
     path:
-      - { action: "RC := 1",       kind: processing }
-      - { action: Transmit_Enquiry, kind: subroutine }
+      - { action: "RC := 1", kind: processing }
+      - { action: Transmit Enquery, kind: subroutine }
     next: TimerRecovery
-    notes: |
-      T3 expired — long idle, poll the peer via Transmit Enquiry.
 
-  # ─── Column 15: SABM received (collision / reset) ───────────────────
-
-    references:
-      - source: spec_prose
-        cite: "§6.7.1"
-        quote: "T3 (inactive link timer): used to monitor data link traffic during idle periods to ensure the link is still functional."
-      - source: linbpq
-        path: L2Code.c
-        function: "L2TimerProc"
-        line: 3557
-        note: "L2SLOTIM (T3) decrement → SendSupervisCmd (RR(P) link-validation poll)"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "t3_expiry"
-        line: 5631
-        note: "Author erratum 5633: \"Original sets RC to 0, 2006 revision sets RC to 1 which makes more sense.\" Direwolf follows 2006"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::t3"
-        line: 1732
-        note: "Author: \"1998 bug: Says to set rc=0. Fixed in 2017.\" Sets rc=1, → TimerRecovery"
-      - source: linux_oot
-        path: net/ax25/ax25_std_timer.c
-        function: "ax25_std_t3timer_expiry"
-        line: 87
-        note: "n2count=0 then transmit_enquiry, → STATE_4. DIVERGES: figure says \"stay in Connected\"; Linux moves to TimerRecovery"
-  - id: t40_sabm_received_vs_neq_va
+  - id: t14_sabm_received_yes
     on: SABM_received
     path:
-      - { action: "F := P",            kind: processing }
-      - { action: set_version_2_0,     kind: processing }
-      - { action: UA,                  kind: signal_lower }
-      - { action: Clear_Exception_Conditions, kind: subroutine }
-      - { action: DL_ERROR_indication_F, kind: signal_upper }
-      - { decision: vs_eq_va,          branch: "No" }
-      - { action: discard_I_frame_queue, kind: processing }
-      - { action: DL_CONNECT_indication, kind: signal_upper }
-      - { action: stop_T1,             kind: processing }
-      - { action: start_T3,            kind: processing }
-      - { action: "V(a) := 0",         kind: processing }
-      - { action: "V(s) := 0",         kind: processing }
-      - { action: "V(r) := 0",         kind: processing }
-      - { action: "RC := 0",           kind: processing }
+      - { action: "F := P", kind: processing }
+      - { action: Set Version 2.0, kind: processing }
+      - { action: UA, kind: signal_lower }
+      - { action: Clear Exception Conditions, kind: subroutine }
+      - { action: DL-ERROR Indication (F), kind: signal_upper }
+      - { decision: sabm_vs_eq_va, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Start T3, kind: processing }
+      - { action: "V(a) := 0", kind: processing }
+      - { action: "V(s) := 0", kind: processing }
+      - { action: "V(r) := 0", kind: processing }
+      - { action: "RC := 0", kind: processing }
     next: Connected
-    notes: |
-      Peer sent SABM while we're already Connected → reset to v2.0.
-      V(s) ≠ V(a) means we have unacknowledged data; discard queue and
-      notify L3 of the reset via DL-CONNECT indication.
 
-    references:
-      - source: spec_prose
-        cite: "§6.3.3"
-        quote: "If the TNC receives a SABM(E) command while in the information-transfer state, it follows the resetting procedure outlined in Section 6.5."
-      - source: linbpq
-        path: L2Code.c
-        function: "L2LINKACTIVE"
-        line: 1281
-        note: "If SESSACTIVE: InformPartner(NORMALCLOSE) + reset via L2SABM. LinBPQ uses SESSACTIVE flag instead of V(s)==V(a) — no DL-CONNECT-Indication"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "sabm_e_frame"
-        line: 4442
-        note: "state_3/state_4 fall-through: UA F=p, clear_exception_conditions, error F, discard queue if vs!=va, reset V(), STOP_T1/START_T3"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::sabm"
-        line: 1506
-        note: "Sets version 2, delegates to sabm_or_sabme()"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 146
-        note: "Combined SABM/SABME case 146-165. Collapses figure's t40-t43 — no per-F-bit or per-V-state branching"
-  - id: t41_sabm_received_vs_eq_va
+  - id: t14_sabm_received_no
     on: SABM_received
     path:
-      - { action: "F := P",            kind: processing }
-      - { action: set_version_2_0,     kind: processing }
-      - { action: UA,                  kind: signal_lower }
-      - { action: Clear_Exception_Conditions, kind: subroutine }
-      - { action: DL_ERROR_indication_F, kind: signal_upper }
-      - { decision: vs_eq_va,          branch: "Yes" }
-      - { action: stop_T1,             kind: processing }
-      - { action: start_T3,            kind: processing }
-      - { action: "V(a) := 0",         kind: processing }
-      - { action: "V(s) := 0",         kind: processing }
-      - { action: "V(r) := 0",         kind: processing }
-      - { action: "RC := 0",           kind: processing }
+      - { action: "F := P", kind: processing }
+      - { action: Set Version 2.0, kind: processing }
+      - { action: UA, kind: signal_lower }
+      - { action: Clear Exception Conditions, kind: subroutine }
+      - { action: DL-ERROR Indication (F), kind: signal_upper }
+      - { decision: sabm_vs_eq_va, branch: No }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: DL-CONNECT Indication, kind: signal_upper }
+      - { action: Stop T1, kind: processing }
+      - { action: Start T3, kind: processing }
+      - { action: "V(a) := 0", kind: processing }
+      - { action: "V(s) := 0", kind: processing }
+      - { action: "V(r) := 0", kind: processing }
+      - { action: "RC := 0", kind: processing }
     next: Connected
-    notes: |
-      Peer SABM with V(s)==V(a) (no unacked data) — silent reset, no
-      DL-CONNECT indication to upper layer.
 
-  # ─── Column 16: SABME received (collision / reset → v2.2) ───────────
-
-    references:
-      - source: spec_prose
-        cite: "§6.3.3"
-        quote: "If the TNC receives a SABM(E) command while in the information-transfer state, it follows the resetting procedure outlined in Section 6.5."
-      - source: linbpq
-        path: L2Code.c
-        function: "L2LINKACTIVE"
-        line: 1275
-        note: "SESSACTIVE==0: repeat UA. Treats SABM as missed-UA case — no DL-CONNECT-Indication. Divergence from spec"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "sabm_e_frame"
-        line: 4468
-        note: "vs!=va branch: discard I queue and re-issue server_link_established (figure's DL-CONNECT indication path)"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::sabm_or_sabme"
-        line: 1433
-        note: "Author: \"2017 spec says to stop both T1 and T3 in state timer recovery. That can't be right, can it?\" (only T1 stopped)"
-  - id: t42_sabme_received_vs_neq_va
+  - id: t15_sabme_received_yes
     on: SABME_received
     path:
-      - { action: "F := P",            kind: processing }
-      - { action: set_version_2_2,     kind: processing }
-      - { action: UA,                  kind: signal_lower }
-      - { action: Clear_Exception_Conditions, kind: subroutine }
-      - { action: DL_ERROR_indication_F, kind: signal_upper }
-      - { decision: vs_eq_va,          branch: "No" }
-      - { action: discard_I_frame_queue, kind: processing }
-      - { action: DL_CONNECT_indication, kind: signal_upper }
-      - { action: stop_T1,             kind: processing }
-      - { action: start_T3,            kind: processing }
-      - { action: "V(a) := 0",         kind: processing }
-      - { action: "V(s) := 0",         kind: processing }
-      - { action: "V(r) := 0",         kind: processing }
-      - { action: "RC := 0",           kind: processing }
+      - { action: "F := P", kind: processing }
+      - { action: Set Version 2.2, kind: processing }
+      - { action: UA, kind: signal_lower }
+      - { action: Clear Exception Conditions, kind: subroutine }
+      - { action: DL-ERROR Indication (F), kind: signal_upper }
+      - { decision: sabme_vs_eq_va, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Start T3, kind: processing }
+      - { action: "V(a) := 0", kind: processing }
+      - { action: "V(s) := 0", kind: processing }
+      - { action: "V(r) := 0", kind: processing }
+      - { action: "RC := 0", kind: processing }
     next: Connected
 
-    references:
-      - source: spec_prose
-        cite: "§6.3.3"
-        quote: "If the TNC receives a SABM(E) command while in the information-transfer state, it follows the resetting procedure outlined in Section 6.5."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "sabm_e_frame"
-        line: 4454
-        note: "SABM and SABME merge in state_3. extended bool only routes set_version — structural collapse vs figc4.4"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::sabme"
-        line: 1515
-        note: "Sets version 2.2, delegates to sabm_or_sabme()"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 147
-        note: "Same combined case as t40. Extended modulus set at 152-153"
-  - id: t43_sabme_received_vs_eq_va
+  - id: t15_sabme_received_no
     on: SABME_received
     path:
-      - { action: "F := P",            kind: processing }
-      - { action: set_version_2_2,     kind: processing }
-      - { action: UA,                  kind: signal_lower }
-      - { action: Clear_Exception_Conditions, kind: subroutine }
-      - { action: DL_ERROR_indication_F, kind: signal_upper }
-      - { decision: vs_eq_va,          branch: "Yes" }
-      - { action: stop_T1,             kind: processing }
-      - { action: start_T3,            kind: processing }
-      - { action: "V(a) := 0",         kind: processing }
-      - { action: "V(s) := 0",         kind: processing }
-      - { action: "V(r) := 0",         kind: processing }
-      - { action: "RC := 0",           kind: processing }
+      - { action: "F := P", kind: processing }
+      - { action: Set Version 2.2, kind: processing }
+      - { action: UA, kind: signal_lower }
+      - { action: Clear Exception Conditions, kind: subroutine }
+      - { action: DL-ERROR Indication (F), kind: signal_upper }
+      - { decision: sabme_vs_eq_va, branch: No }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: DL-CONNECT Indication, kind: signal_upper }
+      - { action: Stop T1, kind: processing }
+      - { action: Start T3, kind: processing }
+      - { action: "V(a) := 0", kind: processing }
+      - { action: "V(s) := 0", kind: processing }
+      - { action: "V(r) := 0", kind: processing }
+      - { action: "RC := 0", kind: processing }
     next: Connected
 
-  # ─── Column 17: FRMR received ───────────────────────────────────────
-
-    references:
-      - source: spec_prose
-        cite: "§6.3.3"
-        quote: "If the TNC receives a SABM(E) command while in the information-transfer state, it follows the resetting procedure outlined in Section 6.5."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "sabm_e_frame"
-        line: 4468
-        note: "same as t41 — direwolf doesn't distinguish SABM/SABME branches"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::sabm_or_sabme"
-        line: 1447
-        note: "Author: \"Added in 2017 spec, but only for Connected. TODO: should this be set also for TimerRecovery?\" on rc=0 reset"
-  - id: t44_frmr_received_v22
+  - id: t16_frmr_received_no
     on: FRMR_received
     path:
-      - { action: DL_ERROR_indication_K,  kind: signal_upper }
-      - { action: Establish_Data_Link,    kind: subroutine }
-      - { action: clear_layer_3_initiated, kind: processing }
-      - { decision: version_2_2,          branch: "Yes" }
-    next: AwaitingConnection22
+      - { action: DL-ERROR Indication (K), kind: signal_upper }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Clear Layer 3 Initiated, kind: processing }
+      - { decision: frmr_version_2.2, branch: No }
+    next: AwaitingConnection
 
-    references:
-      - source: spec_prose
-        cite: "§6.5 ¶2"
-        quote: "A TNC initiates a reset procedure whenever it receives an unexpected UA response frame, or after receipt of a FRMR frame from a TNC using an older version of the protocol."
-      - source: linbpq
-        path: L2Code.c
-        function: "L2_PROCESS"
-        line: 2168
-        note: "FRMRHACK (L2Code.c:24) treats FRMR as DM — InformPartner(LINKLOST) + DM + CLEAROUTLINK. NOTABLE DIVERGENCE: spec says DL-ERROR(K)+Establish. Spec-compliant path commented out at 2192-2202"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "frmr_frame"
-        line: 5020
-        note: "state_3/state_4: error K, set_version_2_0 (Erratum 5028: \"FRMR can only be sent by v2.0\"), establish_data_link, → state_1"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::frmr"
-        line: 1760
-        note: "Both Connected and TimerRecovery: layer3_initiated=false, DlError::K, establish_data_link, → AwaitingConnection"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 248
-        note: "AX25_FRMR (and AX25_ILLEGAL) → establish_data_link + STATE_1. No DL-ERROR(K) report; no FRMR info bytes inspected"
-  - id: t45_frmr_received_v20
+  - id: t16_frmr_received_yes
     on: FRMR_received
     path:
-      - { action: DL_ERROR_indication_K,  kind: signal_upper }
-      - { action: Establish_Data_Link,    kind: subroutine }
-      - { action: clear_layer_3_initiated, kind: processing }
-      - { decision: version_2_2,          branch: "No" }
-    next: AwaitingConnection
+      - { action: DL-ERROR Indication (K), kind: signal_upper }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Clear Layer 3 Initiated, kind: processing }
+      - { decision: frmr_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
 
-  # ─── Column 18: UA received (unexpected) ────────────────────────────
-
-    references:
-      - source: spec_prose
-        cite: "§6.5 ¶2"
-        quote: "A TNC initiates a reset procedure whenever it receives an unexpected UA response frame, or after receipt of a FRMR frame from a TNC using an older version of the protocol."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "frmr_frame"
-        line: 5031
-        note: "single path — direwolf has no separate L3-initiated branch"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::frmr"
-        line: 1760
-        note: "same handler as t44"
-      - source: linbpq
-        path: L2Code.c
-        function: "L2_PROCESS"
-        line: 2168
-        note: "same FRMRHACK path as t44 — no v22/v20 split"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 248
-        note: "same case as t44"
-  - id: t46_ua_received_v22
+  - id: t17_ua_received_no
     on: UA_received
     path:
-      - { action: DL_ERROR_indication_K,  kind: signal_upper }
-      - { action: Establish_Data_Link,    kind: subroutine }
-      - { action: clear_layer_3_initiated, kind: processing }
-      - { decision: version_2_2,          branch: "Yes" }
-    next: AwaitingConnection22
-
-    references:
-      - source: spec_prose
-        cite: "§6.5 ¶2"
-        quote: "A TNC initiates a reset procedure whenever it receives an unexpected UA response frame, or after receipt of a FRMR frame from a TNC using an older version of the protocol."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "ua_frame"
-        line: 4948
-        note: "state_3/state_4: error C (\"Unexpected UA\"), establish_data_link, → state_1 or 5 (modulo author enhancement). Direwolf does NOT branch on F bit — figure's two-path F=1/F=0 collapsed"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::ua"
-        line: 1748
-        note: "Author: \"2017 spec says DlError::K, which is undocumented.\" Uses DlError::C, establish_data_link, → AwaitingConnection"
-      - source: linbpq
-        path: L2Code.c
-        function: "L2_PROCESS"
-        line: 2140
-        note: "UA in state 5 falls to default → ReleaseBuffer (silent ignore). NOTABLE DIVERGENCE from spec DL-ERROR(C)+Establish"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 254
-        note: "No AX25_UA case in STATE_3 switch → silent default. DIVERGENCE: figure t46 calls for DL-ERROR(C)"
-  - id: t47_ua_received_v20
-    on: UA_received
-    path:
-      - { action: DL_ERROR_indication_K,  kind: signal_upper }
-      - { action: Establish_Data_Link,    kind: subroutine }
-      - { action: clear_layer_3_initiated, kind: processing }
-      - { decision: version_2_2,          branch: "No" }
+      - { action: DL-ERROR Indication (K), kind: signal_upper }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Clear Layer 3 Initiated, kind: processing }
+      - { decision: ua_version_2.2, branch: No }
     next: AwaitingConnection
 
-  # ─── Column 19: UI received ─────────────────────────────────────────
+  - id: t17_ua_received_yes
+    on: UA_received
+    path:
+      - { action: DL-ERROR Indication (K), kind: signal_upper }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Clear Layer 3 Initiated, kind: processing }
+      - { decision: ua_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
 
-    references:
-      - source: spec_prose
-        cite: "§6.5 ¶2"
-        quote: "A TNC initiates a reset procedure whenever it receives an unexpected UA response frame, or after receipt of a FRMR frame from a TNC using an older version of the protocol."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "ua_frame"
-        line: 4948
-        note: "same path as t46 — no F-bit branching"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::ua"
-        line: 1748
-        note: "same handler as t46"
-      - source: linbpq
-        path: L2Code.c
-        function: "L2_PROCESS"
-        line: 2140
-        note: "same silent-ignore as t46"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 254
-        note: "same default-case drop as t46. Linux uniform: no F-bit distinction"
-  - id: t48_ui_received_p_eq_0
+  - id: t18_ui_received_yes
     on: UI_received
     path:
-      - { action: UI_Check,    kind: subroutine }
-      - { decision: p_eq_1, branch: "No" }
+      - { action: UI Check, kind: subroutine }
+      - { decision: ui_p_eq_1, branch: Yes }
+      - { action: Enquiry Response (F = 1), kind: subroutine }
     next: Connected
 
-    references:
-      - source: spec_prose
-        cite: "§6.3.7"
-        quote: "AX.25 uses a special frame for this operation, the Unnumbered Information (UI) frame…Since this mode is connectionless, there are no requests for retransmissions of bad frames."
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "ui_frame"
-        line: 5127
-        note: "Only runs when cmd && pf==1. state_3/4 case calls enquiry_response with frame_type_U_UI"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::ui"
-        line: 1770
-        note: "Calls Data::ui_check(cr, len); no enquiry response unless poll set"
-      - source: linbpq
-        path: L2Code.c
-        function: "L2LINKACTIVE"
-        line: 1065
-        note: "UI dispatched by PID (Netrom/IP/ARP). No UI_Check DL-error semantics — LinBPQ just routes"
-      - source: linux_oot
-        path: net/ax25/ax25_in.c
-        function: "ax25_rcv"
-        line: 229
-        note: "UI intercepted before LAPB state machine — handled state-independently"
-  - id: t49_ui_received_p_eq_1
+  - id: t18_ui_received_no
     on: UI_received
     path:
-      - { action: UI_Check,             kind: subroutine }
-      - { decision: p_eq_1, branch: "Yes" }
-      - { action: "Enquiry_Response_F_1", kind: subroutine }
+      - { action: UI Check, kind: subroutine }
+      - { decision: ui_p_eq_1, branch: No }
     next: Connected
 
-  # ─── Column 20: DISC received ───────────────────────────────────────
-
-    references:
-      - source: spec_prose
-        cite: "§6.3.7"
-        quote: "AX.25 uses a special frame for this operation, the Unnumbered Information (UI) frame…"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::ui"
-        line: 1772
-        note: "Poll branch: act.push(data.enquiry_response(true))"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "ui_frame"
-        line: 5127
-        note: "same path as t48 — direwolf only handles cmd && pf==1 case"
-  - id: t50_disc_received
+  - id: t19_disc_received
     on: DISC_received
     path:
-      - { action: discard_I_frame_queue, kind: processing }
-      - { action: "F := P",              kind: processing }
-      - { action: UA,                    kind: signal_lower }
-      - { action: DL_DISCONNECT_indication, kind: signal_upper }
-      - { action: stop_T3,               kind: processing }
-      - { action: start_T1,              kind: processing }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: "F := P", kind: processing }
+      - { action: UA, kind: signal_lower }
+      - { action: DL-DISCONNECT Indication, kind: signal_upper }
+      - { action: Stop T3, kind: processing }
+      - { action: Start T1, kind: processing }
     next: Disconnected
-    notes: |
-      Peer wants to disconnect — confirm with UA, notify L3, swap
-      timers and head to Disconnected. The figure draws stop_T3 then
-      start_T1 (and indeed wait for the peer's ack of the UA via T1).
 
-  # ─── Column 21: DM received ─────────────────────────────────────────
-
-    references:
-      - source: spec_prose
-        cite: "§6.3.4 ¶2"
-        quote: "After receiving a valid DISC command, the TNC sends a UA response frame and enters the disconnected state."
-      - source: linbpq
-        path: L2Code.c
-        function: "L2LINKACTIVE"
-        line: 1090
-        note: "InformPartner(NORMALCLOSE) + L2SENDUA + CLEAROUTLINK. Goes straight to Disconnected — no explicit T3-stop/T1-start"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "disc_frame"
-        line: 4557
-        note: "state_3/state_4: discard queue, UA F=p, server_link_terminated, STOP_T1, STOP_T3, → state_0"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::disc"
-        line: 1537
-        note: "Author marks \"Done.\" Clear queue, stop T1/T3, SendUa + EOF + Disconnected"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 167
-        note: "UA F=pf, then ax25_disconnect(0) → STATE_0"
-  - id: t51_dm_received
+  - id: t20_dm_received
     on: DM_received
     path:
-      - { action: DL_ERROR_indication_E,  kind: signal_upper }
-      - { action: DL_DISCONNECT_indication, kind: signal_upper }
-      - { action: discard_I_frame_queue,  kind: processing }
-      - { action: stop_T1,                kind: processing }
-      - { action: stop_T3,                kind: processing }
+      - { action: DL-ERROR Indication (E), kind: signal_upper }
+      - { action: DL-DISCONNECT Indication, kind: signal_upper }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: Stop T1, kind: processing }
+      - { action: Stop T3, kind: processing }
     next: Disconnected
-    notes: |
-      Unexpected DM while connected — peer claims it's not connected.
-      DL-ERROR(E), tell L3 the link is gone, stop both timers.
 
-  # ─── Column 22: RR received ─────────────────────────────────────────
-
-    references:
-      - source: linbpq
-        path: L2Code.c
-        function: "L2_PROCESS"
-        line: 2145
-        note: "InformPartner(LINKLOST) + CLEAROUTLINK. No explicit DL-ERROR(E)"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "dm_frame"
-        line: 4696
-        note: "state_3/state_4: error E, server_link_terminated, → state_0. Direwolf does NOT branch on F bit (spec figure shows F=1/F=0 paths)"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::dm"
-        line: 1523
-        note: "Author marks \"Done.\" DL-DISCONNECT, clear queue, stop T1/T3, DlError::E, → Disconnected"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 172
-        note: "ax25_disconnect(ECONNRESET) → STATE_0. Linux ignores F bit (figure t51 only acts on F=1)"
-  - id: t52_rr_received_nr_in_window
+  - id: t21_rr_received_yes
     on: RR_received
     path:
-      - { action: clear_peer_busy,        kind: processing }
-      - { action: Check_Need_For_Response, kind: subroutine }
-      - { decision: nr_in_window,         branch: "Yes" }
-      - { action: Check_I_Frame_Acknowledged, kind: subroutine }
+      - { action: Clear Peer Busy, kind: processing }
+      - { action: Check Need For Response, kind: subroutine }
+      - { decision: rr_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frame Acknowledged, kind: subroutine }
     next: Connected
 
-    references:
-      - source: spec_prose
-        cite: "§6.4.6"
-        quote: "Whenever an I or S frame is correctly received, even in a busy condition, the N(R) of the received frame is checked to see if it includes an acknowledgement of outstanding sent I frames."
-      - source: linbpq
-        path: L2Code.c
-        function: "SFRAME"
-        line: 2403
-        note: "treatasRR: clears RNRSET; ACKMSG releases acked frames. Stays in 5"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "rr_rnr_frame"
-        line: 3545
-        note: "state_3 entry. peer_receiver_busy=!ready. Erratum 3549-3552: check_need_for_response only for cmd&&pf (figure has unconditional)"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::rr_connected"
-        line: 1361
-        note: "Connected branch. Clears peer_receiver_busy, check_need_for_response, check_iframe_acked"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 182
-        note: "Combined RR/RNR case. enquiry_response on cmd&&pf, then check_iframes_acked"
-  - id: t53_rr_received_nr_out_of_window_v22
+  - id: t21_rr_received_no_no
     on: RR_received
     path:
-      - { action: clear_peer_busy,        kind: processing }
-      - { action: Check_Need_For_Response, kind: subroutine }
-      - { decision: nr_in_window,         branch: "No" }
-      - { action: N_r_Error_Recovery,     kind: subroutine }
-      - { decision: version_2_2,          branch: "Yes" }
-    next: AwaitingConnection22
-
-    references:
-      - source: linbpq
-        path: L2Code.c
-        function: "SFRAME"
-        line: 2277
-        note: "SDREJF set by SDNRCHK → SDFRMR (FRMR state). NOTABLE DIVERGENCE: spec says N(r) Error Recovery → AwaitingConnection22. LinBPQ goes to FRMR state 3"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "rr_rnr_frame"
-        line: 3569
-        note: "bad N(R): nr_error_recovery, → state_1 (or state_5 modulo author enhancement)"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::rr_connected"
-        line: 1366
-        note: "N(R) out of window: nr_error_recovery → AwaitingConnection"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 184
-        note: "On invalid N(R): nr_error_recovery + STATE_1"
-  - id: t54_rr_received_nr_out_of_window_v20
-    on: RR_received
-    path:
-      - { action: clear_peer_busy,        kind: processing }
-      - { action: Check_Need_For_Response, kind: subroutine }
-      - { decision: nr_in_window,         branch: "No" }
-      - { action: N_r_Error_Recovery,     kind: subroutine }
-      - { decision: version_2_2,          branch: "No" }
+      - { action: Clear Peer Busy, kind: processing }
+      - { action: Check Need For Response, kind: subroutine }
+      - { decision: rr_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: rr_version_2.2, branch: No }
     next: AwaitingConnection
 
-  # ─── Column 23: RNR received ────────────────────────────────────────
+  - id: t21_rr_received_no_yes
+    on: RR_received
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { action: Check Need For Response, kind: subroutine }
+      - { decision: rr_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: rr_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
 
-    references:
-      - source: linbpq
-        path: L2Code.c
-        function: "SFRAME"
-        line: 2277
-        note: "same SDFRMR path as t53 — no v22/v20 split"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "rr_rnr_frame"
-        line: 3569
-        note: "same as t53"
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::rr_connected"
-        line: 1366
-        note: "same as t53"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 184
-        note: "same as t53"
-  - id: t55_rnr_received_nr_in_window
+  - id: t22_rnr_received_yes
     on: RNR_received
     path:
-      - { action: set_peer_busy,          kind: processing }
-      - { action: Check_Need_For_Response, kind: subroutine }
-      - { decision: nr_in_window,         branch: "Yes" }
-      - { action: Check_I_Frame_Acknowledged, kind: subroutine }
+      - { action: Set Peer Busy, kind: processing }
+      - { action: Check Need For Response, kind: subroutine }
+      - { decision: rnr_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frame Acknowledged, kind: subroutine }
     next: Connected
 
-    references:
-      - source: spec_prose
-        cite: "§6.4.9"
-        quote: "Whenever a TNC receives an RNR frame, it stops transmitting I frames until the busy condition is cleared."
-      - source: linbpq
-        path: L2Code.c
-        function: "SFRAME"
-        line: 2410
-        note: "Sets RNRSET (peer busy). RNR(F) restarts L2TIMER (2511) — explicit divergence comment at 2507"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "rr_rnr_frame"
-        line: 3547
-        note: "Same code path as RR; ready=0 sets peer_receiver_busy=1. Structural collapse RR/RNR"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 181
-        note: "Shares RR/RNR case. Sets PEER_RX_BUSY (only difference from RR)"
-  - id: t56_rnr_received_nr_out_of_window_v22
+  - id: t22_rnr_received_no_no
     on: RNR_received
     path:
-      - { action: set_peer_busy,          kind: processing }
-      - { action: Check_Need_For_Response, kind: subroutine }
-      - { decision: nr_in_window,         branch: "No" }
-      - { action: N_r_Error_Recovery,     kind: subroutine }
-      - { decision: version_2_2,          branch: "Yes" }
-    next: AwaitingConnection22
-
-    references:
-      - source: spec_prose
-        cite: "§6.4.9"
-        quote: "Whenever a TNC receives an RNR frame, it stops transmitting I frames until the busy condition is cleared."
-      - source: linbpq
-        path: L2Code.c
-        function: "SFRAME"
-        line: 2277
-        note: "same SDFRMR path as t53"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "rr_rnr_frame"
-        line: 3569
-        note: "RR/RNR converge for bad-N(R)"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 184
-        note: "same as t53"
-  - id: t57_rnr_received_nr_out_of_window_v20
-    on: RNR_received
-    path:
-      - { action: set_peer_busy,          kind: processing }
-      - { action: Check_Need_For_Response, kind: subroutine }
-      - { decision: nr_in_window,         branch: "No" }
-      - { action: N_r_Error_Recovery,     kind: subroutine }
-      - { decision: version_2_2,          branch: "No" }
+      - { action: Set Peer Busy, kind: processing }
+      - { action: Check Need For Response, kind: subroutine }
+      - { decision: rnr_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: rnr_version_2.2, branch: No }
     next: AwaitingConnection
 
-  # ─── Column 24: LM-SEIZE Confirm ────────────────────────────────────
+  - id: t22_rnr_received_no_yes
+    on: RNR_received
+    path:
+      - { action: Set Peer Busy, kind: processing }
+      - { action: Check Need For Response, kind: subroutine }
+      - { decision: rnr_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: rnr_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
 
-    references:
-      - source: linbpq
-        path: L2Code.c
-        function: "SFRAME"
-        line: 2277
-        note: "same SDFRMR path"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "rr_rnr_frame"
-        line: 3569
-        note: "same as t56"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 184
-        note: "same as t53"
-  - id: t58_lm_seize_confirm_no_ack_pending
+  - id: t23_lm_seize_confirm_yes
     on: LM_SEIZE_confirm
     path:
-      - { decision: ack_pending,       branch: "No" }
-      - { action: LM_release_request,  kind: signal_lower }
+      - { decision: lm_seize_ack_pending, branch: Yes }
+      - { action: Clear Acknowledge Pending, kind: processing }
+      - { action: Enquiry Response (F = 0), kind: subroutine }
+      - { action: LM-RELEASE Request, kind: signal_lower }
     next: Connected
 
-    references:
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "lm_seize_confirm"
-        line: 2223
-        note: "state_3/4: i_frame_pop_off_queue, no enquiry_response (acknowledge_pending false). Erratum 2244: states 3 & 4 merged per 2006 revision"
-  - id: t59_lm_seize_confirm_ack_pending
+  - id: t23_lm_seize_confirm_no
     on: LM_SEIZE_confirm
     path:
-      - { decision: ack_pending,       branch: "Yes" }
-      - { action: clear_acknowledge_pending, kind: processing }
-      - { action: "Enquiry_Response_F_0", kind: subroutine }
-      - { action: LM_release_request,  kind: signal_lower }
+      - { decision: lm_seize_ack_pending, branch: No }
+      - { action: LM-RELEASE Request, kind: signal_lower }
     next: Connected
 
-  # ─── Column 25: SREJ received ───────────────────────────────────────
-
-    references:
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "lm_seize_confirm"
-        line: 2231
-        note: "Same code path; acknowledge_pending check at 2235"
-      - source: linbpq
-        path: L2Code.c
-        function: "L2TimerProc"
-        line: 3526
-        note: "Closest analog: delayed-ack timer (L2ACKREQ) fires SEND_RR_RESP. Not literally LM-SEIZE — deferred ack mechanism"
-  - id: t60_srej_received_nr_in_window_pf_eq_0
+  - id: t24_srej_received_yes_yes
     on: SREJ_received
     path:
-      - { action: clear_peer_busy,        kind: processing }
-      - { action: Check_Need_For_Response, kind: subroutine }
-      - { decision: nr_in_window,         branch: "Yes" }
-      - { decision: p_or_f_eq_1,          branch: "No" }
-      - { action: stop_T1,                kind: processing }
-      - { action: start_T3,               kind: processing }
-      - { action: Select_T1_Value,        kind: subroutine }
-      - { action: push_old_I_frame_N_r_on_queue, kind: internal_out }
-      - { action: LM_data_request,        kind: signal_lower }
-      - { action: stop_T3,                kind: processing }
-      - { action: start_T1,               kind: processing }
-      - { action: clear_acknowledge_pending, kind: processing }
+      - { action: Clear Peer Busy, kind: processing }
+      - { action: Check Need For Response, kind: subroutine }
+      - { decision: srej_va_le_nr_le_vs, branch: Yes }
+      - { decision: srej_p/f_eq_1, branch: Yes }
+      - { action: "V(a) := N(r)", kind: processing }
+      - { action: Stop T1, kind: processing }
+      - { action: Start T3, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { action: Push Old I Frame N(r) on Queue, kind: internal_out }
+      - { action: LM-DATA Request, kind: signal_lower }
+      - { action: Stop T3, kind: processing }
+      - { action: Start T1, kind: processing }
+      - { action: Clear Acknowledge Pending, kind: processing }
     next: Connected
 
-    references:
-      - source: spec_prose
-        cite: "§6.4.8"
-        quote: "After receiving a SREJ frame, the transmitting TNC retransmits the individual I frame indicated by the N(R) contained in the SREJ at the next available opportunity."
-      - source: linbpq
-        path: L2Code.c
-        function: "SFRAME"
-        line: 2954
-        note: "SDNRCHK: SREJ without F doesn't ACK (early return)"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "srej_frame"
-        line: 4057
-        note: "state_3 entry. Erratum 4061-4067: figure has check_need_for_response but SREJ can only be response, so removed"
-  - id: t61_srej_received_nr_in_window_pf_eq_1
+  - id: t24_srej_received_yes_no
     on: SREJ_received
     path:
-      - { action: clear_peer_busy,        kind: processing }
-      - { action: Check_Need_For_Response, kind: subroutine }
-      - { decision: nr_in_window,         branch: "Yes" }
-      - { decision: p_or_f_eq_1,          branch: "Yes" }
-      - { action: "V(a) := N(r)",         kind: processing }
-      - { action: stop_T1,                kind: processing }
-      - { action: start_T3,               kind: processing }
-      - { action: Select_T1_Value,        kind: subroutine }
-      - { action: push_old_I_frame_N_r_on_queue, kind: internal_out }
-      - { action: LM_data_request,        kind: signal_lower }
-      - { action: stop_T3,                kind: processing }
-      - { action: start_T1,               kind: processing }
-      - { action: clear_acknowledge_pending, kind: processing }
+      - { action: Clear Peer Busy, kind: processing }
+      - { action: Check Need For Response, kind: subroutine }
+      - { decision: srej_va_le_nr_le_vs, branch: Yes }
+      - { decision: srej_p/f_eq_1, branch: No }
+      - { action: Stop T1, kind: processing }
+      - { action: Start T3, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { action: Push Old I Frame N(r) on Queue, kind: internal_out }
+      - { action: LM-DATA Request, kind: signal_lower }
+      - { action: Stop T3, kind: processing }
+      - { action: Start T1, kind: processing }
+      - { action: Clear Acknowledge Pending, kind: processing }
     next: Connected
 
-    references:
-      - source: spec_prose
-        cite: "§6.4.8"
-        quote: "If the P bit was set, then all frames up to N(R)-1 are acknowledged."
-      - source: linbpq
-        path: L2Code.c
-        function: "SFRAME"
-        line: 2303
-        note: "SREJ(F) resend: clear POLLSENT, look up FRAMES[NS], resend. No V(s) advance / T3 restart — collapses spec's t60/t61"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "srej_frame"
-        line: 4079
-        note: "resend_for_srej. Author addition at 4082-4093: STOP_T3/START_T1 after sending I frame — avoids mutual-timeout deadlock"
-  - id: t62_srej_received_nr_out_of_window_v22
+  - id: t24_srej_received_no_no
     on: SREJ_received
     path:
-      - { action: clear_peer_busy,        kind: processing }
-      - { action: Check_Need_For_Response, kind: subroutine }
-      - { decision: nr_in_window,         branch: "No" }
-      - { action: N_r_Error_Recovery,     kind: subroutine }
-      - { decision: version_2_2,          branch: "Yes" }
-    next: AwaitingConnection22
-
-    references:
-      - source: linbpq
-        path: L2Code.c
-        function: "SFRAME"
-        line: 2277
-        note: "same SDFRMR path as t53"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "srej_frame"
-        line: 4096
-        note: "bad N(R): nr_error_recovery, → state_1 or 5. Erratum 4098: \"Flow chart shows state 1 but that would not be appropriate if modulo is 128\""
-  - id: t63_srej_received_nr_out_of_window_v20
-    on: SREJ_received
-    path:
-      - { action: clear_peer_busy,        kind: processing }
-      - { action: Check_Need_For_Response, kind: subroutine }
-      - { decision: nr_in_window,         branch: "No" }
-      - { action: N_r_Error_Recovery,     kind: subroutine }
-      - { decision: version_2_2,          branch: "No" }
+      - { action: Clear Peer Busy, kind: processing }
+      - { action: Check Need For Response, kind: subroutine }
+      - { decision: srej_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: srej_version_2.2, branch: No }
     next: AwaitingConnection
 
-  # ─── Column 26: REJ received ────────────────────────────────────────
+  - id: t24_srej_received_no_yes
+    on: SREJ_received
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { action: Check Need For Response, kind: subroutine }
+      - { decision: srej_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: srej_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
 
-    references:
-      - source: linbpq
-        path: L2Code.c
-        function: "SFRAME"
-        line: 2277
-        note: "same as t62"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "srej_frame"
-        line: 4096
-        note: "same as t62"
-  - id: t64_rej_received_nr_in_window
+  - id: t25_rej_received_no_no
     on: REJ_received
     path:
-      - { action: clear_peer_busy,         kind: processing }
-      - { action: Check_Need_For_Response, kind: subroutine }
-      - { decision: nr_in_window,          branch: "Yes" }
-      - { action: "V(a) := N(r)",          kind: processing }
-      - { action: start_T1,                kind: processing }
-      - { action: stop_T3,                 kind: processing }
-      - { action: clear_acknowledge_pending, kind: processing }
-      - { action: Select_T1_Value,         kind: subroutine }
-      - { action: Invoke_Retransmission,   kind: subroutine }
-    next: Connected
-
-    references:
-      - source: spec_prose
-        cite: "§6.4.7"
-        quote: "After receiving a REJ frame, the transmitting TNC sets its send state variable to the same value as the REJ frame's received sequence number in the control field. The TNC then retransmits any I frame(s) outstanding at the next available opportunity."
-      - source: linbpq
-        path: L2Code.c
-        function: "SFRAME"
-        line: 2481
-        note: "REJ → POLLSENT check → RESETNS resets V(s) to N(r) (= Invoke_Retransmission). T1 cleared at 2486. No explicit Select_T1_Value"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "rej_frame"
-        line: 3804
-        note: "state_3: peer_receiver_busy=0, check_need_for_response UNCONDITIONAL (different from rr_rnr_frame), is_good_nr"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 192
-        note: "AX25_REJ: clears PEER_RX_BUSY, enquiry_response on cmd&&pf, ax25_frames_acked + RTT + stop T1 + start T3 + requeue_frames on valid N(R)"
-  - id: t65_rej_received_nr_out_of_window_v22
-    on: REJ_received
-    path:
-      - { action: clear_peer_busy,         kind: processing }
-      - { action: Check_Need_For_Response, kind: subroutine }
-      - { decision: nr_in_window,          branch: "No" }
-      - { action: N_r_Error_Recovery,      kind: subroutine }
-      - { decision: version_2_2,           branch: "Yes" }
-    next: AwaitingConnection22
-
-    references:
-      - source: linbpq
-        path: L2Code.c
-        function: "SFRAME"
-        line: 2277
-        note: "same SDFRMR path"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "rej_frame"
-        line: 3840
-        note: "bad N(R): nr_error_recovery, → state_1 or 5 (author enhancement)"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 194
-        note: "same as t53"
-  - id: t66_rej_received_nr_out_of_window_v20
-    on: REJ_received
-    path:
-      - { action: clear_peer_busy,         kind: processing }
-      - { action: Check_Need_For_Response, kind: subroutine }
-      - { decision: nr_in_window,          branch: "No" }
-      - { action: N_r_Error_Recovery,      kind: subroutine }
-      - { decision: version_2_2,           branch: "No" }
+      - { action: Clear Peer Busy, kind: processing }
+      - { action: Check Need For Response, kind: subroutine }
+      - { decision: rej_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: rej_version_2.2, branch: No }
     next: AwaitingConnection
 
-  # ─── Column 2 continued — V(r) I Frame Stored? = Yes paths ──────────
-  #
-  # In figc4.4 the n148 "V(r) I Frame Stored?" Yes branch is a loop:
-  # n149 Retrieve Stored V(r) I Frame → n150 DL-DATA Indication →
-  # n151 V(r) := V(r) + 1 → back to n148. Each iteration delivers one
-  # previously-stored out-of-sequence frame. The loop terminates when
-  # no further frame is stored at the new V(r), at which point the
-  # column continues with n152 (P == 1?).
-  #
-  # Encoding the loop in a flat path: the YAML carries one iteration of
-  # the loop body (retrieve, DL-DATA indication, increment V(r)) and a
-  # `verification_pending` note explaining the figure semantics. The
-  # runtime dispatcher will need to interpret these three actions as a
-  # loop body when wiring real handlers — see notes on t67-t69. Added
-  # at the end to avoid renumbering t12-t66; semantically they belong
-  # to column 2 alongside t02-t17.
+  - id: t25_rej_received_no_yes
+    on: REJ_received
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { action: Check Need For Response, kind: subroutine }
+      - { decision: rej_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: rej_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
 
-    references:
-      - source: linbpq
-        path: L2Code.c
-        function: "SFRAME"
-        line: 2277
-        note: "same as t65"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "rej_frame"
-        line: 3840
-        note: "same as t65"
-      - source: linux_oot
-        path: net/ax25/ax25_std_in.c
-        function: "ax25_std_state3_machine"
-        line: 194
-        note: "same as t65"
-  - id: t67_i_received_in_seq_stored_p_eq_1
+  - id: t25_rej_received_yes
+    on: REJ_received
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { action: Check Need For Response, kind: subroutine }
+      - { decision: rej_va_le_nr_le_vs, branch: Yes }
+      - { action: "V(a) := N(r)", kind: processing }
+      - { action: Start T1, kind: processing }
+      - { action: Stop T3, kind: processing }
+      - { action: Clear Acknowledge Pending, kind: processing }
+      - { action: Select T1 Value, kind: subroutine }
+      - { action: Invoke Retransmission, kind: subroutine }
+    next: Connected
+
+  - id: t26_i_received_no_no_no
     on: I_received
     path:
-      - { decision: command,            branch: "Yes" }
-      - { decision: info_field_valid,   branch: "Yes" }
-      - { decision: nr_in_window,       branch: "Yes" }
-      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
-      - { decision: own_receiver_busy,  branch: "No" }
-      - { decision: ns_eq_vr,           branch: "Yes" }
-      - { action: "V(r) := V(r) + 1",            kind: processing }
-      - { action: clear_reject_exception,         kind: processing }
-      - { action: "decrement_srej_exception_if_gt_0", kind: processing }
-      - { action: DL_DATA_indication,             kind: signal_upper }
-      - { decision: vr_i_frame_stored,  branch: "Yes" }
-      - loop_while: vr_i_frame_stored
-        body:
-          - { action: retrieve_stored_V_r_I_frame, kind: processing }
-          - { action: DL_DATA_indication,          kind: signal_upper }
-          - { action: "V(r) := V(r) + 1",          kind: processing }
-      - { decision: p_eq_1,             branch: "Yes" }
-      - { action: "F := 1",             kind: processing }
-      - { action: "N(r) := V(r)",       kind: processing }
-      - { action: RR,                   kind: signal_lower }
-      - { action: clear_acknowledge_pending, kind: processing }
-    next: Connected
-    notes: |
-      Loop body (retrieve / DL-DATA Indication / V(r)++) drained
-      via the `loop_while` step — iterates until V(r) I Frame Stored
-      returns false. Compiled to flat Actions[] with a LoopRange entry;
-      runtime loop semantics handled by loop-aware dispatchers, falls
-      back to one-iteration on legacy consumers (matches today's smoke
-      test behaviour).
+      - { decision: i_command, branch: No }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: No }
+      - { action: DL-ERROR Indication (O), kind: signal_upper }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Clear Layer 3 Initiated, kind: processing }
+      - { decision: i_version_2.2, branch: No }
+    next: AwaitingConnection
 
-    references:
-      - source: spec_prose
-        cite: "§6.4.4.2"
-        quote: "When an I frame is received…the frame is retained…This mode requires frame queuing and frame resequencing at the receiver."
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::iframe"
-        line: 1628
-        note: "Loop to drain stored out-of-order iframes — stub only (`while false`); TODO: \"check for stored out of order frames\""
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame_continued"
-        line: 2906
-        note: "Drain SREJ-buffered out-of-order frames now contiguous with V(R) — equivalent of figure's stored-frame loop"
-      - source: linbpq
-        path: L2Code.c
-        function: "SDIFRM"
-        line: 2586
-        note: "After REJ, when missing frame arrives, replays stored RXFRAMES via CheckNSLoop → PROC_I_FRAME at 2593"
-  - id: t68_i_received_in_seq_stored_p_eq_0_ack_pending
+  - id: t26_i_received_no_no_yes
     on: I_received
     path:
-      - { decision: command,            branch: "Yes" }
-      - { decision: info_field_valid,   branch: "Yes" }
-      - { decision: nr_in_window,       branch: "Yes" }
-      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
-      - { decision: own_receiver_busy,  branch: "No" }
-      - { decision: ns_eq_vr,           branch: "Yes" }
-      - { action: "V(r) := V(r) + 1",            kind: processing }
-      - { action: clear_reject_exception,         kind: processing }
-      - { action: "decrement_srej_exception_if_gt_0", kind: processing }
-      - { action: DL_DATA_indication,             kind: signal_upper }
-      - { decision: vr_i_frame_stored,  branch: "Yes" }
-      - loop_while: vr_i_frame_stored
-        body:
-          - { action: retrieve_stored_V_r_I_frame, kind: processing }
-          - { action: DL_DATA_indication,          kind: signal_upper }
-          - { action: "V(r) := V(r) + 1",          kind: processing }
-      - { decision: p_eq_1,             branch: "No" }
-      - { decision: ack_pending,        branch: "Yes" }
-    next: Connected
-    notes: |
-      Same stored-frame loop as t67; continues into the not-polled /
-      ack-pending tail.
+      - { decision: i_command, branch: No }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: No }
+      - { action: DL-ERROR Indication (O), kind: signal_upper }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Clear Layer 3 Initiated, kind: processing }
+      - { decision: i_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
 
-    references:
-      - source: spec_prose
-        cite: "§6.4.4.2"
-        quote: "When an I frame is received…the frame is retained…This mode requires frame queuing and frame resequencing at the receiver."
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::iframe"
-        line: 1628
-        note: "same loop stub as t67"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame_continued"
-        line: 2906
-        note: "same drain loop as t67"
-      - source: linbpq
-        path: L2Code.c
-        function: "SDIFRM"
-        line: 2586
-        note: "same replay path as t67"
-  - id: t69_i_received_in_seq_stored_p_eq_0_no_ack_pending
+  - id: t26_i_received_no_yes_no_no
     on: I_received
     path:
-      - { decision: command,            branch: "Yes" }
-      - { decision: info_field_valid,   branch: "Yes" }
-      - { decision: nr_in_window,       branch: "Yes" }
-      - { action: Check_I_Frames_Acknowledged, kind: subroutine }
-      - { decision: own_receiver_busy,  branch: "No" }
-      - { decision: ns_eq_vr,           branch: "Yes" }
-      - { action: "V(r) := V(r) + 1",            kind: processing }
-      - { action: clear_reject_exception,         kind: processing }
-      - { action: "decrement_srej_exception_if_gt_0", kind: processing }
-      - { action: DL_DATA_indication,             kind: signal_upper }
-      - { decision: vr_i_frame_stored,  branch: "Yes" }
-      - loop_while: vr_i_frame_stored
-        body:
-          - { action: retrieve_stored_V_r_I_frame, kind: processing }
-          - { action: DL_DATA_indication,          kind: signal_upper }
-          - { action: "V(r) := V(r) + 1",          kind: processing }
-      - { decision: p_eq_1,             branch: "No" }
-      - { decision: ack_pending,        branch: "No" }
-      - { action: LM_seize_request,     kind: signal_lower }
-      - { action: set_acknowledgement_pending, kind: processing }
+      - { decision: i_command, branch: No }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: i_version_2.2, branch: No }
+    next: AwaitingConnection
+
+  - id: t26_i_received_no_yes_no_yes
+    on: I_received
+    path:
+      - { decision: i_command, branch: No }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: i_version_2.2, branch: Yes }
+    next: AwaitingV22Connection
+
+  - id: t26_i_received_no_yes_yes_no_yes_no_no_no
+    on: I_received
+    path:
+      - { decision: i_command, branch: No }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receiver_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: Yes }
+      - { action: "V(r) := V(r) + 1", kind: processing }
+      - { action: Clear Reject Exception, kind: processing }
+      - { action: "Decrement Sreject Exception if > 0", kind: processing }
+      - { action: DL-DATA Indication, kind: signal_upper }
+      - { decision: i_p_eq_1, branch: No }
+      - { decision: i_ack_pending, branch: No }
+      - { action: LM-SEIZE Request, kind: signal_lower }
+      - { action: Set Acknowledgement Pending, kind: processing }
     next: Connected
-    notes: |
-      Same stored-frame loop as t67; continues into the not-polled /
-      no-ack tail.
-    references:
-      - source: spec_prose
-        cite: "§6.4.4.2"
-        quote: "When an I frame is received…the frame is retained…This mode requires frame queuing and frame resequencing at the receiver."
-      - source: rax25
-        path: src/state.rs
-        function: "Connected::iframe"
-        line: 1628
-        note: "same loop stub"
-      - source: direwolf
-        path: src/ax25_link.c
-        function: "i_frame_continued"
-        line: 2906
-        note: "same drain loop"
-      - source: linbpq
-        path: L2Code.c
-        function: "RR_OR_RNR"
-        line: 4185
-        note: "Second replay loop in RR_OR_RNR — replays RXFRAMES when about to send supervisory response"
+
+  - id: t26_i_received_no_yes_yes_no_yes_no_no_yes
+    on: I_received
+    path:
+      - { decision: i_command, branch: No }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receiver_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: Yes }
+      - { action: "V(r) := V(r) + 1", kind: processing }
+      - { action: Clear Reject Exception, kind: processing }
+      - { action: "Decrement Sreject Exception if > 0", kind: processing }
+      - { action: DL-DATA Indication, kind: signal_upper }
+      - { decision: i_p_eq_1, branch: No }
+      - { decision: i_ack_pending, branch: Yes }
+    next: Connected
+
+  - id: t26_i_received_no_yes_yes_no_yes_no_yes
+    on: I_received
+    path:
+      - { decision: i_command, branch: No }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receiver_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: Yes }
+      - { action: "V(r) := V(r) + 1", kind: processing }
+      - { action: Clear Reject Exception, kind: processing }
+      - { action: "Decrement Sreject Exception if > 0", kind: processing }
+      - { action: DL-DATA Indication, kind: signal_upper }
+      - { decision: i_p_eq_1, branch: Yes }
+      - { action: "F := 1", kind: processing }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: RR, kind: signal_lower }
+      - { action: Clear Acknowledge Pending, kind: processing }
+    next: Connected
+
+  - id: t26_i_received_no_yes_yes_no_no_yes_yes
+    on: I_received
+    path:
+      - { decision: i_command, branch: No }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receiver_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_reject_exception, branch: Yes }
+      - { action: Discard Contents of I Frame, kind: processing }
+      - { decision: i_p_eq_1, branch: Yes }
+      - { action: "F := 1", kind: processing }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: RR, kind: signal_lower }
+      - { action: Clear Acknowledge Pending, kind: processing }
+    next: Connected
+
+  - id: t26_i_received_no_yes_yes_no_no_yes_no
+    on: I_received
+    path:
+      - { decision: i_command, branch: No }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receiver_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_reject_exception, branch: Yes }
+      - { action: Discard Contents of I Frame, kind: processing }
+      - { decision: i_p_eq_1, branch: No }
+    next: Connected
+
+  - id: t26_i_received_no_yes_yes_no_no_no_no
+    on: I_received
+    path:
+      - { decision: i_command, branch: No }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receiver_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_reject_exception, branch: No }
+      - { decision: i_srej_enabled, branch: No }
+      - { action: Discard Contents of I Frame, kind: processing }
+      - { action: Set Reject Exception, kind: processing }
+      - { action: "F := P", kind: processing }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: REJ, kind: signal_lower }
+      - { action: Clear Acknowledge Pending, kind: processing }
+    next: Connected
+
+  - id: t26_i_received_no_yes_yes_no_no_no_yes_yes
+    on: I_received
+    path:
+      - { decision: i_command, branch: No }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receiver_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_reject_exception, branch: No }
+      - { decision: i_srej_enabled, branch: Yes }
+      - { action: Save Contents of I Frame, kind: processing }
+      - { decision: i_sreject_exception_gt_0, branch: Yes }
+      - { action: "N(r) := N(s)", kind: processing }
+      - { action: "F := 0", kind: processing }
+      - { action: Increment Sreject Exception, kind: processing }
+      - { action: SREJ, kind: signal_lower }
+    next: Connected
+
+  - id: t26_i_received_no_yes_yes_no_no_no_yes_no_yes
+    on: I_received
+    path:
+      - { decision: i_command, branch: No }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receiver_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_reject_exception, branch: No }
+      - { decision: i_srej_enabled, branch: Yes }
+      - { action: Save Contents of I Frame, kind: processing }
+      - { decision: i_sreject_exception_gt_0, branch: No }
+      - { decision: i_ns_gt_vr_+_1, branch: Yes }
+      - { action: Discard Contents of I Frame, kind: processing }
+      - { action: Set Reject Exception, kind: processing }
+      - { action: "F := P", kind: processing }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: REJ, kind: signal_lower }
+      - { action: Clear Acknowledge Pending, kind: processing }
+    next: Connected
+
+  - id: t26_i_received_no_yes_yes_no_no_no_yes_no_no
+    on: I_received
+    path:
+      - { decision: i_command, branch: No }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receiver_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_reject_exception, branch: No }
+      - { decision: i_srej_enabled, branch: Yes }
+      - { action: Save Contents of I Frame, kind: processing }
+      - { decision: i_sreject_exception_gt_0, branch: No }
+      - { decision: i_ns_gt_vr_+_1, branch: No }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: "F := 1", kind: processing }
+      - { action: Increment Sreject Exception, kind: processing }
+      - { action: SREJ, kind: signal_lower }
+    next: Connected
+
+  - id: t26_i_received_no_yes_yes_yes_yes
+    on: I_received
+    path:
+      - { decision: i_command, branch: No }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receiver_busy, branch: Yes }
+      - { action: Discard Contents of I Frame, kind: processing }
+      - { decision: i_p_eq_1, branch: Yes }
+      - { action: "F := 1", kind: processing }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: RR, kind: signal_lower }
+      - { action: Clear Acknowledge Pending, kind: processing }
+    next: Connected
+
+  - id: t26_i_received_no_yes_yes_yes_no
+    on: I_received
+    path:
+      - { decision: i_command, branch: No }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receiver_busy, branch: Yes }
+      - { action: Discard Contents of I Frame, kind: processing }
+      - { decision: i_p_eq_1, branch: No }
+    next: Connected
+
+  - id: t26_i_received_yes
+    on: I_received
+    path:
+      - { decision: i_command, branch: Yes }
+      - { action: DL-ERROR Indication (O), kind: signal_upper }
+      - { action: Discard I Frame, kind: processing }
+    next: Connected

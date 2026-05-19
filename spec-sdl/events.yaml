@@ -57,6 +57,7 @@ internal:
   - I_frame_pops_off_queue
   - control_field_error
   - info_not_permitted_in_frame
+  - info_field_permitted_in_frame
   - u_or_s_frame_length_error
 
 # Service primitives between Data-Link and Link Multiplexer.

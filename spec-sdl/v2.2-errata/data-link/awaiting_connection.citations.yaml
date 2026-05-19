@@ -1,0 +1,558 @@
+# Cross-reference annotations for awaiting_connection.sdl.yaml.
+#
+# These notes + references were originally embedded inside the
+# transitions/subroutines themselves in the LLM-authored yaml.
+# After the move to tool-generated yamls (Packet.Sdl.Transcribe
+# in 2026-05-19), the SDL-skeleton lives in awaiting_connection.sdl.yaml and gets
+# regenerated from Awaitingconnection.graphml; the human-curated
+# notes + per-implementation citations live here so they survive
+# regeneration.
+#
+# Schema: spec-sdl/schema/sdl-citations.schema.json (TODO).
+#
+# Keys under transitions:/subroutines: are the transition ids /
+# subroutine names from the matching awaiting_connection.sdl.yaml. When the tool
+# regenerates yaml with different ids (e.g. branch suffixes change),
+# corresponding keys here need re-matching — for now the LLM-era
+# ids are preserved verbatim.
+
+pinned_refs:
+  linbpq:
+    repo: https://github.com/M0LTE/linbpq
+    commit: 88a68988b446187cc5f7a2dfdbe33d1cc3ebd46f
+  direwolf:
+    repo: https://github.com/wb2osz/direwolf
+    commit: a231971a652bfb574a4bae9a5d875fbce53d2267
+  rax25:
+    repo: https://github.com/ThomasHabets/rax25
+    commit: d97b7ab725620497d5444e7393969b8d6f9ae58d
+  linux_oot:
+    repo: https://github.com/linux-netdev/mod-orphan
+    commit: 40188e901024be90f50fc37ba1ba3a84678dfe12
+transitions:
+  t01_disc_received:
+    notes: 'Received DISC while waiting for UA. Respond DM (we''re not connected),
+
+      stay in AwaitingConnection waiting for our SABM''s UA.
+
+      '
+    references:
+    - source: linbpq
+      path: L2Code.c
+      function: L2LINKACTIVE
+      line: 1090
+      note: DISC handled unconditionally — sends UA (not DM) and tears link down.
+        Diverges from figure
+    - source: direwolf
+      path: src/ax25_link.c
+      function: disc_frame
+      line: 4530
+      note: state_1 falls through with states 0 and 5 to a single DM(F=p) reply,
+        keep current state
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state1_machine
+      line: 54
+      note: sends DM with pf passed through (F:=P implicit)
+  t02_dm_received_f_eq_1:
+    notes: 'DM with F=1 = peer is refusing the connect. Abandon: discard queue,
+
+      tell upper layer the connect failed, stop T1.
+
+      '
+    references:
+    - source: spec_prose
+      cite: §6.3.1 ¶4
+      quote: When the originating TNC receives a DM response to its SABM(E) frame,
+        it cancels its T1 timer and does not enter the information-transfer state.
+    - source: linbpq
+      path: L2Code.c
+      function: L2_PROCESS
+      line: 2145
+      note: DM in state 2 → CONNECTREFUSED. LinBPQ ignores F bit — treats any DM
+        as connect refused
+    - source: direwolf
+      path: src/ax25_link.c
+      function: dm_frame
+      line: 4656
+      note: 'state_1 case: if (f==1) discard_i_queue, server_link_terminated, STOP_T1,
+        enter_new_state(0)'
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state1_machine
+      line: 80
+      note: DM with pf=1 calls ax25_disconnect(ECONNREFUSED) which stops timers
+        and tears socket
+  t03_dm_received_not_f_eq_1:
+    notes: 'DM without F=1 isn''t a response to our SABM — ignore, keep waiting.
+
+      '
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: dm_frame
+      line: 4668
+      note: 'else branch in case state_1: ''keep current state'''
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state1_machine
+      line: 81
+      note: '''if (pf)'' guard means DM with F=0 falls through, function returns
+        with no action'
+  t04_ua_received_not_f_eq_1:
+    notes: 'UA without F=1 isn''t a valid response to our polled SABM —
+
+      DL-ERROR(D), keep waiting.
+
+      '
+    references:
+    - source: spec_prose
+      cite: §6.3.1 ¶4
+      quote: Reception of the UA response frame by the originating TNC causes it
+        to cancel the T1 timer and set its internal state variables to '0'.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: ua_frame
+      line: 4917
+      note: 'else (f != 1) branch: logs ''Protocol Error D: UA received without
+        F=1 when SABM or DISC was sent P=1'', stays'
+    - source: rax25
+      path: src/state.rs
+      function: AwaitingConnection::ua
+      line: 1207
+      note: early return Action::DlError(DlError::D) when !f; matches spec, stays
+        implicitly
+  t05_ua_received_f_eq_1_layer_3_initiated:
+    notes: 'Happy path: UA with F=1 in response to our L3-initiated SABM. Confirm
+
+      to upper layer, run the standard Connected-entry housekeeping.
+
+
+      NOTE: LinBPQ and Linux do not track a Layer-3-initiated flag at all,
+
+      so t05/t06/t07 collapse to one handler in those implementations.
+
+      Direwolf and rax25 implement the flag and reproduce the 3-branch
+
+      tree (with their own restructurings).
+
+      '
+    references:
+    - source: spec_prose
+      cite: §6.3.1 ¶1
+      quote: Reception of the UA response frame by the originating TNC causes it
+        to cancel the T1 timer and set its internal state variables to '0'.
+    - source: linbpq
+      path: L2Code.c
+      function: L2_PROCESS
+      line: 2072
+      note: 'UA in state 2: clears timer, sets L2STATE=5, calls SENDCONNECTREPLY.
+        Collapses t05/t06/t07 — no L3-init flag'
+    - source: direwolf
+      path: src/ax25_link.c
+      function: ua_frame
+      line: 4837
+      note: if (f==1) { if (layer_3_initiated) { server_link_established(incoming=0)
+        } else if (vs!=va) {...} } then common cleanup → state_3
+    - source: rax25
+      path: src/state.rs
+      function: AwaitingConnection::ua
+      line: 1210
+      note: '`if data.layer3_initiated { debug!("DL-CONNECT CONFIRM") }`; common
+        tail at 1233. Author flags 2017 vs 1998 spec divergences on T3 timing'
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state1_machine
+      line: 58
+      note: 'DIVERGES: collapses all three F=1 branches into one; unconditionally
+        zeros V() and notifies socket → STATE_3. No L3-init concept'
+  t06_ua_received_f_eq_1_not_layer_3_initiated_vs_eq_va:
+    notes: 'Connection coming up that we didn''t initiate (peer connected to us
+
+      via SABM and we sent UA back; this branch is reached when local
+
+      send-variables already align with peer''s ack-variables). No
+
+      DL-CONNECT confirm — upper layer wasn''t expecting one.
+
+      '
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: ua_frame
+      line: 4878
+      note: 'fall-through leg: !L3init AND !(vs!=va) means neither inner branch
+        fires; common cleanup without server_link_established'
+    - source: rax25
+      path: src/state.rs
+      function: AwaitingConnection::ua
+      line: 1212
+      note: implicit else when !layer3_initiated && vs==va; no confirm emitted,
+        falls through to common tail at 1233
+  t07_ua_received_f_eq_1_not_layer_3_initiated_vs_neq_va:
+    notes: 'V(s) ≠ V(a) recovery branch: re-init timer values + restart T1
+
+      *before* the standard housekeeping. (The figure starts T1 here then
+
+      immediately stops it in the next chain — looks redundant on paper
+
+      but is what''s drawn; trust the figure.)
+
+
+      NOTE: rax25 author flags this exact pattern as a spec bug:
+
+      "bug in the 2017 spec...start T1, then immediately stop it again"
+
+      (src/state.rs:1226). Direwolf author similarly comments at
+
+      ua_frame:4849-4876 that 2006 vs original wording differs.
+
+      Independent corroboration — candidate upstream spec issue.
+
+      '
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: ua_frame
+      line: 4848
+      note: 'else if (vs!=va) branch (4848-4877): INIT_T1V_SRT resets SRT/T1V, START_T3
+        (author notes redundancy), server_link_established(incoming=0). Author flags
+        ''2006 vs original wording differs'''
+    - source: rax25
+      path: src/state.rs
+      function: AwaitingConnection::ua
+      line: 1212
+      note: else-if `data.vs != data.va` branch (1212-1232); resets srt, t1v:=2*srt;
+        author comment 'bug in the 2017 spec...start T1, then immediately stop it
+        again'
+  t08_t1_expiry_rc_eq_n2:
+    notes: 'Reached the retry limit (N2). Give up: discard pending frames,
+
+      DL-ERROR(G), DL-DISCONNECT indication, go to Disconnected.
+
+
+      NOTE: rax25 author flags spec typo: "Typo in 1998 spec: G, not g"
+
+      (src/state.rs:1192). Candidate upstream spec issue.
+
+      '
+    references:
+    - source: spec_prose
+      cite: §6.3.1 ¶2
+      quote: If this happens N2 times, the TNC enters the disconnected state.
+    - source: linbpq
+      path: L2Code.c
+      function: L2TIMEOUT
+      line: 3768
+      note: state-2 retry-exhausted → CONNECTFAILED, CLEAROUTLINK; no explicit DL-ERROR(G)
+    - source: direwolf
+      path: src/ax25_link.c
+      function: t1_expiry
+      line: 5461
+      note: 'state_1: if (rc==n2_retry) discard_i_queue, ''Failed to connect'',
+        server_link_terminated, → state_0. Substitutes user-facing message for DL-ERROR(G)'
+    - source: rax25
+      path: src/state.rs
+      function: AwaitingConnection::t1
+      line: 1189
+      note: 'if data.rc == data.n2: clears queue, emits DlError::G (''Typo in 1998
+        spec: G, not g''), transitions to Disconnected. Note: rax25 does NOT emit
+        DL-DISCONNECT indication — divergence'
+    - source: linux_oot
+      path: net/ax25/ax25_std_timer.c
+      function: ax25_std_t1timer_expiry
+      line: 124
+      note: STATE_1 + n2count==n2 + AX25_MODULUS → ax25_disconnect(ETIMEDOUT). Linux
+        first downgrades EMODULUS→MODULUS and retries (not in spec)
+  t09_t1_expiry_rc_neq_n2:
+    notes: 'Below retry limit — bump RC, resend SABM with P=1, recalc T1V via
+
+      Select T1 Value, restart T1.
+
+      '
+    references:
+    - source: spec_prose
+      cite: §6.3.1 ¶2
+      quote: If the distant TNC doesn't respond before T1 times out, the originating
+        TNC resends the SABM frame and starts T1 running again.
+    - source: linbpq
+      path: L2Code.c
+      function: L2TIMEOUT
+      line: 3763
+      note: 'state-2 timeout, RC<N2: L2RETRIES++, SENDSABM. No ''Select T1'' (LinBPQ
+        has no SRT/T1V dynamic update)'
+    - source: direwolf
+      path: src/ax25_link.c
+      function: t1_expiry
+      line: 5469
+      note: SET_RC(rc+1), build SABM(P=1) or SABME, lm_data_request, select_t1_value,
+        START_T1, keep state
+    - source: rax25
+      path: src/state.rs
+      function: AwaitingConnection::t1
+      line: 1196
+      note: rc += 1, select_t1_value(), t1.start(data.srt) — uses srt rather than
+        t1v, possible deviation
+    - source: linux_oot
+      path: net/ax25/ax25_std_timer.c
+      function: ax25_std_t1timer_expiry
+      line: 134
+      note: increments n2count, retransmits SABM/SABME(P=1), ax25_calculate_t1 +
+        ax25_start_t1timer at function tail (173-174)
+  t10_all_other_primitives_from_upper_layer:
+    notes: 'Catch-all for unhandled primitives drawn with d5
+
+      "Signal reception from upper layer". No action — stay in
+
+      AwaitingConnection.
+
+      '
+    references: []
+  t11_dl_connect_request:
+    notes: 'DL-CONNECT while already waiting for connection: discard pending
+
+      queue and re-mark layer-3-initiated. Stays in AwaitingConnection
+
+      (the existing T1 / RC counters continue).
+
+      '
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: dl_connect_request
+      line: 1039
+      note: 'case state_1 (and state_5): discard_i_queue, layer_3_initiated=1, ''Keep
+        current state''. Matches spec exactly'
+  t12_dl_unit_data_request:
+    references:
+    - source: spec_prose
+      cite: §6.3.7
+      quote: AX.25 uses a special frame for this operation, the Unnumbered Information
+        (UI) frame.
+    - source: linux_oot
+      path: net/ax25/af_ax25.c
+      function: ax25_sendmsg
+      line: 1657
+      note: SOCK_DGRAM path builds UI command, ax25_queue_xmit. Works while STATE_1
+  t13_dl_data_request_layer_3_initiated:
+    notes: 'verification_pending: the Yes/No branch labels on this diamond are
+
+      not drawn in the spec PNG — Tom assumed them when transcribing the
+
+      graphml. Reading: when L3 initiated the connection, we accept
+
+      incoming I-frame payloads onto the queue for delivery once
+
+      Connected. Could be inverted — flag for upstream check.
+
+
+      DIRECTLY CORROBORATED: direwolf author independently flags the
+
+      same diamond as confusing at src/ax25_link.c:1466-1473: "The flow
+
+      chart shows ''push on I frame queue'' if layer 3 initiated is NOT
+
+      set. This seems backwards but I don''t understand enough yet to
+
+      make a compelling argument that it is wrong. Implemented as in
+
+      flow chart." Direwolf reads the figure with the **opposite** Yes/No
+
+      interpretation from this transcription (direwolf: !L3-init → push,
+
+      L3-init → discard). Verification REALLY pending — there are now
+
+      three independent observations of confusion on this diamond
+
+      (Tom, direwolf author, broader spec community).
+
+      '
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: data_request_good_size
+      line: 1464
+      note: 'VERIFICATION PENDING: direwolf reads diamond INVERTED — L3-init → cdata_delete
+        (discard), !L3-init → push to queue. Author comment 1466-1473 acknowledges
+        confusion'
+  t14_dl_data_request_not_layer_3_initiated:
+    notes: 'verification_pending: see t13''s note. Reading: peer-initiated
+
+      connection — drop the data silently rather than queue it.
+
+      '
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: data_request_good_size
+      line: 1478
+      note: 'VERIFICATION PENDING: direwolf reads diamond INVERTED — !L3-init falls
+        through to state_3/state_4 block (push to queue), opposite of this transcription'
+  t15_i_frame_pops_off_queue_layer_3_initiated:
+    notes: 'verification_pending: shares the (label-assumed) diamond with t13.
+
+      '
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: i_frame_pop_off_queue
+      line: 6560
+      note: 'VERIFICATION PENDING: direwolf reads diamond INVERTED — L3-init → cdata_delete
+        (discard from queue), opposite of this transcription. Author erratum comment
+        at 6555-6558: ''The flow chart seems to be backwards'''
+  t16_i_frame_pops_off_queue_not_layer_3_initiated:
+    notes: 'verification_pending: shares the (label-assumed) diamond with t14.
+
+      '
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: i_frame_pop_off_queue
+      line: 6543
+      note: 'VERIFICATION PENDING: direwolf falls through with no action when !L3-init
+        — opposite of this transcription''s reading (we''d push to queue). See t15'
+  t17_all_other_primitives_from_lower_layer:
+    references:
+    - source: linbpq
+      path: L2Code.c
+      function: L2_PROCESS
+      line: 2066
+      note: default case silently releases buffer for unrecognised U-frame responses
+        in states 1/2/4
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state1_machine
+      line: 91
+      note: 'default: break — any frametype not matched silently ignored in state
+        1'
+  t18_ui_received_p_eq_1:
+    references:
+    - source: spec_prose
+      cite: §6.3.5 ¶3
+      quote: UI frame with the P bit set to '1' responds with a DM frame with the
+        F bit set to '1'.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: ui_frame
+      line: 5115
+      note: 'if (cr==cmd && pf==1): state_1 falls through with 0/2/5 to DM(F=pf).
+        UI_Check explicitly omitted per header comment 5102-5104: ''UI frames don''t
+        go thru here for normal operation'''
+    - source: linbpq
+      path: L2Code.c
+      function: L2LINKACTIVE
+      line: 1065
+      note: UI dispatched at active-link entry irrespective of state; no DM on P=1,
+        no P-bit branch — divergence
+    - source: linux_oot
+      path: net/ax25/ax25_in.c
+      function: ax25_rcv
+      line: 229
+      note: 'DIVERGES: UI handled before state-machine dispatch, uniformly for all
+        states; no DM(F=1) response on UI(P=1)'
+  t19_ui_received_p_eq_0:
+    references:
+    - source: spec_prose
+      cite: §6.3.5 ¶3
+      quote: The offending frame is ignored.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: ui_frame
+      line: 5110
+      note: P=0 case falls through the cr==cmd&&pf==1 guard, function returns with
+        no action. No UI_Check
+    - source: linbpq
+      path: L2Code.c
+      function: L2LINKACTIVE
+      line: 1065
+      note: same path as t18; LinBPQ does not branch on P bit for UI
+    - source: linux_oot
+      path: net/ax25/ax25_in.c
+      function: ax25_rcv
+      line: 229
+      note: same UI bypass path as t18
+  t20_control_field_error:
+    references:
+    - source: linbpq
+      path: L2Code.c
+      function: L2_PROCESS
+      line: 2049
+      note: default case sets SDINVC + SDFRMR (transitions to FRMR state); in states
+        1/2/4 just discards. Uses FRMR, not DL-ERROR(L)
+  t21_info_not_permitted_in_frame:
+    references: []
+  t22_u_or_s_frame_length_error:
+    references:
+    - source: linbpq
+      path: L2Code.c
+      function: L2Routine
+      line: 210
+      note: gross frame-length check drops short frames at entry; no DL-ERROR(N)
+        per-state
+  t23_sabm_received:
+    notes: 'Collision recovery: SABM from peer while our own SABM is in flight.
+
+      Reply UA, stay (our own SABM may still get its UA).
+
+
+      NOTE: direwolf author at src/ax25_link.c:4390-4392 explicitly
+
+      confirms this reading: "Erratum! 2006 version shows SABME twice
+
+      for state 1. First one should be SABM in last page of Figure C4.2.
+
+      Original appears to be correct." Triangulated upstream-spec
+
+      finding — the 2006 version of figc4.2 has a SABM/SABME swap bug.
+
+      '
+    references:
+    - source: spec_prose
+      cite: §6.3.6
+      quote: Collision Recovery
+    - source: linbpq
+      path: L2Code.c
+      function: L2LINKACTIVE
+      line: 1243
+      note: SABM in state 1 (XID-sent) calls L2SABM, sends UA via SETUPNEWL2SESSION.
+        State 2 collision falls through; F:=P semantics not modelled — verification
+        pending
+    - source: direwolf
+      path: src/ax25_link.c
+      function: sabm_e_frame
+      line: 4388
+      note: 'case state_1 !extended: build UA with f=p, stay in state 1. Author
+        erratum comment 4390-4392 confirms original 1998 figure is correct (2006
+        has SABM/SABME swap bug)'
+    - source: rax25
+      path: src/state.rs
+      function: AwaitingConnection::sabm
+      line: 1250
+      note: 'returns SendUa{pf: packet.poll}; F:=P implicit via UA''s pf field;
+        stays in AwaitingConnection. Matches spec'
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state1_machine
+      line: 42
+      note: sets modulus/window, sends UA with pf passed through (F:=P implicit),
+        stays
+  t24_sabme_received:
+    notes: 'SABME received while we sent SABM (v2.0). Reply DM and move to
+
+      ''Awaiting 2.2 Connection'' (state 5 in the figure / figc4.6) — peer
+
+      wants v2.2, we''ll handle the next collision step there.
+
+      '
+    references:
+    - source: spec_prose
+      cite: §6.3.1 ¶3
+      quote: If the distant TNC receives a SABM(E) command and cannot enter the
+        indicated state, it sends a DM frame.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: sabm_e_frame
+      line: 4379
+      note: 'case state_1 extended: build DM with f=p, enter_new_state(state_5_awaiting_v22_connection).
+        Matches spec; direwolf explicitly notes ''Don''t combine with state 5. They
+        are slightly different.'' at 4377'
