@@ -103,6 +103,56 @@ subroutines:
           - { decision: check_need_for_response_response_and_f_eq_1, branch: Yes }
           - { action: DL-ERROR Indication (A), kind: signal_upper }
 
+  - name: Establish_Extended_Data_Link
+    decisions:
+      - id: establish_extended_data_link_mod_128
+        question: "Mod 128?"
+        predicate: mod_128
+    paths:
+      - id: t01_establish_extended_data_link_no
+        path:
+          - { action: Clear Exception Conditions, kind: processing }
+          - { action: "RC := 1", kind: processing }
+          - { action: "P := 1", kind: processing }
+          - { decision: establish_extended_data_link_mod_128, branch: No }
+          - { action: SABM, kind: signal_lower }
+          - { action: Stop T3, kind: processing }
+          - { action: Start T1, kind: processing }
+      - id: t02_establish_extended_data_link_yes
+        path:
+          - { action: Clear Exception Conditions, kind: processing }
+          - { action: "RC := 1", kind: processing }
+          - { action: "P := 1", kind: processing }
+          - { decision: establish_extended_data_link_mod_128, branch: Yes }
+          - { action: SABME, kind: signal_lower }
+          - { action: Stop T3, kind: processing }
+          - { action: Start T1, kind: processing }
+
+  - name: Establish_Data_Link
+    decisions:
+      - id: establish_data_link_mod_128
+        question: "Mod 128?"
+        predicate: mod_128
+    paths:
+      - id: t01_establish_data_link_no
+        path:
+          - { action: Clear Exception Conditions, kind: processing }
+          - { action: "RC := 1", kind: processing }
+          - { action: "P := 1", kind: processing }
+          - { decision: establish_data_link_mod_128, branch: No }
+          - { action: SABM, kind: signal_lower }
+          - { action: Stop T3, kind: processing }
+          - { action: Start T1, kind: processing }
+      - id: t02_establish_data_link_yes
+        path:
+          - { action: Clear Exception Conditions, kind: processing }
+          - { action: "RC := 1", kind: processing }
+          - { action: "P := 1", kind: processing }
+          - { decision: establish_data_link_mod_128, branch: Yes }
+          - { action: SABME, kind: signal_lower }
+          - { action: Stop T3, kind: processing }
+          - { action: Start T1, kind: processing }
+
   - name: Invoke_Retransmission
     decisions:
       - id: invoke_retransmission_vs_eq_x

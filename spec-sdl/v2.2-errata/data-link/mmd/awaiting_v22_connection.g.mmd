@@ -24,7 +24,7 @@ stateDiagram-v2
     AwaitingV22Connection --> AwaitingV22Connection: t05_i_frame_pops_off_queue_no<br/>on: I_frame_pops_off_queue<br/>[not layer_3_initiated]<br/>/ ⇢ push_frame_on_queue
     AwaitingV22Connection --> AwaitingV22Connection: t06_all_other_primitives__from_lower_layer<br/>on: all_other_primitives__from_lower_layer
     AwaitingV22Connection --> AwaitingV22Connection: t07_control_field_error<br/>on: control_field_error<br/>/ ↑ DL-ERROR Indication (L)
-    AwaitingV22Connection --> AwaitingV22Connection: t08_info_field_permitted_in_frame<br/>on: info_field_permitted_in_frame<br/>/ ↑ DL-ERROR Indication (M)
+    AwaitingV22Connection --> AwaitingV22Connection: t08_info_not_permitted_in_frame<br/>on: info_not_permitted_in_frame<br/>/ ↑ DL-ERROR Indication (M)
     AwaitingV22Connection --> AwaitingV22Connection: t09_u_or_s_frame_length_error<br/>on: u_or_s_frame_length_error<br/>/ ↑ DL-ERROR Indication (N)
     AwaitingV22Connection --> AwaitingV22Connection: t10_ui_received_no<br/>on: UI_received<br/>[not P_eq_1]<br/>/ →() UI Check<br/>/ ↓ DM (F = 1)
     AwaitingV22Connection --> AwaitingV22Connection: t10_ui_received_yes<br/>on: UI_received<br/>[P_eq_1]<br/>/ →() UI Check

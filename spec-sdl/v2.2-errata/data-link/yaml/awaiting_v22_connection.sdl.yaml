@@ -96,9 +96,9 @@ transitions:
       - { action: DL-ERROR Indication (L), kind: signal_upper }
     next: AwaitingV22Connection
 
-  - id: t08_info_field_permitted_in_frame
-    on: info_field_permitted_in_frame
-    on_label: Info Field Permitted In Frame
+  - id: t08_info_not_permitted_in_frame
+    on: info_not_permitted_in_frame
+    on_label: Info Not Permitted In Frame
     path:
       - { action: DL-ERROR Indication (M), kind: signal_upper }
     next: AwaitingV22Connection
