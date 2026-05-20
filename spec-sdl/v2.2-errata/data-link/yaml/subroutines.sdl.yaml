@@ -25,9 +25,9 @@ subroutines:
       - id: ui_check_command
         question: "Command?"
         predicate: command
-      - id: ui_check_info_field_length_le_n1_&_content_is_octet_aligned
+      - id: ui_check_info_field_length_le_n1_and_content_is_octet_aligned
         question: "Info Field Length <= N1 & Content is Octet Aligned?"
-        predicate: info_field_length_le_N1_&_content_is_octet_aligned
+        predicate: info_field_length_le_N1_and_content_is_octet_aligned
     paths:
       - id: t01_ui_check_no
         path:
@@ -36,12 +36,12 @@ subroutines:
       - id: t02_ui_check_yes_yes
         path:
           - { decision: ui_check_command, branch: Yes }
-          - { decision: ui_check_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+          - { decision: ui_check_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
           - { action: DL-UNIT-DATA Indication, kind: signal_upper }
       - id: t03_ui_check_yes_no
         path:
           - { decision: ui_check_command, branch: Yes }
-          - { decision: ui_check_info_field_length_le_n1_&_content_is_octet_aligned, branch: No }
+          - { decision: ui_check_info_field_length_le_n1_and_content_is_octet_aligned, branch: No }
           - { action: DL-ERROR Indication (K), kind: signal_upper }
 
   - name: Select_T1
@@ -82,25 +82,25 @@ subroutines:
 
   - name: Check_Need_for_Response
     decisions:
-      - id: check_need_for_response_command_&_p_eq_1
+      - id: check_need_for_response_command_and_p_eq_1
         question: "Command & P == 1?"
-        predicate: command_&_P_eq_1
-      - id: check_need_for_response_response_&_f_eq_1
+        predicate: command_and_P_eq_1
+      - id: check_need_for_response_response_and_f_eq_1
         question: "Response & F == 1?"
-        predicate: response_&_F_eq_1
+        predicate: response_and_F_eq_1
     paths:
       - id: t01_check_need_for_response_yes
         path:
-          - { decision: check_need_for_response_command_&_p_eq_1, branch: Yes }
+          - { decision: check_need_for_response_command_and_p_eq_1, branch: Yes }
           - { action: Enquiry Response (F = 1), kind: subroutine }
       - id: t02_check_need_for_response_no_no
         path:
-          - { decision: check_need_for_response_command_&_p_eq_1, branch: No }
-          - { decision: check_need_for_response_response_&_f_eq_1, branch: No }
+          - { decision: check_need_for_response_command_and_p_eq_1, branch: No }
+          - { decision: check_need_for_response_response_and_f_eq_1, branch: No }
       - id: t03_check_need_for_response_no_yes
         path:
-          - { decision: check_need_for_response_command_&_p_eq_1, branch: No }
-          - { decision: check_need_for_response_response_&_f_eq_1, branch: Yes }
+          - { decision: check_need_for_response_command_and_p_eq_1, branch: No }
+          - { decision: check_need_for_response_response_and_f_eq_1, branch: Yes }
           - { action: DL-ERROR Indication (A), kind: signal_upper }
 
   - name: Invoke_Retransmission
@@ -211,9 +211,9 @@ subroutines:
 
   - name: Enquiry_Response
     decisions:
-      - id: enquiry_response_f_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi
+      - id: enquiry_response_f_eq_1_and_frame_eq_rr_or_frame_eq_rnr_or_frame_eq_i
         question: "F == 1 & (Frame==RR || Frame==RNR || Frame==I)?"
-        predicate: F_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi
+        predicate: F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I
       - id: enquiry_response_own_receiver_busy
         question: "Own Receiver Busy?"
         predicate: own_receiver_busy
@@ -230,14 +230,14 @@ subroutines:
       - id: t01_enquiry_response_yes_yes
         path:
           - { action: "N(r) := V(r)", kind: processing }
-          - { decision: enquiry_response_f_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi, branch: Yes }
+          - { decision: enquiry_response_f_eq_1_and_frame_eq_rr_or_frame_eq_rnr_or_frame_eq_i, branch: Yes }
           - { decision: enquiry_response_own_receiver_busy, branch: Yes }
           - { action: RNR Response, kind: signal_lower }
           - { action: Clear Acknowledge Pending, kind: processing }
       - id: t02_enquiry_response_yes_no_yes_yes_yes
         path:
           - { action: "N(r) := V(r)", kind: processing }
-          - { decision: enquiry_response_f_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi, branch: Yes }
+          - { decision: enquiry_response_f_eq_1_and_frame_eq_rr_or_frame_eq_rnr_or_frame_eq_i, branch: Yes }
           - { decision: enquiry_response_own_receiver_busy, branch: No }
           - { decision: enquiry_response_srej_enabled, branch: Yes }
           - { decision: enquiry_response_mod_8, branch: Yes }
@@ -249,7 +249,7 @@ subroutines:
       - id: t03_enquiry_response_yes_no_yes_yes_no
         path:
           - { action: "N(r) := V(r)", kind: processing }
-          - { decision: enquiry_response_f_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi, branch: Yes }
+          - { decision: enquiry_response_f_eq_1_and_frame_eq_rr_or_frame_eq_rnr_or_frame_eq_i, branch: Yes }
           - { decision: enquiry_response_own_receiver_busy, branch: No }
           - { decision: enquiry_response_srej_enabled, branch: Yes }
           - { decision: enquiry_response_mod_8, branch: Yes }
@@ -260,7 +260,7 @@ subroutines:
       - id: t04_enquiry_response_yes_no_yes_no_yes
         path:
           - { action: "N(r) := V(r)", kind: processing }
-          - { decision: enquiry_response_f_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi, branch: Yes }
+          - { decision: enquiry_response_f_eq_1_and_frame_eq_rr_or_frame_eq_rnr_or_frame_eq_i, branch: Yes }
           - { decision: enquiry_response_own_receiver_busy, branch: No }
           - { decision: enquiry_response_srej_enabled, branch: Yes }
           - { decision: enquiry_response_mod_8, branch: No }
@@ -271,7 +271,7 @@ subroutines:
       - id: t05_enquiry_response_yes_no_yes_no_no
         path:
           - { action: "N(r) := V(r)", kind: processing }
-          - { decision: enquiry_response_f_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi, branch: Yes }
+          - { decision: enquiry_response_f_eq_1_and_frame_eq_rr_or_frame_eq_rnr_or_frame_eq_i, branch: Yes }
           - { decision: enquiry_response_own_receiver_busy, branch: No }
           - { decision: enquiry_response_srej_enabled, branch: Yes }
           - { decision: enquiry_response_mod_8, branch: No }
@@ -281,7 +281,7 @@ subroutines:
       - id: t06_enquiry_response_yes_no_no
         path:
           - { action: "N(r) := V(r)", kind: processing }
-          - { decision: enquiry_response_f_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi, branch: Yes }
+          - { decision: enquiry_response_f_eq_1_and_frame_eq_rr_or_frame_eq_rnr_or_frame_eq_i, branch: Yes }
           - { decision: enquiry_response_own_receiver_busy, branch: No }
           - { decision: enquiry_response_srej_enabled, branch: No }
           - { action: RR Response, kind: signal_lower }
@@ -289,6 +289,6 @@ subroutines:
       - id: t07_enquiry_response_no
         path:
           - { action: "N(r) := V(r)", kind: processing }
-          - { decision: enquiry_response_f_eq_1_&_frameeqrr_||_frameeqrnr_||_frameeqi, branch: No }
+          - { decision: enquiry_response_f_eq_1_and_frame_eq_rr_or_frame_eq_rnr_or_frame_eq_i, branch: No }
           - { action: RR Response, kind: signal_lower }
           - { action: Clear Acknowledge Pending, kind: processing }

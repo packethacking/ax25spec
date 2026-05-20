@@ -11,9 +11,9 @@ decisions:
   - id: i_frame_pops_off_queue_peer_receiver_busy
     question: "Peer Receiver Busy?"
     predicate: peer_receiver_busy
-  - id: i_frame_pops_off_queue_vs_eq_va_+_k
+  - id: i_frame_pops_off_queue_vs_eq_va_plus_k
     question: "V(s) == V(a) + k?"
-    predicate: vs_eq_va_+_k
+    predicate: vs_eq_va_plus_k
   - id: i_frame_pops_off_queue_t1_running
     question: "T1 Running?"
     predicate: T1_running
@@ -26,72 +26,72 @@ decisions:
   - id: dl_flow_on_t1_running
     question: "T1 Running?"
     predicate: T1_running
-  - id: dl_connect_version_2.2
+  - id: dl_connect_version_2_2
     question: "Version 2.2?"
-    predicate: version_2.2
-  - id: control_field_error_version_2.2
+    predicate: version_2_2
+  - id: control_field_error_version_2_2
     question: "Version 2.2?"
-    predicate: version_2.2
-  - id: info_not_permitted_in_frame_version_2.2
+    predicate: version_2_2
+  - id: info_not_permitted_in_frame_version_2_2
     question: "Version 2.2?"
-    predicate: version_2.2
-  - id: u_or_s_frame_length_error_version_2.2
+    predicate: version_2_2
+  - id: u_or_s_frame_length_error_version_2_2
     question: "Version 2.2?"
-    predicate: version_2.2
+    predicate: version_2_2
   - id: sabm_vs_eq_va
     question: "V(s) == V(a)?"
     predicate: vs_eq_va
   - id: sabme_vs_eq_va
     question: "V(s) == V(a)?"
     predicate: vs_eq_va
-  - id: frmr_version_2.2
+  - id: frmr_version_2_2
     question: "Version 2.2?"
-    predicate: version_2.2
-  - id: ua_version_2.2
+    predicate: version_2_2
+  - id: ua_version_2_2
     question: "Version 2.2?"
-    predicate: version_2.2
+    predicate: version_2_2
   - id: ui_p_eq_1
     question: "P == 1?"
     predicate: P_eq_1
   - id: rr_va_le_nr_le_vs
     question: "V(a) <= N(r) <= V(s)?"
     predicate: va_le_nr_le_vs
-  - id: rr_version_2.2
+  - id: rr_version_2_2
     question: "Version 2.2?"
-    predicate: version_2.2
+    predicate: version_2_2
   - id: rnr_va_le_nr_le_vs
     question: "V(a) <= N(r) <= V(s)?"
     predicate: va_le_nr_le_vs
-  - id: rnr_version_2.2
+  - id: rnr_version_2_2
     question: "Version 2.2?"
-    predicate: version_2.2
+    predicate: version_2_2
   - id: lm_seize_ack_pending
     question: "Ack Pending?"
     predicate: ack_pending
   - id: srej_va_le_nr_le_vs
     question: "V(a) <= N(r) <= V(s)?"
     predicate: va_le_nr_le_vs
-  - id: srej_p/f_eq_1
+  - id: srej_p_or_f_eq_1
     question: "P/F == 1?"
-    predicate: p/f_eq_1
-  - id: srej_version_2.2
+    predicate: P_or_F_eq_1
+  - id: srej_version_2_2
     question: "Version 2.2?"
-    predicate: version_2.2
+    predicate: version_2_2
   - id: rej_va_le_nr_le_vs
     question: "V(a) <= N(r) <= V(s)?"
     predicate: va_le_nr_le_vs
-  - id: rej_version_2.2
+  - id: rej_version_2_2
     question: "Version 2.2?"
-    predicate: version_2.2
+    predicate: version_2_2
   - id: i_command
     question: "Command?"
     predicate: command
   - id: i_info_field_length_le_n1_and_content_is_octet_aligned
     question: "Info Field Length <= N1 and Content is Octet Aligned?"
     predicate: info_field_length_le_N1_and_content_is_octet_aligned
-  - id: i_version_2.2
+  - id: i_version_2_2
     question: "Version 2.2?"
-    predicate: version_2.2
+    predicate: version_2_2
   - id: i_va_le_nr_le_vs
     question: "V(a) <= N(r) <= V(s)?"
     predicate: va_le_nr_le_vs
@@ -116,9 +116,9 @@ decisions:
   - id: i_sreject_exception_gt_0
     question: "SReject Exception > 0?"
     predicate: sreject_exception_gt_0
-  - id: i_ns_gt_vr_+_1
+  - id: i_ns_gt_vr_plus_1
     question: "N(s) > V(r) + 1?"
-    predicate: ns_gt_vr_+_1
+    predicate: ns_gt_vr_plus_1
 
 transitions:
 
@@ -153,7 +153,7 @@ transitions:
     on_label: I Frame Pops Off Queue
     path:
       - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
-      - { decision: i_frame_pops_off_queue_vs_eq_va_+_k, branch: Yes }
+      - { decision: i_frame_pops_off_queue_vs_eq_va_plus_k, branch: Yes }
       - { action: Push on I Frame Queue, kind: internal_out }
     next: Connected
 
@@ -162,7 +162,7 @@ transitions:
     on_label: I Frame Pops Off Queue
     path:
       - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
-      - { decision: i_frame_pops_off_queue_vs_eq_va_+_k, branch: No }
+      - { decision: i_frame_pops_off_queue_vs_eq_va_plus_k, branch: No }
       - { action: "N(s) := V(s)", kind: processing }
       - { action: "N(r) := V(r)", kind: processing }
       - { action: "p := 0", kind: processing }
@@ -179,7 +179,7 @@ transitions:
     on_label: I Frame Pops Off Queue
     path:
       - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
-      - { decision: i_frame_pops_off_queue_vs_eq_va_+_k, branch: No }
+      - { decision: i_frame_pops_off_queue_vs_eq_va_plus_k, branch: No }
       - { action: "N(s) := V(s)", kind: processing }
       - { action: "N(r) := V(r)", kind: processing }
       - { action: "p := 0", kind: processing }
@@ -251,7 +251,7 @@ transitions:
       - { action: Discard I Frame Queue, kind: processing }
       - { action: Establish Data Link, kind: subroutine }
       - { action: Set Layer 3 Initiated, kind: processing }
-      - { decision: dl_connect_version_2.2, branch: No }
+      - { decision: dl_connect_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t07_dl_connect_request_yes
@@ -261,7 +261,7 @@ transitions:
       - { action: Discard I Frame Queue, kind: processing }
       - { action: Establish Data Link, kind: subroutine }
       - { action: Set Layer 3 Initiated, kind: processing }
-      - { decision: dl_connect_version_2.2, branch: Yes }
+      - { decision: dl_connect_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t08_all_other_primitives__from_lower_layer
@@ -278,7 +278,7 @@ transitions:
       - { action: Discard I Frame Queue, kind: processing }
       - { action: Establish Data Link, kind: subroutine }
       - { action: Set Layer 3 Initiated, kind: processing }
-      - { decision: control_field_error_version_2.2, branch: No }
+      - { decision: control_field_error_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t09_control_field_error_yes
@@ -289,7 +289,7 @@ transitions:
       - { action: Discard I Frame Queue, kind: processing }
       - { action: Establish Data Link, kind: subroutine }
       - { action: Set Layer 3 Initiated, kind: processing }
-      - { decision: control_field_error_version_2.2, branch: Yes }
+      - { decision: control_field_error_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t10_info_not_permitted_in_frame_no
@@ -300,7 +300,7 @@ transitions:
       - { action: Discard I Frame Queue, kind: processing }
       - { action: Establish Data Link, kind: subroutine }
       - { action: Set Layer 3 Initiated, kind: processing }
-      - { decision: info_not_permitted_in_frame_version_2.2, branch: No }
+      - { decision: info_not_permitted_in_frame_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t10_info_not_permitted_in_frame_yes
@@ -311,7 +311,7 @@ transitions:
       - { action: Discard I Frame Queue, kind: processing }
       - { action: Establish Data Link, kind: subroutine }
       - { action: Set Layer 3 Initiated, kind: processing }
-      - { decision: info_not_permitted_in_frame_version_2.2, branch: Yes }
+      - { decision: info_not_permitted_in_frame_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t11_u_or_s_frame_length_error_no
@@ -322,7 +322,7 @@ transitions:
       - { action: Discard I Frame Queue, kind: processing }
       - { action: Establish Data Link, kind: subroutine }
       - { action: Set Layer 3 Initiated, kind: processing }
-      - { decision: u_or_s_frame_length_error_version_2.2, branch: No }
+      - { decision: u_or_s_frame_length_error_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t11_u_or_s_frame_length_error_yes
@@ -333,7 +333,7 @@ transitions:
       - { action: Discard I Frame Queue, kind: processing }
       - { action: Establish Data Link, kind: subroutine }
       - { action: Set Layer 3 Initiated, kind: processing }
-      - { decision: u_or_s_frame_length_error_version_2.2, branch: Yes }
+      - { decision: u_or_s_frame_length_error_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t12_t1_expiry
@@ -435,7 +435,7 @@ transitions:
       - { action: DL-ERROR Indication (K), kind: signal_upper }
       - { action: Establish Data Link, kind: subroutine }
       - { action: Clear Layer 3 Initiated, kind: processing }
-      - { decision: frmr_version_2.2, branch: No }
+      - { decision: frmr_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t16_frmr_received_yes
@@ -445,7 +445,7 @@ transitions:
       - { action: DL-ERROR Indication (K), kind: signal_upper }
       - { action: Establish Data Link, kind: subroutine }
       - { action: Clear Layer 3 Initiated, kind: processing }
-      - { decision: frmr_version_2.2, branch: Yes }
+      - { decision: frmr_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t17_ua_received_no
@@ -455,7 +455,7 @@ transitions:
       - { action: DL-ERROR Indication (K), kind: signal_upper }
       - { action: Establish Data Link, kind: subroutine }
       - { action: Clear Layer 3 Initiated, kind: processing }
-      - { decision: ua_version_2.2, branch: No }
+      - { decision: ua_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t17_ua_received_yes
@@ -465,7 +465,7 @@ transitions:
       - { action: DL-ERROR Indication (K), kind: signal_upper }
       - { action: Establish Data Link, kind: subroutine }
       - { action: Clear Layer 3 Initiated, kind: processing }
-      - { decision: ua_version_2.2, branch: Yes }
+      - { decision: ua_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t18_ui_received_yes
@@ -526,7 +526,7 @@ transitions:
       - { action: Check Need For Response, kind: subroutine }
       - { decision: rr_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: rr_version_2.2, branch: No }
+      - { decision: rr_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t21_rr_received_no_yes
@@ -537,7 +537,7 @@ transitions:
       - { action: Check Need For Response, kind: subroutine }
       - { decision: rr_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: rr_version_2.2, branch: Yes }
+      - { decision: rr_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t22_rnr_received_yes
@@ -558,7 +558,7 @@ transitions:
       - { action: Check Need For Response, kind: subroutine }
       - { decision: rnr_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: rnr_version_2.2, branch: No }
+      - { decision: rnr_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t22_rnr_received_no_yes
@@ -569,7 +569,7 @@ transitions:
       - { action: Check Need For Response, kind: subroutine }
       - { decision: rnr_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: rnr_version_2.2, branch: Yes }
+      - { decision: rnr_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t23_lm_seize_confirm_yes
@@ -597,7 +597,7 @@ transitions:
       - { action: Clear Peer Busy, kind: processing }
       - { action: Check Need For Response, kind: subroutine }
       - { decision: srej_va_le_nr_le_vs, branch: Yes }
-      - { decision: srej_p/f_eq_1, branch: Yes }
+      - { decision: srej_p_or_f_eq_1, branch: Yes }
       - { action: "V(a) := N(r)", kind: processing }
       - { action: Stop T1, kind: processing }
       - { action: Start T3, kind: processing }
@@ -616,7 +616,7 @@ transitions:
       - { action: Clear Peer Busy, kind: processing }
       - { action: Check Need For Response, kind: subroutine }
       - { decision: srej_va_le_nr_le_vs, branch: Yes }
-      - { decision: srej_p/f_eq_1, branch: No }
+      - { decision: srej_p_or_f_eq_1, branch: No }
       - { action: Stop T1, kind: processing }
       - { action: Start T3, kind: processing }
       - { action: Select T1 Value, kind: subroutine }
@@ -635,7 +635,7 @@ transitions:
       - { action: Check Need For Response, kind: subroutine }
       - { decision: srej_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: srej_version_2.2, branch: No }
+      - { decision: srej_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t24_srej_received_no_yes
@@ -646,7 +646,7 @@ transitions:
       - { action: Check Need For Response, kind: subroutine }
       - { decision: srej_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: srej_version_2.2, branch: Yes }
+      - { decision: srej_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t25_rej_received_no_no
@@ -657,7 +657,7 @@ transitions:
       - { action: Check Need For Response, kind: subroutine }
       - { decision: rej_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: rej_version_2.2, branch: No }
+      - { decision: rej_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t25_rej_received_no_yes
@@ -668,7 +668,7 @@ transitions:
       - { action: Check Need For Response, kind: subroutine }
       - { decision: rej_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: rej_version_2.2, branch: Yes }
+      - { decision: rej_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t25_rej_received_yes
@@ -695,7 +695,7 @@ transitions:
       - { action: DL-ERROR Indication (O), kind: signal_upper }
       - { action: Establish Data Link, kind: subroutine }
       - { action: Clear Layer 3 Initiated, kind: processing }
-      - { decision: i_version_2.2, branch: No }
+      - { decision: i_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t26_i_received_no_no_yes
@@ -707,7 +707,7 @@ transitions:
       - { action: DL-ERROR Indication (O), kind: signal_upper }
       - { action: Establish Data Link, kind: subroutine }
       - { action: Clear Layer 3 Initiated, kind: processing }
-      - { decision: i_version_2.2, branch: Yes }
+      - { decision: i_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t26_i_received_no_yes_no_no
@@ -718,7 +718,7 @@ transitions:
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: i_version_2.2, branch: No }
+      - { decision: i_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t26_i_received_no_yes_no_yes
@@ -729,7 +729,7 @@ transitions:
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: i_version_2.2, branch: Yes }
+      - { decision: i_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t26_i_received_no_yes_yes_no_yes_no_no_no
@@ -879,7 +879,7 @@ transitions:
       - { decision: i_srej_enabled, branch: Yes }
       - { action: Save Contents of I Frame, kind: processing }
       - { decision: i_sreject_exception_gt_0, branch: No }
-      - { decision: i_ns_gt_vr_+_1, branch: Yes }
+      - { decision: i_ns_gt_vr_plus_1, branch: Yes }
       - { action: Discard Contents of I Frame, kind: processing }
       - { action: Set Reject Exception, kind: processing }
       - { action: "F := P", kind: processing }
@@ -902,7 +902,7 @@ transitions:
       - { decision: i_srej_enabled, branch: Yes }
       - { action: Save Contents of I Frame, kind: processing }
       - { decision: i_sreject_exception_gt_0, branch: No }
-      - { decision: i_ns_gt_vr_+_1, branch: No }
+      - { decision: i_ns_gt_vr_plus_1, branch: No }
       - { action: "N(r) := V(r)", kind: processing }
       - { action: "F := 1", kind: processing }
       - { action: Increment Sreject Exception, kind: processing }

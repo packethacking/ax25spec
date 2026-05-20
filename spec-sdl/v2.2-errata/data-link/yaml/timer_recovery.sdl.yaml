@@ -12,9 +12,9 @@ decisions:
   - id: i_frame_pops_off_queue_peer_receiver_busy
     question: "Peer Receiver Busy?"
     predicate: peer_receiver_busy
-  - id: i_frame_pops_off_queue_vseqva+k
+  - id: i_frame_pops_off_queue_vs_eq_va_plus_k
     question: "V(s)==V(a)+k?"
-    predicate: vseqva+k
+    predicate: vs_eq_va_plus_k
   - id: i_frame_pops_off_queue_t1_running
     question: "T1 Running?"
     predicate: T1_running
@@ -36,33 +36,33 @@ decisions:
   - id: ui_p_eq_1
     question: "P == 1?"
     predicate: P_eq_1
-  - id: rr_response_&_f_eq_1
+  - id: rr_response_and_f_eq_1
     question: "Response & F == 1?"
-    predicate: response_&_F_eq_1
-  - id: rr_command_&_p_eq_1
+    predicate: response_and_F_eq_1
+  - id: rr_command_and_p_eq_1
     question: "Command & P == 1?"
-    predicate: command_&_P_eq_1
+    predicate: command_and_P_eq_1
   - id: rr_va_le_nr_le_vs
     question: "V(a) <= N(r) <= V(s)?"
     predicate: va_le_nr_le_vs
-  - id: rr_version_2.2
+  - id: rr_version_2_2
     question: "Version 2.2?"
-    predicate: version_2.2
+    predicate: version_2_2
   - id: rr_vs_eq_va
     question: "V(s) == V(a)?"
     predicate: vs_eq_va
-  - id: rnr_response_&_f_eq_1
+  - id: rnr_response_and_f_eq_1
     question: "Response & F == 1?"
-    predicate: response_&_F_eq_1
-  - id: rnr_command_&_p_eq_1
+    predicate: response_and_F_eq_1
+  - id: rnr_command_and_p_eq_1
     question: "Command & P == 1?"
-    predicate: command_&_P_eq_1
+    predicate: command_and_P_eq_1
   - id: rnr_va_le_nr_le_vs
     question: "V(a) <= N(r) <= V(s)?"
     predicate: va_le_nr_le_vs
-  - id: rnr_version_2.2
+  - id: rnr_version_2_2
     question: "Version 2.2?"
-    predicate: version_2.2
+    predicate: version_2_2
   - id: rnr_vs_eq_va
     question: "V(s) == V(a)?"
     predicate: vs_eq_va
@@ -81,9 +81,9 @@ decisions:
   - id: i_command
     question: "Command?"
     predicate: command
-  - id: i_info_field_length_le_n1_&_content_is_octet_aligned
+  - id: i_info_field_length_le_n1_and_content_is_octet_aligned
     question: "Info Field Length <= N1 & Content Is Octet Aligned?"
-    predicate: info_field_length_le_N1_&_content_is_octet_aligned
+    predicate: info_field_length_le_N1_and_content_is_octet_aligned
   - id: i_va_le_nr_le_vs
     question: "V(a) <= N(r) <= V(s)"
     predicate: va_le_nr_le_vs
@@ -105,27 +105,27 @@ decisions:
   - id: i_srej_enabled
     question: "SREJ Enabled"
     predicate: SREJ_enabled
-  - id: i_sreject_exception_gt0
+  - id: i_sreject_exception_gt_0
     question: "Sreject Exception  >0?"
-    predicate: sreject_exception_gt0
-  - id: i_ns_gt_vr+1
+    predicate: sreject_exception_gt_0
+  - id: i_ns_gt_vr_plus_1
     question: "N(s) > V(r)+1?"
-    predicate: ns_gt_vr+1
-  - id: rej_response_&_f_eq_1
+    predicate: ns_gt_vr_plus_1
+  - id: rej_response_and_f_eq_1
     question: "Response & F == 1?"
-    predicate: response_&_F_eq_1
-  - id: rej_command_&_p_eq_1
+    predicate: response_and_F_eq_1
+  - id: rej_command_and_p_eq_1
     question: "Command & P == 1?"
-    predicate: command_&_P_eq_1
+    predicate: command_and_P_eq_1
   - id: rej_va_le_nr_le_vs
     question: "V(a) <= N(r) <= V(s)"
     predicate: va_le_nr_le_vs
   - id: rej_vs_eq_va
     question: "V(s) == V(a)?"
     predicate: vs_eq_va
-  - id: rej_version_2.2
+  - id: rej_version_2_2
     question: "Version 2.2?"
-    predicate: version_2.2
+    predicate: version_2_2
   - id: srej_response
     question: "Response?"
     predicate: response
@@ -138,9 +138,9 @@ decisions:
   - id: srej_vs_eq_va
     question: "V(s) == V(a)?"
     predicate: vs_eq_va
-  - id: srej_version_2.2
+  - id: srej_version_2_2
     question: "Version 2.2?"
-    predicate: version_2.2
+    predicate: version_2_2
   - id: srej_f_eq_1
     question: "F == 1?"
     predicate: F_eq_1
@@ -178,7 +178,7 @@ transitions:
     on_label: I Frame Pops Off Queue
     path:
       - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
-      - { decision: i_frame_pops_off_queue_vseqva+k, branch: Yes }
+      - { decision: i_frame_pops_off_queue_vs_eq_va_plus_k, branch: Yes }
       - { action: Push I Frame on I Queue, kind: internal_out }
     next: TimerRecovery
 
@@ -187,7 +187,7 @@ transitions:
     on_label: I Frame Pops Off Queue
     path:
       - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
-      - { decision: i_frame_pops_off_queue_vseqva+k, branch: No }
+      - { decision: i_frame_pops_off_queue_vs_eq_va_plus_k, branch: No }
       - { action: "N(s) := V(s)", kind: processing }
       - { action: "N(R) := V(r)", kind: processing }
       - { action: "P := 0", kind: processing }
@@ -202,7 +202,7 @@ transitions:
     on_label: I Frame Pops Off Queue
     path:
       - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
-      - { decision: i_frame_pops_off_queue_vseqva+k, branch: No }
+      - { decision: i_frame_pops_off_queue_vs_eq_va_plus_k, branch: No }
       - { action: "N(s) := V(s)", kind: processing }
       - { action: "N(R) := V(r)", kind: processing }
       - { action: "P := 0", kind: processing }
@@ -434,8 +434,8 @@ transitions:
     on_label: RR
     path:
       - { action: Clear Peer Busy, kind: processing }
-      - { decision: rr_response_&_f_eq_1, branch: No }
-      - { decision: rr_command_&_p_eq_1, branch: No }
+      - { decision: rr_response_and_f_eq_1, branch: No }
+      - { decision: rr_command_and_p_eq_1, branch: No }
     next: Undefined
 
   - id: t18_rr_received_no_yes_yes
@@ -443,8 +443,8 @@ transitions:
     on_label: RR
     path:
       - { action: Clear Peer Busy, kind: processing }
-      - { decision: rr_response_&_f_eq_1, branch: No }
-      - { decision: rr_command_&_p_eq_1, branch: Yes }
+      - { decision: rr_response_and_f_eq_1, branch: No }
+      - { decision: rr_command_and_p_eq_1, branch: Yes }
       - { action: Enquiry Response (F = 1), kind: subroutine }
       - { decision: rr_va_le_nr_le_vs, branch: Yes }
       - { action: "V(a) := N(r)", kind: processing }
@@ -455,12 +455,12 @@ transitions:
     on_label: RR
     path:
       - { action: Clear Peer Busy, kind: processing }
-      - { decision: rr_response_&_f_eq_1, branch: No }
-      - { decision: rr_command_&_p_eq_1, branch: Yes }
+      - { decision: rr_response_and_f_eq_1, branch: No }
+      - { decision: rr_command_and_p_eq_1, branch: Yes }
       - { action: Enquiry Response (F = 1), kind: subroutine }
       - { decision: rr_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: rr_version_2.2, branch: No }
+      - { decision: rr_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t18_rr_received_no_yes_no_yes
@@ -468,12 +468,12 @@ transitions:
     on_label: RR
     path:
       - { action: Clear Peer Busy, kind: processing }
-      - { decision: rr_response_&_f_eq_1, branch: No }
-      - { decision: rr_command_&_p_eq_1, branch: Yes }
+      - { decision: rr_response_and_f_eq_1, branch: No }
+      - { decision: rr_command_and_p_eq_1, branch: Yes }
       - { action: Enquiry Response (F = 1), kind: subroutine }
       - { decision: rr_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: rr_version_2.2, branch: Yes }
+      - { decision: rr_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t18_rr_received_yes_no_no
@@ -481,12 +481,12 @@ transitions:
     on_label: RR
     path:
       - { action: Clear Peer Busy, kind: processing }
-      - { decision: rr_response_&_f_eq_1, branch: Yes }
+      - { decision: rr_response_and_f_eq_1, branch: Yes }
       - { action: Stop T1, kind: processing }
       - { action: Select T1 Value, kind: subroutine }
       - { decision: rr_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: rr_version_2.2, branch: No }
+      - { decision: rr_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t18_rr_received_yes_no_yes
@@ -494,12 +494,12 @@ transitions:
     on_label: RR
     path:
       - { action: Clear Peer Busy, kind: processing }
-      - { decision: rr_response_&_f_eq_1, branch: Yes }
+      - { decision: rr_response_and_f_eq_1, branch: Yes }
       - { action: Stop T1, kind: processing }
       - { action: Select T1 Value, kind: subroutine }
       - { decision: rr_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: rr_version_2.2, branch: Yes }
+      - { decision: rr_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t18_rr_received_yes_yes_no
@@ -507,7 +507,7 @@ transitions:
     on_label: RR
     path:
       - { action: Clear Peer Busy, kind: processing }
-      - { decision: rr_response_&_f_eq_1, branch: Yes }
+      - { decision: rr_response_and_f_eq_1, branch: Yes }
       - { action: Stop T1, kind: processing }
       - { action: Select T1 Value, kind: subroutine }
       - { decision: rr_va_le_nr_le_vs, branch: Yes }
@@ -524,7 +524,7 @@ transitions:
     on_label: RR
     path:
       - { action: Clear Peer Busy, kind: processing }
-      - { decision: rr_response_&_f_eq_1, branch: Yes }
+      - { decision: rr_response_and_f_eq_1, branch: Yes }
       - { action: Stop T1, kind: processing }
       - { action: Select T1 Value, kind: subroutine }
       - { decision: rr_va_le_nr_le_vs, branch: Yes }
@@ -539,8 +539,8 @@ transitions:
     on_label: RNR
     path:
       - { action: Set Peer Busy, kind: processing }
-      - { decision: rnr_response_&_f_eq_1, branch: No }
-      - { decision: rnr_command_&_p_eq_1, branch: No }
+      - { decision: rnr_response_and_f_eq_1, branch: No }
+      - { decision: rnr_command_and_p_eq_1, branch: No }
     next: Undefined
 
   - id: t19_rnr_received_no_yes_yes
@@ -548,8 +548,8 @@ transitions:
     on_label: RNR
     path:
       - { action: Set Peer Busy, kind: processing }
-      - { decision: rnr_response_&_f_eq_1, branch: No }
-      - { decision: rnr_command_&_p_eq_1, branch: Yes }
+      - { decision: rnr_response_and_f_eq_1, branch: No }
+      - { decision: rnr_command_and_p_eq_1, branch: Yes }
       - { action: Enquiry Response (F = 1), kind: subroutine }
       - { decision: rnr_va_le_nr_le_vs, branch: Yes }
       - { action: "V(a) := N(r)", kind: processing }
@@ -560,12 +560,12 @@ transitions:
     on_label: RNR
     path:
       - { action: Set Peer Busy, kind: processing }
-      - { decision: rnr_response_&_f_eq_1, branch: No }
-      - { decision: rnr_command_&_p_eq_1, branch: Yes }
+      - { decision: rnr_response_and_f_eq_1, branch: No }
+      - { decision: rnr_command_and_p_eq_1, branch: Yes }
       - { action: Enquiry Response (F = 1), kind: subroutine }
       - { decision: rnr_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: rnr_version_2.2, branch: No }
+      - { decision: rnr_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t19_rnr_received_no_yes_no_yes
@@ -573,12 +573,12 @@ transitions:
     on_label: RNR
     path:
       - { action: Set Peer Busy, kind: processing }
-      - { decision: rnr_response_&_f_eq_1, branch: No }
-      - { decision: rnr_command_&_p_eq_1, branch: Yes }
+      - { decision: rnr_response_and_f_eq_1, branch: No }
+      - { decision: rnr_command_and_p_eq_1, branch: Yes }
       - { action: Enquiry Response (F = 1), kind: subroutine }
       - { decision: rnr_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: rnr_version_2.2, branch: Yes }
+      - { decision: rnr_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t19_rnr_received_yes_no_no
@@ -586,12 +586,12 @@ transitions:
     on_label: RNR
     path:
       - { action: Set Peer Busy, kind: processing }
-      - { decision: rnr_response_&_f_eq_1, branch: Yes }
+      - { decision: rnr_response_and_f_eq_1, branch: Yes }
       - { action: Stop T1, kind: processing }
       - { action: Select T1 Value, kind: subroutine }
       - { decision: rnr_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: rnr_version_2.2, branch: No }
+      - { decision: rnr_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t19_rnr_received_yes_no_yes
@@ -599,12 +599,12 @@ transitions:
     on_label: RNR
     path:
       - { action: Set Peer Busy, kind: processing }
-      - { decision: rnr_response_&_f_eq_1, branch: Yes }
+      - { decision: rnr_response_and_f_eq_1, branch: Yes }
       - { action: Stop T1, kind: processing }
       - { action: Select T1 Value, kind: subroutine }
       - { decision: rnr_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: rnr_version_2.2, branch: Yes }
+      - { decision: rnr_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t19_rnr_received_yes_yes_no
@@ -612,7 +612,7 @@ transitions:
     on_label: RNR
     path:
       - { action: Set Peer Busy, kind: processing }
-      - { decision: rnr_response_&_f_eq_1, branch: Yes }
+      - { decision: rnr_response_and_f_eq_1, branch: Yes }
       - { action: Stop T1, kind: processing }
       - { action: Select T1 Value, kind: subroutine }
       - { decision: rnr_va_le_nr_le_vs, branch: Yes }
@@ -629,7 +629,7 @@ transitions:
     on_label: RNR
     path:
       - { action: Set Peer Busy, kind: processing }
-      - { decision: rnr_response_&_f_eq_1, branch: Yes }
+      - { decision: rnr_response_and_f_eq_1, branch: Yes }
       - { action: Stop T1, kind: processing }
       - { action: Select T1 Value, kind: subroutine }
       - { decision: rnr_va_le_nr_le_vs, branch: Yes }
@@ -718,7 +718,7 @@ transitions:
     on_label: I Frame
     path:
       - { decision: i_command, branch: Undefined }
-      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: No }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: No }
       - { action: DL-ERROR Indication (O), kind: signal_upper }
       - { action: Establish Data Link, kind: subroutine }
       - { action: Clear Layer 3 Initiated, kind: processing }
@@ -729,7 +729,7 @@ transitions:
     on_label: I Frame
     path:
       - { decision: i_command, branch: Undefined }
-      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: No }
       - { action: N(r) Recovery, kind: subroutine }
     next: AwaitingConnection
@@ -739,7 +739,7 @@ transitions:
     on_label: I Frame
     path:
       - { decision: i_command, branch: Undefined }
-      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
       - { decision: i_own_receive_busy, branch: Yes }
@@ -756,7 +756,7 @@ transitions:
     on_label: I Frame
     path:
       - { decision: i_command, branch: Undefined }
-      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
       - { decision: i_own_receive_busy, branch: Yes }
@@ -769,7 +769,7 @@ transitions:
     on_label: I Frame
     path:
       - { decision: i_command, branch: Undefined }
-      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
       - { decision: i_own_receive_busy, branch: No }
@@ -790,7 +790,7 @@ transitions:
     on_label: I Frame
     path:
       - { decision: i_command, branch: Undefined }
-      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
       - { decision: i_own_receive_busy, branch: No }
@@ -810,7 +810,7 @@ transitions:
     on_label: I Frame
     path:
       - { decision: i_command, branch: Undefined }
-      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
       - { decision: i_own_receive_busy, branch: No }
@@ -828,7 +828,7 @@ transitions:
     on_label: I Frame
     path:
       - { decision: i_command, branch: Undefined }
-      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
       - { decision: i_own_receive_busy, branch: No }
@@ -847,7 +847,7 @@ transitions:
     on_label: I Frame
     path:
       - { decision: i_command, branch: Undefined }
-      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
       - { decision: i_own_receive_busy, branch: No }
@@ -862,7 +862,7 @@ transitions:
     on_label: I Frame
     path:
       - { decision: i_command, branch: Undefined }
-      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
       - { decision: i_own_receive_busy, branch: No }
@@ -882,7 +882,7 @@ transitions:
     on_label: I Frame
     path:
       - { decision: i_command, branch: Undefined }
-      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
       - { decision: i_own_receive_busy, branch: No }
@@ -890,8 +890,8 @@ transitions:
       - { decision: i_reject_exception, branch: No }
       - { decision: i_srej_enabled, branch: Yes }
       - { action: Save Contents of I Frame, kind: processing }
-      - { decision: i_sreject_exception_gt0, branch: No }
-      - { decision: i_ns_gt_vr+1, branch: Yes }
+      - { decision: i_sreject_exception_gt_0, branch: No }
+      - { decision: i_ns_gt_vr_plus_1, branch: Yes }
       - { action: Discard Contents of I Frame, kind: processing }
       - { action: Set Reject Exception, kind: processing }
       - { action: "F := P", kind: processing }
@@ -905,7 +905,7 @@ transitions:
     on_label: I Frame
     path:
       - { decision: i_command, branch: Undefined }
-      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
       - { decision: i_own_receive_busy, branch: No }
@@ -913,8 +913,8 @@ transitions:
       - { decision: i_reject_exception, branch: No }
       - { decision: i_srej_enabled, branch: Yes }
       - { action: Save Contents of I Frame, kind: processing }
-      - { decision: i_sreject_exception_gt0, branch: No }
-      - { decision: i_ns_gt_vr+1, branch: No }
+      - { decision: i_sreject_exception_gt_0, branch: No }
+      - { decision: i_ns_gt_vr_plus_1, branch: No }
       - { action: "N(r) := V(r)", kind: processing }
       - { action: "F := 1", kind: processing }
       - { action: "Sreject := Sreject + 1", kind: processing }
@@ -926,7 +926,7 @@ transitions:
     on_label: I Frame
     path:
       - { decision: i_command, branch: Undefined }
-      - { decision: i_info_field_length_le_n1_&_content_is_octet_aligned, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
       - { decision: i_own_receive_busy, branch: No }
@@ -934,7 +934,7 @@ transitions:
       - { decision: i_reject_exception, branch: No }
       - { decision: i_srej_enabled, branch: Yes }
       - { action: Save Contents of I Frame, kind: processing }
-      - { decision: i_sreject_exception_gt0, branch: Yes }
+      - { decision: i_sreject_exception_gt_0, branch: Yes }
       - { action: "N(r) := V(r)", kind: processing }
       - { action: "F := 0", kind: processing }
       - { action: "Sreject := Sreject + 1", kind: processing }
@@ -946,8 +946,8 @@ transitions:
     on_label: REJ
     path:
       - { action: Clear Peer Busy, kind: processing }
-      - { decision: rej_response_&_f_eq_1, branch: No }
-      - { decision: rej_command_&_p_eq_1, branch: Yes }
+      - { decision: rej_response_and_f_eq_1, branch: No }
+      - { decision: rej_command_and_p_eq_1, branch: Yes }
       - { action: Enquiry Response (F = 1), kind: subroutine }
       - { decision: rej_va_le_nr_le_vs, branch: Yes }
       - { action: "V(a) := N(r)", kind: processing }
@@ -959,8 +959,8 @@ transitions:
     on_label: REJ
     path:
       - { action: Clear Peer Busy, kind: processing }
-      - { decision: rej_response_&_f_eq_1, branch: No }
-      - { decision: rej_command_&_p_eq_1, branch: Yes }
+      - { decision: rej_response_and_f_eq_1, branch: No }
+      - { decision: rej_command_and_p_eq_1, branch: Yes }
       - { action: Enquiry Response (F = 1), kind: subroutine }
       - { decision: rej_va_le_nr_le_vs, branch: Yes }
       - { action: "V(a) := N(r)", kind: processing }
@@ -976,12 +976,12 @@ transitions:
     on_label: REJ
     path:
       - { action: Clear Peer Busy, kind: processing }
-      - { decision: rej_response_&_f_eq_1, branch: No }
-      - { decision: rej_command_&_p_eq_1, branch: Yes }
+      - { decision: rej_response_and_f_eq_1, branch: No }
+      - { decision: rej_command_and_p_eq_1, branch: Yes }
       - { action: Enquiry Response (F = 1), kind: subroutine }
       - { decision: rej_va_le_nr_le_vs, branch: No }
       - { action: N(r) Recovery, kind: subroutine }
-      - { decision: rej_version_2.2, branch: Yes }
+      - { decision: rej_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t23_rej_received_no_yes_no_no
@@ -989,12 +989,12 @@ transitions:
     on_label: REJ
     path:
       - { action: Clear Peer Busy, kind: processing }
-      - { decision: rej_response_&_f_eq_1, branch: No }
-      - { decision: rej_command_&_p_eq_1, branch: Yes }
+      - { decision: rej_response_and_f_eq_1, branch: No }
+      - { decision: rej_command_and_p_eq_1, branch: Yes }
       - { action: Enquiry Response (F = 1), kind: subroutine }
       - { decision: rej_va_le_nr_le_vs, branch: No }
       - { action: N(r) Recovery, kind: subroutine }
-      - { decision: rej_version_2.2, branch: No }
+      - { decision: rej_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t23_rej_received_no_no_yes_yes
@@ -1002,8 +1002,8 @@ transitions:
     on_label: REJ
     path:
       - { action: Clear Peer Busy, kind: processing }
-      - { decision: rej_response_&_f_eq_1, branch: No }
-      - { decision: rej_command_&_p_eq_1, branch: No }
+      - { decision: rej_response_and_f_eq_1, branch: No }
+      - { decision: rej_command_and_p_eq_1, branch: No }
       - { decision: rej_va_le_nr_le_vs, branch: Yes }
       - { action: "V(a) := N(r)", kind: processing }
       - { decision: rej_vs_eq_va, branch: Yes }
@@ -1014,8 +1014,8 @@ transitions:
     on_label: REJ
     path:
       - { action: Clear Peer Busy, kind: processing }
-      - { decision: rej_response_&_f_eq_1, branch: No }
-      - { decision: rej_command_&_p_eq_1, branch: No }
+      - { decision: rej_response_and_f_eq_1, branch: No }
+      - { decision: rej_command_and_p_eq_1, branch: No }
       - { decision: rej_va_le_nr_le_vs, branch: Yes }
       - { action: "V(a) := N(r)", kind: processing }
       - { decision: rej_vs_eq_va, branch: No }
@@ -1030,11 +1030,11 @@ transitions:
     on_label: REJ
     path:
       - { action: Clear Peer Busy, kind: processing }
-      - { decision: rej_response_&_f_eq_1, branch: No }
-      - { decision: rej_command_&_p_eq_1, branch: No }
+      - { decision: rej_response_and_f_eq_1, branch: No }
+      - { decision: rej_command_and_p_eq_1, branch: No }
       - { decision: rej_va_le_nr_le_vs, branch: No }
       - { action: N(r) Recovery, kind: subroutine }
-      - { decision: rej_version_2.2, branch: Yes }
+      - { decision: rej_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t23_rej_received_no_no_no_no
@@ -1042,11 +1042,11 @@ transitions:
     on_label: REJ
     path:
       - { action: Clear Peer Busy, kind: processing }
-      - { decision: rej_response_&_f_eq_1, branch: No }
-      - { decision: rej_command_&_p_eq_1, branch: No }
+      - { decision: rej_response_and_f_eq_1, branch: No }
+      - { decision: rej_command_and_p_eq_1, branch: No }
       - { decision: rej_va_le_nr_le_vs, branch: No }
       - { action: N(r) Recovery, kind: subroutine }
-      - { decision: rej_version_2.2, branch: No }
+      - { decision: rej_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t23_rej_received_yes_no_yes
@@ -1054,12 +1054,12 @@ transitions:
     on_label: REJ
     path:
       - { action: Clear Peer Busy, kind: processing }
-      - { decision: rej_response_&_f_eq_1, branch: Yes }
+      - { decision: rej_response_and_f_eq_1, branch: Yes }
       - { action: Stop T1, kind: processing }
       - { action: Select T1 Value, kind: subroutine }
       - { decision: rej_va_le_nr_le_vs, branch: No }
       - { action: N(r) Recovery, kind: subroutine }
-      - { decision: rej_version_2.2, branch: Yes }
+      - { decision: rej_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t23_rej_received_yes_no_no
@@ -1067,12 +1067,12 @@ transitions:
     on_label: REJ
     path:
       - { action: Clear Peer Busy, kind: processing }
-      - { decision: rej_response_&_f_eq_1, branch: Yes }
+      - { decision: rej_response_and_f_eq_1, branch: Yes }
       - { action: Stop T1, kind: processing }
       - { action: Select T1 Value, kind: subroutine }
       - { decision: rej_va_le_nr_le_vs, branch: No }
       - { action: N(r) Recovery, kind: subroutine }
-      - { decision: rej_version_2.2, branch: No }
+      - { decision: rej_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t23_rej_received_yes_yes_undefined_via_start_t3
@@ -1080,7 +1080,7 @@ transitions:
     on_label: REJ
     path:
       - { action: Clear Peer Busy, kind: processing }
-      - { decision: rej_response_&_f_eq_1, branch: Yes }
+      - { decision: rej_response_and_f_eq_1, branch: Yes }
       - { action: Stop T1, kind: processing }
       - { action: Select T1 Value, kind: subroutine }
       - { decision: rej_va_le_nr_le_vs, branch: Yes }
@@ -1095,7 +1095,7 @@ transitions:
     on_label: REJ
     path:
       - { action: Clear Peer Busy, kind: processing }
-      - { decision: rej_response_&_f_eq_1, branch: Yes }
+      - { decision: rej_response_and_f_eq_1, branch: Yes }
       - { action: Stop T1, kind: processing }
       - { action: Select T1 Value, kind: subroutine }
       - { decision: rej_va_le_nr_le_vs, branch: Yes }
@@ -1165,7 +1165,7 @@ transitions:
       - { decision: srej_response, branch: No }
       - { decision: srej_va_le_nr_le_vs, branch: No }
       - { action: N(r) Recovery, kind: subroutine }
-      - { decision: srej_version_2.2, branch: No }
+      - { decision: srej_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t24_srej_received_no_no_yes
@@ -1176,7 +1176,7 @@ transitions:
       - { decision: srej_response, branch: No }
       - { decision: srej_va_le_nr_le_vs, branch: No }
       - { action: N(r) Recovery, kind: subroutine }
-      - { decision: srej_version_2.2, branch: Yes }
+      - { decision: srej_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t24_srej_received_yes_no_no
@@ -1189,7 +1189,7 @@ transitions:
       - { action: Select T1 Value, kind: subroutine }
       - { decision: srej_va_le_nr_le_vs, branch: No }
       - { action: N(r) Recovery, kind: subroutine }
-      - { decision: srej_version_2.2, branch: No }
+      - { decision: srej_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t24_srej_received_yes_no_yes
@@ -1202,7 +1202,7 @@ transitions:
       - { action: Select T1 Value, kind: subroutine }
       - { decision: srej_va_le_nr_le_vs, branch: No }
       - { action: N(r) Recovery, kind: subroutine }
-      - { decision: srej_version_2.2, branch: Yes }
+      - { decision: srej_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t24_srej_received_yes_yes_yes_yes
