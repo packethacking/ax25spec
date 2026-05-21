@@ -686,11 +686,11 @@ transitions:
       - { action: Invoke Retransmission, kind: subroutine }
     next: Connected
 
-  - id: t26_i_received_no_no_no
+  - id: t26_i_received_yes_no_no
     on: I_received
     on_label: I
     path:
-      - { decision: i_command, branch: No }
+      - { decision: i_command, branch: Yes }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: No }
       - { action: DL-ERROR Indication (O), kind: signal_upper }
       - { action: Establish Data Link, kind: subroutine }
@@ -698,11 +698,11 @@ transitions:
       - { decision: i_version_2_2, branch: No }
     next: AwaitingConnection
 
-  - id: t26_i_received_no_no_yes
+  - id: t26_i_received_yes_no_yes
     on: I_received
     on_label: I
     path:
-      - { decision: i_command, branch: No }
+      - { decision: i_command, branch: Yes }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: No }
       - { action: DL-ERROR Indication (O), kind: signal_upper }
       - { action: Establish Data Link, kind: subroutine }
@@ -710,33 +710,33 @@ transitions:
       - { decision: i_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
-  - id: t26_i_received_no_yes_no_no
+  - id: t26_i_received_yes_yes_no_no
     on: I_received
     on_label: I
     path:
-      - { decision: i_command, branch: No }
+      - { decision: i_command, branch: Yes }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
       - { decision: i_version_2_2, branch: No }
     next: AwaitingConnection
 
-  - id: t26_i_received_no_yes_no_yes
+  - id: t26_i_received_yes_yes_no_yes
     on: I_received
     on_label: I
     path:
-      - { decision: i_command, branch: No }
+      - { decision: i_command, branch: Yes }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
       - { decision: i_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
-  - id: t26_i_received_no_yes_yes_no_yes_no_no_no
+  - id: t26_i_received_yes_yes_yes_no_yes_no_no_no
     on: I_received
     on_label: I
     path:
-      - { decision: i_command, branch: No }
+      - { decision: i_command, branch: Yes }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
@@ -752,11 +752,11 @@ transitions:
       - { action: Set Acknowledgement Pending, kind: processing }
     next: Connected
 
-  - id: t26_i_received_no_yes_yes_no_yes_no_no_yes
+  - id: t26_i_received_yes_yes_yes_no_yes_no_no_yes
     on: I_received
     on_label: I
     path:
-      - { decision: i_command, branch: No }
+      - { decision: i_command, branch: Yes }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
@@ -770,11 +770,11 @@ transitions:
       - { decision: i_ack_pending, branch: Yes }
     next: Connected
 
-  - id: t26_i_received_no_yes_yes_no_yes_no_yes
+  - id: t26_i_received_yes_yes_yes_no_yes_no_yes
     on: I_received
     on_label: I
     path:
-      - { decision: i_command, branch: No }
+      - { decision: i_command, branch: Yes }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
@@ -791,11 +791,11 @@ transitions:
       - { action: Clear Acknowledge Pending, kind: processing }
     next: Connected
 
-  - id: t26_i_received_no_yes_yes_no_no_yes_yes
+  - id: t26_i_received_yes_yes_yes_no_no_yes_yes
     on: I_received
     on_label: I
     path:
-      - { decision: i_command, branch: No }
+      - { decision: i_command, branch: Yes }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
@@ -810,11 +810,11 @@ transitions:
       - { action: Clear Acknowledge Pending, kind: processing }
     next: Connected
 
-  - id: t26_i_received_no_yes_yes_no_no_yes_no
+  - id: t26_i_received_yes_yes_yes_no_no_yes_no
     on: I_received
     on_label: I
     path:
-      - { decision: i_command, branch: No }
+      - { decision: i_command, branch: Yes }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
@@ -825,11 +825,11 @@ transitions:
       - { decision: i_p_eq_1, branch: No }
     next: Connected
 
-  - id: t26_i_received_no_yes_yes_no_no_no_no
+  - id: t26_i_received_yes_yes_yes_no_no_no_no
     on: I_received
     on_label: I
     path:
-      - { decision: i_command, branch: No }
+      - { decision: i_command, branch: Yes }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
@@ -845,11 +845,11 @@ transitions:
       - { action: Clear Acknowledge Pending, kind: processing }
     next: Connected
 
-  - id: t26_i_received_no_yes_yes_no_no_no_yes_yes
+  - id: t26_i_received_yes_yes_yes_no_no_no_yes_yes
     on: I_received
     on_label: I
     path:
-      - { decision: i_command, branch: No }
+      - { decision: i_command, branch: Yes }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
@@ -865,11 +865,11 @@ transitions:
       - { action: SREJ, kind: signal_lower }
     next: Connected
 
-  - id: t26_i_received_no_yes_yes_no_no_no_yes_no_yes
+  - id: t26_i_received_yes_yes_yes_no_no_no_yes_no_yes
     on: I_received
     on_label: I
     path:
-      - { decision: i_command, branch: No }
+      - { decision: i_command, branch: Yes }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
@@ -888,11 +888,11 @@ transitions:
       - { action: Clear Acknowledge Pending, kind: processing }
     next: Connected
 
-  - id: t26_i_received_no_yes_yes_no_no_no_yes_no_no
+  - id: t26_i_received_yes_yes_yes_no_no_no_yes_no_no
     on: I_received
     on_label: I
     path:
-      - { decision: i_command, branch: No }
+      - { decision: i_command, branch: Yes }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
@@ -909,11 +909,11 @@ transitions:
       - { action: SREJ, kind: signal_lower }
     next: Connected
 
-  - id: t26_i_received_no_yes_yes_yes_yes
+  - id: t26_i_received_yes_yes_yes_yes_yes
     on: I_received
     on_label: I
     path:
-      - { decision: i_command, branch: No }
+      - { decision: i_command, branch: Yes }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
@@ -926,11 +926,11 @@ transitions:
       - { action: Clear Acknowledge Pending, kind: processing }
     next: Connected
 
-  - id: t26_i_received_no_yes_yes_yes_no
+  - id: t26_i_received_yes_yes_yes_yes_no
     on: I_received
     on_label: I
     path:
-      - { decision: i_command, branch: No }
+      - { decision: i_command, branch: Yes }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
@@ -939,11 +939,11 @@ transitions:
       - { decision: i_p_eq_1, branch: No }
     next: Connected
 
-  - id: t26_i_received_yes
+  - id: t26_i_received_no
     on: I_received
     on_label: I
     path:
-      - { decision: i_command, branch: Yes }
+      - { decision: i_command, branch: No }
       - { action: DL-ERROR Indication (O), kind: signal_upper }
       - { action: Discard I Frame, kind: processing }
     next: Connected
