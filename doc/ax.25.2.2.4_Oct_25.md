@@ -3,6 +3,8 @@
 # AX.25 Link Access Protocol for Amateur Packet Radio
 
 **Version 2.2 Revision 4: 27 October 2025**
+**Version 2.3 Revision 1: 22 May 2026**
+[should be saved as "ax.25.2.3.1_May_26.md"]
 
 > *This markdown document was adapted from the original PDF. The source PDF is available in the [src folder](../src/ax.25.2.2.4_Oct_25.pdf).*
 
@@ -13,6 +15,7 @@ Copyright (c) 1997 by Tucson Amateur Packet Radio Corporation. Portions Copyrigh
 - [AX.25 Amateur Packet-Radio Link-Layer Protocol, v2.0, October 1984](https://wiki.oarc.uk/_media/packet:ax25v20.pdf)
 - [AX.25 Link Access Protocol for Amateur Packet Radio v2.2, revision July 1998](https://wiki.oarc.uk/_media/packet:ax25.2.2.pdf)
 - [AX.25 Link Access Protocol for Amateur Packet Radio v2.2, revision 10 September 2017](https://wiki.oarc.uk/_media/packet:ax25.2.2.10.pdf)
+- [AX.25 Link Access Protocol for Amateur Packet Radio v2.2.4, revision October 2025](https://wiki.oarc.uk/_media/packet:ax25.2.2.4.pdf)
 
 Original: 1993 Version 1
 
@@ -226,7 +229,7 @@ As with any evolving technical standard, this protocol is subject to periodic re
 
 The amateur radio community has expressed the need and desire to define a protocol that can accept and reliably deliver data over a variety of communications links between two signaling terminals. The AX.25 version 2.2 Link-Layer Protocol provides this service, independent of the existence of any upper layer.
 
-This protocol conforms to International Standards Organization (ISO) Information Standards (IS) 3309, 4335 and 7809 High-Level Data Link Control (HDLC) and uses terminology found in these documents. It also follows the principles of Consultative Committee in International Telegraph and Telephone (CCITT) Recommendation Q.920 and Q.921 (LAP-D) in the use of multiple links, distinguished by the address field, on a single shared channel. Parameter negotiation was extracted from ISO IS 8885. The data-link service definitions were extracted from ISO IS 8886.
+This protocol conforms to International Standards Organization (ISO) Information Standard (IS) 13239 High-Level Data Link Control (HDLC) and uses terminology found in these documents. 
 
 As defined, this protocol works equally well in either half- or full-duplex amateur radio environments and has been improved for operation over partially impaired HF circuits.
 
@@ -487,7 +490,7 @@ In order to ensure that the flag bit sequence mentioned above does not appear ac
 
 ## 3.7 Frame-Check Sequence
 
-The Frame-Check Sequence (FCS) is a sixteen-bit number calculated by both the sender and the receiver of a frame. It ensures that the frame was not corrupted by the transmission medium. The Frame-Check Sequence is calculated in accordance with recommendations in the HDLC reference document, ISO 3309.
+The Frame-Check Sequence (FCS) is a sixteen-bit number calculated by both the sender and the receiver of a frame. It ensures that the frame was not corrupted by the transmission medium. The Frame-Check Sequence is calculated in accordance with recommendations in the HDLC reference document, ISO 13239, Annex A.
 
 ## 3.8 Order of Octet and Bit Transmission
 
@@ -1002,17 +1005,16 @@ bypassing flow control.
 
 Because these frames cannot be acknowledged, if one such frame is obliterated, it cannot be recovered.
 
-A received UI frame with the P bit set causes a response to be transmitted. This response is a DM frame when in the disconnected state, or an RR (or RNR, if appropriate)
-frame in the information transfer state.
+A received UI frame with the P bit set causes a response to be transmitted. This response is a DM frame when in the disconnected state, or an RR (or RNR, if appropriate) frame in the information transfer state.
 
 ##### 4.3.3.7 Exchange Identification (XID) Frame
 
 The Exchange Identification frame causes the addressed station to identify itself, and to provide its characteristics to the sending station. An information field is optional within the XID frame. A station receiving an XID command returns an XID response unless a UA response to a mode setting command is awaiting transmission, or a FRMR condition exists.
 
-ISO 8885 allows for an XID exchange at any time before, during, or after a data link is established. This AX.25 standard only provides for an XID exchange before the data link is established.
+ISO 13239, Section 7.0, allows for an XID exchange at any time before, during, or after a data link is established. This AX.25 standard only provides for an XID exchange before the data link is established.
 
-The XID frame complies with ISO 8885. Only those fields applicable to AX.25 are described. All other fields are set to an appropriate value.
-This implementation is compatible with any implementation which follows ISO 8885. Only the general-purpose XID information field identifier is required in this version of AX.25.
+The XID frame complies with ISO 13239,Section 7.0. Only those fields applicable to AX.25 are described. All other fields are set to an appropriate value.
+This implementation is compatible with any implementation which follows ISO 13239, Section 7.0. Only the general-purpose XID information field identifier is required in this version of AX.25.
 
 The information field consists of zero or more information elements. The information elements start with a Format Identifier (FI) octet. The second octet is the Group Identifier (GI). The third and fourth octets form the Group Length (GL). The rest of the information field contains parameter fields.
 
@@ -1020,8 +1022,7 @@ The FI takes the value 82 hex for the general-purpose XID information.
 The GI takes the value 80 hex for the parameter-negotiation identifier.
 The GL indicates the length of the associated parameter field. This length is expressed as a two-octet binary number representing the length of the associated parameter field in octets. The high-order bits of length value are in the first of the two octets. A group length of zero indicates the lack of an associated parameter field and that all parameters assume their default values. The GL does not include its own length or the length of the GI.
 
-The parameter field contains a series of Parameter Identifier (PI), Parameter Length (PL), and Parameter Value (PV) set structures, in that order. Each PI identifies a parameter and is one octet in length. Each
-PL indicates the length of the associated PV in octets and is one octet in length. Each PV contains the parameter value and is PL octets in length. The PL does not include its own length or the length of its associated PI. A PL value of zero indicates that the associated PV is absent; the parameter assumes the default value. A PI/PL/PV set may be omitted if it is not required to convey information, or if present values for the parameter are to be used. The PI/PL/PV fields are placed into the information field of the XID frame in ascending order. There is only one entry for each PI/PL/PV field used. A parameter field containing an unrecognized PI is ignored. An omitted parameter field assumes the currently negotiated value.
+The parameter field contains a series of Parameter Identifier (PI), Parameter Length (PL), and Parameter Value (PV) set structures, in that order. Each PI identifies a parameter and is one octet in length. Each PL indicates the length of the associated PV in octets and is one octet in length. Each PV contains the parameter value and is PL octets in length. The PL does not include its own length or the length of its associated PI. A PL value of zero indicates that the associated PV is absent; the parameter assumes the default value. A PI/PL/PV set may be omitted if it is not required to convey information, or if present values for the parameter are to be used. The PI/PL/PV fields are placed into the information field of the XID frame in ascending order. There is only one entry for each PI/PL/PV field used. A parameter field containing an unrecognized PI is ignored. An omitted parameter field assumes the currently negotiated value.
 
 The parameter fields described below represent the minimum implementation and do not preclude the negotiation of other parameters between consenting stations.
 
@@ -1071,7 +1072,7 @@ The encoding of each PI/PL/PV applicable to AX.25 is detailed in Figure 4.5. Som
 
 Note: that Type E is a bit field and Type B is a numeric field of N octets. 32
 
-Parameter field elements marked \* are defined in ISO 8885. They are shown for compatibility purposes only and are not needed to negotiate the features of this version of AX.25.
+Parameter field elements marked \* are defined in ISO 13239, Section 7.0. They are shown for compatibility purposes only and are not needed to negotiate the features of this version of AX.25.
 
 The Classes of Procedures parameter field (PI=2) serves to negotiate half- or full duplex:
 - Bit 0 is always a 1.
@@ -1766,23 +1767,11 @@ Black, Uyless D., 1993, “Data-Link Protocols.”
 
 CCITT Recommendation X.25, "Interface Between Data Terminal Equipment (DTE) and Data-Circuit Terminating Equipment (DCE) for Terminals Operating in the Packet Mode on Public Data Networks."
 
-CCITT Recommendation Q.920/Q.921, Blue Book, 1989, “Digital Subscriber Signaling System No. 1 (DSS 1), Data link Layer.”
-
 Fox, Terry L., October 1984, “AX.25 Amateur Packet-Radio Link-Layer Protocol.”
 
-ISO 3309, 4th edition, 1 June 91, “Information Technology - Telecommunications and Information Exchange between Systems — High-level Data-Link Control (HDLC) Procedures - Frame Structure.”
+ISO 7776, 2nd edition, 1 July 1995, “Information Technologs — Telecommunications and Information Exchange between Systems — High-level Data-Link Control Procedures.”
 
-ISO 4335, 4th edition, 15 September 91 (with Amendment 4), “Information Technology — Telecommunications and Information Exchange between Systems — High-level Data-Link Control (HDLC) Procedures Elements of Procedures.”
-
-ISO 7776, 1st edition, 15 December 86, “Information Processing Systems — Data Communication — High-level Data-Link Control Procedures — Description of the X.25 LAPB-Compatible DTE Data-Link Procedures.”
-
-ISO 7809, 2nd edition, 15 September 91 (with Amendments 5, 6, and 7), “Information Technology — Telecommunications and Information Exchange between Systems — High-level Data-Link Control (HDLC) Procedures —
-Classes of Procedures.”
-
-ISO 8885, 2nd edition, 1 June 91 (with Amendment 3, 4 and 5), “Information Technology — Telecommunications and Information Exchange between Systems — High-level Data-Link Control (HDLC) Procedures —
-General Purpose XID Frame Information Field Content and Format.”
-
-ISO 8886, 1st edition, 15 June 91, “Information Technology — Telecommunications and Information Exchange between Systems — Data-Link Service Definition for Open Systems Interconnection.”
+ISO 13239, 3rd edition, 15 July 2002, “Information Technology - Telecommunications and Information Exchange between Systems — High-level Data-Link Control (HDLC) Procedures.”
 
 Scace, Eric L., K3NA, “Various AX.25 State Machines — 7th Computer Networking Conference — LAPA Link Access Protocol Specification.”
 
