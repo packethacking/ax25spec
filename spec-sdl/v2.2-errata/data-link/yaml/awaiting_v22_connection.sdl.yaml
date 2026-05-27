@@ -83,8 +83,8 @@ transitions:
       - { action: Push Frame Onto Queue, kind: internal_out }
     next: AwaitingV22Connection
 
-  - id: t06_all_other_primitives__from_lower_layer
-    on: all_other_primitives__from_lower_layer
+  - id: t06_all_other_primitives__from_upper_layer
+    on: all_other_primitives__from_upper_layer
     on_label: All Other Primitives
     path: []
     next: AwaitingV22Connection
@@ -261,8 +261,8 @@ transitions:
       - { action: DM, kind: signal_lower }
     next: AwaitingV22Connection
 
-  - id: t18_all_other_primitives__from_upper_layer
-    on: all_other_primitives__from_upper_layer
+  - id: t18_all_other_primitives__from_lower_layer
+    on: all_other_primitives__from_lower_layer
     on_label: All Other Primitives
     path: []
     next: AwaitingV22Connection

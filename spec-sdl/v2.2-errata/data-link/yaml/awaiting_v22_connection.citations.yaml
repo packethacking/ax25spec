@@ -140,10 +140,10 @@ transitions:
       note: 'state_5 case, !L3-init branch: comment ''For the case of removing it
         from the queue and putting it back in we just leave it there.'' Functionally
         equivalent to figure''s ''Push Frame Onto Queue'' (frame stays on queue)'
-  t07_all_other_primitives_from_lower_layer:
+  t07_all_other_primitives_from_upper_layer:
     notes: 'Catch-all for unhandled primitives drawn with d5
 
-      "Signal reception from Lower Layer". No action — stay.
+      "Signal reception from upper layer". No action — stay.
 
       '
     references:
@@ -560,10 +560,10 @@ transitions:
       line: 54
       note: 'case AX25_DISC: ax25_send_control(AX25_DM, pf, RESPONSE) — F:=P via
         pf, stays in state 1'
-  t25_all_other_primitives_from_upper_layer:
+  t25_all_other_primitives_from_lower_layer:
     notes: 'Catch-all for unhandled primitives drawn with d5
 
-      "Signal reception from upper layer". No action — stay.
+      "Signal reception from lower layer". No action — stay.
 
       '
     references: []

@@ -70,8 +70,8 @@ transitions:
       - { action: DL-ERROR Indication (D), kind: signal_upper }
     next: AwaitingRelease
 
-  - id: t04_all_other_primitives__from_upper_layer
-    on: all_other_primitives__from_upper_layer
+  - id: t04_all_other_primitives__from_lower_layer
+    on: all_other_primitives__from_lower_layer
     on_label: All Other Primitives
     path: []
     next: AwaitingRelease
@@ -83,8 +83,8 @@ transitions:
       - { action: UI Command, kind: signal_lower }
     next: AwaitingRelease
 
-  - id: t06_all_other_primitives__from_lower_layer
-    on: all_other_primitives__from_lower_layer
+  - id: t06_all_other_primitives__from_upper_layer
+    on: all_other_primitives__from_upper_layer
     on_label: All Other Primitives
     path: []
     next: AwaitingRelease

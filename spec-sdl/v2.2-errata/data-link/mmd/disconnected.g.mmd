@@ -19,9 +19,9 @@ stateDiagram-v2
     Disconnected --> Disconnected: t01_dl_disconnect_request<br/>on: DL_DISCONNECT_request<br/>/ ↑ DL-DISCONNECT Confirm
     Disconnected --> Disconnected: t02_dl_unit_data_request<br/>on: DL_UNIT_DATA_request<br/>/ ↓ UI Command
     Disconnected --> AwaitingConnection: t03_dl_connect_request<br/>on: DL_CONNECT_request<br/>/ · SRT := Initial Default<br/>/ · T1V := 2 * SRT<br/>/ →() Establish_Data_Link<br/>/ · Set Layer 3 Initiated
-    Disconnected --> Disconnected: t04_all_other_primitives__from_lower_layer<br/>on: all_other_primitives__from_lower_layer
+    Disconnected --> Disconnected: t04_all_other_primitives__from_upper_layer<br/>on: all_other_primitives__from_upper_layer
     Disconnected --> Disconnected: t05_all_other_commands<br/>on: all_other_commands<br/>/ · F := P<br/>/ ↓ DM
-    Disconnected --> Disconnected: t06_all_other_primitives__from_upper_layer<br/>on: all_other_primitives__from_upper_layer<br/>/ · Discard Primitive
+    Disconnected --> Disconnected: t06_all_other_primitives__from_lower_layer<br/>on: all_other_primitives__from_lower_layer<br/>/ · Discard Primitive
     Disconnected --> Disconnected: t07_control_field_error<br/>on: control_field_error<br/>/ ↑ DL-ERROR Indication (L)
     Disconnected --> Disconnected: t08_info_not_permitted_in_frame<br/>on: info_not_permitted_in_frame<br/>/ ↑ DL-ERROR Indication (M)
     Disconnected --> Disconnected: t09_u_or_s_frame_length_error<br/>on: u_or_s_frame_length_error<br/>/ ↑ DL-ERROR Indication (N)

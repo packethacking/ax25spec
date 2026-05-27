@@ -32,7 +32,7 @@
     </node>
     <node id="n1">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from Lower Layer]]></data>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
       <data key="d6">
         <y:SVGNode>
           <y:Geometry height="71.89795918367349" width="120.0" x="24.0" y="329.1020408163265"/>
@@ -48,7 +48,7 @@
     </node>
     <node id="n2">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from Lower Layer]]></data>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
       <data key="d6">
         <y:SVGNode>
           <y:Geometry height="71.89795918367349" width="120.0" x="174.0" y="329.1020408163265"/>
@@ -64,7 +64,7 @@
     </node>
     <node id="n3">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from Lower Layer]]></data>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
       <data key="d6">
         <y:SVGNode>
           <y:Geometry height="71.89795918367349" width="120.0" x="324.0" y="329.1020408163265"/>
@@ -80,7 +80,7 @@
     </node>
     <node id="n4">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from Lower Layer]]></data>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
       <data key="d6">
         <y:SVGNode>
           <y:Geometry height="71.89795918367349" width="120.0" x="474.0" y="329.1020408163265"/>
@@ -96,7 +96,7 @@
     </node>
     <node id="n5">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from Lower Layer]]></data>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
       <data key="d6">
         <y:SVGNode>
           <y:Geometry height="71.89795918367349" width="120.0" x="624.0" y="329.1020408163265"/>
@@ -112,7 +112,7 @@
     </node>
     <node id="n6">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from Lower Layer]]></data>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
       <data key="d6">
         <y:SVGNode>
           <y:Geometry height="71.89795918367349" width="120.0" x="767.0" y="329.1020408163265"/>
@@ -128,7 +128,7 @@
     </node>
     <node id="n7">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from lower layer]]></data>
       <data key="d6">
         <y:SVGNode>
           <y:Geometry height="71.89795918367352" width="120.0" x="973.875" y="329.1020408163265"/>
@@ -144,7 +144,7 @@
     </node>
     <node id="n8">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from lower layer]]></data>
       <data key="d6">
         <y:SVGNode>
           <y:Geometry height="71.89795918367352" width="120.0" x="1123.875" y="329.1020408163265"/>
@@ -160,7 +160,7 @@
     </node>
     <node id="n9">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from lower layer]]></data>
       <data key="d6">
         <y:SVGNode>
           <y:Geometry height="71.89795918367352" width="120.0" x="1273.875" y="329.1020408163265"/>
@@ -176,7 +176,7 @@
     </node>
     <node id="n10">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from lower layer]]></data>
       <data key="d6">
         <y:SVGNode>
           <y:Geometry height="71.89795918367352" width="120.0" x="1433.875" y="329.1020408163265"/>
@@ -192,7 +192,7 @@
     </node>
     <node id="n11">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from lower layer]]></data>
       <data key="d6">
         <y:SVGNode>
           <y:Geometry height="71.89795918367352" width="120.0" x="1583.875" y="329.1020408163265"/>
@@ -604,7 +604,7 @@ Set Layer 3 Initiated</y:NodeLabel>
     </node>
     <node id="n37">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from lower layer]]></data>
       <data key="d6">
         <y:SVGNode>
           <y:Geometry height="71.89795918367352" width="120.0" x="1852.9375" y="329.1020408163265"/>
@@ -620,7 +620,7 @@ Set Layer 3 Initiated</y:NodeLabel>
     </node>
     <node id="n38">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from lower layer]]></data>
       <data key="d6">
         <y:SVGNode>
           <y:Geometry height="71.89795918367352" width="120.0" x="2147.125" y="329.1020408163265"/>
@@ -636,7 +636,7 @@ Set Layer 3 Initiated</y:NodeLabel>
     </node>
     <node id="n39">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from lower layer]]></data>
       <data key="d6">
         <y:SVGNode>
           <y:Geometry height="71.89795918367352" width="120.0" x="2483.8125" y="329.1020408163265"/>
@@ -652,7 +652,7 @@ Set Layer 3 Initiated</y:NodeLabel>
     </node>
     <node id="n40">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from lower layer]]></data>
       <data key="d6">
         <y:SVGNode>
           <y:Geometry height="71.89795918367352" width="120.0" x="2633.8125" y="329.1020408163265"/>
@@ -668,7 +668,7 @@ Set Layer 3 Initiated</y:NodeLabel>
     </node>
     <node id="n41">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from lower layer]]></data>
       <data key="d6">
         <y:SVGNode>
           <y:Geometry height="71.89795918367352" width="120.0" x="3113.9375" y="329.1020408163265"/>
@@ -684,7 +684,7 @@ Set Layer 3 Initiated</y:NodeLabel>
     </node>
     <node id="n42">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from lower layer]]></data>
       <data key="d6">
         <y:SVGNode>
           <y:Geometry height="71.89795918367352" width="120.0" x="2783.8125" y="329.1020408163265"/>
@@ -700,7 +700,7 @@ Set Layer 3 Initiated</y:NodeLabel>
     </node>
     <node id="n43">
       <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
+      <data key="d5" xml:space="preserve"><![CDATA[Signal reception from lower layer]]></data>
       <data key="d6">
         <y:SVGNode>
           <y:Geometry height="71.89795918367352" width="120.0" x="2948.875" y="330.59183673469397"/>

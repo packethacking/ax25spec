@@ -34,15 +34,15 @@
     </node>
     <node id="n1">
       <data key="d3" xml:space="preserve"><![CDATA[ax25sdl.SignalReceptionFromLowerLayer]]></data>
-      <data key="d4" xml:space="preserve"><![CDATA[Signal reception from Lower Layer]]></data>
+      <data key="d4" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
       <data key="d5" xml:space="preserve"/>
-      <data key="d6" xml:space="preserve"><![CDATA[Signal reception from Lower Layer]]></data>
+      <data key="d6" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
       <data key="d7">
         <y:SVGNode>
           <y:Geometry height="71.89795918367349" width="120.0" x="415.97789115646253" y="-112.86204081632651"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="node_width" bottomInset="0" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.1875" horizontalTextPosition="center" iconTextGap="4" leftInset="20" modelName="internal" modelPosition="c" rightInset="0" textColor="#000000" topInset="0" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="19.855229591836746">Signal reception from lower layer</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" bottomInset="0" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.1875" horizontalTextPosition="center" iconTextGap="4" leftInset="20" modelName="internal" modelPosition="c" rightInset="0" textColor="#000000" topInset="0" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="19.855229591836746">Signal reception from upper layer</y:NodeLabel>
           <y:SVGNodeProperties usingVisualBounds="true"/>
           <y:SVGModel svgBoundsPolicy="0">
             <y:SVGContent refid="2"/>
@@ -52,15 +52,15 @@
     </node>
     <node id="n2">
       <data key="d3" xml:space="preserve"><![CDATA[ax25sdl.SignalReceptionFromUpperLayer]]></data>
-      <data key="d4" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
+      <data key="d4" xml:space="preserve"><![CDATA[Signal reception from lower layer]]></data>
       <data key="d5" xml:space="preserve"/>
-      <data key="d6" xml:space="preserve"><![CDATA[Signal reception from upper layer]]></data>
+      <data key="d6" xml:space="preserve"><![CDATA[Signal reception from lower layer]]></data>
       <data key="d7">
         <y:SVGNode>
           <y:Geometry height="71.89795918367352" width="120.0" x="415.97789115646253" y="-15.163265306122497"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="node_width" bottomInset="0" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.1875" horizontalTextPosition="center" iconTextGap="4" leftInset="0" modelName="internal" modelPosition="c" rightInset="20" textColor="#000000" topInset="0" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="19.855229591836746">Signal reception from upper layer</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" bottomInset="0" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.1875" horizontalTextPosition="center" iconTextGap="4" leftInset="0" modelName="internal" modelPosition="c" rightInset="20" textColor="#000000" topInset="0" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="19.855229591836746">Signal reception from lower layer</y:NodeLabel>
           <y:SVGNodeProperties usingVisualBounds="true"/>
           <y:SVGModel svgBoundsPolicy="0">
             <y:SVGContent refid="3"/>

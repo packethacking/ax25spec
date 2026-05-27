@@ -144,8 +144,8 @@ transitions:
       - { action: Start T1, kind: processing }
     next: AwaitingConnection
 
-  - id: t06_all_other_primitives__from_upper_layer
-    on: all_other_primitives__from_upper_layer
+  - id: t06_all_other_primitives__from_lower_layer
+    on: all_other_primitives__from_lower_layer
     on_label: All Other Primitives
     path: []
     next: AwaitingConnection
@@ -195,8 +195,8 @@ transitions:
       - { decision: i_frame_pops_off_queue_layer_3_initiated, branch: No }
     next: AwaitingConnection
 
-  - id: t11_all_other_primitives__from_lower_layer
-    on: all_other_primitives__from_lower_layer
+  - id: t11_all_other_primitives__from_upper_layer
+    on: all_other_primitives__from_upper_layer
     on_label: All Other Primitives
     path: []
     next: AwaitingConnection

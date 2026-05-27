@@ -30,7 +30,7 @@ stateDiagram-v2
     Connected --> Connected: t06_dl_flow_on_request_yes_no<br/>on: DL_FLOW_ON_request<br/>[own_receiver_busy and not T1_running]<br/>/ · Clear Own Receiver Busy<br/>/ ↓ RR Command<br/>/ · Clear Acknowledge Pending<br/>/ · Stop T3<br/>/ · Start T1
     Connected --> AwaitingConnection: t07_dl_connect_request_no<br/>on: DL_CONNECT_request<br/>[not version_2_2]<br/>/ · discard_I_frame_queue<br/>/ →() Establish_Data_Link<br/>/ · Set Layer 3 Initiated
     Connected --> AwaitingV22Connection: t07_dl_connect_request_yes<br/>on: DL_CONNECT_request<br/>[version_2_2]<br/>/ · discard_I_frame_queue<br/>/ →() Establish_Data_Link<br/>/ · Set Layer 3 Initiated
-    Connected --> Connected: t08_all_other_primitives__from_lower_layer<br/>on: all_other_primitives__from_lower_layer
+    Connected --> Connected: t08_all_other_primitives__from_upper_layer<br/>on: all_other_primitives__from_upper_layer
     Connected --> AwaitingConnection: t09_control_field_error_no<br/>on: control_field_error<br/>[not version_2_2]<br/>/ ↑ DL-ERROR Indication (L)<br/>/ · discard_I_frame_queue<br/>/ →() Establish_Data_Link<br/>/ · Set Layer 3 Initiated
     Connected --> AwaitingV22Connection: t09_control_field_error_yes<br/>on: control_field_error<br/>[version_2_2]<br/>/ ↑ DL-ERROR Indication (L)<br/>/ · discard_I_frame_queue<br/>/ →() Establish_Data_Link<br/>/ · Set Layer 3 Initiated
     Connected --> AwaitingConnection: t10_info_not_permitted_in_frame_no<br/>on: info_not_permitted_in_frame<br/>[not version_2_2]<br/>/ ↑ DL-ERROR Indication (M)<br/>/ · discard_I_frame_queue<br/>/ →() Establish_Data_Link<br/>/ · Set Layer 3 Initiated

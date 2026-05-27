@@ -299,10 +299,10 @@ transitions:
       line: 134
       note: increments n2count, retransmits SABM/SABME(P=1), ax25_calculate_t1 +
         ax25_start_t1timer at function tail (173-174)
-  t10_all_other_primitives_from_upper_layer:
+  t10_all_other_primitives_from_lower_layer:
     notes: 'Catch-all for unhandled primitives drawn with d5
 
-      "Signal reception from upper layer". No action — stay in
+      "Signal reception from lower layer". No action — stay in
 
       AwaitingConnection.
 
@@ -411,7 +411,7 @@ transitions:
       line: 6543
       note: 'VERIFICATION PENDING: direwolf falls through with no action when !L3-init
         — opposite of this transcription''s reading (we''d push to queue). See t15'
-  t17_all_other_primitives_from_lower_layer:
+  t17_all_other_primitives_from_upper_layer:
     references:
     - source: linbpq
       path: L2Code.c

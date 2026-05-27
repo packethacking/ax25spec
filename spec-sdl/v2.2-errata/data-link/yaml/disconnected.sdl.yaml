@@ -44,8 +44,8 @@ transitions:
       - { action: Set Layer 3 Initiated, kind: processing }
     next: AwaitingConnection
 
-  - id: t04_all_other_primitives__from_lower_layer
-    on: all_other_primitives__from_lower_layer
+  - id: t04_all_other_primitives__from_upper_layer
+    on: all_other_primitives__from_upper_layer
     on_label: All Other Primitives
     path: []
     next: Disconnected
@@ -58,8 +58,8 @@ transitions:
       - { action: DM, kind: signal_lower }
     next: Disconnected
 
-  - id: t06_all_other_primitives__from_upper_layer
-    on: all_other_primitives__from_upper_layer
+  - id: t06_all_other_primitives__from_lower_layer
+    on: all_other_primitives__from_lower_layer
     on_label: All Other Primitives
     path:
       - { action: Discard Primitive, kind: processing }

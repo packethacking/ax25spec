@@ -264,8 +264,8 @@ transitions:
       - { decision: dl_connect_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
-  - id: t08_all_other_primitives__from_lower_layer
-    on: all_other_primitives__from_lower_layer
+  - id: t08_all_other_primitives__from_upper_layer
+    on: all_other_primitives__from_upper_layer
     on_label: All Other Primitives
     path: []
     next: Connected

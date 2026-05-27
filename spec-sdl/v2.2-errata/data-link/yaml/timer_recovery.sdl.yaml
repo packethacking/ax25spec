@@ -1302,14 +1302,14 @@ transitions:
       - { action: Invoke Retransmission, kind: subroutine }
     next: TimerRecovery
 
-  - id: t25_all_other_primitives__from_upper_layer
-    on: all_other_primitives__from_upper_layer
+  - id: t25_all_other_primitives__from_lower_layer
+    on: all_other_primitives__from_lower_layer
     on_label: All Other Primitives
     path: []
     next: TimerRecovery
 
-  - id: t26_all_other_primitives__from_lower_layer
-    on: all_other_primitives__from_lower_layer
+  - id: t26_all_other_primitives__from_upper_layer
+    on: all_other_primitives__from_upper_layer
     on_label: All Other Primitives
     path: []
     next: TimerRecovery

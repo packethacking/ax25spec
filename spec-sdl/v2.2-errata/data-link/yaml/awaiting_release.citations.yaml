@@ -244,10 +244,10 @@ transitions:
       line: 1300
       note: F=0 branch (lines 1300-1302) returns vec![Action::DlError(DlError::D)].
         Matches figure
-  t06_all_other_primitives_from_upper_layer:
+  t06_all_other_primitives_from_lower_layer:
     notes: 'Catch-all for unhandled primitives drawn with d5
 
-      "Signal reception from upper layer". No action — stay in
+      "Signal reception from lower layer". No action — stay in
 
       AwaitingRelease.
 
@@ -277,10 +277,10 @@ transitions:
       line: 1655
       note: 'SOCK_DGRAM path bypasses state machine: builds AX25_UI frame and ax25_queue_xmit
         at 1658. State-independent; works in any STATE_x including STATE_2'
-  t08_all_other_primitives_from_lower_layer:
+  t08_all_other_primitives_from_upper_layer:
     notes: 'Catch-all for unhandled primitives drawn with d5
 
-      "Signal reception from Lower Layer". No action — stay in
+      "Signal reception from upper layer". No action — stay in
 
       AwaitingRelease.
 

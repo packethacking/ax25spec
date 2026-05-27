@@ -702,7 +702,7 @@ transitions:
       function: dl_connect_request
       line: 1060
       note: modulo!=128 branch → state_1
-  t31_all_other_primitives_from_lower_layer:
+  t31_all_other_primitives_from_upper_layer:
     references:
     - source: linbpq
       path: L2Code.c

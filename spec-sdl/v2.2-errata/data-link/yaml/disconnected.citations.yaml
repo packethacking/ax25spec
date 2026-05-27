@@ -130,12 +130,12 @@ transitions:
       note: ax25_std_establish_data_link does SRT/T1V init + SABM(E) send + RC:=0;
         state:=AX25_STATE_1. set_layer_3_initiated implicit (no explicit flag in
         Linux)
-  t04_all_other_primitives_from_lower_layer:
+  t04_all_other_primitives_from_upper_layer:
     notes: 'spec_prose: catch-all column with no prose backing. Receive any
 
-      unhandled primitive drawn with the "Signal reception from Lower
+      unhandled primitive drawn with the "Signal reception from upper
 
-      Layer" shape (d5), stay in Disconnected, do nothing. Standard
+      layer" shape (d5), stay in Disconnected, do nothing. Standard
 
       SDL convention for "everything else from this source class".
 
@@ -186,12 +186,12 @@ transitions:
       line: 327
       note: 'state-0 non-SABM(E) path: any command frame to us (except DM) gets
         a DM via ax25_return_dm; F:=P implicit via path reversal'
-  t06_all_other_primitives_from_upper_layer:
+  t06_all_other_primitives_from_lower_layer:
     notes: 'spec_prose: catch-all column with no prose backing. Receive any
 
-      unhandled primitive drawn with the "Signal reception from upper
+      unhandled primitive drawn with the "Signal reception from Lower
 
-      layer" shape (d5), discard it, stay in Disconnected.
+      Layer" shape (d5), discard it, stay in Disconnected.
 
       '
     references: []

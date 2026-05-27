@@ -21,9 +21,9 @@ stateDiagram-v2
     AwaitingRelease --> AwaitingRelease: t02_t1_expiry_no<br/>on: T1_expiry<br/>[not RC_eq_N2]<br/>/ · RC := RC + 1<br/>/ ↓ DISC (P = 1)<br/>/ →() Select_T1_Value<br/>/ · Start T1
     AwaitingRelease --> Disconnected: t03_ua_received_yes<br/>on: UA_received<br/>[F_eq_1]<br/>/ ↑ DL-DISCONNECT Confirm<br/>/ · Stop T1
     AwaitingRelease --> AwaitingRelease: t03_ua_received_no<br/>on: UA_received<br/>[not F_eq_1]<br/>/ ↑ DL-ERROR Indication (D)
-    AwaitingRelease --> AwaitingRelease: t04_all_other_primitives__from_upper_layer<br/>on: all_other_primitives__from_upper_layer
+    AwaitingRelease --> AwaitingRelease: t04_all_other_primitives__from_lower_layer<br/>on: all_other_primitives__from_lower_layer
     AwaitingRelease --> AwaitingRelease: t05_dl_unit_data_request<br/>on: DL_UNIT_DATA_request<br/>/ ↓ UI Command
-    AwaitingRelease --> AwaitingRelease: t06_all_other_primitives__from_lower_layer<br/>on: all_other_primitives__from_lower_layer
+    AwaitingRelease --> AwaitingRelease: t06_all_other_primitives__from_upper_layer<br/>on: all_other_primitives__from_upper_layer
     AwaitingRelease --> AwaitingRelease: t07_control_field_error<br/>on: control_field_error<br/>/ ↑ DL-ERROR Indication (L)
     AwaitingRelease --> AwaitingRelease: t08_info_not_permitted_in_frame<br/>on: info_not_permitted_in_frame<br/>/ ↑ DL-ERROR Indication (M)
     AwaitingRelease --> AwaitingRelease: t09_u_or_s_frame_length_error<br/>on: u_or_s_frame_length_error<br/>/ ↑ DL-ERROR Indication (N)
