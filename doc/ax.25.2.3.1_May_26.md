@@ -1213,7 +1213,7 @@ Communication between the Layer 3 Entity and the Management Data-link State Mach
 
 Machine Communication between the Management Data-link State Machine and the Link Multiplexer State Machine is characterized by two primitives:
 - **LM-DATA.Request**. The Management Data-link State Machine uses this primitive to pass frames of any type (XID, UI, etc.) to the Link Multiplexer State Machine.
-- **LM-DATA Indication**. The Link Multiplexer State Machine uses this primitive to pass frames of any type (XID, UI, etc.) to the Management Data-link State Machine.
+- **LM-DATA.Indication**. The Link Multiplexer State Machine uses this primitive to pass frames of any type (XID, UI, etc.) to the Management Data-link State Machine.
 
 ## 5.3 Layer 3 Entity <—> Data-Link State Machine
 
@@ -1253,7 +1253,7 @@ Communication between the Link Multiplexer State Machine and the Physical State 
 - **PH-BUSY.Indication**. The Physical State Machine uses this primitive to indicate that the channel is busy.
 - **PH-EXPEDITED-DATA.Request**. The Link Multiplexer State Machine uses this primitive to request transmission of each digipeat or expedite data frame.
 - **PH-DATA.Request**. The Link Multiplexer State Machine uses this primitive to request transmission of each normal frame.
-- **PH-DATA Indication**. The Physical State Machine uses this primitive to provide incoming frames to the link multiplexer.
+- **PH-DATA.Indication**. The Physical State Machine uses this primitive to provide incoming frames to the link multiplexer.
 
 ## 5.6 Physical State Machine <—> Hardware
 
@@ -1884,14 +1884,14 @@ PH Primitives (Received from the Link Multiplexer):
 
 PH Primitives (Sent to the Link Multiplexer):
 - PH-SEIZE.Confirm
-- PH-BUSY Indication 
+- PH-BUSY.Indication 
 - PH-QUIET.Indication
-- PH-DATA Indication
+- PH-DATA.Indication
 
 PH Primitives (Received from the Radio):
-- HW-AOS Indication
-- HW-LOS Indication 
-- HW-DATA Indication
+- HW-AOS.Indication
+- HW-LOS.Indication 
+- HW-DATA.Indication
 
 PH Primitives (Sent to the Radio):
 - HW-TON.Request
@@ -1980,13 +1980,13 @@ LM Primitives (Received from LM):
 
 Primitives (Sent to LM):
 - LM-SEIZE.Confirm 
-- LM-DATA Indicate
+- LM-DATA.Indication
 
 PH Primitives (Received from PH):
 - PH-SEIZE.Confirm
-- PH-QUIET Indication 
-- PH-BUSY Indication
-- PH-DATA Indication
+- PH-QUIET.Indication 
+- PH-BUSY.Indication
+- PH-DATA.Indication
 
 PH Primitives (Sent to PH):
 - PH-SEIZE.Request
@@ -2068,12 +2068,12 @@ etc.) to the Data link State Machine.
 All queues are first-in, first-out. Below is a summary of primitives, states, queues, flags, errors, and timers used in the data link state machines:
 DL Primitives (Received from DL)
 - DL-CONNECT.Confirm 
-- DL-CONNECT Indication
+- DL-CONNECT.Indication
 - DL-DISCONNECT.Confirm 
-- DL-DISCONNECT Indication
-- DL-DATA Indicate
-- DL-UNIT-DATA Indicate 
-- DL-ERROR Indicate
+- DL-DISCONNECT.Indication
+- DL-DATA.Indication
+- DL-UNIT-DATA.Indication 
+- DL-ERROR.Indication
 
 DL Primitives (Sent to DL)
 - DL-CONNECT.Request
@@ -2091,7 +2091,7 @@ LM Primitives (Sent to LM):
 
 LM Primitives (Received from LM):
 - LM-SEIZE.Confirm
-- LM-DATA Indicate
+- LM-DATA.Indication
 
 States:
 - 0 — Disconnected
@@ -2220,7 +2220,7 @@ The Data-Link Service Access Point directs the operation of the Management Data 
 
 The Management Data link State Machine directs the operation of the Link Multiplexer State Machine through the link multiplexer (LM) primitives described below:
 - **LM-DATA.Request**. This primitive is used by the Data link State Machines to pass frames of any type (SABM, RR, UI, etc.) to the Link Multiplexer State Machine.
-- **LM-DATA Indication**. This primitive is used by the Link Multiplexer State Machines to pass frames of any type (SABM, RR, UI,
+- **LM-DATA.Indication**. This primitive is used by the Link Multiplexer State Machines to pass frames of any type (SABM, RR, UI,
 etc.) to the Data-link State Machine.
 
 ## C5.3 Internal Operation of the Machine
@@ -2242,7 +2242,7 @@ LM Primitives (Sent to LM):
 - LM-DATA.Request 
 
 LM Primitives (Received from LM):
-- LM-DATA Indicate
+- LM-DATA.Indication
 
 States:
 - 0 — Ready
@@ -2325,14 +2325,14 @@ DL Primitives (Received from DLSAP}
 - NOTE: All other primitives are passed transparently.
 
 DL Primitives (Sent to DLSAP)
-- DL-DATA Indication
-- DL-UNIT-DATA Indication 
-- DL-ERROR Indication
+- DL-DATA.Indication
+- DL-UNIT-DATA.Indication 
+- DL-ERROR.Indication
 - NOTE: All other primitives are passed transparently.
 
 DL Primitives (Received from the Data Link State Machine)
-- DL-DATA Indication
-- DL-UNIT-DATA Indication
+- DL-DATA.Indication
+- DL-UNIT-DATA.Indication
 - NOTE: All other primitives are passed transparently.
 
 DL Primitives (Sent to the Data Link State Machine)
@@ -2505,7 +2505,7 @@ Where: N/A – Not a valid state of queue ---- Not to be destructive nor to be a
 
 A primitive issued at one DLC endpoint will, in general, have consequences at the other DLC endpoint. The relationship of primitives of each type at one DLC endpoint to primitives at the other DLC endpoint are defined in the appropriate sub clauses discussed in Section 5.
 
-A simple connection-oriented transmission of data would be handled by the following primitives at the DLSAPs as shown in Figure D.3. Notice that the MDL primitives do not generate an Indicate primitive nor require a Response primitive from the Layer 3 entity in the station B. The MDL entities in the stations A and B work on a peer-to-peer relationship.
+A simple connection-oriented transmission of data would be handled by the following primitives at the DLSAPs as shown in Figure D.3. Notice that the MDL primitives do not generate an Indication primitive nor require a Response primitive from the Layer 3 entity in the station B. The MDL entities in the stations A and B work on a peer-to-peer relationship.
 The other primitives work in groups of four with the request from the station A causing an Indication in the station B, and a Response in station B causing a confirm in the station A.
 
 **Figure D.3 Example of a Connection-Oriented Data Exchange.**
