@@ -2214,7 +2214,7 @@ Queues:
 The Data-Link Service Access Point directs the operation of the Management Data link State Machine through the management data link (MDL) primitives described below:
 - **MDL-NEGOTIATE.Request**. This primitive is used by the Layer 3 entity to request the Data-link State Machine to notify/negotiate.
 - **MDL-NEGOTIATE.Confirm**. This primitive is used by the Management Data link State Machine to notify the Layer 3 entity notification/negotiation is complete.
-- **MDL-ERROR.Indication. This primitive is used by the Management Data link State Machine to notify the Layer 3 entity notification/negotiation has failed.
+- **MDL-ERROR.Indication**. This primitive is used by the Management Data link State Machine to notify the Layer 3 entity notification/negotiation has failed.
 
 ## C5.2 Interaction with the Link Multiplexer State Machine
 
@@ -2310,11 +2310,11 @@ All segments are turned over immediately; therefore, the Data-link State Machine
 
 All primitives from the Data-link State Machine are delivered transparently, except the following:
 - **DL-DATA.Indication**. This primitive is examined by the reassembler state machine. If the accompanying received data begins with an octet other than 0x08, it is assumed it has not been segmented and is passed up transparently. If the data begins with 0x08, the reassembler state machine allocates buffers and switches to state 1.
-After various checks for errors, this segment and all remaining segments received in subsequent DL-DATA.Indication primitives are assembled together to recreate the original larger data unit. If a segment is received without the proper PID or out of sequence, the accumulated packets are discarded, buffers are freed, a DL-ERROR.Indication is delivered, and the state machine returns to state 0. The larger data unit is delivered with one D-DATA.Indication primitive.
+After various checks for errors, this segment and all remaining segments received in subsequent DL-DATA.Indication primitives are assembled together to recreate the original larger data unit. If a segment is received without the proper PID or out of sequence, the accumulated packets are discarded, buffers are freed, a DL-ERROR.Indication is delivered, and the state machine returns to state 0. The larger data unit is delivered with one DL-DATA.Indication primitive.
 - **DL-UNIT-DATA.Indication**. This primitive is examined by the reassembler state machine. If the accompanying received data begins with an octet other than 0x08, it is assumed it has not been segmented and is passed up transparently. If the data begins with 0x08, the reassembler state machine allocates buffers and switches to state 2.
 After various checks for errors, this segment and all remaining segments received in subsequent DL-Unit-DATA.Indication primitives are assembled together to recreate the original larger data unit. If a segment is received without the proper PID or out of sequence, the accumulated packets are discarded, buffers are freed, a DL-ERROR.Indication is delivered, and the state machine returns to state 0. The larger data unit is delivered with one DL Unit Data Indication primitive.
 - **Timer TR210 Expiry**. This primitive occurs when a segment is not received before timer TR210 times out. When this primitive is received, the accumulated packets are discarded, buffers are freed, and the state machine returns to state 0. A DL Error Indication is passed to the higher level.
-- **All Other DL Primitives**. All other DL primitives are passed through the reassembler state machine unchanged. If the state machine is in states 1 or 0 when another DL primitive is received, the accumulated packets are discarded, buffers are freed, and the state machine returns to state 0. A DL-ERROR.Indication is passed to the higher level.
+- **All Other DL Primitives**. All other DL primitives are passed through the reassembler state machine unchanged. If the state machine is in states 1 or 2 when another DL primitive is received, the accumulated packets are discarded, buffers are freed, and the state machine returns to state 0. A DL-ERROR.Indication is passed to the higher level.
 
 ## C6.3 Internal Operation of the Machine
 
