@@ -341,7 +341,7 @@ Entities exist in each layer. Entities may be the Link Multiplexer, Data Link, M
 
 Cooperation between data-link layer entities is governed by a peer-to-peer protocol specific to the layer. For example, when information is to be exchanged between two Layer 3 entities, an association must be established between the entities through the data-link layer using the AX.25 protocol. This association is called a data-link connection. Data-link connections are provided by the data-link layer between two or more DLSAPs.
 
-Layer 3.Requests services from the data-link layer via command/response interactions known as service "primitives." (Similarly, the interaction between the data-link layer and the physical layer also occurs via service primitives.) Primitives are discussed in greater detail in Section 5.
+Layer 3 requests services from the data-link layer via command/response interactions known as service "primitives." (Similarly, the interaction between the data-link layer and the physical layer also occurs via service primitives.) Primitives are discussed in greater detail in Section 5.
 
 ```
   Station A           DLSAP                     DLSAP           Station A
@@ -368,10 +368,10 @@ Layer 3.Requests services from the data-link layer via command/response interact
 **Figure 2.4 Example Use Of AX.25 Primitive Types.**
 
 The primitives that are exchanged between the data-link layer and adjacent layers are of the following four types:
--.Request primitive type: used by a higher layer to.Request a service from the next lower layer.
-- INDICATION primitive type: used by the next lower layer to provide a service to notify the next higher layer of any specific activity that is service related. INDICATION primitive may be the result of an activity of the lower layer related to the primitive type.Request at the peer entity.
+- REQUEST primitive type: used by a higher layer to request a service from the next lower layer.
+- INDICATION primitive type: used by the next lower layer to provide a service to notify the next higher layer of any specific activity that is service related. INDICATION primitive may be the result of an activity of the lower layer related to the primitive type REQUEST at the peer entity.
 - RESPONSE primitive type: used by a layer to acknowledge receipt from a lower layer of the primitive type INDICATION. AX.25 does not use the RESPONSE primitive. Actual frames will be sent as shown in the example below with the UA frame.
--.Confirm primitive type: used by the upper layer to provide the.Requested service to.Confirm that the activity has been completed by the lower layer.
+- CONFIRM primitive type: used by the upper layer to provide the requested service to confirm that the activity has been completed by the lower layer.
 
 Figure 2.4 illustrates the use of the four primitive types in conjunction with the Connect primitive.
 
@@ -871,7 +871,7 @@ Where:
 - RR Receive Ready - System Ready To Receive.
 - RNR Receive Not Ready - TNC Buffer Full.
 - REJ Implicit Reject Frame - Out of Sequence or Duplicate.
-- SREJ Selective Reject -.Request Single or Multiple Frame Repeat.
+- SREJ Selective Reject - Request Single or Multiple Frame Repeat.
 
 ##### 4.3.2.1 Receive Ready (RR) Command and Response
 
@@ -1223,7 +1223,7 @@ Communication between the Layer 3 Entity and the Data-link State Machine is char
 - **DL-CONNECT.Confirm**. The Data-link State Machine uses this primitive to indicate that an AX.25 connection has been made.
 - **DL-DISCONNECT.Request**. The Layer 3 entity uses this primitive to request the release of an AX.25 connection.
 - **DL-DISCONNECT Indication**. The Data-link State Machine uses this primitive to indicate that an AX.25 connection has been released.
-- **DL-DISCONNECT.Confirm**. The Data-link State Machine uses this primitive to indicate that an AX.25 connection has been released and.Confirmed.
+- **DL-DISCONNECT.Confirm**. The Data-link State Machine uses this primitive to indicate that an AX.25 connection has been released and confirmed.
 - **DL-DATA.Request**. The Layer 3 entity uses this primitive to request the transmission of data using connection-oriented protocol.  If necessary, this frame is examined and acted upon by the segmenter.
 - **DL-DATA.Indication**. The reassembler uses this primitive to indicate reception of Layer 3 data using connection-oriented protocol.
 - **DL-UNIT-DATA.Request**. The Layer 3 entity uses this primitive to request the transmission of data using connectionless protocol. If necessary, this frame is examined and acted upon by the segmenter.  This frame is sent as a UI frame in normal order.
@@ -1376,7 +1376,7 @@ After establishing a link connection, the TNC enters the information-transfer st
 
 ### 6.3.4 Link Disconnection
 
-While in the information-transfer state, either TNC may indicate a.Request to disconnect the link by transmitting a DISC command frame and starting timer T1.
+While in the information-transfer state, either TNC may indicate a request to disconnect the link by transmitting a DISC command frame and starting timer T1.
 
 After receiving a valid DISC command, the TNC sends a UA response frame and enters the disconnected state. After receiving a UA or DM response to a sent DISC command, the TNC cancels timer T1 and enters the disconnected state.
 
@@ -1909,7 +1909,7 @@ Error Codes:
 - No Error Codes Used.
 
 Queues:
-- Normal Queue — holds all normal frames, plus Seize and Release.Requests, in the order that they arrived from the higher level.
+- Normal Queue — holds all normal frames, plus Seize and Release Requests, in the order that they arrived from the higher level.
 
 Flags and Parameters:
 - Interrupted — set when anti-hogging or 10-minute transmitter limits have interrupted the transmission of normal frames.
@@ -1951,11 +1951,11 @@ LM-RELEASE.Request primitive.
 ## C3.2 Interaction with the Physical Layer State Machine
 
 The Link Multiplexer State Machine works with the physical layer state machine. It is important to note that variations in the operating characteristics of radio channels are kept hidden from the Link Multiplexer State Machine. The Link Multiplexer State Machine uses the same primitives to communicate with the physical layer state machine, regardless of the latter’s type:
-- **PH-SEIZE.Request**. This primitive is used by the Link Multiplexer State Machine before each transmission to.Request access to the radio channel.
+- **PH-SEIZE.Request**. This primitive is used by the Link Multiplexer State Machine before each transmission to request access to the radio channel.
 - **PH-SEIZE.Confirm**. This primitive notifies the Link Multiplexer State Machine when access has been obtained (i.e., the transmitter is operating, any intervening repeater has had an opportunity to be activated, the remote station’s receiver has had an opportunity to become synchronized, and the channel is considered ready to send traffic).
 - **PH-DATA.Request**. This primitive is used by the Link Multiplexer State Machine to deliver each frame to the physical layer state machine.
 - **PH-RELEASE.Request**. This primitive is used when all frames that have been awaiting transmission for a given link have been submitted for transmission. The intention here is that a single transmission will contain frames for only one remote station. The PH-RELEASE.Request primitive permits the physical layer state machine to release the channel for use by others, for digipeating, and for receipt of acknowledgments in a contention environment (such as shared simplex channels).
-- **PH-DATA.Indication**. This primitive is used by the physical layer state machine to provide incoming frames to the Link Multiplexer State Machine. The Link Multiplexer State Machine checks each incoming frame for FCS errors. Correctly received frames are checked to see if digipeating by the station has been.Requested and if the digipeat function is enabled (a user specified parameter); if so, the frame is resubmitted to the physical layer state machine in a Digipeat Frame primitive. Correctly received frames addressed to this station are delivered to the indicated higher-layer Data-link State Machine (see Section 5.3.1).
+- **PH-DATA.Indication**. This primitive is used by the physical layer state machine to provide incoming frames to the Link Multiplexer State Machine. The Link Multiplexer State Machine checks each incoming frame for FCS errors. Correctly received frames are checked to see if digipeating by the station has been requested and if the digipeat function is enabled (a user specified parameter); if so, the frame is resubmitted to the physical layer state machine in a Digipeat Frame primitive. Correctly received frames addressed to this station are delivered to the indicated higher-layer Data-link State Machine (see Section 5.3.1).
 - **PH-EXPEDITE-DATA.Request**. This primitive is used by the Link Multiplexer State Machine to submit a frame to the physical layer state machine to be transmitted immediately. (PH-SEIZE.Request and PH-RELEASE.Request are not used for digipeat operation.)
 - **PH-BUSY.Indication**. This primitive is used by the Link Multiplexer State Machine to suspend all AX.25 data-link timers.
 - **PH-QUIET.Indication**. This primitive is used by the Link Multiplexer State Machine to resume timing on all AX.25 data- link timers. The suspension of timers overcomes a problem noted in some implementations on busy channels. This problem occurs when frames are transmitted, and a response is expected. If the channel is busy, it is possible for the retry timers (AX.25 timer T1) to expire before the remote station has had an opportunity to send any acknowledgment. This premature expiration causes needless retries and polling, which further clutters an already busy frequency.
@@ -2054,7 +2054,7 @@ The data link service access point directs the operation of the Data link State 
 ## C4.2 Interaction with the Link Multiplexer State Machine
 
 The Data link State Machine directs the operation of the Link Multiplexer State Machine through the data link (LM) primitives described below:
-- **LM-SEIZE.Request**. This primitive is used by the Data link State Machine to.Request the Link Multiplexer State Machine to arrange for transmission at the next available opportunity. The Data link State
+- **LM-SEIZE.Request**. This primitive is used by the Data link State Machine to request the Link Multiplexer State Machine to arrange for transmission at the next available opportunity. The Data link State
 Machine uses this primitive when an acknowledgment must be made, but the exact frame in which the acknowledgment is sent will be chosen when the actual time for transmission arrives.
 - **LM-SEIZE.Confirm**. This primitive indicates to the Data link State Machine that the transmission opportunity has arrived.
 - **LM-RELEASE.Request**. This primitive is used by the Link Multiplexer State Machine to stop transmission.
@@ -2126,7 +2126,7 @@ Error Codes:
 - V — No DL machines available to establish connection.
 
 Flags:
-- Layer 3 Initiated — SABM was sent by.Request of Layer 3; i.e., - DL-CONNECT.Request primitive.
+- Layer 3 Initiated — SABM was sent by request of Layer 3; i.e., - DL-CONNECT.Request primitive.
 - Peer Receiver Busy — Remote station is busy and cannot receive I frames.
 - Own Receiver Busy — Layer 3 is busy and cannot receive I frames.
 - Reject Exception — A REJ frame has been sent to the remote station.
