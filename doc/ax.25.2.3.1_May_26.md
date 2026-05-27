@@ -1,5 +1,4 @@
 ![](media/fig_cover.jpeg)
-[I have made corrections by joining paragraphs together and eliminating <CR><LF> to join lists together]
 
 # AX.25 Link Access Protocol for Amateur Packet Radio
 
