@@ -120,11 +120,13 @@
                   "required": ["loop_while", "body"],
                   "additionalProperties": false,
                   "properties": {
-                    "loop_while": { "type": "string", "description": "References an id in the page-level decisions[] list. The body is executed while the decision's predicate evaluates true; loop exits when it returns false." },
+                    "loop_while": { "type": "string", "description": "References an id in the page-level decisions[] list — the test controlling the loop, recovered from a back-edge in the figure." },
+                    "branch": { "type": "string", "enum": ["Yes", "No"], "description": "Which figure edge of the controlling decision continues the loop. 'Yes' (default) = keep looping while the predicate holds; 'No' = the predicate is the exit test, so the continue condition is its negation." },
+                    "test": { "type": "string", "enum": ["head", "tail"], "description": "Where the figure draws the test relative to the body. 'head' (default) = while loop: predicate checked before each iteration, body runs zero-or-more times. 'tail' = do-while loop: predicate checked after each iteration, body runs one-or-more times." },
                     "body": {
                       "type": "array",
                       "minItems": 1,
-                      "description": "Sub-path executed each iteration of the loop. Same step types as the outer path[] (action steps and decision-branch steps). Nested loop_while is permitted but unusual in AX.25 figures."
+                      "description": "Action-only sub-path executed each iteration of the loop. Nested decisions and loops are not supported (refactor as a subroutine)."
                     }
                   }
                 }

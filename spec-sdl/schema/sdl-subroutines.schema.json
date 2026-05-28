@@ -139,7 +139,9 @@
                         "required": ["loop_while", "body"],
                         "additionalProperties": false,
                         "properties": {
-                          "loop_while": { "type": "string" },
+                          "loop_while": { "type": "string", "description": "References an id in the subroutine-level decisions[] list — the test controlling the loop, recovered from a back-edge in the figure." },
+                          "branch": { "type": "string", "enum": ["Yes", "No"], "description": "Which figure edge of the controlling decision continues the loop. 'Yes' (default) = continue while predicate holds; 'No' = continue while its negation holds." },
+                          "test": { "type": "string", "enum": ["head", "tail"], "description": "'head' (default) = while (test before body, zero-or-more iterations); 'tail' = do-while (test after body, one-or-more iterations)." },
                           "body": {
                             "type": "array",
                             "minItems": 1

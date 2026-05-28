@@ -159,14 +159,17 @@ subroutines:
         question: "V(s) == X?"
         predicate: vs_eq_X
     paths:
-      - id: t01_invoke_retransmission_yes
+      - id: t01_invoke_retransmission
         path:
           - { action: Backtrack, kind: processing }
           - { action: "X := V(s)", kind: processing }
           - { action: "V(s) := N(r)", kind: processing }
-          - { action: Push Old I Frame onto Queue, kind: internal_out }
-          - { action: "V(s) := V(s) + 1", kind: processing }
-          - { decision: invoke_retransmission_vs_eq_x, branch: Yes }
+          - loop_while: invoke_retransmission_vs_eq_x
+            branch: No
+            test: tail
+            body:
+              - { action: Push Old I Frame onto Queue, kind: internal_out }
+              - { action: "V(s) := V(s) + 1", kind: processing }
 
   - name: Check_I_Frame_Acknowledged
     decisions:

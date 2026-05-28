@@ -95,6 +95,9 @@ decisions:
   - id: i_ns_eq_vr
     question: "N(s) == V(r)?"
     predicate: ns_eq_vr
+  - id: i_vr_i_frame_stored
+    question: "V(r) I Frame Stored?"
+    predicate: vr_I_frame_stored
   - id: i_ack_pending
     question: "Ack Pending?"
     predicate: ack_pending
@@ -789,6 +792,57 @@ transitions:
       - { decision: i_p_eq_1, branch: No }
     next: TimerRecovery
 
+  - id: t22_i_received_yes_yes_yes_no_yes_yes
+    on: I_received
+    on_label: I Frame
+    path:
+      - { decision: i_command, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receive_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: Yes }
+      - { action: "V(r) := V(r) + 1", kind: processing }
+      - { action: Clear Reject Exception, kind: processing }
+      - { action: "Decrement Sreject Exception if > 0", kind: processing }
+      - { action: DL-DATA Indication, kind: signal_upper }
+      - loop_while: i_vr_i_frame_stored
+        body:
+          - { action: Retrieve Stored V(r) I Frame, kind: processing }
+          - { action: DL-DATA Indication, kind: signal_upper }
+          - { action: "V(r) := V(r) - 1", kind: processing }
+      - { decision: i_p_eq_1, branch: Yes }
+      - { action: "F := 1", kind: processing }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: RR, kind: signal_lower }
+      - { action: Clear Acknowledge Pending, kind: processing }
+    next: TimerRecovery
+
+  - id: t22_i_received_yes_yes_yes_no_yes_no_no
+    on: I_received
+    on_label: I Frame
+    path:
+      - { decision: i_command, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receive_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: Yes }
+      - { action: "V(r) := V(r) + 1", kind: processing }
+      - { action: Clear Reject Exception, kind: processing }
+      - { action: "Decrement Sreject Exception if > 0", kind: processing }
+      - { action: DL-DATA Indication, kind: signal_upper }
+      - loop_while: i_vr_i_frame_stored
+        body:
+          - { action: Retrieve Stored V(r) I Frame, kind: processing }
+          - { action: DL-DATA Indication, kind: signal_upper }
+          - { action: "V(r) := V(r) - 1", kind: processing }
+      - { decision: i_p_eq_1, branch: No }
+      - { decision: i_ack_pending, branch: No }
+      - { action: Set Acknowledge Pending, kind: processing }
+      - { action: LM-SIEZE Request, kind: signal_lower }
+    next: TimerRecovery
+
   - id: t22_i_received_yes_yes_yes_no_yes_no_yes
     on: I_received
     on_label: I Frame
@@ -803,47 +857,11 @@ transitions:
       - { action: Clear Reject Exception, kind: processing }
       - { action: "Decrement Sreject Exception if > 0", kind: processing }
       - { action: DL-DATA Indication, kind: signal_upper }
-      - { decision: i_p_eq_1, branch: Yes }
-      - { action: "F := 1", kind: processing }
-      - { action: "N(r) := V(r)", kind: processing }
-      - { action: RR, kind: signal_lower }
-      - { action: Clear Acknowledge Pending, kind: processing }
-    next: TimerRecovery
-
-  - id: t22_i_received_yes_yes_yes_no_yes_no_no_no
-    on: I_received
-    on_label: I Frame
-    path:
-      - { decision: i_command, branch: Yes }
-      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
-      - { decision: i_va_le_nr_le_vs, branch: Yes }
-      - { action: Check I Frames Acknowledged, kind: subroutine }
-      - { decision: i_own_receive_busy, branch: No }
-      - { decision: i_ns_eq_vr, branch: Yes }
-      - { action: "V(r) := V(r) + 1", kind: processing }
-      - { action: Clear Reject Exception, kind: processing }
-      - { action: "Decrement Sreject Exception if > 0", kind: processing }
-      - { action: DL-DATA Indication, kind: signal_upper }
-      - { decision: i_p_eq_1, branch: No }
-      - { decision: i_ack_pending, branch: No }
-      - { action: Set Acknowledge Pending, kind: processing }
-      - { action: LM-SIEZE Request, kind: signal_lower }
-    next: TimerRecovery
-
-  - id: t22_i_received_yes_yes_yes_no_yes_no_no_yes
-    on: I_received
-    on_label: I Frame
-    path:
-      - { decision: i_command, branch: Yes }
-      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
-      - { decision: i_va_le_nr_le_vs, branch: Yes }
-      - { action: Check I Frames Acknowledged, kind: subroutine }
-      - { decision: i_own_receive_busy, branch: No }
-      - { decision: i_ns_eq_vr, branch: Yes }
-      - { action: "V(r) := V(r) + 1", kind: processing }
-      - { action: Clear Reject Exception, kind: processing }
-      - { action: "Decrement Sreject Exception if > 0", kind: processing }
-      - { action: DL-DATA Indication, kind: signal_upper }
+      - loop_while: i_vr_i_frame_stored
+        body:
+          - { action: Retrieve Stored V(r) I Frame, kind: processing }
+          - { action: DL-DATA Indication, kind: signal_upper }
+          - { action: "V(r) := V(r) - 1", kind: processing }
       - { decision: i_p_eq_1, branch: No }
       - { decision: i_ack_pending, branch: Yes }
     next: TimerRecovery

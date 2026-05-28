@@ -189,6 +189,13 @@ subroutines:
 
       increment, repeat until back at X (the original V(s)).
 
+      Encoded as a test-at-tail (do-while) loop_while (m0lte/ax25sdl#44):
+      the figure draws the V(s)==X? test after the body, so the body runs
+      at least once. verification_pending — confirm with the spec authors
+      that test-at-tail is intentional rather than a redraw artefact; a
+      test-at-head reading would differ only in the N(r)==X
+      (nothing-to-retransmit) edge case.
+
       '
     references:
     - source: linbpq
