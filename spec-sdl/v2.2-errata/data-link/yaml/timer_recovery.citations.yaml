@@ -1,0 +1,70 @@
+# Cross-reference annotations for timer_recovery.sdl.yaml.
+#
+# The SDL skeleton in timer_recovery.sdl.yaml is regenerated from
+# DataLink_TimerRecovery.graphml; the human-curated notes + per-implementation
+# citations live here so they survive regeneration.
+#
+# Schema: spec-sdl/schema/sdl-citations.schema.json.
+#
+# Keys under transitions: are the transition ids from timer_recovery.sdl.yaml.
+# If the tool regenerates with different ids (e.g. branch suffixes change),
+# the keys here need re-matching.
+
+transitions:
+  t24_srej_received_yes_yes_yes_no:
+    notes: >-
+      verification_pending (ax25sdl#55): transcribed faithfully from figc4.5e,
+      where this SREJ path (response, F=1, frames still outstanding / V(s) != V(a))
+      is drawn as ERRATA — green "Push frame onto queue" plus red "Invoke
+      Retransmission". As drawn it makes the SREJ handler do go-back-N (Invoke
+      Retransmission re-queues every unacked I-frame N(r)..V(s)) using the generic
+      fresh-DL-DATA push verb. That contradicts (a) the prose: §4.3.2.4 / §6.4.8
+      say SREJ requests retransmission of the SINGLE I-frame N(r) and that "I
+      frames transmitted following the I frame indicated by the SREJ frame are not
+      retransmitted", and (b) the figc4.4 (Connected) SREJ handler, which uses
+      "Push Old I Frame N(r) on Queue" with NO Invoke Retransmission. The
+      spec-correct behaviour is single-frame selective retransmit. Tom confirmed
+      (2026-05-28) these boxes are errata (red/green) and likely buggy/unimplemented
+      design; kept faithful to the figure pending an upstream ruling and raised with
+      packethacking/ax25spec. Separately, "Push Frame Onto Queue" (internal_out,
+      fresh-DL-DATA verb) on an SREJ_received trigger carries no payload, which can
+      crash a naive consumer mid-transition — runtime robustness tracked at
+      m0lte/packet.net#225.
+    references:
+    - source: spec_prose
+      cite: "§4.3.2.4"
+      quote: >-
+        The selective reject frame is used by the receiving TNC to request
+        retransmission of the single I frame numbered N(R). ... I frames
+        transmitted following the I frame indicated by the SREJ frame are not
+        retransmitted as the result of receiving a SREJ frame. ... The SREJ frame
+        is only sent as a response.
+    - source: spec_prose
+      cite: "§6.4.8"
+      quote: >-
+        the transmitting TNC retransmits the individual I frame indicated by the
+        N(R) contained in the SREJ at the next available opportunity. After
+        retransmitting the frame above, new I frames may be retransmitted
+        subsequently if they become available.
+  t24_srej_received_yes_yes_no_no:
+    notes: >-
+      verification_pending (ax25sdl#55): same disputed SREJ errata as
+      t24_srej_received_yes_yes_yes_no, F=0 branch — generic "Push frame onto
+      queue" + go-back-N "Invoke Retransmission" where §4.3.2.4 / §6.4.8 and the
+      figc4.4 SREJ handler call for single-frame selective retransmit. Faithful to
+      figc4.5e (errata); raised upstream.
+  t24_srej_received_no_yes_yes_no:
+    notes: >-
+      verification_pending (ax25sdl#55): command (Response=No) SREJ path, P=1,
+      frames still outstanding — figc4.5e draws "Invoke Retransmission" (go-back-N)
+      here. Doubly questionable: §4.3.2.4 marks the SREJ COMMAND form for removal
+      ("(remove Command and) Response" — SREJ is response-only in v2.2), and the
+      go-back-N contradicts SREJ's single-frame selective semantics (see
+      t24_srej_received_yes_yes_yes_no). Faithful to the figure (errata); raised
+      upstream.
+  t24_srej_received_no_yes_no_no:
+    notes: >-
+      verification_pending (ax25sdl#55): command (Response=No) SREJ path, P=0 —
+      same as t24_srej_received_no_yes_yes_no (vestigial command-SREJ form +
+      go-back-N where selective is specified). Faithful to figc4.5e (errata);
+      raised upstream.
