@@ -70,14 +70,14 @@ transitions:
 
   - id: t05_i_frame_pops_off_queue_yes
     on: I_frame_pops_off_queue
-    on_label: I Frame Pops Off Queue
+    on_label: I Frame Pops Off I Frame Queue
     path:
       - { decision: i_frame_pops_off_queue_layer_3_initiated, branch: Yes }
     next: AwaitingV22Connection
 
   - id: t05_i_frame_pops_off_queue_no
     on: I_frame_pops_off_queue
-    on_label: I Frame Pops Off Queue
+    on_label: I Frame Pops Off I Frame Queue
     path:
       - { decision: i_frame_pops_off_queue_layer_3_initiated, branch: No }
       - { action: Push Frame Onto Queue, kind: internal_out }

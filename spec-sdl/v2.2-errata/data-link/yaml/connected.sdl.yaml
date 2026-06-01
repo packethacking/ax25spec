@@ -145,7 +145,7 @@ transitions:
 
   - id: t03_i_frame_pops_off_queue_yes
     on: I_frame_pops_off_queue
-    on_label: I Frame Pops Off Queue
+    on_label: I Frame Pops Off I Frame Queue
     path:
       - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: Yes }
       - { action: Push on I Frame Queue, kind: internal_out }
@@ -153,7 +153,7 @@ transitions:
 
   - id: t03_i_frame_pops_off_queue_no_yes
     on: I_frame_pops_off_queue
-    on_label: I Frame Pops Off Queue
+    on_label: I Frame Pops Off I Frame Queue
     path:
       - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
       - { decision: i_frame_pops_off_queue_vs_eq_va_plus_k, branch: Yes }
@@ -162,7 +162,7 @@ transitions:
 
   - id: t03_i_frame_pops_off_queue_no_no_no
     on: I_frame_pops_off_queue
-    on_label: I Frame Pops Off Queue
+    on_label: I Frame Pops Off I Frame Queue
     path:
       - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
       - { decision: i_frame_pops_off_queue_vs_eq_va_plus_k, branch: No }
@@ -179,7 +179,7 @@ transitions:
 
   - id: t03_i_frame_pops_off_queue_no_no_yes
     on: I_frame_pops_off_queue
-    on_label: I Frame Pops Off Queue
+    on_label: I Frame Pops Off I Frame Queue
     path:
       - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
       - { decision: i_frame_pops_off_queue_vs_eq_va_plus_k, branch: No }
