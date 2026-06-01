@@ -342,7 +342,7 @@ subroutines:
       note: 'omitted: no separate routine; ax25_std_establish_data_link (line 35)
         sends SABME when ax25->modulus == AX25_EMODULUS. Already cited under Establish_Data_Link
         — duplicate citation would be noise.'
-  Check_Need_For_Response:
+  Check_Need_for_Response:
     notes: 'Looks at incoming command/response role + P/F bit and either
 
       sends Enquiry_Response(F=1) (when it was a poll), surfaces a
@@ -414,7 +414,7 @@ subroutines:
       note: 'omitted: UI frames bypass the LAPB state machine entirely (ax25_in.c:229
         ''if ((*skb->data & ~0x10) == AX25_UI) ...''). There is no DL-state-machine
         UI_Check.'
-  Select_T1_Value:
+  Select_T1:
     notes: 'Recompute SRT (smoothed round-trip estimate) and the next T1
 
       timeout. On a fresh-ack path (RC==0) the spec''s IIR-style
@@ -424,13 +424,12 @@ subroutines:
       bump T1V to next-attempt. Otherwise return without change.
 
 
-      Canonical name `Select_T1_Value` (the figure''s start label is
+      SDL name is `Select_T1` (the figure''s start label); state-machine
 
-      just "Select T1" but the existing registry / state pages use
-
-      the longer form).
+      pages reference it as `Select T1 Value` — same subroutine.
 
       '
+
     references:
     - source: linbpq
       note: 'omitted: linbpq uses a fixed L2TIME derived from PORTT1 (FRACK) plus

@@ -30,7 +30,7 @@ pinned_refs:
     repo: https://github.com/linux-netdev/mod-orphan
     commit: 40188e901024be90f50fc37ba1ba3a84678dfe12
 transitions:
-  t01_disc_received:
+  t02_disc_received:
     notes: 'Received DISC while waiting for UA. Respond DM (we''re not connected),
 
       stay in AwaitingConnection waiting for our SABM''s UA.
@@ -54,7 +54,7 @@ transitions:
       function: ax25_std_state1_machine
       line: 54
       note: sends DM with pf passed through (F:=P implicit)
-  t02_dm_received_f_eq_1:
+  t03_dm_received_yes:
     notes: 'DM with F=1 = peer is refusing the connect. Abandon: discard queue,
 
       tell upper layer the connect failed, stop T1.
@@ -83,7 +83,7 @@ transitions:
       line: 80
       note: DM with pf=1 calls ax25_disconnect(ECONNREFUSED) which stops timers
         and tears socket
-  t03_dm_received_not_f_eq_1:
+  t03_dm_received_no:
     notes: 'DM without F=1 isn''t a response to our SABM — ignore, keep waiting.
 
       '
@@ -99,7 +99,7 @@ transitions:
       line: 81
       note: '''if (pf)'' guard means DM with F=0 falls through, function returns
         with no action'
-  t04_ua_received_not_f_eq_1:
+  t04_ua_received_no:
     notes: 'UA without F=1 isn''t a valid response to our polled SABM —
 
       DL-ERROR(D), keep waiting.
@@ -122,7 +122,7 @@ transitions:
       line: 1207
       note: early return Action::DlError(DlError::D) when !f; matches spec, stays
         implicitly
-  t05_ua_received_f_eq_1_layer_3_initiated:
+  t04_ua_received_yes_yes:
     notes: 'Happy path: UA with F=1 in response to our L3-initiated SABM. Confirm
 
       to upper layer, run the standard Connected-entry housekeeping.
@@ -166,7 +166,7 @@ transitions:
       line: 58
       note: 'DIVERGES: collapses all three F=1 branches into one; unconditionally
         zeros V() and notifies socket → STATE_3. No L3-init concept'
-  t06_ua_received_f_eq_1_not_layer_3_initiated_vs_eq_va:
+  t04_ua_received_yes_no_yes:
     notes: 'Connection coming up that we didn''t initiate (peer connected to us
 
       via SABM and we sent UA back; this branch is reached when local
@@ -189,7 +189,7 @@ transitions:
       line: 1212
       note: implicit else when !layer3_initiated && vs==va; no confirm emitted,
         falls through to common tail at 1233
-  t07_ua_received_f_eq_1_not_layer_3_initiated_vs_neq_va:
+  t04_ua_received_yes_no_no:
     notes: 'V(s) ≠ V(a) recovery branch: re-init timer values + restart T1
 
       *before* the standard housekeeping. (The figure starts T1 here then
@@ -225,7 +225,7 @@ transitions:
       note: else-if `data.vs != data.va` branch (1212-1232); resets srt, t1v:=2*srt;
         author comment 'bug in the 2017 spec...start T1, then immediately stop it
         again'
-  t08_t1_expiry_rc_eq_n2:
+  t05_t1_expiry_yes:
     notes: 'Reached the retry limit (N2). Give up: discard pending frames,
 
       DL-ERROR(G), DL-DISCONNECT indication, go to Disconnected.
@@ -264,7 +264,7 @@ transitions:
       line: 124
       note: STATE_1 + n2count==n2 + AX25_MODULUS → ax25_disconnect(ETIMEDOUT). Linux
         first downgrades EMODULUS→MODULUS and retries (not in spec)
-  t09_t1_expiry_rc_neq_n2:
+  t05_t1_expiry_no:
     notes: 'Below retry limit — bump RC, resend SABM with P=1, recalc T1V via
 
       Select T1 Value, restart T1.
@@ -299,16 +299,59 @@ transitions:
       line: 134
       note: increments n2count, retransmits SABM/SABME(P=1), ax25_calculate_t1 +
         ax25_start_t1timer at function tail (173-174)
-  t10_all_other_primitives_from_lower_layer:
+  t06_all_other_primitives__from_lower_layer:
     notes: 'Catch-all for unhandled primitives drawn with d5
 
       "Signal reception from lower layer". No action — stay in
 
       AwaitingConnection.
 
+
+      All four implementations reach the same outcome (silent discard / do
+
+      nothing) but via different structures: direwolf has explicit ''Ignore it.
+
+      Keep same state.'' comments in each per-frame handler for state_1;
+
+      linux_oot relies on the state_1 switch default (line 91); linbpq
+
+      routes through L2_PROCESS whose default discards; rax25 state trait
+
+      defaults log a TODO and return empty.
+
       '
-    references: []
-  t11_dl_connect_request:
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: i_frame
+      line: 2628
+      note: 'case state_1_awaiting_connection / state_5: ''Ignore it.  Keep same
+        state.'' — representative of all per-frame handlers (rr_rnr_frame:3518,
+        rej_frame:3780, srej_frame:4030); all share identical ''do nothing'' body
+        for state_1'
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state1_machine
+      line: 91
+      note: '''default: break;'' — any frametype not matched in the state_1 switch
+        (RR, RNR, REJ, SREJ, FRMR, unknown U) silently ignored; function returns 0
+        with no side-effect'
+    - source: linbpq
+      path: L2Code.c
+      function: L2_PROCESS
+      line: 2203
+      note: '''default: ANY OTHER - IGNORE'' branch (ReleaseBuffer); reached for
+        frames in states 2/4 that aren''t UA/DM/FRMR. LinBPQ routes all L2STATE<5
+        frames through this switch — covers awaiting-connection catch-all'
+    - source: rax25
+      path: src/state.rs
+      function: State trait default (rr/rnr/rej/srej/frmr)
+      line: 963
+      note: 'Default State-trait implementations for rr (963), rej (970), srej (991),
+        frmr (1000), rnr (1007), iframe (1028) all return vec![] with stderr ''TODO:
+        unexpected …'' log; AwaitingConnection does not override any of them — silent
+        no-op in practice'
+  t07_dl_connect_request:
     notes: 'DL-CONNECT while already waiting for connection: discard pending
 
       queue and re-mark layer-3-initiated. Stays in AwaitingConnection
@@ -323,7 +366,7 @@ transitions:
       line: 1039
       note: 'case state_1 (and state_5): discard_i_queue, layer_3_initiated=1, ''Keep
         current state''. Matches spec exactly'
-  t12_dl_unit_data_request:
+  t08_dl_unit_data_request:
     references:
     - source: spec_prose
       cite: §6.3.7
@@ -334,7 +377,7 @@ transitions:
       function: ax25_sendmsg
       line: 1657
       note: SOCK_DGRAM path builds UI command, ax25_queue_xmit. Works while STATE_1
-  t13_dl_data_request_layer_3_initiated:
+  t09_dl_data_request_yes:
     notes: 'verification_pending: the Yes/No branch labels on this diamond are
 
       not drawn in the spec PNG — Tom assumed them when transcribing the
@@ -375,7 +418,7 @@ transitions:
       note: 'VERIFICATION PENDING: direwolf reads diamond INVERTED — L3-init → cdata_delete
         (discard), !L3-init → push to queue. Author comment 1466-1473 acknowledges
         confusion'
-  t14_dl_data_request_not_layer_3_initiated:
+  t09_dl_data_request_no:
     notes: 'verification_pending: see t13''s note. Reading: peer-initiated
 
       connection — drop the data silently rather than queue it.
@@ -388,7 +431,7 @@ transitions:
       line: 1478
       note: 'VERIFICATION PENDING: direwolf reads diamond INVERTED — !L3-init falls
         through to state_3/state_4 block (push to queue), opposite of this transcription'
-  t15_i_frame_pops_off_queue_layer_3_initiated:
+  t10_i_frame_pops_off_queue_yes:
     notes: 'verification_pending: shares the (label-assumed) diamond with t13.
 
       '
@@ -400,7 +443,7 @@ transitions:
       note: 'VERIFICATION PENDING: direwolf reads diamond INVERTED — L3-init → cdata_delete
         (discard from queue), opposite of this transcription. Author erratum comment
         at 6555-6558: ''The flow chart seems to be backwards'''
-  t16_i_frame_pops_off_queue_not_layer_3_initiated:
+  t10_i_frame_pops_off_queue_no:
     notes: 'verification_pending: shares the (label-assumed) diamond with t14.
 
       '
@@ -411,7 +454,7 @@ transitions:
       line: 6543
       note: 'VERIFICATION PENDING: direwolf falls through with no action when !L3-init
         — opposite of this transcription''s reading (we''d push to queue). See t15'
-  t17_all_other_primitives_from_upper_layer:
+  t11_all_other_primitives__from_upper_layer:
     references:
     - source: linbpq
       path: L2Code.c
@@ -425,7 +468,7 @@ transitions:
       line: 91
       note: 'default: break — any frametype not matched silently ignored in state
         1'
-  t18_ui_received_p_eq_1:
+  t12_ui_received_yes:
     references:
     - source: spec_prose
       cite: §6.3.5 ¶3
@@ -450,7 +493,7 @@ transitions:
       line: 229
       note: 'DIVERGES: UI handled before state-machine dispatch, uniformly for all
         states; no DM(F=1) response on UI(P=1)'
-  t19_ui_received_p_eq_0:
+  t12_ui_received_no:
     references:
     - source: spec_prose
       cite: §6.3.5 ¶3
@@ -471,7 +514,7 @@ transitions:
       function: ax25_rcv
       line: 229
       note: same UI bypass path as t18
-  t20_control_field_error:
+  t13_control_field_error:
     references:
     - source: linbpq
       path: L2Code.c
@@ -479,9 +522,54 @@ transitions:
       line: 2049
       note: default case sets SDINVC + SDFRMR (transitions to FRMR state); in states
         1/2/4 just discards. Uses FRMR, not DL-ERROR(L)
-  t21_info_not_permitted_in_frame:
-    references: []
-  t22_u_or_s_frame_length_error:
+  t14_info_not_permitted_in_frame:
+    notes: 'Figure-authoritative DL-ERROR(M) emission triggered when a U- or S-frame
+
+      carries an unexpected information field. None of the four implementations
+
+      surface this typed error code: linbpq validates frame length globally in
+
+      L2Routine before state dispatch (line 210) and discards short frames, but does
+
+      not check for info fields in S/U frames per-state; direwolf strips info silently
+
+      at parse time via ax25_get_info() without emitting DL-ERROR(M); rax25 defines
+
+      DlError::M at state.rs:145 but never emits it; linux_oot has no per-state
+
+      info-field check.
+
+      '
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: lm_data_indication
+      line: 2519
+      note: 'frame_type_U (unknown/non-spec U-frame) → break with no action; frame_not_AX25
+        → break. Neither path emits DL-ERROR(M). Info-field content of S/U frames
+        not inspected per-state — info check limited to I-frame length (line 2758 in
+        i_frame)'
+    - source: rax25
+      path: src/state.rs
+      function: DlError enum
+      line: 145
+      note: 'DlError::M defined (''M: Information field was received in a U- or S-type
+        frame'') but never emitted anywhere in state.rs or lib.rs — no implementation
+        of info_not_permitted_in_frame for any state'
+    - source: linbpq
+      path: L2Code.c
+      function: L2Routine
+      line: 210
+      note: Frame-length check at entry discards undersized frames (L2Routine:210);
+        no per-state check for unexpected info fields in U/S frames, and no DL-ERROR(M)
+        path exists
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state1_machine
+      line: 91
+      note: 'default: break — ax25_decode (ax25_subr.c:97) does not validate info-field
+        presence in S/U frames; no DL-ERROR(M) raised in any state machine'
+  t15_u_or_s_frame_length_error:
     references:
     - source: linbpq
       path: L2Code.c
@@ -489,7 +577,7 @@ transitions:
       line: 210
       note: gross frame-length check drops short frames at entry; no DL-ERROR(N)
         per-state
-  t23_sabm_received:
+  t16_sabm_received:
     notes: 'Collision recovery: SABM from peer while our own SABM is in flight.
 
       Reply UA, stay (our own SABM may still get its UA).
@@ -536,7 +624,7 @@ transitions:
       line: 42
       note: sets modulus/window, sends UA with pf passed through (F:=P implicit),
         stays
-  t24_sabme_received:
+  t17_sabme_received:
     notes: 'SABME received while we sent SABM (v2.0). Reply DM and move to
 
       ''Awaiting 2.2 Connection'' (state 5 in the figure / figc4.6) — peer

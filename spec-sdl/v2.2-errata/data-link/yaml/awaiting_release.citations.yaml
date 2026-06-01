@@ -90,7 +90,7 @@ transitions:
         case (sends DISC, calls ax25_disconnect). Linux socket layer does not re-enter
         STATE_2 from STATE_2 on user disconnect; figc4.3 expedited-DM-then-stay
         semantics absent
-  t02_t1_expiry_rc_eq_n2:
+  t02_t1_expiry_yes:
     notes: 'Retry limit hit while awaiting UA for our DISC. Surface DL-ERROR(G)
 
       (no response to repeated command frame) and DL-DISCONNECT indication
@@ -143,7 +143,7 @@ transitions:
       note: 'STATE_2 branch: if (n2count == n2) → ax25_send_control(DISC,P=1,COMMAND)
         then ax25_disconnect(ETIMEDOUT). DIVERGES: also retransmits DISC alongside
         disconnect, and surfaces ETIMEDOUT not DL-ERROR(G)'
-  t03_t1_expiry_rc_neq_n2:
+  t02_t1_expiry_no:
     notes: 'Below retry limit — bump RC, resend DISC with P=1, recalc T1V via
 
       Select T1 Value, restart T1, keep waiting.
@@ -180,7 +180,7 @@ transitions:
       note: 'STATE_2 else branch: n2count++; ax25_send_control(AX25_DISC,POLLON,COMMAND);
         ax25_calculate_t1+ax25_start_t1timer at L173-174. Matches RC++, DISC(P=1),
         Select_T1_Value, start T1; stays in STATE_2'
-  t04_ua_received_f_eq_1:
+  t03_ua_received_yes:
     notes: 'Peer acked our DISC with UA(F=1). Confirm to upper layer, stop T1,
 
       drop to Disconnected. Happy path out of AwaitingRelease.
@@ -218,7 +218,7 @@ transitions:
       line: 116
       note: 'case AX25_DM/AX25_UA: if (pf) ax25_disconnect(ax25,0). DIVERGES: Linux
         collapses DM and UA into one branch and uses pf instead of distinct F bit'
-  t05_ua_received_not_f_eq_1:
+  t03_ua_received_no:
     notes: 'UA without F=1 isn''t a valid response to our polled DISC —
 
       DL-ERROR(D), keep waiting for a properly-flagged UA or DM.
@@ -244,7 +244,7 @@ transitions:
       line: 1300
       note: F=0 branch (lines 1300-1302) returns vec![Action::DlError(DlError::D)].
         Matches figure
-  t06_all_other_primitives_from_lower_layer:
+  t04_all_other_primitives__from_lower_layer:
     notes: 'Catch-all for unhandled primitives drawn with d5
 
       "Signal reception from lower layer". No action — stay in
@@ -260,7 +260,7 @@ transitions:
       note: 'case state_0_disconnected/state_2_awaiting_release: ''Discard it.''
         via cdata_delete(txdata). Direwolf doesn''t have a monolithic ''all other''
         switch but this is the clearest equivalent for DL-DATA-style primitives'
-  t07_dl_unit_data_request:
+  t05_dl_unit_data_request:
     notes: 'Connectionless data even while waiting for release — send UI command,
 
       stay. Mirrors figc4.2''s same column.
@@ -277,7 +277,7 @@ transitions:
       line: 1655
       note: 'SOCK_DGRAM path bypasses state machine: builds AX25_UI frame and ax25_queue_xmit
         at 1658. State-independent; works in any STATE_x including STATE_2'
-  t08_all_other_primitives_from_upper_layer:
+  t06_all_other_primitives__from_upper_layer:
     notes: 'Catch-all for unhandled primitives drawn with d5
 
       "Signal reception from upper layer". No action — stay in
@@ -306,7 +306,7 @@ transitions:
       line: 129
       note: 'default: break; covers unhandled frame types (FRMR, XID, TEST, SREJ)
         in STATE_2'
-  t09_control_field_error:
+  t07_control_field_error:
     notes: 'Figure-authoritative DL-ERROR(L) emission. None of the four pinned
 
       implementations emit a typed DL-ERROR(L) — unrecognised control
@@ -314,22 +314,102 @@ transitions:
       fields are silently dropped.
 
       '
-    references: []
-  t10_info_not_permitted_in_frame:
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: lm_data_indication
+      line: 2519
+      note: 'frame_type_U (unrecognised U-frame) and frame_not_AX25 → break with no
+        action (lines 2519-2523). No DL-ERROR(L) emitted. AwaitingRelease (state_2)
+        reaches this path when ax25_frame_type() cannot classify the control byte'
+    - source: rax25
+      path: src/state.rs
+      function: DlError enum
+      line: 144
+      note: 'DlError::L defined (''L: Control field invalid or not implemented'') but
+        never emitted in any state handler; unrecognised control fields cause a
+        todo!() panic at lib.rs:604 — no graceful DL-ERROR(L)'
+    - source: linbpq
+      path: L2Code.c
+      function: L2_PROCESS
+      line: 2049
+      note: 'Connected-state (L2STATE>=5) default case: SDINVC + SDFRMR — sends FRMR,
+        not DL-ERROR(L). States 2/4 reach the ''default: ANY OTHER - IGNORE'' branch
+        at line 2203 (ReleaseBuffer) with no error emission'
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state2_machine
+      line: 129
+      note: '''default: break;'' — ax25_decode returns AX25_ILLEGAL for unrecognised
+        control bytes; state_2 switch has no AX25_ILLEGAL case so it falls to default
+        and is silently discarded. No DL-ERROR(L) raised'
+  t08_info_not_permitted_in_frame:
     notes: 'Figure-authoritative DL-ERROR(M) emission. No implementation
 
       surfaces this error code.
 
       '
-    references: []
-  t11_u_or_s_frame_length_error:
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: lm_data_indication
+      line: 2519
+      note: Info-field content of S/U frames is not inspected per-state in state_2;
+        info check only performed inside i_frame() for I-frames. No DL-ERROR(M) path
+        exists for state_2
+    - source: rax25
+      path: src/state.rs
+      function: DlError enum
+      line: 145
+      note: 'DlError::M defined (''M: Information field was received in a U- or S-type
+        frame'') but never emitted by any AwaitingRelease handler or any other state'
+    - source: linbpq
+      path: L2Code.c
+      function: L2Routine
+      line: 210
+      note: Gross frame-length check at entry discards short frames before any per-state
+        handling; no info-field presence check in S/U frames, no DL-ERROR(M) path
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state2_machine
+      line: 129
+      note: 'default: break — ax25_decode does not check for unexpected info fields
+        in S/U frames; no DL-ERROR(M) raised in state_2'
+  t09_u_or_s_frame_length_error:
     notes: 'Figure-authoritative DL-ERROR(N) emission. No implementation
 
       surfaces this error code; malformed frames are rejected earlier.
 
       '
-    references: []
-  t12_sabm_received:
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: lm_data_indication
+      line: 2522
+      note: 'frame_not_AX25 (decode failure due to truncated frame) → break with no
+        action; no DL-ERROR(N) emitted. Frame length validated at ax25_frame_type()
+        parse level — error surfaces as frame_not_AX25, not per-state DL-ERROR(N)'
+    - source: rax25
+      path: src/lib.rs
+      function: Packet::parse
+      line: 549
+      note: 'Short S/U frame returns anyhow::Error ''AX.25 in ext mode, but S/U frame
+        is too short'' — parse fails before state dispatch; DlError::N defined at
+        state.rs:146 but never emitted'
+    - source: linbpq
+      path: L2Code.c
+      function: L2Routine
+      line: 210
+      note: Global minimum-length check (line 210) releases undersized frames with
+        Debugprintf before any state dispatch; no per-state DL-ERROR(N) generated
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state2_machine
+      line: 129
+      note: 'default: break — frame length validated by ax25_addr_parse() at ax25_in.c:206
+        before reaching state machines; truncated frames freed at ''goto free'' without
+        DL-ERROR(N)'
+  t10_sabm_received:
     notes: 'Peer tried to (re)connect while we''re tearing down — refuse with
 
       Expedited DM, stay in AwaitingRelease.
@@ -357,7 +437,7 @@ transitions:
       line: 106
       note: case AX25_SABM/SABME share ax25_send_control(AX25_DM, pf, AX25_RESPONSE)
         — F:=P via pf passthrough. Not flagged 'expedited' but functionally identical
-  t13_sabme_received:
+  t11_sabme_received:
     notes: 'Same as t12 but for v2.2 SABME. Refuse with Expedited DM, stay.
 
 
@@ -378,7 +458,7 @@ transitions:
       note: Same state_2 branch as t12 — sabm_e_frame parameterised by 'extended'
         but state_2 path ignores it. Erratum at 4428 notes SABME not in figure for
         state 2; direwolf treats same as SABM
-  t14_disc_received:
+  t12_disc_received:
     notes: 'Cross-DISC: peer also wants to disconnect. Acknowledge with
 
       Expedited UA, stay in AwaitingRelease until our own DISC gets
@@ -428,7 +508,7 @@ transitions:
       note: 'case AX25_DISC: ax25_send_control(AX25_UA, pf, AX25_RESPONSE); ax25_disconnect(ax25,
         0). DIVERGES from figc4.3 (stays in AwaitingRelease); matches spec prose
         (enters Disconnected)'
-  t15_dm_received_f_eq_1:
+  t13_dm_received_yes:
     notes: 'Peer responded DM(F=1) to our polled DISC — equivalent to UA(F=1)
 
       for tear-down purposes. Confirm, stop T1, drop to Disconnected.
@@ -479,7 +559,7 @@ transitions:
       line: 116
       note: 'case AX25_DM/AX25_UA: if (pf) ax25_disconnect(ax25,0). Shared branch
         with UA F=1; ax25_disconnect stops timers and transitions to STATE_0'
-  t16_dm_received_not_f_eq_1:
+  t13_dm_received_no:
     notes: 'DM without F=1 isn''t a response to our polled DISC — ignore, keep
 
       waiting.
@@ -503,7 +583,7 @@ transitions:
       line: 118
       note: AX25_DM with pf==0 falls through if-guard without action; remains in
         STATE_2
-  t17_ui_received_p_eq_1:
+  t14_ui_received_yes:
     notes: 'DIVERGENCE: §6.3.5 ¶3 explicitly EXCLUDES UI from the "respond DM"
 
       rule ("Any TNC receiving a command frame other than a SABM(E) or
@@ -526,12 +606,12 @@ transitions:
         sends DM response with f=pf=1, lm_data_request. Direwolf does NOT perform
         UI_Check (no DL-DATA indication of UI payload to upper layer) — only the
         DM(F=1) reply. Partial match'
-  t18_ui_received_not_p_eq_1:
+  t14_ui_received_no:
     references:
     - source: spec_prose
       cite: §6.3.5 ¶3
       quote: The offending frame is ignored.
-  t19_i_or_s_command_p_eq_1:
+  t15_i_or_s_command_received_yes:
     notes: 'Direwolf erratum at rr_rnr_frame:3537-3541 (duplicated in rej/srej):
 
       "RR, RNR, REJ, SREJ responses would fall under all other primitives.
@@ -570,7 +650,7 @@ transitions:
       line: 122
       note: 'case AX25_I/REJ/RNR/RR: if (pf) ax25_send_control(AX25_DM, AX25_POLLON,
         AX25_RESPONSE). Matches DM F=1. SREJ not in switch (folds to default)'
-  t20_i_or_s_command_not_p_eq_1:
+  t15_i_or_s_command_received_no:
     references:
     - source: linbpq
       path: L2Code.c

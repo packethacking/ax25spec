@@ -30,7 +30,7 @@ pinned_refs:
     repo: https://github.com/linux-netdev/mod-orphan
     commit: 40188e901024be90f50fc37ba1ba3a84678dfe12
 transitions:
-  t01_dl_connect_request:
+  t02_dl_connect_request:
     notes: 'DL-CONNECT while already negotiating v2.2: discard pending queue
 
       and re-mark layer-3-initiated. Stays in AwaitingConnection22 (the
@@ -46,7 +46,7 @@ transitions:
       note: 'case state_1_awaiting_connection / state_5_awaiting_v22_connection
         share body: discard_i_queue(S); S->layer_3_initiated = 1; ''// Keep current
         state.'' Matches figure'
-  t02_dl_unit_data_request:
+  t03_dl_unit_data_request:
     notes: 'Connectionless data even while negotiating v2.2 — send UI command,
 
       stay. Mirrors figc4.2''s t12 and figc4.3''s t07.
@@ -63,7 +63,7 @@ transitions:
       line: 229
       note: UI frames bypass LAPB entirely; outbound UI goes via raw/dgram socket
         send. State-agnostic, not gated on AX25_STATE_1
-  t03_dl_data_request_layer_3_initiated:
+  t04_dl_data_request_yes:
     notes: 'verification_pending (carried forward from figc4.2''s t13/t14):
 
       Yes/No labels on this diamond are not drawn in the spec PNG —
@@ -94,7 +94,7 @@ transitions:
       note: 'case state_1/state_5: ''if (S->layer_3_initiated) { cdata_delete(txdata);
         break; }''. Erratum at 1467-1473 flags polarity uncertainty but implements
         per figure'
-  t04_dl_data_request_not_layer_3_initiated:
+  t04_dl_data_request_no:
     notes: 'verification_pending: shares the (label-assumed) diamond with t03.
 
       Reading: peer-initiated connection negotiating v2.2 — queue the
@@ -116,7 +116,7 @@ transitions:
       line: 1499
       note: Frame appended to sk_write_queue regardless of state; ax25_kick drains
         only after AX25_STATE_3. No L3-init gating (always 'push')
-  t05_i_frame_pops_off_queue_layer_3_initiated:
+  t05_i_frame_pops_off_queue_yes:
     notes: 'verification_pending: shares the (label-assumed) diamond with t03.
 
       '
@@ -128,7 +128,7 @@ transitions:
       note: 'case state_1/state_5: ''if (S->layer_3_initiated) { ... cdata_delete(txdata);
         }'' (lines 6560-6570). Erratum at 6555-6558 notes flow chart ''seems backwards''
         but implements as documented'
-  t06_i_frame_pops_off_queue_not_layer_3_initiated:
+  t05_i_frame_pops_off_queue_no:
     notes: 'verification_pending: shares the (label-assumed) diamond with t04.
 
       '
@@ -140,7 +140,7 @@ transitions:
       note: 'state_5 case, !L3-init branch: comment ''For the case of removing it
         from the queue and putting it back in we just leave it there.'' Functionally
         equivalent to figure''s ''Push Frame Onto Queue'' (frame stays on queue)'
-  t07_all_other_primitives_from_upper_layer:
+  t06_all_other_primitives__from_upper_layer:
     notes: 'Catch-all for unhandled primitives drawn with d5
 
       "Signal reception from upper layer". No action — stay.
@@ -153,14 +153,42 @@ transitions:
       line: 91
       note: 'default: break — all unhandled frame types silently ignored in state
         1 (Linux fuses spec states 1 and 5)'
-  t08_control_field_error:
+  t07_control_field_error:
     notes: 'Figure-authoritative DL-ERROR(L) emission. No implementation
 
       surfaces this typed error code.
 
       '
-    references: []
-  t09_info_not_permitted_in_frame:
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: lm_data_indication
+      line: 2519
+      note: 'frame_type_U (unrecognised U-frame) and frame_not_AX25 → break with no
+        action (lines 2519-2523). direwolf fuses state_1 and state_5 for all per-frame
+        handlers; state_5 reaches same no-op for unrecognised control. No DL-ERROR(L)'
+    - source: rax25
+      path: src/state.rs
+      function: DlError enum
+      line: 144
+      note: 'DlError::L defined but never emitted; unrecognised U-frame control bytes
+        reach todo!() panic at lib.rs:604. rax25 has no dedicated AwaitingV22Connection
+        state, so this applies via AwaitingConnection'
+    - source: linbpq
+      path: L2Code.c
+      function: L2_PROCESS
+      line: 2049
+      note: 'LinBPQ has no state-5 (no v2.2 SABME/Mod-128 support); state_2 unrecognised
+        S-frame → SDFRMR (connected states) or ''default: IGNORE'' (states 2/4). No
+        DL-ERROR(L)'
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state1_machine
+      line: 91
+      note: 'Linux fuses state_1 and state_5 into ax25_std_state1_machine. ''default:
+        break;'' handles AX25_ILLEGAL (unrecognised control) — silently dropped, no
+        DL-ERROR(L)'
+  t08_info_not_permitted_in_frame:
     notes: 'verification_pending: the spec figc4.6 PNG labels this column
 
       "Info Field Permitted In Frame" — the canonical reading per the
@@ -183,15 +211,68 @@ transitions:
       surfaces this typed error code.
 
       '
-    references: []
-  t10_u_or_s_frame_length_error:
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: lm_data_indication
+      line: 2519
+      note: S/U frames with unexpected info fields are not checked per-state; info
+        validation only inside i_frame() for I-frames. direwolf state_1/state_5 reach
+        the same code path — no DL-ERROR(M) for either
+    - source: rax25
+      path: src/state.rs
+      function: DlError enum
+      line: 145
+      note: 'DlError::M defined (''M: Information field was received in a U- or S-type
+        frame'') but never emitted anywhere in codebase. rax25 has no AwaitingV22Connection
+        state'
+    - source: linbpq
+      path: L2Code.c
+      function: L2Routine
+      line: 210
+      note: Global length check at entry drops short frames; no per-state info-field
+        presence check for U/S frames in any state, including the no-v2.2 equivalent
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state1_machine
+      line: 91
+      note: No info-field check in ax25_decode (ax25_subr.c:97) for S/U frames;
+        state_1 (fused with state_5) has no AX25_ILLEGAL case for info field errors
+  t09_u_or_s_frame_length_error:
     notes: 'Figure-authoritative DL-ERROR(N) emission. No implementation
 
       surfaces this typed error code.
 
       '
-    references: []
-  t11_ui_received_p_eq_1:
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: lm_data_indication
+      line: 2522
+      note: 'frame_not_AX25 (parse failure for truncated frame) → break, no action;
+        no DL-ERROR(N). Length validated at ax25_frame_type() parse time before state
+        dispatch; applies equally to state_1 and state_5 (fused in direwolf)'
+    - source: rax25
+      path: src/lib.rs
+      function: Packet::parse
+      line: 549
+      note: Short ext-mode S/U frame returns anyhow::Error before state dispatch;
+        DlError::N defined at state.rs:146 but never emitted; rax25 has no v2.2-aware
+        state
+    - source: linbpq
+      path: L2Code.c
+      function: L2Routine
+      line: 210
+      note: Minimum-length guard at L2Routine entry drops frames before any state
+        dispatch; no per-state DL-ERROR(N); LinBPQ has no v2.2 / state-5 equivalent
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state1_machine
+      line: 91
+      note: 'Frame length validated by ax25_addr_parse() at ax25_in.c:206 before
+        reaching state machines; truncated frames freed at ''goto free''. state_1
+        (fused with state_5): default: break covers AX25_ILLEGAL — no DL-ERROR(N)'
+  t10_ui_received_yes:
     notes: 'verification_pending: the spec figc4.6 PNG has the UI-column
 
       `P == 1?` diamond''s Yes/No labels INVERTED compared to figc4.3
@@ -224,16 +305,60 @@ transitions:
       note: UI bypass at ax25_in.c:229 ignores P/F entirely; no DM is generated
         regardless of P — effectively matches the figc4.6 'no action' outcome but
         for the wrong reason
-  t12_ui_received_not_p_eq_1:
+  t10_ui_received_no:
     notes: 'See t11''s verification_pending note — figc4.6 has P==1 Yes/No
 
       swapped vs figc4.3 and §6.3.5 ¶3 prose. This is the figure''s
 
       "No → DM(F=1)" branch.
 
+
+      Under the inverted-label reading (figc4.6 Yes/No are swapped),
+
+      "No" actually means P==1. The canonical-prose-correct behaviour
+
+      is: UI with P=1 received → send DM(F=1). direwolf implements this
+
+      branch (line 5110) under the guard ''cr==cmd && pf==1'' — which
+
+      maps to what prose (not the figure) calls P=1. The three other
+
+      implementations either bypass UI before state dispatch (linux_oot)
+
+      or silently ignore UI in awaiting states (linbpq, rax25 default).
+
       '
-    references: []
-  t13_dm_received_f_eq_1:
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: ui_frame
+      line: 5110
+      note: '''if (cr == cr_cmd && pf == 1)'': state_1/state_5 fall-through sends
+        DM(F=pf) — this implements the canonical ''P=1 → DM(F=1)'' response. Under
+        figc4.6''s inverted Yes/No this is the "No" branch (the one labelled No that
+        means P==1). Matches §6.3.5 ¶3 prose'
+    - source: linux_oot
+      path: net/ax25/ax25_in.c
+      function: ax25_rcv
+      line: 229
+      note: UI bypassed before LAPB state machine uniformly for all states — no DM
+        sent on UI P=1 in state_5 (Linux fuses states 1 and 5); neither branch of
+        the figc4.6 P==1 diamond is implemented
+    - source: rax25
+      path: src/state.rs
+      function: State trait default (ui)
+      line: 1035
+      note: 'Default ui() implementation (line 1035-1037) returns vec![] — silent
+        no-op. AwaitingConnection (which covers the v2.2 awaiting role in rax25) does
+        not override ui(); no DM(F=1) generated for any P value'
+    - source: linbpq
+      path: L2Code.c
+      function: L2LINKACTIVE
+      line: 1065
+      note: UI dispatched by PID at L2LINKACTIVE entry regardless of state; no P-bit
+        branch — neither arm of the figc4.6 UI diamond is implemented; no DM reply
+        for UI(P=1) in awaiting states
+  t11_dm_received_yes:
     notes: 'DM(F=1) is a refusal response to our SABME. Discard queue, notify
 
       upper layer of disconnect, stop T1, drop to Disconnected. Mirrors
@@ -258,7 +383,7 @@ transitions:
         — discard_i_queue, DL-DISCONNECT indication, STOP_T1, enter state_0. The
         active ''#else'' block (4734-4765) DIVERGES: on F==1 falls back to v2.0
         SABM retry (KPC-3+ workaround). Erratum at 4735: ''copied from FRMR case'''
-  t14_dm_received_not_f_eq_1:
+  t11_dm_received_no:
     notes: 'DM(F=0) drops us back to v2.0 AwaitingConnection (state 1). Read:
 
       peer doesn''t want v2.2 right now — let the v2.0 negotiation cycle
@@ -274,7 +399,7 @@ transitions:
       note: case AX25_DM with if(pf) gate at line 81 means F=0 falls through with
         no action; stays in AX25_STATE_1 — matches outcome (Linux fuses states 1
         and 5, so 'stay in 1' here is figc4.6's t14 'go to 1')
-  t15_ua_received_not_f_eq_1:
+  t12_ua_received_no:
     notes: 'UA without F=1 isn''t a valid response to our polled SABME — emit
 
       DL-ERROR(D), keep waiting. Mirrors figc4.2''s t04.
@@ -295,7 +420,7 @@ transitions:
       line: 1207
       note: 'lines 1207-1209: ''if !f { return vec![Action::DlError(DlError::D)];
         }'' — matches DL-ERROR(D)'
-  t16_ua_received_f_eq_1_layer_3_initiated:
+  t12_ua_received_yes_yes:
     notes: 'Happy path: UA(F=1) in response to our L3-initiated SABME. Confirm
 
       to upper layer, run housekeeping, kick MDL-NEGOTIATE Request on
@@ -339,7 +464,7 @@ transitions:
         state:=AX25_STATE_3, n2count:=0. No MDL-NEGOTIATE — Linux uses modulus already
         chosen at SABM/SABME send time. SRT/T1 init via ax25_calculate_rtt rather
         than spec Select_T1_Value'
-  t17_ua_received_f_eq_1_not_layer_3_initiated_vs_eq_va:
+  t12_ua_received_yes_no_yes:
     notes: 'Peer-initiated v2.2 connection coming up with V(s) already aligned.
 
       No DL-CONNECT confirm (upper layer wasn''t expecting one). Mirrors
@@ -355,7 +480,7 @@ transitions:
       note: 'implicit else: !layer3_initiated && vs==va falls through if/else if
         at 1210-1232, hits common tail at 1233-1246 (stop T1, start T3, reset counters,
         select_t1_value, → Connected). No MDL-NEGOTIATE'
-  t18_ua_received_f_eq_1_not_layer_3_initiated_vs_neq_va:
+  t12_ua_received_yes_no_no:
     notes: 'V(s) ≠ V(a) recovery branch: re-init timer values + Start T3
 
       BEFORE the standard housekeeping which ALSO restarts T3. Same
@@ -385,7 +510,7 @@ transitions:
         confirmation, but vs!=va? What does that mean?'' and ''bug in the 2017 spec.
         This path says to start T1, then immediately stop it again.'' warn!(''Strange
         state entered: UA received while vs != va'')'
-  t19_t1_expiry_rc_eq_n2:
+  t13_t1_expiry_yes:
     notes: 'Retry exhaustion while awaiting UA for our SABME — discard queue,
 
       emit DL-ERROR(G), DL-DISCONNECT indication, drop to Disconnected.
@@ -423,7 +548,7 @@ transitions:
       note: 'if (n2count == n2): for AX25_MODULUS calls ax25_disconnect(ETIMEDOUT).
         For AX25_EMODULUS instead drops to v2.0 (modulus:=AX25_MODULUS, n2count:=0,
         resend SABM) — Linux''s v2.2→v2.0 fallback rather than spec disconnect'
-  t20_t1_expiry_rc_neq_n2:
+  t13_t1_expiry_no:
     notes: 'Below retry limit — bump RC, resend SABME(P=1), recalc T1V via
 
       Select T1 Value, restart T1, keep waiting. Mirrors figc4.2''s t09
@@ -456,7 +581,7 @@ transitions:
       line: 134
       note: 'else branch: n2count++, retransmit SABM or SABME based on current modulus.
         No Select_T1_Value — T1 implicitly restarted by ax25_send_control machinery'
-  t21_frmr_received:
+  t14_frmr_received:
     notes: 'FRMR while negotiating v2.2 — peer is v2.0 (or pre-2.2 in v2.0
 
       mode), so re-initialise timers, run the Establish Data Link
@@ -480,7 +605,7 @@ transitions:
         5044: ''Need to force v2.0. This is not in flow chart''), establish_data_link,
         S->layer_3_initiated = 1 (Erratum at 5047: ''State 1 clears it. State 5
         sets it. Why not the same?''), enter state_1'
-  t22_sabme_received:
+  t15_sabme_received:
     notes: 'SABME from peer while our own SABME is in flight — collision
 
       recovery: respond UA, stay (our own SABME may still get its UA).
@@ -506,7 +631,7 @@ transitions:
       line: 48
       note: 'case AX25_SABME: modulus:=AX25_EMODULUS, window:=EWINDOW, send UA(F=pf).
         Stays in AX25_STATE_1 — same fused state for v2.0/v2.2'
-  t23_sabm_received:
+  t16_sabm_received:
     notes: 'SABM (v2.0) from peer while we''re trying v2.2 — peer doesn''t
 
       support v2.2 or is downgrading. Reply UA, set version 2.0, fall to
@@ -534,7 +659,7 @@ transitions:
       line: 42
       note: 'case AX25_SABM: modulus:=AX25_MODULUS, window:=WINDOW, send UA(F=pf).
         Stays AX25_STATE_1 (no v2.0/v2.2 state distinction)'
-  t24_disc_received:
+  t17_disc_received:
     notes: 'DISC from peer while negotiating v2.2: respond DM (we''re not
 
       connected yet), stay in AwaitingConnection22 waiting for our
@@ -560,10 +685,42 @@ transitions:
       line: 54
       note: 'case AX25_DISC: ax25_send_control(AX25_DM, pf, RESPONSE) — F:=P via
         pf, stays in state 1'
-  t25_all_other_primitives_from_lower_layer:
+  t18_all_other_primitives__from_lower_layer:
     notes: 'Catch-all for unhandled primitives drawn with d5
 
       "Signal reception from lower layer". No action — stay.
 
+
+      LinBPQ has no v2.2 state so this transition has no linbpq evidence.
+
+      The three implementations that have state_5 (or fuse it) all reach
+
+      a silent discard for unhandled lower-layer primitives via their
+
+      per-frame handler no-op cases.
+
       '
-    references: []
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: i_frame
+      line: 2628
+      note: 'state_1_awaiting_connection / state_5_awaiting_v22_connection share body:
+        ''Ignore it.  Keep same state.'' — representative of all per-frame handlers
+        (rr_rnr_frame:3518, rej_frame:3780, srej_frame:4030). Any S-frame received
+        in state_5 is silently discarded'
+    - source: rax25
+      path: src/state.rs
+      function: State trait default (rr/rnr/rej/srej/frmr)
+      line: 963
+      note: 'rax25 has no AwaitingV22Connection state; AwaitingConnection''s unhandled
+        primitives fall to State-trait defaults: rr (963), rej (970), srej (991), frmr
+        (1000), rnr (1007), iframe (1028) all return vec![] with stderr TODO log —
+        effectively silent discard'
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state1_machine
+      line: 91
+      note: 'Linux fuses spec states 1 and 5 into ax25_std_state1_machine; ''default:
+        break;'' covers any unmatched frametype (RR, RNR, REJ, SREJ, FRMR, AX25_ILLEGAL)
+        — silent no-op, stays in AX25_STATE_1'
