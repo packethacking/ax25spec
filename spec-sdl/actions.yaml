@@ -73,23 +73,55 @@ signal_lower:
   # Folded into the single signal_lower block so all signal_lower verbs
   # live together and the catalog loads as intended.
   - name: LM_seize_request
+    aliases:
+      - "LM-SEIZE Request"
+      - "LM-SIEZE Request"        # figure typo
   - name: LM_release_request
+    aliases:
+      - "LM-RELEASE Request"
+      - "LM_RELEASE Request"      # underscore-spelled figure variant
   - name: LM_data_request
+    aliases:
+      - "LM-DATA Request"
 
 signal_upper:
   # DL primitives raised to Layer 3 (§5.5). The dispatcher emits each as
   # a DataLinkSignal record via the sendUpward callback. DL_DATA_indication
   # carries the incoming I-frame's Info + PID; the others have no payload.
+  # The figures draw these in display form ("DL-CONNECT Indication"); the
+  # aliases canonicalise every figc spelling onto the snake_case name the
+  # dispatcher cases on, so the generated tables only ever carry the canonical.
   - name: DL_CONNECT_indication
+    aliases:
+      - "DL-CONNECT Indication"
+      - "DL Connect Indication"
   - name: DL_CONNECT_confirm
+    aliases:
+      - "DL-CONNECT Confirm"
   - name: DL_DISCONNECT_indication
+    aliases:
+      - "DL-DISCONNECT Indication"
+      - "DL-DISCONNECT indication"
   - name: DL_DISCONNECT_confirm
+    aliases:
+      - "DL-DISCONNECT Confirm"
   - name: DL_DATA_indication
+    aliases:
+      - "DL-DATA Indication"
+  - name: DL_UNIT_DATA_indication
+    aliases:
+      - "DL-UNIT-DATA Indication"
 
   # DL-ERROR-indication letter variants (§C5). Each maps to
-  # DataLinkErrorIndication("<letter>") via the suffix.
+  # DataLinkErrorIndication("<letter>") via the suffix. Figures draw them as
+  # "DL-ERROR Indication (<letter>)" (case varies); aliases canonicalise.
   - name: DL_ERROR_indication_C_D
+    aliases:
+      - "DL-ERROR Indication (C,D)"
   - name: DL_ERROR_indication_D
+    aliases:
+      - "DL-ERROR Indication (D)"
+      - "DL-ERROR indication (D)"
   - name: DL_ERROR_indication_E
   - name: DL_ERROR_indication_F
   - name: DL_ERROR_indication_G
@@ -124,6 +156,7 @@ processing:
   - name: clear_peer_receiver_busy
     aliases:
       - "Clear Peer Busy"          # figc4.4 figure spelling (drops 'receiver')
+      - "Clear Peer Receiver Busy" # figc4.2 full title-case spelling
   - name: set_peer_receiver_busy
     aliases:
       - "Set Peer Busy"            # figc4.4 figure spelling (drops 'receiver')
@@ -143,6 +176,7 @@ processing:
   - name: set_acknowledge_pending
     aliases:
       - "Set Acknowledgement Pending"  # figc4.4 figure spelling ('ment' suffix)
+      - "Set Acknowledge Pending"      # title-case figure spelling
   - name: clear_acknowledge_pending
 
   # Out-of-sequence I-frame storage.
@@ -162,6 +196,15 @@ processing:
   - name: "SRT := Initial Default"
   - name: "T1V := 2 * SRT"
 
+  # Sequence/poll assignments drawn with case-variant spellings across
+  # figures (the same operation, inconsistent capitalisation).
+  - name: "N(r) := V(r)"
+    aliases:
+      - "N(R) := V(r)"           # upper-case N(R) figure variant
+  - name: "P := 0"
+    aliases:
+      - "p := 0"                 # lower-case p figure variant
+
 internal_out:
   # Push to the internal I-frame transmission queue. Three figure
   # spellings:
@@ -172,6 +215,7 @@ internal_out:
   - name: push_frame_on_queue
     aliases:
       - "Push Frame Onto Queue"    # figc4.6 title-case spelling
+      - "Push Frame on Queue"      # figc4.3 title-case spelling ('on' not 'Onto')
   - name: push_old_I_frame_N_r_on_queue
 
   # Management data-link XID negotiation trigger.
@@ -192,6 +236,7 @@ subroutine:
   - name: Check_I_Frame_Acknowledged
     aliases:
       - "Check I Frames Acknowledged"  # figc4.4 figure spelling (plural)
+      - "Check I Frame Acknowledged"   # figc4.5 figure spelling (singular)
   - name: Check_Need_For_Response
   - name: Transmit_Enquiry
   - name: Invoke_Retransmission
