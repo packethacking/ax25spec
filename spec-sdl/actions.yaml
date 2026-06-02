@@ -58,6 +58,16 @@ signal_lower:
   # false) — see ActionDispatcher.BuildUiFrame.
   - name: UI_command
 
+  # XID-frame command verb (Management-Data-Link, figc5.1/figc5.2 —
+  # prose-bootstrap, verification_pending). The Negotiating exchange is
+  # opened (and retried) by sending an XID command frame carrying the
+  # initiator's offered parameter set (§6.3.2). Error code A ("XID
+  # command without P=1", §C5.3) implies the command carries P=1, but
+  # the prose-derived bootstrap does NOT encode the P-bit box (figc5.x
+  # detail) so this verb is left bare for now. No aliases — single
+  # spelling so far.
+  - name: XID_command
+
   # I-frame verb. Drawn in figc4.4 t19/t20 and the SREJ retransmit
   # paths. Payload + PID come from the triggering I_frame_pops_off_queue
   # event; N(s)/N(r)/P consume pending. Emitted frame is also stashed
@@ -131,6 +141,31 @@ signal_upper:
   - name: DL_ERROR_indication_N
   - name: DL_ERROR_indication_O
 
+  # Management-Data-Link → Layer 3 primitives (§5.1, Appendix C5.1 /
+  # C5.3 — prose-bootstrap, verification_pending). The MDL machine
+  # raises these to the Layer 3 entity. MDL-NEGOTIATE Confirm signals
+  # that notification/negotiation is complete; MDL-ERROR Indicate (X)
+  # signals it failed, with X one of the §C5.3 management error codes
+  # (A — XID command without P=1; B — Unexpected XID response; C —
+  # Management retry limit exceeded; D — XID response without F=1).
+  # The figures draw these in display form; the aliases canonicalise to
+  # the snake_case spellings a downstream dispatcher would case on,
+  # mirroring the DL_CONNECT_* / DL_ERROR_indication_* convention above.
+  # Only the codes actually emitted by the prose-bootstrap (B, C, D)
+  # are catalogued; error A's reception path is figc5.x backfill.
+  - name: MDL_NEGOTIATE_confirm
+    aliases:
+      - "MDL-NEGOTIATE Confirm"
+  - name: MDL_ERROR_indicate_B
+    aliases:
+      - "MDL-ERROR Indicate (B)"
+  - name: MDL_ERROR_indicate_C
+    aliases:
+      - "MDL-ERROR Indicate (C)"
+  - name: MDL_ERROR_indicate_D
+    aliases:
+      - "MDL-ERROR Indicate (D)"
+
 processing:
   # Queue-clearing verbs — three figure spellings, one semantic
   # operation (clear ctx.IFrameQueue). All three remain canonical
@@ -183,11 +218,23 @@ processing:
   - name: save_contents_of_I_frame
   - name: retrieve_stored_V_r_I_frame
 
-  # Modulus selection.
+  # Modulus selection. `set_version_2_0` is shared between the
+  # data-link figc4.6 FRMR path and the Management-Data-Link figc5.2
+  # FRMR (pre-v2.2 peer) path — both fall back to the §6.3.2 version-2.0
+  # default parameter set.
   - name: set_version_2_0
     aliases:
       - "Set Version 2.0"          # figc4.6 title-case spelling
   - name: set_version_2_2
+
+  # Management-Data-Link retry timer TM201 (Appendix C5.3 "Timers" —
+  # prose-bootstrap, verification_pending). Started when an XID command
+  # is sent (and on each retransmit) and stopped when negotiation
+  # completes. Drawn here as processing boxes by analogy with the
+  # data-link Start T1 / Stop T1 timer verbs (which pass through
+  # uncatalogued); catalogued explicitly because TM201 is MDL-only.
+  - name: Start TM201
+  - name: Stop TM201
 
   # Link-parameter assignments — Smoothed Round-Trip Time per §6.7.1.2
   # and T1 timeout value per §6.7.1.3. Initialised at link-establishment
@@ -249,3 +296,15 @@ subroutine:
   - name: Enquiry_Response_F_1
     aliases:
       - "Enquiry Response (F = 1)"        # figc4.7 Check_Need_For_Response subroutine-call label
+
+  # Management-Data-Link parameter application (Appendix C5.2/C5.3 +
+  # §6.3.2 — prose-bootstrap, verification_pending). PLACEHOLDER for the
+  # figc5.3–figc5.8 per-parameter "reverts to" negotiation subroutines
+  # (Classes of Procedures / Optional Functions / N1 / Window / Retry /
+  # T1). Invoked from the figc5.2 Negotiating XID-response-received path.
+  # The decomposed subroutine bodies are figure-dependent and are NOT
+  # transcribed by the prose bootstrap — they are the figc5.x graphml
+  # backfill. No figc4.7-style subroutine page defines this body yet;
+  # downstream subroutine registries treat it as a (currently no-op)
+  # named call until the backfill lands.
+  - name: Apply Negotiated Parameters

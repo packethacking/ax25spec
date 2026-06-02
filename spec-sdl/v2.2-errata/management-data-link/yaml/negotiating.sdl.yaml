@@ -1,0 +1,221 @@
+# PROSE-DERIVED BOOTSTRAP — NOT a figure-faithful transcription.
+#
+# This page was hand-authored from the AX.25 v2.2 (rev 4, Oct 2025) spec
+# PROSE only. The Management Data-Link figure figc5.2 (Negotiating) was
+# never redrawn as graphml in this repo, and the published PNG is
+# unreliable (all-black render). Per a deliberate, Tom-directed
+# exception to the repo's graphml→YAML flow, the MDL negotiation-exchange
+# FSM is bootstrapped from §2.6, §5.1, §5.2, §6.3.2 and Appendix C5.3
+# text. NO figc5.x image was opened or inferred from.
+#
+# Every transition below carries a verification_pending note and a
+# spec_prose citation of the section(s) it was derived from. The
+# figc5.x graphml redraw + figure-faithful transcription is a pending
+# backfill task; until then this page MUST NOT be mistaken for a
+# figure transcription. coverage is `partial` because the prose does
+# not enumerate catch-all columns or the XID-command-reception
+# (collision) path for this state (those are figc5.2 figure detail —
+# see backfill scope).
+#
+# The per-parameter "reverts to" application of the six negotiated
+# parameters (§6.3.2) is represented here as a SINGLE subroutine call,
+# `Apply Negotiated Parameters`. The figc5.3–figc5.8 decomposition
+# (Classes of Procedures / Optional Functions / N1 / Window / Retry /
+# T1 negotiation subroutines) is figure-dependent and is deliberately
+# NOT replicated — it belongs to the graphml backfill.
+#
+# DO NOT regenerate this file from graphml — there is no graphml source.
+
+machine: management_data_link
+state: Negotiating
+coverage: partial
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc5.2
+  url: https://raw.githubusercontent.com/packethacking/ax25spec/main/doc/ax.25.2.2.4_Oct_25.md
+
+# Variables read/written by this state (documentation-only):
+#   RC     — retry count (Appendix C5.3 "Variables").
+#   NM201  — maximum number of retries of the XID command (C5.3).
+# Timer: TM201 — retry timer for management functions (C5.3 "Timers").
+variables:
+  - RC
+  - NM201
+
+decisions:
+  # F-bit check on a received XID response. The EXISTENCE of this test
+  # is implied by error code D ("XID response without F=1", §C5.3 Error
+  # Codes): a response with F=1 completes negotiation; one without F=1
+  # is the error-D condition. The diamond itself is NOT read from a
+  # figure — see the t01 verification_pending note.
+  - id: xid_response_f_eq_1
+    question: "F == 1?"
+    predicate: F_eq_1
+
+  # Retry-limit check on TM201 expiry. Mirrors the data-link RC==N2
+  # retransmit/give-up pattern (figc4.3/figc4.6), substituting the
+  # management-machine counter NM201 for N2. Yes = limit reached (give
+  # up with error C); No = retransmit the XID command.
+  - id: tm201_expiry_rc_eq_nm201
+    question: "RC == NM201?"
+    predicate: RC_eq_NM201
+
+transitions:
+
+  # ── XID response received, F == 1: the peer is v2.2+ and has returned
+  #    its chosen parameter values. Apply the negotiated parameters per
+  #    §6.3.2 (represented as one subroutine — see header), stop TM201,
+  #    confirm completion to Layer 3, and return to Ready.
+  - id: t01_xid_response_received_yes
+    on: XID_response_received
+    on_label: XID
+    path:
+      - { decision: xid_response_f_eq_1, branch: Yes }
+      - { action: Apply Negotiated Parameters, kind: subroutine }
+      - { action: Stop TM201, kind: processing }
+      - { action: MDL-NEGOTIATE Confirm, kind: signal_upper }
+    next: Ready
+    notes: >-
+      verification_pending (prose-derived bootstrap; figc5.2 graphml redraw
+      pending — see backfill task). Derived from §C5.3 ¶3 ("If the other
+      station is using version 2.2 or better, it will respond with an XID
+      response") + §6.3.2 ("Both TNCs set up based on the values used in
+      the XID response") + the §C5.3 MDL-NEGOTIATE Confirm primitive. The
+      F==1 split is inferred from error code D ("XID response without
+      F=1") — the diamond's presence/placement is NOT figure-verified.
+      `Apply Negotiated Parameters` is a placeholder for the
+      figc5.3–figc5.8 per-parameter "reverts to" subroutines (Classes of
+      Procedures → half-duplex; Optional Functions → lesser of REJ/SREJ
+      and modulo 8/128; Ack Timer & Retries → greater; N1 & k →
+      notification/min), which are NOT decomposed here. Whether the
+      figure stops T1 (a data-link timer) in addition to TM201 is
+      UNKNOWN: the §C5.3 timer list names only TM201 for this machine,
+      so only TM201 is stopped here; the task brief's mention of "stop
+      T1/TM201" is flagged as figc5.2-dependent and unverified.
+    references:
+      - source: spec_prose
+        cite: "§C5.3 ¶3"
+        quote: "If the other station is using version 2.2 or better, it will respond with an XID response."
+      - source: spec_prose
+        cite: "§6.3.2 ¶7"
+        quote: "The distant TNC chooses to accept the values offered, or other acceptable values, and places these values in the XID response. Both TNCs set up based on the values used in the XID response."
+      - source: spec_prose
+        cite: "§5.1"
+        quote: "MDL-NEGOTIATE Confirm. The Management Data-link State Machine uses this primitive to notify the Layer 3 entity that notification/negotiation is complete."
+
+  # ── XID response received, F != 1: error code D ("XID response without
+  #    F=1"). Report to Layer 3 via MDL-ERROR Indicate; remain in
+  #    Negotiating (the retry timer TM201 is still running).
+  - id: t01_xid_response_received_no
+    on: XID_response_received
+    on_label: XID
+    path:
+      - { decision: xid_response_f_eq_1, branch: No }
+      - { action: "MDL-ERROR Indicate (D)", kind: signal_upper }
+    next: Negotiating
+    notes: >-
+      verification_pending (prose-derived bootstrap; figc5.2 graphml redraw
+      pending — see backfill task). The error-D condition ("XID response
+      without F=1", §C5.3 Error Codes) is prose-clear. The destination
+      state after error D (here: stay in Negotiating, TM201 still
+      running) and whether any frame is emitted are NOT figure-verified —
+      this is the most defensible reading of the error-code list.
+    references:
+      - source: spec_prose
+        cite: "§C5.3 Error Codes"
+        quote: "D — XID response without F=1."
+
+  # ── FRMR received: the peer is pre-v2.2 and rejected the XID command
+  #    with a Frame Reject. Fall back to the version-2.0 default
+  #    parameters (§6.3.2 ¶1), stop TM201, confirm completion to Layer 3,
+  #    and return to Ready. A version 2.0 connection is made.
+  - id: t02_frmr_received
+    on: FRMR_received
+    on_label: FRMR
+    path:
+      - { action: Set Version 2.0, kind: processing }
+      - { action: Stop TM201, kind: processing }
+      - { action: MDL-NEGOTIATE Confirm, kind: signal_upper }
+    next: Ready
+    notes: >-
+      verification_pending (prose-derived bootstrap; figc5.2 graphml redraw
+      pending — see backfill task). Derived from §6.3.2 ¶1 ("Implementations
+      of AX.25 prior to version 2.2 respond to an XID command frame with a
+      FRMR response frame. The TNC receiving the FRMR uses a default set of
+      parameters compatible with previous versions of AX.25 and a version
+      2.0 connection is made") and §C5.3 ¶3. `Set Version 2.0` stands in
+      for installing the §6.3.2 version-2.0 default parameter set (half
+      duplex; implicit reject, modulo 8; N1=2048 bits; k=7; T1=3000 ms;
+      retries=10). The exact action set/order (does the figure draw a
+      distinct "load v2.0 defaults" box vs reuse the data-link
+      `Set Version 2.0` verb? does it stop TM201 before or after
+      confirming?) is figc5.2 detail and unverified. The `Set Version 2.0`
+      verb is shared with the data-link figc4.6 FRMR path.
+    references:
+      - source: spec_prose
+        cite: "§6.3.2 ¶1"
+        quote: "Implementations of AX.25 prior to version 2.2 respond to an XID command frame with a FRMR response frame. The TNC receiving the FRMR uses a default set of parameters compatible with previous versions of AX.25 and a version 2.0 connection is made."
+      - source: spec_prose
+        cite: "§C5.3 ¶3"
+        quote: "If the other station is using a version of AX.25 earlier than 2.2, it will respond with an FRMR of the XID command, and the default version 2.0 parameters will be used."
+
+  # ── TM201 expiry, RC == NM201: the XID command has been retried the
+  #    maximum number of times with no usable reply. Give up: report
+  #    error code C ("Management retry limit exceeded") to Layer 3 via
+  #    MDL-ERROR Indicate and return to Ready.
+  - id: t03_tm201_expiry_yes
+    on: TM201_expiry
+    on_label: Timer TM201 Expiry
+    path:
+      - { decision: tm201_expiry_rc_eq_nm201, branch: Yes }
+      - { action: "MDL-ERROR Indicate (C)", kind: signal_upper }
+    next: Ready
+    notes: >-
+      verification_pending (prose-derived bootstrap; figc5.2 graphml redraw
+      pending — see backfill task). Derived from §C5.3 Error Codes ("C —
+      Management retry limit exceeded"), the §C5.3 Variables (RC, NM201)
+      and Timer (TM201). The retry-limit FSM shape (compare RC to the
+      maximum, give up vs retransmit) is the standard AX.25 retransmit
+      pattern drawn for T1/N2 in the data-link figures (figc4.3 t02,
+      figc4.6 t13); it is reconstructed here for the management timer by
+      analogy and is NOT figure-verified for figc5.2. The destination
+      state on give-up (Ready) and the exact RC comparison sense (==
+      vs >=) are unverified figure detail.
+    references:
+      - source: spec_prose
+        cite: "§C5.3 Error Codes"
+        quote: "C — Management retry limit exceeded."
+      - source: spec_prose
+        cite: "§C5.3 Variables"
+        quote: "RC — Retry count. NM201 — Maximum number of retries of the XID command."
+
+  # ── TM201 expiry, RC < NM201: retransmit the XID command, bump the
+  #    retry count, restart TM201, and remain in Negotiating.
+  - id: t03_tm201_expiry_no
+    on: TM201_expiry
+    on_label: Timer TM201 Expiry
+    path:
+      - { decision: tm201_expiry_rc_eq_nm201, branch: No }
+      - { action: "RC := RC + 1", kind: processing }
+      - { action: XID_command, kind: signal_lower }
+      - { action: Start TM201, kind: processing }
+    next: Negotiating
+    notes: >-
+      verification_pending (prose-derived bootstrap; figc5.2 graphml redraw
+      pending — see backfill task). Derived from the §C5.3 Variables (RC,
+      NM201) and Timer (TM201) plus the §6.3.1 link-establishment retry
+      analogue ("If the distant TNC doesn't respond before T1 times out,
+      the originating TNC resends ... and starts T1 running again. The
+      originating TNC tries to establish a connection until it has tried
+      unsuccessfully N2 times"). The action set/order (RC:=RC+1, resend
+      XID, restart TM201) mirrors the data-link figc4.3/figc4.6 T1-expiry
+      retransmit column; it is reconstructed by analogy and NOT
+      figure-verified for figc5.2. The resent XID command's P-bit is
+      unverified (see Ready t01 note re error A / P=1).
+    references:
+      - source: spec_prose
+        cite: "§C5.3 Variables"
+        quote: "RC — Retry count. NM201 — Maximum number of retries of the XID command."
+      - source: spec_prose
+        cite: "§6.3.1 ¶2"
+        quote: "If the distant TNC doesn't respond before T1 times out, the originating TNC resends the SABM frame and starts T1 running again. The originating TNC tries to establish a connection until it has tried unsuccessfully N2 times."

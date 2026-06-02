@@ -12,13 +12,13 @@
       "enum": [
         "data_link",
         "link_mux",
-        "mgmt_data_link",
+        "management_data_link",
         "simplex_phy",
         "duplex_phy",
         "segmenter",
         "reassembler"
       ],
-      "description": "Which spec state machine this page belongs to."
+      "description": "Which spec state machine this page belongs to. NB: `management_data_link` was previously listed as `mgmt_data_link` here; the long form is the spelling actually used by spec-sdl/v2.2-errata/management-data-link/ (prose bootstrap). This authoring schema is documentation-only — the codegen emits its own JSON schema (spec/json/schema.json) with an unconstrained `machine` string."
     },
     "state": {
       "type": "string",

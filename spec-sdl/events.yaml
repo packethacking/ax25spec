@@ -34,6 +34,17 @@ frames_received:
   - DM_received
   - FRMR_received
   - XID_received
+  # Management-Data-Link negotiation distinguishes the XID *command*
+  # (sent by the initiator) from the XID *response* (returned by a
+  # v2.2+ peer) — §4.3.3.7 and §6.3.2 draw them as distinct frames, and
+  # Appendix C5.3's Negotiating state reacts only to the response.
+  # `XID_received` above is the undifferentiated data-link spelling
+  # (not yet used by any data-link page); `XID_response_received` is the
+  # MDL-specific input. A future `XID_command_received` event will be
+  # needed once the figc5.x XID-command-reception (collision / error-A)
+  # paths are transcribed — deliberately omitted now (prose-bootstrap
+  # encodes no such transition; see management-data-link backfill).
+  - XID_response_received
   - TEST_received
   # Composite event: figc4.3 (AwaitingRelease) groups all info/supervisory
   # command frames into a single SDL input column labelled
@@ -69,3 +80,7 @@ timers:
   - T1_expiry
   - T2_expiry
   - T3_expiry
+  # TM201 — retry timer for management functions (Appendix C5.3
+  # "Timers"). Drives the Management-Data-Link Negotiating state's XID
+  # command retransmit / give-up logic.
+  - TM201_expiry

@@ -12,13 +12,13 @@
       "enum": [
         "data_link",
         "link_mux",
-        "mgmt_data_link",
+        "management_data_link",
         "simplex_phy",
         "duplex_phy",
         "segmenter",
         "reassembler"
       ],
-      "description": "Which spec state machine these subroutines belong to."
+      "description": "Which spec state machine these subroutines belong to. NB: `management_data_link` was previously listed as `mgmt_data_link`; the long form is the spelling used by spec-sdl/v2.2-errata/management-data-link/."
     },
     "source": {
       "type": "object",
