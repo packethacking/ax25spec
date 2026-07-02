@@ -1,0 +1,224 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="992.61" height="1735.37" viewBox="5060.35 294.72 992.61 1735.37" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 1 L 9 5 L 0 9 z" fill="#000000"/></marker></defs>
+<rect x="5060.35" y="294.72" width="992.61" height="1735.37" fill="#FFFFFF"/>
+<path d="M 5218.76 416.61 L 5218.76 482.61" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 5218.76 542.61 L 5218.76 576.96" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 5218.76 672.27 L 5218.76 726.92" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="5188.76" y="703.82" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 5218.76 822.23 L 5218.76 865.76" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="5188.76" y="848.22" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 5218.76 961.07 L 5218.76 1004.6" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="5218.76" y="979.61" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 5218.76 1064.6 L 5218.76 1102.61" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 5158.76 913.41 L 5110.35 913.41 L 5110.35 1171.81 L 5158.76 1202.38" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="5127.22" y="917.61" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 5218.76 1162.61 L 5218.76 1192.61" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 5218.76 1287.92 L 5218.76 1339.41" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="5188.76" y="1317.88" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 5278.53 1287.92 L 5343.12 1339.41" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="5309.24" y="1354.97" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 5380.75 1399.41 L 5380.75 1429.41" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 5278.76 659.71 L 5423.85 744.58" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="5317.7" y="686.68" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 5475.15 804.58 L 5475.15 838.61" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 5475.15 898.61 L 5475.15 928.61" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 5257.08 822.23 L 5451.02 1063.41" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="5280.87" y="856.01" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 5475.15 1023.91 L 5475.15 1063.41" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="5475.15" y="1042.44" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 5475.15 1123.41 L 5475.15 1153.41" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 5421.87 1248.72 L 5421.09 1249.41" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="5387.81" y="1243.13" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 5516.25 1248.72 L 5516.85 1249.41" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="5527.15" y="1244.12" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 5535.15 997.18 L 5751.15 1072.49" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="5566.92" y="1012.46" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 5811.15 1141.07 L 5811.15 1198.61" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="5781.15" y="1174.06" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 5811.15 1258.61 L 5811.15 1288.61" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 5811.15 1348.61 L 5811.15 1384.96" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 5751.15 1093.41 L 5716.75 1093.41 L 5716.75 1376.61 L 5751.15 1397.02" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="5716.71" y="1118.01" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 5766.53 1480.27 L 5738.44 1510.27" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="5706.53" y="1504.65" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 5710.35 1570.27 L 5710.35 1607.41" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 5868.11 1480.27 L 5893.67 1501.65" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="5889.87" y="1484.42" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 5941.55 1651.01 L 5941.55 1651.01" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 5941.55 1686.96 L 5941.55 1728.53" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 5941.55 1788.53 L 5941.55 1830.09" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 5941.55 1890.09 L 5941.55 1920.09" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<g transform="translate(5158.76 344.72) scale(1 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="18,0 120,0 120,60 18,60 0,30.0" />
+  </g>
+</g>
+<text x="5218.76" y="384.12" font-size="12" text-anchor="middle">SREJ</text>
+<g transform="translate(5158.76 482.61) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 102,0 120,30.0 102,60 0,60" />
+  </g>
+</g>
+<text x="5218.76" y="514.07" font-size="12" text-anchor="middle">Clear Peer Busy</text>
+<g transform="translate(5158.76 576.96) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="5218.76" y="626.07" font-size="12" text-anchor="middle">Response?</text>
+<g transform="translate(5158.76 726.92) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="5218.76" y="776.03" font-size="12" text-anchor="middle">V(a) &lt;= N(r) &lt;=</text>
+<text x="5218.76" y="791.1" font-size="12" text-anchor="middle">V(s)</text>
+<g transform="translate(5158.76 865.76) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="5218.76" y="914.87" font-size="12" text-anchor="middle">P == 1?</text>
+<g transform="translate(5158.76 1004.6) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 102,0 120,30.0 102,60 0,60" />
+  </g>
+</g>
+<text x="5218.76" y="1036.05" font-size="12" text-anchor="middle">V(a) &lt;- N(r)</text>
+<g transform="translate(5158.76 1102.61) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+    <line x1="10" y1="1.0" x2="10" y2="59.0" />
+    <line x1="110" y1="1.0" x2="110" y2="59.0" />
+  </g>
+</g>
+<text x="5218.76" y="1126.52" font-size="12" text-anchor="middle">Check I Frame</text>
+<text x="5218.76" y="1141.59" font-size="12" text-anchor="middle">Acknowledged</text>
+<g transform="translate(5158.76 1192.61) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="5218.76" y="1241.72" font-size="12" text-anchor="middle">V(s) == V(a)?</text>
+<g transform="translate(5158.76 1339.41) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="5218.76" y="1370.87" font-size="12" text-anchor="middle">4 Timer Recovery</text>
+<g transform="translate(5320.75 1339.41) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+    <line x1="10" y1="1.0" x2="10" y2="59.0" />
+    <line x1="110" y1="1.0" x2="110" y2="59.0" />
+  </g>
+</g>
+<text x="5380.75" y="1363.32" font-size="12" text-anchor="middle">Invoke</text>
+<text x="5380.75" y="1378.39" font-size="12" text-anchor="middle">Retransmission</text>
+<g transform="translate(5320.75 1429.41) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="5380.75" y="1460.87" font-size="12" text-anchor="middle">4 Timer Recovery</text>
+<g transform="translate(5415.15 744.58) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 102,0 120,30.0 102,60 0,60" />
+  </g>
+</g>
+<text x="5475.15" y="776.03" font-size="12" text-anchor="middle">Stop T1</text>
+<g transform="translate(5415.15 838.61) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+    <line x1="10" y1="1.0" x2="10" y2="59.0" />
+    <line x1="110" y1="1.0" x2="110" y2="59.0" />
+  </g>
+</g>
+<text x="5475.15" y="870.06" font-size="12" text-anchor="middle">Select T1 Value</text>
+<g transform="translate(5415.15 928.61) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="5475.15" y="977.72" font-size="12" text-anchor="middle">V(a) &lt;= N(r) &lt;=</text>
+<text x="5475.15" y="992.79" font-size="12" text-anchor="middle">V(s)</text>
+<g transform="translate(5415.15 1063.41) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+    <line x1="10" y1="1.0" x2="10" y2="59.0" />
+    <line x1="110" y1="1.0" x2="110" y2="59.0" />
+  </g>
+</g>
+<text x="5475.15" y="1094.87" font-size="12" text-anchor="middle">N(r) Recovery</text>
+<g transform="translate(5415.15 1153.41) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="5475.15" y="1202.52" font-size="12" text-anchor="middle">Version 2.2?</text>
+<g transform="translate(5327.55 1249.41) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="5387.55" y="1273.32" font-size="12" text-anchor="middle">1 Awaiting</text>
+<text x="5387.55" y="1288.39" font-size="12" text-anchor="middle">Connection</text>
+<g transform="translate(5482.73 1249.41) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="5542.73" y="1273.32" font-size="12" text-anchor="middle">5 Awaiting 2.2</text>
+<text x="5542.73" y="1288.39" font-size="12" text-anchor="middle">Connection</text>
+<g transform="translate(5751.15 1045.76) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="5811.15" y="1094.87" font-size="12" text-anchor="middle">F == 1?</text>
+<g transform="translate(5751.15 1198.61) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 102,0 120,30.0 102,60 0,60" />
+  </g>
+</g>
+<text x="5811.15" y="1230.07" font-size="12" text-anchor="middle">V(a) &lt;- N(r)</text>
+<g transform="translate(5751.15 1288.61) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+    <line x1="10" y1="1.0" x2="10" y2="59.0" />
+    <line x1="110" y1="1.0" x2="110" y2="59.0" />
+  </g>
+</g>
+<text x="5811.15" y="1312.52" font-size="12" text-anchor="middle">Check I Frame</text>
+<text x="5811.15" y="1327.59" font-size="12" text-anchor="middle">Acknowledged</text>
+<g transform="translate(5751.15 1384.96) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="5811.15" y="1434.07" font-size="12" text-anchor="middle">V(s) == V(a)?</text>
+<g transform="translate(5650.35 1510.27) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 102,0 120,30.0 102,60 0,60" />
+  </g>
+</g>
+<text x="5710.35" y="1534.17" font-size="12" text-anchor="middle">Start T3</text>
+<text x="5710.35" y="1549.24" font-size="12" text-anchor="middle">RC &lt;- 0</text>
+<g transform="translate(5650.35 1607.41) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="5710.35" y="1638.87" font-size="12" text-anchor="middle">3 Connected</text>
+<g transform="translate(5871.15 1501.65) scale(3.64 3.83) translate(-29.09 -2.47)" style="stroke-width:0.26"><g>
+    <g transform="matrix(-1,0,0,1,73.847429,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 60.640436,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="5937.05" y="1536.17" font-size="12" text-anchor="middle">Push Frame Onto</text>
+<text x="5937.05" y="1551.24" font-size="12" text-anchor="middle">Queue</text>
+<g transform="translate(5887.43 1615.07) scale(0.92 1.24) translate(-1 -1)" style="stroke-width:0.81"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="5941.55" y="1652.47" font-size="12" text-anchor="middle">LM-DATA Request</text>
+<g transform="translate(5881.55 1728.53) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 102,0 120,30.0 102,60 0,60" />
+  </g>
+</g>
+<text x="5941.55" y="1737.34" font-size="12" text-anchor="middle">Stop T3</text>
+<text x="5941.55" y="1752.41" font-size="12" text-anchor="middle">Start T1</text>
+<text x="5941.55" y="1767.48" font-size="12" text-anchor="middle">Clear Acknowledge</text>
+<text x="5941.55" y="1782.55" font-size="12" text-anchor="middle">Pending</text>
+<g transform="translate(5881.55 1830.09) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+    <line x1="10" y1="1.0" x2="10" y2="59.0" />
+    <line x1="110" y1="1.0" x2="110" y2="59.0" />
+  </g>
+</g>
+<text x="5941.55" y="1853.99" font-size="12" text-anchor="middle">Invoke</text>
+<text x="5941.55" y="1869.07" font-size="12" text-anchor="middle">Retransmission</text>
+<g transform="translate(5881.55 1920.09) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="5941.55" y="1951.54" font-size="12" text-anchor="middle">4 Timer Recovery</text>
+</svg>

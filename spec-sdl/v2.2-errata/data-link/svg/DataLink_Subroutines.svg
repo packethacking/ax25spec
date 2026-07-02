@@ -1,0 +1,655 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="4434.98" height="1773.15" viewBox="142.66 216.58 4434.98 1773.15" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 1 L 9 5 L 0 9 z" fill="#000000"/></marker></defs>
+<rect x="142.66" y="216.58" width="4434.98" height="1773.15" fill="#FFFFFF"/>
+<path d="M 227 336.95 L 227 386" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 228.19 446 L 230.14 495.05" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 231.34 555.05 L 231.34 585.05" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 231.34 645.05 L 231.34 671.53" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 407.04 336.95 L 408.11 386" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 404.67 616.24 L 402.59 656.68" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 566.22 336.95 L 568.2 391.97" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 569.27 451.97 L 569.27 481.97" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 569.27 577.27 L 569.27 648.1" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="539.27" y="616.92" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 613.05 577.27 L 682.36 652.71" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="633.2" y="647.75" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 569.27 719.99 L 569.27 804.45" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 679.35 724.61 L 599.34 804.45" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 571.76 864.45 L 575.73 912.36" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 937.16 336.95 L 939.35 404.45" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 943.13 464.45 L 947.54 511.59" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 948.05 606.9 L 944.27 652.71" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="946.87" y="625.45" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 1000.33 724.27 L 1084.95 757.98" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="1034.46" y="742.07" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 1141.21 815.49 L 1147.32 917.73" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1150.59 977.73 L 1194.53 1870.84" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 932.13 748.02 L 922.43 804.45" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="929.34" y="768.47" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 908.32 899.75 L 899.29 972.61" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="906.55" y="918.29" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 895.11 1067.91 L 899.07 1177.57" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="896.39" y="1107.67" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 893.53 1237.57 L 876.75 1313.51" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 868.03 1408.82 L 870.76 1480.74" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="868.58" y="1427.37" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 867.57 1552.63 L 856.58 1639.59" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 861.62 1711.49 L 882.56 1790.05" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 950.55 1839.67 L 1147.52 1904.11" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 891.99 559.25 L 811.66 559.25 L 724.16 1625.74 L 797.92 1654.46" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="877.31" y="563.45" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 940.35 1067.91 L 1088.22 1217.92 L 926.23 1322.45" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="972.67" y="1104.9" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 901.95 1408.82 L 990.99 1527.61 L 885.8 1639.59" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="924.13" y="1442.61" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 1574.71 318.31 L 1580.02 384.86" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1577.21 444.86 L 1564.09 520.63" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1561.45 597.86 L 1566.27 643.86" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1561.93 703.86 L 1550.47 749.86" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1598.6 750.99 L 1697.96 673.95 L 1604.72 597.86" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="1619.84" y="739.74" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 1530.08 845.17 L 1521.85 891.17" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="1495.14" y="874.29" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 1818.92 318.31 L 1818.92 367.21" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1878.92 442.63 L 1968.84 484.26" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="1915.08" y="463.57" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 1817.54 462.51 L 1815.97 516.86" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="1786.74" y="493.86" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 1867.26 612.16 L 1920.8 660.59" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="1884.64" y="650.96" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 1954.97 720.59 L 1956.79 774.51" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1961.24 834.51 L 1971.33 922.53" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1799.29 612.16 L 1763.5 723.62" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="1792.58" y="637.25" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 1799.6 818.92 L 1927.56 937.57" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="1821.88" y="840.26" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 1746.53 818.92 L 1743.81 896.11" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="1715.15" y="861.7" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 1802.76 937.86 L 1927.56 962.29" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 2053.72 542.03 L 2098.12 595.58" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 2114.35 690.88 L 2001.16 922.53" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="2096.17" y="732.29" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 2143.05 690.88 L 2157.92 821.87" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="2145.86" y="719.87" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 2115.28 881.87 L 2026.44 939.75" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 2429.04 318.31 L 2429.04 375.99" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 2560.74 318.31 L 2474.1 375.99" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 2428.08 435.99 L 2426.23 493.67" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 2484.7 568.65 L 2594.34 618.58" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="2531.71" y="594.26" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 2426.99 588.97 L 2428.86 627.76" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="2397.89" y="612.56" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 2428.62 699.66 L 2426.34 741.27" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 2424.7 801.27 L 2424.7 842.89" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 2889.29 457.73 L 2883.49 511.32" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="2887.74" y="476.29" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 2897.62 313.55 L 2896.02 362.43" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 2875.3 571.32 L 2864.69 635.83" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 2954.46 430.42 L 3068.55 469.1" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="2983.55" y="444.48" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 3068.55 532.64 L 2906 649.68" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="3028.32" y="565.81" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 3122.4 537.09 L 3115.15 593.2" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="3088.37" y="570.53" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 3054.22 637.1 L 2906 673.23" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 3369.03 313.55 L 3370.78 370.11" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 3422.83 465.41 L 3553.03 588.08" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="3458.3" y="503.03" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 3576.69 648.08 L 3529.41 821.43" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 3349.44 465.41 L 3320.32 526.27" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="3337.78" y="493.98" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 3283.47 621.57 L 3260.49 699.55" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="3274.15" y="657.41" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 3307.75 759.55 L 3466.48 844.44" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 3355.32 621.57 L 3396.53 655.54" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="3377.36" y="642.58" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 3446.36 715.54 L 3493.78 821.43" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 3833.3 313.55 L 3831.81 357.33" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 3830.19 452.64 L 3830.19 518.98" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="3830.19" y="471.2" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 3827.17 578.98 L 3819.49 655.54" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 3890.19 408.44 L 3992.12 414.3" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="3904.85" y="413.48" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 4012.7 465.41 L 3855.42 655.54" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="3986.62" y="501.14" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 4060.69 465.41 L 4082.73 588.08" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="4065.86" y="498.42" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 4028.12 637.14 L 3863.97 689.28" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 4314.52 313.55 L 4314.52 370.11" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 4316.15 430.11 L 4318.07 465.45" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 4493.31 308.47 L 4493.31 365.03" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 4494.94 425.03 L 4496.85 460.38" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 941.35 899.75 L 1149.11 1264.81 L 1120.91 1619.21 L 906.15 1664.2" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="1025.68" y="1112.77" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 2594.34 674.2 L 2477.13 741.27" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<g transform="translate(162.66 265.05) scale(3.56 3.56) translate(-29.09 -2.47)" style="stroke-width:0.28"><g>
+    <g transform="matrix(-1,0,0,1,73.847429,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 60.640436,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="227" y="302.45" font-size="12" text-anchor="middle">N(r) Error</text>
+<text x="227" y="317.53" font-size="12" text-anchor="middle">Recovery</text>
+<g transform="translate(169.94 386) scale(0.97 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="227" y="411.91" font-size="12" text-anchor="middle">DL-ERROR</text>
+<text x="227" y="426.98" font-size="12" text-anchor="middle">Indication (J)</text>
+<g transform="translate(171.34 495.05) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+    <line x1="10" y1="1.0" x2="10" y2="59.0" />
+    <line x1="110" y1="1.0" x2="110" y2="59.0" />
+  </g>
+</g>
+<text x="231.34" y="526.5" font-size="12" text-anchor="middle">Establish Data</text>
+<text x="231.34" y="541.58" font-size="12" text-anchor="middle">Link</text>
+<g transform="translate(171.34 585.05) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="231.34" y="608.96" font-size="12" text-anchor="middle">Clear Layer 3</text>
+<text x="231.34" y="624.03" font-size="12" text-anchor="middle">Initiated</text>
+<g transform="translate(181.89 671.53) scale(10.88 10.88) translate(-14.01 -6.65)" style="stroke-width:0.09"><g>
+    <circle style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" cx="18.550999" cy="11.190404" r="4.5428672" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="m 15.319238,8.0506505 6.44052,6.2795065 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 15.319238,14.445167 21.828764,8.0736524 Z" />
+  </g>
+</g>
+<g transform="translate(341.93 265.05) scale(3.56 3.56) translate(-29.09 -2.47)" style="stroke-width:0.28"><g>
+    <g transform="matrix(-1,0,0,1,73.847429,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 60.640436,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="406.26" y="294.91" font-size="12" text-anchor="middle">Clear Exception</text>
+<text x="406.26" y="309.98" font-size="12" text-anchor="middle">Conditions</text>
+<g transform="translate(350.6 386) scale(1 3.84) translate(0 0)" style="stroke-width:0.26"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="410.6" y="419.56" font-size="12" text-anchor="middle">Clear Peer</text>
+<text x="410.6" y="434.63" font-size="12" text-anchor="middle">Receiver Busy</text>
+<text x="410.6" y="449.7" font-size="12" text-anchor="middle">Clear Own</text>
+<text x="410.6" y="464.77" font-size="12" text-anchor="middle">Receiver Busy</text>
+<text x="410.6" y="479.85" font-size="12" text-anchor="middle">Clear Reject</text>
+<text x="410.6" y="494.92" font-size="12" text-anchor="middle">Condition</text>
+<text x="410.6" y="509.99" font-size="12" text-anchor="middle">Clear Sreject</text>
+<text x="410.6" y="525.06" font-size="12" text-anchor="middle">Condition</text>
+<text x="410.6" y="540.13" font-size="12" text-anchor="middle">Clear Acknowledge</text>
+<text x="410.6" y="555.21" font-size="12" text-anchor="middle">Pending</text>
+<text x="410.6" y="570.28" font-size="12" text-anchor="middle">Discard I Queue</text>
+<text x="410.6" y="585.35" font-size="12" text-anchor="middle">Entries</text>
+<g transform="translate(350.6 656.68) scale(10.88 10.88) translate(-14.01 -6.65)" style="stroke-width:0.09"><g>
+    <circle style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" cx="18.550999" cy="11.190404" r="4.5428672" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="m 15.319238,8.0506505 6.44052,6.2795065 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 15.319238,14.445167 21.828764,8.0736524 Z" />
+  </g>
+</g>
+<g transform="translate(500.6 265.05) scale(3.56 3.56) translate(-29.09 -2.47)" style="stroke-width:0.28"><g>
+    <g transform="matrix(-1,0,0,1,73.847429,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 60.640436,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="564.94" y="302.45" font-size="12" text-anchor="middle">Transmit Enquiry</text>
+<g transform="translate(509.27 391.97) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="569.27" y="415.87" font-size="12" text-anchor="middle">P &lt;- 1</text>
+<text x="569.27" y="430.94" font-size="12" text-anchor="middle">N(r) &lt;- V(r)</text>
+<g transform="translate(509.27 481.97) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="569.27" y="531.07" font-size="12" text-anchor="middle">Own receiver</text>
+<text x="569.27" y="546.14" font-size="12" text-anchor="middle">busy?</text>
+<g transform="translate(515.15 648.1) scale(0.9 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 102,30.0 120,60 0,60" />
+  </g>
+</g>
+<text x="569.27" y="685.5" font-size="12" text-anchor="middle">RR Command</text>
+<g transform="translate(661.27 652.71) scale(0.9 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 102,30.0 120,60 0,60" />
+  </g>
+</g>
+<text x="715.39" y="690.11" font-size="12" text-anchor="middle">RNR Command</text>
+<g transform="translate(509.27 804.45) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="569.27" y="820.8" font-size="12" text-anchor="middle">Clear Acknowledge</text>
+<text x="569.27" y="835.88" font-size="12" text-anchor="middle">Pending</text>
+<text x="569.27" y="850.95" font-size="12" text-anchor="middle">Start T1</text>
+<g transform="translate(530.38 912.36) scale(10.88 10.88) translate(-14.01 -6.65)" style="stroke-width:0.09"><g>
+    <circle style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" cx="18.550999" cy="11.190404" r="4.5428672" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="m 15.319238,8.0506505 6.44052,6.2795065 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 15.319238,14.445167 21.828764,8.0736524 Z" />
+  </g>
+</g>
+<g transform="translate(871.66 265.05) scale(3.56 3.56) translate(-29.09 -2.47)" style="stroke-width:0.28"><g>
+    <g transform="matrix(-1,0,0,1,73.847429,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 60.640436,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="935.99" y="302.45" font-size="12" text-anchor="middle">Enquiry Response</text>
+<g transform="translate(880.33 404.45) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="940.33" y="435.9" font-size="12" text-anchor="middle">N(r) &lt;- V(r)</text>
+<g transform="translate(891.99 511.59) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="951.99" y="538.06" font-size="12" text-anchor="middle">F == 1 &amp;</text>
+<text x="951.99" y="553.13" font-size="12" text-anchor="middle">(Frame==RR ||</text>
+<text x="951.99" y="568.2" font-size="12" text-anchor="middle">Frame==RNR ||</text>
+<text x="951.99" y="583.27" font-size="12" text-anchor="middle">Frame==I)?</text>
+<g transform="translate(880.33 652.71) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="940.33" y="701.82" font-size="12" text-anchor="middle">Own Receiver</text>
+<text x="940.33" y="716.89" font-size="12" text-anchor="middle">Busy?</text>
+<g transform="translate(1084.95 743.59) scale(0.9 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 102,30.0 120,60 0,60" />
+  </g>
+</g>
+<text x="1139.07" y="780.99" font-size="12" text-anchor="middle">RNR Response</text>
+<g transform="translate(1089.11 917.73) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="1149.11" y="941.63" font-size="12" text-anchor="middle">Clear Acknowledge</text>
+<text x="1149.11" y="956.7" font-size="12" text-anchor="middle">Pending</text>
+<g transform="translate(1147.52 1870.84) scale(10.88 10.88) translate(-14.01 -6.65)" style="stroke-width:0.09"><g>
+    <circle style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" cx="18.550999" cy="11.190404" r="4.5428672" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="m 15.319238,8.0506505 6.44052,6.2795065 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 15.319238,14.445167 21.828764,8.0736524 Z" />
+  </g>
+</g>
+<g transform="translate(854.23 804.45) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="914.23" y="853.55" font-size="12" text-anchor="middle">SREJ Enabled?</text>
+<g transform="translate(833.38 972.61) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="893.38" y="1021.72" font-size="12" text-anchor="middle">Mod 8?</text>
+<g transform="translate(843.09 1177.57) scale(0.97 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="900.15" y="1203.47" font-size="12" text-anchor="middle">DL-ERROR</text>
+<text x="900.15" y="1218.54" font-size="12" text-anchor="middle">Indication (add)</text>
+<g transform="translate(806.23 1313.51) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="866.23" y="1347.52" font-size="12" text-anchor="middle">Out of Sequence</text>
+<text x="866.23" y="1362.6" font-size="12" text-anchor="middle">Frames in Receive</text>
+<text x="866.23" y="1377.67" font-size="12" text-anchor="middle">Buffer?</text>
+<g transform="translate(818 1480.74) scale(0.9 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 102,30.0 120,60 0,60" />
+  </g>
+</g>
+<text x="872.12" y="1518.14" font-size="12" text-anchor="middle">SREJ</text>
+<g transform="translate(797.92 1639.59) scale(0.9 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 102,30.0 120,60 0,60" />
+  </g>
+</g>
+<text x="852.04" y="1676.99" font-size="12" text-anchor="middle">RR Response</text>
+<g transform="translate(830.55 1790.05) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="890.55" y="1813.95" font-size="12" text-anchor="middle">Clear Acknowledge</text>
+<text x="890.55" y="1829.02" font-size="12" text-anchor="middle">Pending</text>
+<g transform="translate(1507.51 246.41) scale(3.56 3.56) translate(-29.09 -2.47)" style="stroke-width:0.28"><g>
+    <g transform="matrix(-1,0,0,1,73.847429,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 60.640436,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="1571.84" y="283.81" font-size="12" text-anchor="middle">Invoke</text>
+<text x="1571.84" y="298.89" font-size="12" text-anchor="middle">Retransmission</text>
+<g transform="translate(1522.41 384.86) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="1582.41" y="401.22" font-size="12" text-anchor="middle">Backtrack</text>
+<text x="1582.41" y="416.29" font-size="12" text-anchor="middle">X &lt;- V(s)</text>
+<text x="1582.41" y="431.36" font-size="12" text-anchor="middle">V(s) &lt;- N(r)</text>
+<g transform="translate(1491.5 520.63) scale(3.64 3.83) translate(-29.09 -2.47)" style="stroke-width:0.26"><g>
+    <g transform="matrix(-1,0,0,1,73.847429,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 60.640436,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="1557.41" y="547.6" font-size="12" text-anchor="middle">Push Old I Frame</text>
+<text x="1557.41" y="562.68" font-size="12" text-anchor="middle">onto Queue</text>
+<g transform="translate(1509.41 643.86) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="1569.41" y="675.31" font-size="12" text-anchor="middle">V(s) &lt;- V(s) + 1</text>
+<g transform="translate(1478.6 749.86) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="1538.6" y="798.97" font-size="12" text-anchor="middle">V(s) == X?</text>
+<g transform="translate(1463.56 891.17) scale(10.88 10.88) translate(-14.01 -6.65)" style="stroke-width:0.09"><g>
+    <circle style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" cx="18.550999" cy="11.190404" r="4.5428672" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="m 15.319238,8.0506505 6.44052,6.2795065 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 15.319238,14.445167 21.828764,8.0736524 Z" />
+  </g>
+</g>
+<g transform="translate(1754.58 246.41) scale(3.56 3.56) translate(-29.09 -2.47)" style="stroke-width:0.28"><g>
+    <g transform="matrix(-1,0,0,1,73.847429,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 60.640436,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="1818.92" y="276.27" font-size="12" text-anchor="middle">Check I Frame</text>
+<text x="1818.92" y="291.34" font-size="12" text-anchor="middle">Acknowledged</text>
+<g transform="translate(1758.92 367.21) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="1818.92" y="416.31" font-size="12" text-anchor="middle">Peer Receiver</text>
+<text x="1818.92" y="431.39" font-size="12" text-anchor="middle">Busy?</text>
+<g transform="translate(1968.84 482.03) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="2028.84" y="505.94" font-size="12" text-anchor="middle">V(a) &lt;- N(r)</text>
+<text x="2028.84" y="521.01" font-size="12" text-anchor="middle">Stop T3</text>
+<g transform="translate(1754.58 516.86) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="1814.58" y="565.96" font-size="12" text-anchor="middle">N(r) == V(s)?</text>
+<g transform="translate(1893.96 660.59) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="1953.96" y="676.95" font-size="12" text-anchor="middle">V(a) &lt;- N(r)</text>
+<text x="1953.96" y="692.02" font-size="12" text-anchor="middle">Stop T1</text>
+<text x="1953.96" y="707.09" font-size="12" text-anchor="middle">Start T3</text>
+<g transform="translate(1897.8 774.51) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+    <line x1="10" y1="1.0" x2="10" y2="59.0" />
+    <line x1="110" y1="1.0" x2="110" y2="59.0" />
+  </g>
+</g>
+<text x="1957.8" y="805.96" font-size="12" text-anchor="middle">Select T1 Value</text>
+<g transform="translate(1927.56 922.53) scale(10.88 10.88) translate(-14.01 -6.65)" style="stroke-width:0.09"><g>
+    <circle style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" cx="18.550999" cy="11.190404" r="4.5428672" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="m 15.319238,8.0506505 6.44052,6.2795065 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 15.319238,14.445167 21.828764,8.0736524 Z" />
+  </g>
+</g>
+<g transform="translate(1688.2 723.62) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="1748.2" y="772.73" font-size="12" text-anchor="middle">N(r) == V(a)?</text>
+<g transform="translate(1682.76 896.11) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="1742.76" y="920.02" font-size="12" text-anchor="middle">V(a) &lt;- N(r)</text>
+<text x="1742.76" y="935.09" font-size="12" text-anchor="middle">Start T1</text>
+<g transform="translate(2077.64 595.58) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="2137.64" y="644.68" font-size="12" text-anchor="middle">T1 Running?</text>
+<g transform="translate(2101.32 821.87) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="2161.32" y="853.32" font-size="12" text-anchor="middle">Start T1</text>
+<g transform="translate(2364.7 246.41) scale(3.56 3.56) translate(-29.09 -2.47)" style="stroke-width:0.28"><g>
+    <g transform="matrix(-1,0,0,1,73.847429,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 60.640436,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="2429.04" y="276.27" font-size="12" text-anchor="middle">Establish Extended</text>
+<text x="2429.04" y="291.34" font-size="12" text-anchor="middle">Data Link</text>
+<g transform="translate(2550.41 246.41) scale(3.56 3.56) translate(-29.09 -2.47)" style="stroke-width:0.28"><g>
+    <g transform="matrix(-1,0,0,1,73.847429,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 60.640436,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="2614.74" y="283.81" font-size="12" text-anchor="middle">Establish Data</text>
+<text x="2614.74" y="298.89" font-size="12" text-anchor="middle">Link</text>
+<g transform="translate(2369.04 375.99) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="2429.04" y="384.8" font-size="12" text-anchor="middle">Clear Exception</text>
+<text x="2429.04" y="399.87" font-size="12" text-anchor="middle">Conditions</text>
+<text x="2429.04" y="414.95" font-size="12" text-anchor="middle">RC &lt;- 1</text>
+<text x="2429.04" y="430.02" font-size="12" text-anchor="middle">P &lt;- 1</text>
+<g transform="translate(2364.7 493.67) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="2424.7" y="542.78" font-size="12" text-anchor="middle">Mod 128?</text>
+<g transform="translate(2594.34 607.28) scale(0.9 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 102,30.0 120,60 0,60" />
+  </g>
+</g>
+<text x="2648.45" y="644.68" font-size="12" text-anchor="middle">SABM</text>
+<g transform="translate(2376.47 627.76) scale(0.9 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 102,30.0 120,60 0,60" />
+  </g>
+</g>
+<text x="2430.59" y="665.16" font-size="12" text-anchor="middle">SABME</text>
+<g transform="translate(2364.7 741.27) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="2424.7" y="765.18" font-size="12" text-anchor="middle">Stop T3</text>
+<text x="2424.7" y="780.25" font-size="12" text-anchor="middle">Start T1</text>
+<g transform="translate(2375.26 842.89) scale(10.88 10.88) translate(-14.01 -6.65)" style="stroke-width:0.09"><g>
+    <circle style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" cx="18.550999" cy="11.190404" r="4.5428672" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="m 15.319238,8.0506505 6.44052,6.2795065 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 15.319238,14.445167 21.828764,8.0736524 Z" />
+  </g>
+</g>
+<g transform="translate(2834.46 241.65) scale(3.56 3.56) translate(-29.09 -2.47)" style="stroke-width:0.28"><g>
+    <g transform="matrix(-1,0,0,1,73.847429,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 60.640436,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="2898.79" y="271.5" font-size="12" text-anchor="middle">Check Need for</text>
+<text x="2898.79" y="286.58" font-size="12" text-anchor="middle">Response</text>
+<g transform="translate(2834.46 362.43) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="2894.46" y="411.53" font-size="12" text-anchor="middle">Command &amp; P == 1?</text>
+<g transform="translate(2820.23 511.32) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+    <line x1="10" y1="1.0" x2="10" y2="59.0" />
+    <line x1="110" y1="1.0" x2="110" y2="59.0" />
+  </g>
+</g>
+<text x="2880.23" y="535.23" font-size="12" text-anchor="middle">Enquiry Response</text>
+<text x="2880.23" y="550.3" font-size="12" text-anchor="middle">(F = 1)</text>
+<g transform="translate(2807.11 635.83) scale(10.88 10.88) translate(-14.01 -6.65)" style="stroke-width:0.09"><g>
+    <circle style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" cx="18.550999" cy="11.190404" r="4.5428672" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="m 15.319238,8.0506505 6.44052,6.2795065 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 15.319238,14.445167 21.828764,8.0736524 Z" />
+  </g>
+</g>
+<g transform="translate(3068.55 441.79) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="3128.55" y="490.89" font-size="12" text-anchor="middle">Response &amp; F ==</text>
+<text x="3128.55" y="505.96" font-size="12" text-anchor="middle">1?</text>
+<g transform="translate(3054.22 593.2) scale(0.97 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="3111.27" y="619.1" font-size="12" text-anchor="middle">DL-ERROR</text>
+<text x="3111.27" y="634.18" font-size="12" text-anchor="middle">Indication (A)</text>
+<g transform="translate(3303.58 241.65) scale(3.56 3.56) translate(-29.09 -2.47)" style="stroke-width:0.28"><g>
+    <g transform="matrix(-1,0,0,1,73.847429,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 60.640436,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="3367.91" y="279.05" font-size="12" text-anchor="middle">UI Check</text>
+<g transform="translate(3312.25 370.11) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="3372.25" y="419.21" font-size="12" text-anchor="middle">Command?</text>
+<g transform="translate(3466.48 821.43) scale(10.88 10.88) translate(-14.01 -6.65)" style="stroke-width:0.09"><g>
+    <circle style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" cx="18.550999" cy="11.190404" r="4.5428672" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="m 15.319238,8.0506505 6.44052,6.2795065 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 15.319238,14.445167 21.828764,8.0736524 Z" />
+  </g>
+</g>
+<g transform="translate(3527.82 588.08) scale(0.97 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="3584.87" y="613.98" font-size="12" text-anchor="middle">DL-ERROR</text>
+<text x="3584.87" y="629.06" font-size="12" text-anchor="middle">Indication (Q)</text>
+<g transform="translate(3237.51 526.27) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="3297.51" y="560.28" font-size="12" text-anchor="middle">Info Field Length</text>
+<text x="3297.51" y="575.35" font-size="12" text-anchor="middle">&lt;= N1 &amp; Content</text>
+<text x="3297.51" y="590.42" font-size="12" text-anchor="middle">is Octet Aligned?</text>
+<g transform="translate(3194.59 699.55) scale(0.97 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="3251.65" y="725.46" font-size="12" text-anchor="middle">DL-UNIT-DATA</text>
+<text x="3251.65" y="740.53" font-size="12" text-anchor="middle">Indication</text>
+<g transform="translate(3375.87 655.54) scale(0.97 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="3432.93" y="681.45" font-size="12" text-anchor="middle">DL-ERROR</text>
+<text x="3432.93" y="696.52" font-size="12" text-anchor="middle">Indication (K)</text>
+<g transform="translate(3770.19 241.65) scale(3.56 3.56) translate(-29.09 -2.47)" style="stroke-width:0.28"><g>
+    <g transform="matrix(-1,0,0,1,73.847429,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 60.640436,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="3834.52" y="279.05" font-size="12" text-anchor="middle">Select T1</text>
+<g transform="translate(3770.19 357.33) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="3830.19" y="406.44" font-size="12" text-anchor="middle">RC == 0?</text>
+<g transform="translate(3770.19 518.98) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="3830.19" y="520.25" font-size="12" text-anchor="middle">SRT &lt;- 7(SRT)/8 +</text>
+<text x="3830.19" y="535.32" font-size="12" text-anchor="middle">(T1)/8 -</text>
+<text x="3830.19" y="550.39" font-size="12" text-anchor="middle">(Remaining Time</text>
+<text x="3830.19" y="565.47" font-size="12" text-anchor="middle">on T1 When Last</text>
+<text x="3830.19" y="580.54" font-size="12" text-anchor="middle">Stopped)/8</text>
+<text x="3830.19" y="595.61" font-size="12" text-anchor="middle">Next T1 &lt;- 2 *</text>
+<text x="3830.19" y="610.68" font-size="12" text-anchor="middle">SRT</text>
+<g transform="translate(3765.08 655.54) scale(10.88 10.88) translate(-14.01 -6.65)" style="stroke-width:0.09"><g>
+    <circle style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" cx="18.550999" cy="11.190404" r="4.5428672" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="m 15.319238,8.0506505 6.44052,6.2795065 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 15.319238,14.445167 21.828764,8.0736524 Z" />
+  </g>
+</g>
+<g transform="translate(3992.12 370.11) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="4052.12" y="419.21" font-size="12" text-anchor="middle">T1 Expired?</text>
+<g transform="translate(4028.12 588.08) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="4088.12" y="611.98" font-size="12" text-anchor="middle">Next T1 &lt;-</text>
+<text x="4088.12" y="627.06" font-size="12" text-anchor="middle">(RC*0.25)+SRT*2</text>
+<g transform="translate(4250.19 241.65) scale(3.56 3.56) translate(-29.09 -2.47)" style="stroke-width:0.28"><g>
+    <g transform="matrix(-1,0,0,1,73.847429,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 60.640436,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="4314.52" y="279.05" font-size="12" text-anchor="middle">Set Version 2.0</text>
+<g transform="translate(4254.52 370.11) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="4314.52" y="356.28" font-size="12" text-anchor="middle">Set Half Duplex</text>
+<text x="4314.52" y="371.35" font-size="12" text-anchor="middle">Set Implicit</text>
+<text x="4314.52" y="386.42" font-size="12" text-anchor="middle">Reject</text>
+<text x="4314.52" y="401.49" font-size="12" text-anchor="middle">Modulo &lt;- 8</text>
+<text x="4314.52" y="416.57" font-size="12" text-anchor="middle">N1 &lt;- 2048</text>
+<text x="4314.52" y="431.64" font-size="12" text-anchor="middle">k &lt;- 8</text>
+<text x="4314.52" y="446.71" font-size="12" text-anchor="middle">T2 &lt;- 3000</text>
+<text x="4314.52" y="461.78" font-size="12" text-anchor="middle">N2 &lt;- 10</text>
+<g transform="translate(4271.31 465.45) scale(10.88 10.88) translate(-14.01 -6.65)" style="stroke-width:0.09"><g>
+    <circle style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" cx="18.550999" cy="11.190404" r="4.5428672" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="m 15.319238,8.0506505 6.44052,6.2795065 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 15.319238,14.445167 21.828764,8.0736524 Z" />
+  </g>
+</g>
+<g transform="translate(4428.97 236.58) scale(3.56 3.56) translate(-29.09 -2.47)" style="stroke-width:0.28"><g>
+    <g transform="matrix(-1,0,0,1,73.847429,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 60.640436,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="4493.31" y="273.98" font-size="12" text-anchor="middle">Set Version 2.2</text>
+<g transform="translate(4433.31 365.03) scale(1 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="4493.31" y="351.21" font-size="12" text-anchor="middle">Set Half Duplex</text>
+<text x="4493.31" y="366.28" font-size="12" text-anchor="middle">Set Selective</text>
+<text x="4493.31" y="381.35" font-size="12" text-anchor="middle">Reject</text>
+<text x="4493.31" y="396.42" font-size="12" text-anchor="middle">Modulo &lt;- 128</text>
+<text x="4493.31" y="411.49" font-size="12" text-anchor="middle">N1 &lt;- 2048</text>
+<text x="4493.31" y="426.57" font-size="12" text-anchor="middle">k &lt;- 32</text>
+<text x="4493.31" y="441.64" font-size="12" text-anchor="middle">T2 &lt;- 3000</text>
+<text x="4493.31" y="456.71" font-size="12" text-anchor="middle">N2 &lt;- 10</text>
+<g transform="translate(4450.09 460.38) scale(10.88 10.88) translate(-14.01 -6.65)" style="stroke-width:0.09"><g>
+    <circle style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" cx="18.550999" cy="11.190404" r="4.5428672" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="m 15.319238,8.0506505 6.44052,6.2795065 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 15.319238,14.445167 21.828764,8.0736524 Z" />
+  </g>
+</g>
+</svg>
