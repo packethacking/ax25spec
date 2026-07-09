@@ -14,6 +14,23 @@ The source documents are in [/src](src).
 
 [doc/fbb-forwarding-protocol.md](doc/fbb-forwarding-protocol.md) is a description of the FBB (F6FBB) Forwarding Protocol compiled from public sources, covering message forwarding between amateur packet radio BBS systems, including compressed transfer modes and the B2F extension used by Winlink.
 
+## Machine-readable SDL sources — `spec-sdl/`
+
+[spec-sdl/](spec-sdl) holds the normative machine-readable transcriptions of the AX.25 state-machine SDL figures (the Annex C figc4.x series), relocated here from [packet-net/ax25sdl](https://github.com/packet-net/ax25sdl) (git history preserved) so that a single PR in this repo can change a figure and its prose together.
+
+| Path | What | Normative or derived |
+| --- | --- | --- |
+| `spec-sdl/**/sdl/*.graphml` | The canonical yEd figure sources | **Normative** |
+| `spec-sdl/**/yaml/*.sdl.yaml` | Transcriptions generated from the graphml by ax25sdl's `Packet.Sdl.Transcribe` walker, committed here | Derived (drift-locked by CI) |
+| `spec-sdl/**/yaml/*.citations.yaml` | Human-curated evidence/citation sidecars | Normative |
+| `spec-sdl/**/svg/` | Figure renders — the human-reviewable visual diff for figure changes (regenerate with `python3 tools/render/render_all.py`) | Derived |
+| `spec-sdl/**/mmd/*.g.mmd` | Mermaid renderings (emitted by ax25sdl's codegen) | Derived |
+| `spec-sdl/schema/`, `events.yaml`, `predicates.yaml`, `actions.yaml`, `lint-targets.yaml` | The SDL YAML DSL schema + canonical event/predicate/action catalogues | Normative |
+
+The derived-artifact chain: **graphml → yaml happens here** — CI's `transcribe-drift` job regenerates the yaml with the [packet-net/ax25sdl](https://github.com/packet-net/ax25sdl) tooling commit pinned in [.github/ax25sdl-tooling-ref](.github/ax25sdl-tooling-ref) and fails on drift. **yaml → generated code happens downstream** in packet-net/ax25sdl, which consumes this repo as a pinned git submodule and emits ready-to-use state tables for C#, TypeScript, Go, Rust, C, Python and JSON. Figure/spec changes are made **here**; a pin-bump PR in ax25sdl then regenerates the language backends.
+
+The transcription discipline (shape classes, encode-then-verify, revision provenance) is documented in ax25sdl's [docs/](https://github.com/packet-net/ax25sdl/tree/main/docs) (`sdl-primer.md`, `sdl-transcription-runbook.md`).
+
 Please feel free to raise issues and PRs vs this repo.
 
 ## Future targets

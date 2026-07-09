@@ -1,0 +1,43 @@
+%% This file was produced by codegen/src/Packet.Sdl.CodeGen from spec-sdl/v2.2-errata/data-link/yaml/awaiting_v22_connection.sdl.yaml
+%% Do not edit by hand. Run `dotnet run --project codegen/src/Packet.Sdl.CodeGen` to regenerate.
+%%
+%% Source: ax.25.2.2.4_Oct_25, figure figc4.6
+%% Coverage: complete
+%%
+%% Important: this rendering is approximate and intentionally
+%% looks nothing like the original SDL figure. It is a machine-
+%% generated view of the transitions in the .sdl.yaml — useful
+%% for spotting transcription bugs (missing transitions, wrong
+%% destination state) but NOT a substitute for reading the spec
+%% figure itself. See docs/sdl-primer.md.
+
+stateDiagram-v2
+    direction LR
+
+    classDef focal fill:#fff5b1,stroke:#b08800;
+    class AwaitingV22Connection focal
+    AwaitingV22Connection --> AwaitingV22Connection: t02_dl_connect_request<br/>on: DL_CONNECT_request<br/>/ · Discard Queue<br/>/ · Set Layer 3 Initiated
+    AwaitingV22Connection --> AwaitingV22Connection: t03_dl_unit_data_request<br/>on: DL_UNIT_DATA_request<br/>/ ↓ UI Command
+    AwaitingV22Connection --> AwaitingV22Connection: t04_dl_data_request_yes<br/>on: DL_DATA_request<br/>[layer_3_initiated]
+    AwaitingV22Connection --> AwaitingV22Connection: t04_dl_data_request_no<br/>on: DL_DATA_request<br/>[not layer_3_initiated]<br/>/ ⇢ push_frame_on_queue
+    AwaitingV22Connection --> AwaitingV22Connection: t05_i_frame_pops_off_queue_yes<br/>on: I_frame_pops_off_queue<br/>[layer_3_initiated]
+    AwaitingV22Connection --> AwaitingV22Connection: t05_i_frame_pops_off_queue_no<br/>on: I_frame_pops_off_queue<br/>[not layer_3_initiated]<br/>/ ⇢ push_frame_on_queue
+    AwaitingV22Connection --> AwaitingV22Connection: t06_all_other_primitives__from_upper_layer<br/>on: all_other_primitives__from_upper_layer
+    AwaitingV22Connection --> AwaitingV22Connection: t07_control_field_error<br/>on: control_field_error<br/>/ ↑ DL-ERROR Indication (L)
+    AwaitingV22Connection --> AwaitingV22Connection: t08_info_not_permitted_in_frame<br/>on: info_not_permitted_in_frame<br/>/ ↑ DL-ERROR Indication (M)
+    AwaitingV22Connection --> AwaitingV22Connection: t09_u_or_s_frame_length_error<br/>on: u_or_s_frame_length_error<br/>/ ↑ DL-ERROR Indication (N)
+    AwaitingV22Connection --> AwaitingV22Connection: t10_ui_received_no<br/>on: UI_received<br/>[not P_eq_1]<br/>/ →() UI Check<br/>/ ↓ DM (F = 1)
+    AwaitingV22Connection --> AwaitingV22Connection: t10_ui_received_yes<br/>on: UI_received<br/>[P_eq_1]<br/>/ →() UI Check
+    AwaitingV22Connection --> AwaitingConnection: t11_dm_received_no<br/>on: DM_received<br/>[not F_eq_1]
+    AwaitingV22Connection --> Disconnected: t11_dm_received_yes<br/>on: DM_received<br/>[F_eq_1]<br/>/ · discard_I_frame_queue<br/>/ ↑ DL_DISCONNECT_indication<br/>/ · Stop T1
+    AwaitingV22Connection --> AwaitingV22Connection: t12_ua_received_no<br/>on: UA_received<br/>[not F_eq_1]<br/>/ ↑ DL_ERROR_indication_D
+    AwaitingV22Connection --> Connected: t12_ua_received_yes_yes<br/>on: UA_received<br/>[F_eq_1 and layer_3_initiated]<br/>/ ↑ DL_CONNECT_confirm<br/>/ · Stop T1<br/>/ · Start T3<br/>/ · V(s) := 0<br/>/ · V(a) := 0<br/>/ · V(r) := 0<br/>/ →() Select_T1_Value<br/>/ ⇢ MDL-NEGOTIATE Request
+    AwaitingV22Connection --> Connected: t12_ua_received_yes_no_no<br/>on: UA_received<br/>[F_eq_1 and not layer_3_initiated and not vs_eq_va]<br/>/ · SRT := Initial Default<br/>/ · T1V := 2 * SRT<br/>/ · Start T3<br/>/ ↑ DL_CONNECT_confirm<br/>/ · Stop T1<br/>/ · Start T3<br/>/ · V(s) := 0<br/>/ · V(a) := 0<br/>/ · V(r) := 0<br/>/ →() Select_T1_Value<br/>/ ⇢ MDL-NEGOTIATE Request
+    AwaitingV22Connection --> Connected: t12_ua_received_yes_no_yes<br/>on: UA_received<br/>[F_eq_1 and not layer_3_initiated and vs_eq_va]<br/>/ · Stop T1<br/>/ · Start T3<br/>/ · V(s) := 0<br/>/ · V(a) := 0<br/>/ · V(r) := 0<br/>/ →() Select_T1_Value<br/>/ ⇢ MDL-NEGOTIATE Request
+    AwaitingV22Connection --> Disconnected: t13_t1_expiry_yes<br/>on: T1_expiry<br/>[RC_eq_N2]<br/>/ · discard_frame_queue<br/>/ ↑ DL-ERROR Indication (G)<br/>/ ↑ DL_DISCONNECT_indication
+    AwaitingV22Connection --> AwaitingV22Connection: t13_t1_expiry_no<br/>on: T1_expiry<br/>[not RC_eq_N2]<br/>/ · RC := RC + 1<br/>/ ↓ SABME (P = 1)<br/>/ →() Select_T1_Value<br/>/ · Start T1
+    AwaitingV22Connection --> AwaitingConnection: t14_frmr_received<br/>on: FRMR_received<br/>/ · SRT := Initial Default<br/>/ · T1V := 2 * SRT<br/>/ →() Establish_Data_Link<br/>/ · Set Layer 3 Initiated<br/>/ · set_version_2_0
+    AwaitingV22Connection --> AwaitingV22Connection: t15_sabme_received<br/>on: SABME_received<br/>/ · F := P<br/>/ ↓ UA
+    AwaitingV22Connection --> AwaitingConnection: t16_sabm_received<br/>on: SABM_received<br/>/ · F := P<br/>/ ↓ UA<br/>/ · set_version_2_0
+    AwaitingV22Connection --> AwaitingV22Connection: t17_disc_received<br/>on: DISC_received<br/>/ · F := P<br/>/ ↓ DM
+    AwaitingV22Connection --> AwaitingV22Connection: t18_all_other_primitives__from_lower_layer<br/>on: all_other_primitives__from_lower_layer

@@ -1,0 +1,347 @@
+# Auto-generated from DataLink_Subroutines.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: data_link
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc4.7
+
+subroutines:
+
+  - name: Set_Version_2_2
+    paths:
+      - id: t01_set_version_2_2
+        path:
+          - { action: Set Half Duplex, kind: processing }
+          - { action: Set Selective Reject, kind: processing }
+          - { action: "Modulo := 128", kind: processing }
+          - { action: "N1 := 2048", kind: processing }
+          - { action: "k := 32", kind: processing }
+          - { action: "T2 := 3000", kind: processing }
+          - { action: "N2 := 10", kind: processing }
+
+  - name: UI_Check
+    decisions:
+      - id: ui_check_command
+        question: "Command?"
+        predicate: command
+      - id: ui_check_info_field_length_le_n1_and_content_is_octet_aligned
+        question: "Info Field Length <= N1 & Content is Octet Aligned?"
+        predicate: info_field_length_le_N1_and_content_is_octet_aligned
+    paths:
+      - id: t01_ui_check_no
+        path:
+          - { decision: ui_check_command, branch: No }
+          - { action: DL-ERROR Indication (Q), kind: signal_upper }
+      - id: t02_ui_check_yes_yes
+        path:
+          - { decision: ui_check_command, branch: Yes }
+          - { decision: ui_check_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+          - { action: DL-UNIT-DATA Indication, kind: signal_upper }
+      - id: t03_ui_check_yes_no
+        path:
+          - { decision: ui_check_command, branch: Yes }
+          - { decision: ui_check_info_field_length_le_n1_and_content_is_octet_aligned, branch: No }
+          - { action: DL-ERROR Indication (K), kind: signal_upper }
+
+  - name: Select_T1
+    decisions:
+      - id: select_t1_rc_eq_0
+        question: "RC == 0?"
+        predicate: RC_eq_0
+      - id: select_t1_t1_expired
+        question: "T1 Expired?"
+        predicate: T1_expired
+    paths:
+      - id: t01_select_t1_yes
+        path:
+          - { decision: select_t1_rc_eq_0, branch: Yes }
+          - { action: "SRT := 7(SRT)/8 + (T1)/8 - (Remaining Time on T1 When Last Stopped)/8", kind: processing }
+          - { action: "Next T1 := 2 * SRT", kind: processing }
+      - id: t02_select_t1_no_no
+        path:
+          - { decision: select_t1_rc_eq_0, branch: No }
+          - { decision: select_t1_t1_expired, branch: No }
+      - id: t03_select_t1_no_yes
+        path:
+          - { decision: select_t1_rc_eq_0, branch: No }
+          - { decision: select_t1_t1_expired, branch: Yes }
+          - { action: "Next T1 := (RC*0.25)+SRT*2", kind: processing }
+
+  - name: Set_Version_2_0
+    paths:
+      - id: t01_set_version_2_0
+        path:
+          - { action: Set Half Duplex, kind: processing }
+          - { action: Set Implicit Reject, kind: processing }
+          - { action: "Modulo := 8", kind: processing }
+          - { action: "N1 := 2048", kind: processing }
+          - { action: "k := 8", kind: processing }
+          - { action: "T2 := 3000", kind: processing }
+          - { action: "N2 := 10", kind: processing }
+
+  - name: Check_Need_for_Response
+    decisions:
+      - id: check_need_for_response_command_and_p_eq_1
+        question: "Command & P == 1?"
+        predicate: command_and_P_eq_1
+      - id: check_need_for_response_response_and_f_eq_1
+        question: "Response & F == 1?"
+        predicate: response_and_F_eq_1
+    paths:
+      - id: t01_check_need_for_response_yes
+        path:
+          - { decision: check_need_for_response_command_and_p_eq_1, branch: Yes }
+          - { action: Enquiry Response (F = 1), kind: subroutine }
+      - id: t02_check_need_for_response_no_no
+        path:
+          - { decision: check_need_for_response_command_and_p_eq_1, branch: No }
+          - { decision: check_need_for_response_response_and_f_eq_1, branch: No }
+      - id: t03_check_need_for_response_no_yes
+        path:
+          - { decision: check_need_for_response_command_and_p_eq_1, branch: No }
+          - { decision: check_need_for_response_response_and_f_eq_1, branch: Yes }
+          - { action: DL-ERROR Indication (A), kind: signal_upper }
+
+  - name: Establish_Extended_Data_Link
+    decisions:
+      - id: establish_extended_data_link_mod_128
+        question: "Mod 128?"
+        predicate: mod_128
+    paths:
+      - id: t01_establish_extended_data_link_no
+        path:
+          - { action: Clear Exception Conditions, kind: processing }
+          - { action: "RC := 1", kind: processing }
+          - { action: "P := 1", kind: processing }
+          - { decision: establish_extended_data_link_mod_128, branch: No }
+          - { action: SABM, kind: signal_lower }
+          - { action: Stop T3, kind: processing }
+          - { action: Start T1, kind: processing }
+      - id: t02_establish_extended_data_link_yes
+        path:
+          - { action: Clear Exception Conditions, kind: processing }
+          - { action: "RC := 1", kind: processing }
+          - { action: "P := 1", kind: processing }
+          - { decision: establish_extended_data_link_mod_128, branch: Yes }
+          - { action: SABME, kind: signal_lower }
+          - { action: Stop T3, kind: processing }
+          - { action: Start T1, kind: processing }
+
+  - name: Establish_Data_Link
+    decisions:
+      - id: establish_data_link_mod_128
+        question: "Mod 128?"
+        predicate: mod_128
+    paths:
+      - id: t01_establish_data_link_no
+        path:
+          - { action: Clear Exception Conditions, kind: processing }
+          - { action: "RC := 1", kind: processing }
+          - { action: "P := 1", kind: processing }
+          - { decision: establish_data_link_mod_128, branch: No }
+          - { action: SABM, kind: signal_lower }
+          - { action: Stop T3, kind: processing }
+          - { action: Start T1, kind: processing }
+      - id: t02_establish_data_link_yes
+        path:
+          - { action: Clear Exception Conditions, kind: processing }
+          - { action: "RC := 1", kind: processing }
+          - { action: "P := 1", kind: processing }
+          - { decision: establish_data_link_mod_128, branch: Yes }
+          - { action: SABME, kind: signal_lower }
+          - { action: Stop T3, kind: processing }
+          - { action: Start T1, kind: processing }
+
+  - name: Invoke_Retransmission
+    decisions:
+      - id: invoke_retransmission_vs_eq_x
+        question: "V(s) == X?"
+        predicate: vs_eq_X
+    paths:
+      - id: t01_invoke_retransmission
+        path:
+          - { action: Backtrack, kind: processing }
+          - { action: "X := V(s)", kind: processing }
+          - { action: "V(s) := N(r)", kind: processing }
+          - loop_while: invoke_retransmission_vs_eq_x
+            branch: No
+            test: tail
+            body:
+              - { action: Push Old I Frame onto Queue, kind: internal_out }
+              - { action: "V(s) := V(s) + 1", kind: processing }
+
+  - name: Check_I_Frame_Acknowledged
+    decisions:
+      - id: check_i_frame_acknowledged_peer_receiver_busy
+        question: "Peer Receiver Busy?"
+        predicate: peer_receiver_busy
+      - id: check_i_frame_acknowledged_t1_running
+        question: "T1 Running?"
+        predicate: T1_running
+      - id: check_i_frame_acknowledged_nr_eq_vs
+        question: "N(r) == V(s)?"
+        predicate: nr_eq_vs
+      - id: check_i_frame_acknowledged_nr_eq_va
+        question: "N(r) == V(a)?"
+        predicate: nr_eq_va
+    paths:
+      - id: t01_check_i_frame_acknowledged_yes_yes
+        path:
+          - { decision: check_i_frame_acknowledged_peer_receiver_busy, branch: Yes }
+          - { action: "V(a) := N(r)", kind: processing }
+          - { action: Stop T3, kind: processing }
+          - { decision: check_i_frame_acknowledged_t1_running, branch: Yes }
+      - id: t02_check_i_frame_acknowledged_yes_no
+        path:
+          - { decision: check_i_frame_acknowledged_peer_receiver_busy, branch: Yes }
+          - { action: "V(a) := N(r)", kind: processing }
+          - { action: Stop T3, kind: processing }
+          - { decision: check_i_frame_acknowledged_t1_running, branch: No }
+          - { action: Start T1, kind: processing }
+      - id: t03_check_i_frame_acknowledged_no_yes
+        path:
+          - { decision: check_i_frame_acknowledged_peer_receiver_busy, branch: No }
+          - { decision: check_i_frame_acknowledged_nr_eq_vs, branch: Yes }
+          - { action: "V(a) := N(r)", kind: processing }
+          - { action: Stop T1, kind: processing }
+          - { action: Start T3, kind: processing }
+          - { action: Select T1 Value, kind: subroutine }
+      - id: t04_check_i_frame_acknowledged_no_no_yes
+        path:
+          - { decision: check_i_frame_acknowledged_peer_receiver_busy, branch: No }
+          - { decision: check_i_frame_acknowledged_nr_eq_vs, branch: No }
+          - { decision: check_i_frame_acknowledged_nr_eq_va, branch: Yes }
+      - id: t05_check_i_frame_acknowledged_no_no_no
+        path:
+          - { decision: check_i_frame_acknowledged_peer_receiver_busy, branch: No }
+          - { decision: check_i_frame_acknowledged_nr_eq_vs, branch: No }
+          - { decision: check_i_frame_acknowledged_nr_eq_va, branch: No }
+          - { action: "V(a) := N(r)", kind: processing }
+          - { action: Start T1, kind: processing }
+
+  - name: Clear_Exception_Conditions
+    paths:
+      - id: t01_clear_exception_conditions
+        path:
+          - { action: Clear Peer Receiver Busy, kind: processing }
+          - { action: Clear Own Receiver Busy, kind: processing }
+          - { action: Clear Reject Condition, kind: processing }
+          - { action: Clear Sreject Condition, kind: processing }
+          - { action: Clear Acknowledge Pending, kind: processing }
+          - { action: Discard I Queue Entries, kind: processing }
+
+  - name: N_r_Error_Recovery
+    paths:
+      - id: t01_n_r_error_recovery
+        path:
+          - { action: DL-ERROR Indication (J), kind: signal_upper }
+          - { action: Establish Data Link, kind: subroutine }
+          - { action: Clear Layer 3 Initiated, kind: processing }
+
+  - name: Transmit_Enquiry
+    decisions:
+      - id: transmit_enquiry_own_receiver_busy
+        question: "Own receiver busy?"
+        predicate: own_receiver_busy
+    paths:
+      - id: t01_transmit_enquiry_no
+        path:
+          - { action: "P := 1", kind: processing }
+          - { action: "N(r) := V(r)", kind: processing }
+          - { decision: transmit_enquiry_own_receiver_busy, branch: No }
+          - { action: RR Command, kind: signal_lower }
+          - { action: Clear Acknowledge Pending, kind: processing }
+          - { action: Start T1, kind: processing }
+      - id: t02_transmit_enquiry_yes
+        path:
+          - { action: "P := 1", kind: processing }
+          - { action: "N(r) := V(r)", kind: processing }
+          - { decision: transmit_enquiry_own_receiver_busy, branch: Yes }
+          - { action: RNR Command, kind: signal_lower }
+          - { action: Clear Acknowledge Pending, kind: processing }
+          - { action: Start T1, kind: processing }
+
+  - name: Enquiry_Response
+    decisions:
+      - id: enquiry_response_f_eq_1_and_frame_eq_rr_or_frame_eq_rnr_or_frame_eq_i
+        question: "F == 1 & (Frame==RR || Frame==RNR || Frame==I)?"
+        predicate: F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I
+      - id: enquiry_response_own_receiver_busy
+        question: "Own Receiver Busy?"
+        predicate: own_receiver_busy
+      - id: enquiry_response_srej_enabled
+        question: "SREJ Enabled?"
+        predicate: SREJ_enabled
+      - id: enquiry_response_mod_8
+        question: "Mod 8?"
+        predicate: mod_8
+      - id: enquiry_response_out_of_sequence_frames_in_receive_buffer
+        question: "Out of Sequence Frames in Receive Buffer?"
+        predicate: out_of_sequence_frames_in_receive_buffer
+    paths:
+      - id: t01_enquiry_response_yes_yes
+        path:
+          - { action: "N(r) := V(r)", kind: processing }
+          - { decision: enquiry_response_f_eq_1_and_frame_eq_rr_or_frame_eq_rnr_or_frame_eq_i, branch: Yes }
+          - { decision: enquiry_response_own_receiver_busy, branch: Yes }
+          - { action: RNR Response, kind: signal_lower }
+          - { action: Clear Acknowledge Pending, kind: processing }
+      - id: t02_enquiry_response_yes_no_yes_yes_yes
+        path:
+          - { action: "N(r) := V(r)", kind: processing }
+          - { decision: enquiry_response_f_eq_1_and_frame_eq_rr_or_frame_eq_rnr_or_frame_eq_i, branch: Yes }
+          - { decision: enquiry_response_own_receiver_busy, branch: No }
+          - { decision: enquiry_response_srej_enabled, branch: Yes }
+          - { decision: enquiry_response_mod_8, branch: Yes }
+          - { action: DL-ERROR Indication (add), kind: signal_upper }
+          - { decision: enquiry_response_out_of_sequence_frames_in_receive_buffer, branch: Yes }
+          - { action: SREJ, kind: signal_lower }
+          - { action: RR Response, kind: signal_lower }
+          - { action: Clear Acknowledge Pending, kind: processing }
+      - id: t03_enquiry_response_yes_no_yes_yes_no
+        path:
+          - { action: "N(r) := V(r)", kind: processing }
+          - { decision: enquiry_response_f_eq_1_and_frame_eq_rr_or_frame_eq_rnr_or_frame_eq_i, branch: Yes }
+          - { decision: enquiry_response_own_receiver_busy, branch: No }
+          - { decision: enquiry_response_srej_enabled, branch: Yes }
+          - { decision: enquiry_response_mod_8, branch: Yes }
+          - { action: DL-ERROR Indication (add), kind: signal_upper }
+          - { decision: enquiry_response_out_of_sequence_frames_in_receive_buffer, branch: No }
+          - { action: RR Response, kind: signal_lower }
+          - { action: Clear Acknowledge Pending, kind: processing }
+      - id: t04_enquiry_response_yes_no_yes_no_yes
+        path:
+          - { action: "N(r) := V(r)", kind: processing }
+          - { decision: enquiry_response_f_eq_1_and_frame_eq_rr_or_frame_eq_rnr_or_frame_eq_i, branch: Yes }
+          - { decision: enquiry_response_own_receiver_busy, branch: No }
+          - { decision: enquiry_response_srej_enabled, branch: Yes }
+          - { decision: enquiry_response_mod_8, branch: No }
+          - { decision: enquiry_response_out_of_sequence_frames_in_receive_buffer, branch: Yes }
+          - { action: SREJ, kind: signal_lower }
+          - { action: RR Response, kind: signal_lower }
+          - { action: Clear Acknowledge Pending, kind: processing }
+      - id: t05_enquiry_response_yes_no_yes_no_no
+        path:
+          - { action: "N(r) := V(r)", kind: processing }
+          - { decision: enquiry_response_f_eq_1_and_frame_eq_rr_or_frame_eq_rnr_or_frame_eq_i, branch: Yes }
+          - { decision: enquiry_response_own_receiver_busy, branch: No }
+          - { decision: enquiry_response_srej_enabled, branch: Yes }
+          - { decision: enquiry_response_mod_8, branch: No }
+          - { decision: enquiry_response_out_of_sequence_frames_in_receive_buffer, branch: No }
+          - { action: RR Response, kind: signal_lower }
+          - { action: Clear Acknowledge Pending, kind: processing }
+      - id: t06_enquiry_response_yes_no_no
+        path:
+          - { action: "N(r) := V(r)", kind: processing }
+          - { decision: enquiry_response_f_eq_1_and_frame_eq_rr_or_frame_eq_rnr_or_frame_eq_i, branch: Yes }
+          - { decision: enquiry_response_own_receiver_busy, branch: No }
+          - { decision: enquiry_response_srej_enabled, branch: No }
+          - { action: RR Response, kind: signal_lower }
+          - { action: Clear Acknowledge Pending, kind: processing }
+      - id: t07_enquiry_response_no
+        path:
+          - { action: "N(r) := V(r)", kind: processing }
+          - { decision: enquiry_response_f_eq_1_and_frame_eq_rr_or_frame_eq_rnr_or_frame_eq_i, branch: No }
+          - { action: RR Response, kind: signal_lower }
+          - { action: Clear Acknowledge Pending, kind: processing }

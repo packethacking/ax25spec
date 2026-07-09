@@ -1,0 +1,21 @@
+%% This file was produced by codegen/src/Packet.Sdl.CodeGen from spec-sdl/v2.2-errata/management-data-link/yaml/ready.sdl.yaml
+%% Do not edit by hand. Run `dotnet run --project codegen/src/Packet.Sdl.CodeGen` to regenerate.
+%%
+%% Source: ax.25.2.2.4_Oct_25, figure figc5.1
+%% URL: https://raw.githubusercontent.com/packethacking/ax25spec/main/doc/ax.25.2.2.4_Oct_25.md
+%% Coverage: partial
+%%
+%% Important: this rendering is approximate and intentionally
+%% looks nothing like the original SDL figure. It is a machine-
+%% generated view of the transitions in the .sdl.yaml — useful
+%% for spotting transcription bugs (missing transitions, wrong
+%% destination state) but NOT a substitute for reading the spec
+%% figure itself. See docs/sdl-primer.md.
+
+stateDiagram-v2
+    direction LR
+
+    classDef focal fill:#fff5b1,stroke:#b08800;
+    class Ready focal
+    Ready --> Negotiating: t01_mdl_negotiate_request<br/>on: MDL_NEGOTIATE_request<br/>/ · RC := 0<br/>/ ↓ XID_command<br/>/ · Start TM201
+    Ready --> Ready: t02_xid_response_received<br/>on: XID_response_received<br/>/ ↑ MDL_ERROR_indicate_B

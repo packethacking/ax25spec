@@ -1,0 +1,86 @@
+# Canonical AX.25 event catalog. Every transition's `on:` field in a
+# *.sdl.yaml MUST appear in one of the groups below. The codegen tool will
+# refuse to emit code for an event it can't find here.
+#
+# Source: AX.25 v2.2 rev 4 (Oct 2025) §5 (primitives) and §C (SDL).
+
+# Service primitives from the upper layer (Layer 3 → Data-Link).
+primitives_upper:
+  - DL_DATA_request
+  - DL_UNIT_DATA_request
+  - DL_CONNECT_request
+  - DL_DISCONNECT_request
+  - DL_FLOW_OFF_request
+  - DL_FLOW_ON_request
+
+# Service primitives between Data-Link and Management Data-Link.
+primitives_mgmt:
+  - MDL_NEGOTIATE_request
+  - MDL_NEGOTIATE_confirm
+  - MDL_ERROR_indicate
+
+# Frames received from the link (decoded from the lower layer).
+frames_received:
+  - I_received
+  - RR_received
+  - RNR_received
+  - REJ_received
+  - SREJ_received
+  - UI_received
+  - SABM_received
+  - SABME_received
+  - DISC_received
+  - UA_received
+  - DM_received
+  - FRMR_received
+  - XID_received
+  # Management-Data-Link negotiation distinguishes the XID *command*
+  # (sent by the initiator) from the XID *response* (returned by a
+  # v2.2+ peer) — §4.3.3.7 and §6.3.2 draw them as distinct frames, and
+  # Appendix C5.3's Negotiating state reacts only to the response.
+  # `XID_received` above is the undifferentiated data-link spelling
+  # (not yet used by any data-link page); `XID_response_received` is the
+  # MDL-specific input. A future `XID_command_received` event will be
+  # needed once the figc5.x XID-command-reception (collision / error-A)
+  # paths are transcribed — deliberately omitted now (prose-bootstrap
+  # encodes no such transition; see management-data-link backfill).
+  - XID_response_received
+  - TEST_received
+  # Composite event: figc4.3 (AwaitingRelease) groups all info/supervisory
+  # command frames into a single SDL input column labelled
+  # "I, RR, RNR, REJ or SREJ Commands". Lossless encoding preserves the
+  # figure's grouping rather than fanning out across the five individual
+  # frame events above.
+  - i_or_s_command_received
+
+# Catch-all "everything not matched above" events. The double-underscore
+# suffix records which shape-class (figc1.1 / d5 description) the catch-all
+# was drawn with, since the same label can appear in a figure with two
+# different shape sources (figc4.1's Disconnected state is the worked
+# example: two "All Other Primitives" columns, one per source).
+catchalls:
+  - all_other_primitives__from_lower_layer
+  - all_other_primitives__from_upper_layer
+  - all_other_commands
+
+# Internal events (queue / timer).
+internal:
+  - I_frame_pops_off_queue
+  - control_field_error
+  - info_not_permitted_in_frame
+  - info_field_permitted_in_frame
+  - u_or_s_frame_length_error
+
+# Service primitives between Data-Link and Link Multiplexer.
+link_multiplexer:
+  - LM_SEIZE_confirm
+
+# Timer expiries.
+timers:
+  - T1_expiry
+  - T2_expiry
+  - T3_expiry
+  # TM201 — retry timer for management functions (Appendix C5.3
+  # "Timers"). Drives the Management-Data-Link Negotiating state's XID
+  # command retransmit / give-up logic.
+  - TM201_expiry

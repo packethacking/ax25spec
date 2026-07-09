@@ -1,0 +1,54 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  # ─── Transcribe drift: the committed *.sdl.yaml transcriptions are
+  #     derived from the *.graphml figure sources by packet-net/ax25sdl's
+  #     Packet.Sdl.Transcribe walker. Regenerate them with the tooling
+  #     commit pinned in .github/ax25sdl-tooling-ref and fail if the
+  #     committed yaml has drifted from the figures in THIS repo.
+  #     (Backend codegen drift — yaml → C#/Go/TS/Rust/C/Python/JSON — is
+  #     packet-net/ax25sdl's CI's job, not ours.)
+  #     This repo has no self-hosted runners; jobs here MUST use
+  #     GitHub-hosted runners (ubuntu-latest).
+  transcribe-drift:
+    name: transcribe drift — graphml → yaml
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: read ax25sdl tooling pin
+        id: pin
+        run: echo "ref=$(cat .github/ax25sdl-tooling-ref)" >> "$GITHUB_OUTPUT"
+      - name: check out pinned ax25sdl tooling
+        uses: actions/checkout@v6
+        with:
+          repository: packet-net/ax25sdl
+          ref: ${{ steps.pin.outputs.ref }}
+          path: .ax25sdl-tooling
+      - uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: .ax25sdl-tooling/global.json
+      - name: regenerate yaml from graphml
+        run: |
+          dotnet run --project .ax25sdl-tooling/codegen/src/Packet.Sdl.Transcribe --configuration Release -- \
+            -i spec-sdl/v2.2-errata/data-link/sdl/ \
+            -o spec-sdl/v2.2-errata/data-link/yaml/
+      - name: assert no diff
+        run: |
+          if ! git diff --exit-code -- 'spec-sdl/v2.2-errata/data-link/yaml/*.sdl.yaml'; then
+            echo "::error::*.sdl.yaml files are out of sync with their *.graphml sources. Run \`dotnet run --project codegen/src/Packet.Sdl.Transcribe -- -i <this-repo>/spec-sdl/v2.2-errata/data-link/sdl/ -o <this-repo>/spec-sdl/v2.2-errata/data-link/yaml/\` from a packet-net/ax25sdl checkout at the ref in .github/ax25sdl-tooling-ref and commit the diff."
+            exit 1
+          fi
