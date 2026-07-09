@@ -1176,7 +1176,7 @@ When the SREJ mechanism is used, the receiving station retains correctly receive
 
 ###### 4.4.5.1 T1 Timer Recovery
 
-If a transmission error causes a TNC to fail to receive (or to receive and discard) a single I frame, or the last I frame in a sequence of I frames, then the TNC does not detect a send-sequence-number error and consequently does not transmit an REJ/SREJ. The TNC that transmitted the unacknowledged I frame(s) following the completion of timeout period T1, takes appropriate recovery action to determine when I frame retransmission as described in Section 6.4.10 should begin.
+If a transmission error causes a TNC to fail to receive (or to receive and discard) a single I frame, or the last I frame in a sequence of I frames, then the TNC does not detect a send-sequence-number error and consequently does not transmit an REJ/SREJ. The TNC that transmitted the unacknowledged I frame(s) following the completion of timeout period T1, takes appropriate recovery action to determine when I frame retransmission as described in Section 6.4.11 should begin.
 This condition is cleared by the reception of an acknowledgement for the sent frame(s), or by the link being reset.
 
 ###### 4.4.5.2 Timer T3 Recovery
@@ -1511,6 +1511,8 @@ Whenever a TNC enters a busy condition, it indicates this by sending an RNR resp
 If the originating TNC’s timer T1 expires while awaiting the distant TNC’s acknowledgement of an I frame transmitted, the originating TNC restarts timer T1 and transmits an appropriate supervisory command frame (RR or RNR) with the P bit set.
 
 If the TNC correctly receives a supervisory response frame with the F bit set and with an N(R) within the range from the last N(R) received to the last N(S) sent plus one, the TNC restarts timer T1 and sets its send state variable V(S) to the received N(R). It may then resume with I frame transmission or retransmission, as appropriate. If, on the other hand, the TNC correctly receives a supervisory response frame with the F bit not set, or an I frame or supervisory command frame, and with an N(R) within the range from the last N(R) received to the last N(S) sent plus one, the TNC does not restart timer T1; it uses the received N(R) as an indication of acknowledgement of transmitted I frames up to and including I frame numbered N(R)-1.
+
+The checkpoint retransmission described in the previous paragraph applies to the RR, RNR and REJ supervisory frames; it does not apply to SREJ. An SREJ response frame received while awaiting acknowledgement is processed as described in Sections 4.3.2.4 and 6.4.8: the TNC does not set its send state variable V(S) to the received N(R), and retransmits only the individual I frame indicated by the N(R) of the SREJ frame; I frames transmitted following that I frame are not retransmitted as the result of receiving the SREJ frame. Acknowledgement is inferred from an SREJ frame only when its F bit is set to “1”, in which case I frames numbered up to N(R)-1 inclusive are considered acknowledged; an SREJ frame with the F bit set to “0” does not indicate acknowledgement of I frames.
 
 If timer T1 expires before a supervisory response frame with the F bit set is received, the TNC retransmits an appropriate supervisory command frame (RR or RNR) with the P bit set. After N2 attempts to get a supervisory response frame with the F bit set from the distant TNC, the originating TNC initiates a link resetting procedure as described in Section 6.5.
 
