@@ -339,8 +339,13 @@ def sanitize(el):
 
 
 def resource_group(res_text, cache={}):
-    """Parse a resource SVG once; return (inner_group_element, bounds)."""
-    key = id(res_text)
+    """Parse a resource SVG once; return (inner_group_element, bounds).
+
+    The cache MUST be keyed on the resource text itself, not id(): when
+    render_all.py renders several graphmls in one process, a freed string's
+    memory address can be reused by a different file's resource, and an
+    id()-keyed cache then silently draws the wrong shape."""
+    key = res_text
     if key in cache:
         return cache[key]
     root = ET.fromstring(res_text)

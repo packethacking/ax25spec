@@ -3470,38 +3470,6 @@ Sreject &lt;- Sreject + 1</y:NodeLabel>
         </y:SVGNode>
       </data>
     </node>
-    <node id="n214">
-      <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Subroutine call]]></data>
-      <data key="d6">
-        <y:SVGNode>
-          <y:Geometry height="60.0" width="120.0" x="5320.745052839253" y="1339.4141360207514"/>
-          <y:Fill color="#FFFFFF" transparent="false"/>
-          <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="36.1875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="11.90625">Invoke Retransmission</y:NodeLabel>
-          <y:SVGNodeProperties usingVisualBounds="true"/>
-          <y:SVGModel svgBoundsPolicy="0">
-            <y:SVGContent refid="9"/>
-          </y:SVGModel>
-        </y:SVGNode>
-      </data>
-    </node>
-    <node id="n215">
-      <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[State]]></data>
-      <data key="d6">
-        <y:SVGNode>
-          <y:Geometry height="60.0" width="120.0" x="5320.745052839253" y="1429.4141360207514"/>
-          <y:Fill color="#FFFFFF" transparent="false"/>
-          <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="21.09375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="19.453125">4 Timer Recovery</y:NodeLabel>
-          <y:SVGNodeProperties usingVisualBounds="true"/>
-          <y:SVGModel svgBoundsPolicy="0">
-            <y:SVGContent refid="1"/>
-          </y:SVGModel>
-        </y:SVGNode>
-      </data>
-    </node>
     <node id="n216">
       <data key="d4" xml:space="preserve"/>
       <data key="d5" xml:space="preserve"><![CDATA[Processing description]]></data>
@@ -3718,7 +3686,7 @@ RC &lt;- 0</y:NodeLabel>
           <y:Geometry height="77.22669982910156" width="131.811417952557" x="5871.145052839256" y="1501.6530310041585"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="node_width" bottomInset="0" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.1875" horizontalTextPosition="center" iconTextGap="4" leftInset="20" modelName="internal" modelPosition="c" rightInset="20" textColor="#000000" topInset="0" verticalTextPosition="bottom" visible="true" width="131.811417952557" x="0.0" xml:space="preserve" y="22.51959991455078">Push Frame Onto Queue</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" bottomInset="0" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.1875" horizontalTextPosition="center" iconTextGap="4" leftInset="20" modelName="internal" modelPosition="c" rightInset="20" textColor="#000000" topInset="0" verticalTextPosition="bottom" visible="true" width="131.811417952557" x="0.0" xml:space="preserve" y="22.51959991455078">Push Old I Frame N(r) on Queue</y:NodeLabel>
           <y:SVGNodeProperties usingVisualBounds="true"/>
           <y:SVGModel svgBoundsPolicy="0">
             <y:SVGContent refid="7"/>
@@ -3756,22 +3724,6 @@ Clear Acknowledge Pending</y:NodeLabel>
           <y:SVGNodeProperties usingVisualBounds="true"/>
           <y:SVGModel svgBoundsPolicy="0">
             <y:SVGContent refid="5"/>
-          </y:SVGModel>
-        </y:SVGNode>
-      </data>
-    </node>
-    <node id="n232">
-      <data key="d4" xml:space="preserve"/>
-      <data key="d5" xml:space="preserve"><![CDATA[Subroutine call]]></data>
-      <data key="d6">
-        <y:SVGNode>
-          <y:Geometry height="60.0" width="120.0" x="5881.545052839262" y="1830.0872364289125"/>
-          <y:Fill color="#FFFFFF" transparent="false"/>
-          <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="36.1875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="11.90625">Invoke Retransmission</y:NodeLabel>
-          <y:SVGNodeProperties usingVisualBounds="true"/>
-          <y:SVGModel svgBoundsPolicy="0">
-            <y:SVGContent refid="9"/>
           </y:SVGModel>
         </y:SVGNode>
       </data>
@@ -6474,23 +6426,13 @@ Clear Acknowledge Pending</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e241" source="n212" target="n214">
+    <edge id="e241" source="n212" target="n229">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
           <y:EdgeLabel alignment="center" configuration="AutoFlippingLabel" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" verticalTextPosition="bottom" visible="true" width="19.33984375" x="21.044766616809284" xml:space="preserve" y="53.50528481287506">No<y:LabelModel><y:SmartEdgeLabelModel autoRotationEnabled="false" defaultAngle="0.0" defaultDistance="10.0"/></y:LabelModel><y:ModelParameter><y:SmartEdgeLabelModelParameter angle="0.0" distance="30.0" distanceToCenter="true" position="right" ratio="0.5" segment="0"/></y:ModelParameter><y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="anywhere" sideReference="relative_to_edge_flow"/></y:EdgeLabel>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="e242" source="n214" target="n215">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="none" target="standard"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -6688,17 +6630,7 @@ Clear Acknowledge Pending</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e261" source="n231" target="n232">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="none" target="standard"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="e262" source="n232" target="n233">
+    <edge id="e261" source="n231" target="n233">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
