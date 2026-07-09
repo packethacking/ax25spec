@@ -1,0 +1,310 @@
+# Canonical action verb catalog. Entries here normalise figure-verbatim
+# verb spellings to a single canonical form used in the generated state
+# machine code. Verbs not listed are passed through verbatim (soft mode).
+#
+# Why this file exists: the AX.25 SDL figures sometimes spell the same
+# verb differently on different pages — e.g. figc4.2 draws `DM F=1`,
+# figc4.3 draws `DM F = 1`, figc4.6 draws `DM (F = 1)`. Trust-the-figure
+# requires the YAML transcriptions stay verbatim, but the runtime
+# dispatcher needs a single canonical spelling per semantic verb.
+#
+# `actions.yaml` is the bridge: codegen reads it, substitutes aliases for
+# the canonical `name:`, and emits the canonical into `.g.cs` files. The
+# dispatcher's switch arms then only ever see canonical verbs.
+#
+# Grouped by SDL action kind (signal_upper, signal_lower, processing,
+# subroutine, internal_out) — the kind both documents which figc1.1
+# shape class the verb is drawn with, and lets the validator catch
+# cases where the same canonical verb is drawn with different shape
+# classes on different pages (which would be a transcription error).
+#
+# When to add an entry: when a single semantic action is spelled two or
+# more different ways across pages. When only one spelling exists across
+# every page, an entry is harmless but unnecessary.
+
+signal_lower:
+  - name: "DM (F = 1)"
+    aliases:
+      - "DM F=1"        # figc4.2 spelling
+      - "DM F = 1"      # figc4.3 spelling
+
+  # Supervisory-frame verbs (figc4.4 only). Naming convention from the
+  # figure: the `_command` and `_response` suffixes mark explicit role;
+  # bare verbs (RR, REJ, SREJ) are response-form per SDL convention.
+  # Each emission consumes pending Nr + PfBit (defaults: Nr := V(R),
+  # PfBit := false) — see ActionDispatcher.BuildSFrame.
+  - name: RR_command
+  - name: RR
+  - name: RNR_response
+  - name: REJ
+  - name: SREJ
+
+  # Unnumbered-frame verbs. Bare verbs (UA, DM, Expedited UA,
+  # Expedited DM) consume pending PfBit; the rest force PfBit via the
+  # explicit `(P = 1)` / `(P == 1)` / `(F = 1)` qualifier in the name.
+  # Expedited variants set UFrameSpec.IsExpedited=true as a TX priority
+  # hint. See ActionDispatcher.BuildUFrame.
+  - name: UA
+  - name: DM
+  - name: "Expedited UA"
+  - name: "Expedited DM"
+  - name: "SABM (P == 1)"
+  - name: "SABME (P = 1)"
+  - name: "DISC (P = 1)"
+
+  # UI-frame verb. Drawn in every state's DL_UNIT_DATA_request column
+  # (figc4.1/4.2/4.3/4.4/4.6). Payload + PID come from the triggering
+  # DL_UNIT_DATA_request primitive. P/F bit consumes pending (default
+  # false) — see ActionDispatcher.BuildUiFrame.
+  - name: UI_command
+
+  # XID-frame command verb (Management-Data-Link, figc5.1/figc5.2 —
+  # prose-bootstrap, verification_pending). The Negotiating exchange is
+  # opened (and retried) by sending an XID command frame carrying the
+  # initiator's offered parameter set (§6.3.2). Error code A ("XID
+  # command without P=1", §C5.3) implies the command carries P=1, but
+  # the prose-derived bootstrap does NOT encode the P-bit box (figc5.x
+  # detail) so this verb is left bare for now. No aliases — single
+  # spelling so far.
+  - name: XID_command
+
+  # I-frame verb. Drawn in figc4.4 t19/t20 and the SREJ retransmit
+  # paths. Payload + PID come from the triggering I_frame_pops_off_queue
+  # event; N(s)/N(r)/P consume pending. Emitted frame is also stashed
+  # in ctx.SentIFrames for potential retransmission. See
+  # ActionDispatcher.EmitIFrame.
+  - name: I_command
+
+  # Link-multiplexer requests. signal_lower kind because they exit the
+  # data-link state machine going downward (toward the radio).
+  # NB: these used to live in a separate `signal_lower:` block lower in
+  # the file. YAML's duplicate-key semantics mean the second block
+  # silently overrode the first, dropping the DM-alias entries above.
+  # Folded into the single signal_lower block so all signal_lower verbs
+  # live together and the catalog loads as intended.
+  - name: LM_seize_request
+    aliases:
+      - "LM-SEIZE Request"
+      - "LM-SIEZE Request"        # figure typo
+  - name: LM_release_request
+    aliases:
+      - "LM-RELEASE Request"
+      - "LM_RELEASE Request"      # underscore-spelled figure variant
+  - name: LM_data_request
+    aliases:
+      - "LM-DATA Request"
+
+signal_upper:
+  # DL primitives raised to Layer 3 (§5.5). The dispatcher emits each as
+  # a DataLinkSignal record via the sendUpward callback. DL_DATA_indication
+  # carries the incoming I-frame's Info + PID; the others have no payload.
+  # The figures draw these in display form ("DL-CONNECT Indication"); the
+  # aliases canonicalise every figc spelling onto the snake_case name the
+  # dispatcher cases on, so the generated tables only ever carry the canonical.
+  - name: DL_CONNECT_indication
+    aliases:
+      - "DL-CONNECT Indication"
+      - "DL Connect Indication"
+  - name: DL_CONNECT_confirm
+    aliases:
+      - "DL-CONNECT Confirm"
+  - name: DL_DISCONNECT_indication
+    aliases:
+      - "DL-DISCONNECT Indication"
+      - "DL-DISCONNECT indication"
+  - name: DL_DISCONNECT_confirm
+    aliases:
+      - "DL-DISCONNECT Confirm"
+  - name: DL_DATA_indication
+    aliases:
+      - "DL-DATA Indication"
+  - name: DL_UNIT_DATA_indication
+    aliases:
+      - "DL-UNIT-DATA Indication"
+
+  # DL-ERROR-indication letter variants (§C5). Each maps to
+  # DataLinkErrorIndication("<letter>") via the suffix. Figures draw them as
+  # "DL-ERROR Indication (<letter>)" (case varies); aliases canonicalise.
+  - name: DL_ERROR_indication_C_D
+    aliases:
+      - "DL-ERROR Indication (C,D)"
+  - name: DL_ERROR_indication_D
+    aliases:
+      - "DL-ERROR Indication (D)"
+      - "DL-ERROR indication (D)"
+  - name: DL_ERROR_indication_E
+  - name: DL_ERROR_indication_F
+  - name: DL_ERROR_indication_G
+  - name: DL_ERROR_indication_K
+  - name: DL_ERROR_indication_L
+  - name: DL_ERROR_indication_M
+  - name: DL_ERROR_indication_N
+  - name: DL_ERROR_indication_O
+
+  # Management-Data-Link → Layer 3 primitives (§5.1, Appendix C5.1 /
+  # C5.3 — prose-bootstrap, verification_pending). The MDL machine
+  # raises these to the Layer 3 entity. MDL-NEGOTIATE Confirm signals
+  # that notification/negotiation is complete; MDL-ERROR Indicate (X)
+  # signals it failed, with X one of the §C5.3 management error codes
+  # (A — XID command without P=1; B — Unexpected XID response; C —
+  # Management retry limit exceeded; D — XID response without F=1).
+  # The figures draw these in display form; the aliases canonicalise to
+  # the snake_case spellings a downstream dispatcher would case on,
+  # mirroring the DL_CONNECT_* / DL_ERROR_indication_* convention above.
+  # Only the codes actually emitted by the prose-bootstrap (B, C, D)
+  # are catalogued; error A's reception path is figc5.x backfill.
+  - name: MDL_NEGOTIATE_confirm
+    aliases:
+      - "MDL-NEGOTIATE Confirm"
+  - name: MDL_ERROR_indicate_B
+    aliases:
+      - "MDL-ERROR Indicate (B)"
+  - name: MDL_ERROR_indicate_C
+    aliases:
+      - "MDL-ERROR Indicate (C)"
+  - name: MDL_ERROR_indicate_D
+    aliases:
+      - "MDL-ERROR Indicate (D)"
+
+processing:
+  # Queue-clearing verbs — three figure spellings, one semantic
+  # operation (clear ctx.IFrameQueue). All three remain canonical
+  # because they're drawn distinctly in different figures; the
+  # dispatcher's switch handles all three identically.
+  - name: discard_frame_queue
+    aliases:
+      - "Discard Frame Queue"      # figc4.6 title-case spelling
+  - name: discard_queue
+  - name: discard_I_frame_queue
+    aliases:
+      - "Discard I Frame Queue"    # figc4.6 title-case spelling
+
+  # No-op discard verbs — drop trigger frame / primitive, no context
+  # mutation. Kept distinct to preserve figure semantics.
+  - name: discard_I_frame
+  - name: discard_contents_of_I_frame
+  - name: discard_primitive
+
+  # Peer-busy flag (the same operation under two figure spellings —
+  # figc4.4 drops "receiver" from the verb; figc4.2 keeps it). Canonical
+  # form follows the dispatcher's binding.
+  - name: clear_peer_receiver_busy
+    aliases:
+      - "Clear Peer Busy"          # figc4.4 figure spelling (drops 'receiver')
+      - "Clear Peer Receiver Busy" # figc4.2 full title-case spelling
+  - name: set_peer_receiver_busy
+    aliases:
+      - "Set Peer Busy"            # figc4.4 figure spelling (drops 'receiver')
+
+  # Reject / SREJ exception bookkeeping.
+  - name: set_reject_exception
+  - name: clear_reject_exception
+  - name: increment_srej_exception
+  - name: decrement_srej_exception_if_gt_0
+
+  # Acknowledge-pending flag (figc4.4 ctx.AcknowledgePending). The figure
+  # uses "set_acknowledgement_pending" on the set verb (with the "ment"
+  # in "acknowledgement") but "clear_acknowledge_pending" on the clear
+  # verb — same operation, inconsistent spelling within the same figure.
+  # Canonical is the dispatcher's `set_acknowledge_pending`; the alias
+  # captures the set-form's "ment" suffix.
+  - name: set_acknowledge_pending
+    aliases:
+      - "Set Acknowledgement Pending"  # figc4.4 figure spelling ('ment' suffix)
+      - "Set Acknowledge Pending"      # title-case figure spelling
+  - name: clear_acknowledge_pending
+
+  # Out-of-sequence I-frame storage.
+  - name: save_contents_of_I_frame
+  - name: retrieve_stored_V_r_I_frame
+
+  # Modulus selection. `set_version_2_0` is shared between the
+  # data-link figc4.6 FRMR path and the Management-Data-Link figc5.2
+  # FRMR (pre-v2.2 peer) path — both fall back to the §6.3.2 version-2.0
+  # default parameter set.
+  - name: set_version_2_0
+    aliases:
+      - "Set Version 2.0"          # figc4.6 title-case spelling
+  - name: set_version_2_2
+
+  # Management-Data-Link retry timer TM201 (Appendix C5.3 "Timers" —
+  # prose-bootstrap, verification_pending). Started when an XID command
+  # is sent (and on each retransmit) and stopped when negotiation
+  # completes. Drawn here as processing boxes by analogy with the
+  # data-link Start T1 / Stop T1 timer verbs (which pass through
+  # uncatalogued); catalogued explicitly because TM201 is MDL-only.
+  - name: Start TM201
+  - name: Stop TM201
+
+  # Link-parameter assignments — Smoothed Round-Trip Time per §6.7.1.2
+  # and T1 timeout value per §6.7.1.3. Initialised at link-establishment
+  # time; refreshed by figc4.7's Select_T1_Value subroutine after each
+  # round-trip.
+  - name: "SRT := Initial Default"
+  - name: "T1V := 2 * SRT"
+
+  # Sequence/poll assignments drawn with case-variant spellings across
+  # figures (the same operation, inconsistent capitalisation).
+  - name: "N(r) := V(r)"
+    aliases:
+      - "N(R) := V(r)"           # upper-case N(R) figure variant
+  - name: "P := 0"
+    aliases:
+      - "p := 0"                 # lower-case p figure variant
+
+internal_out:
+  # Push to the internal I-frame transmission queue. Three figure
+  # spellings:
+  #   - push_on_I_frame_queue (figc4.4)
+  #   - push_frame_on_queue (figc4.2; figc4.6 title-case alias below)
+  #   - push_old_I_frame_N_r_on_queue (figc4.4 retransmission flow)
+  - name: push_on_I_frame_queue
+  - name: push_frame_on_queue
+    aliases:
+      - "Push Frame Onto Queue"    # figc4.6 title-case spelling
+      - "Push Frame on Queue"      # figc4.3 title-case spelling ('on' not 'Onto')
+  - name: push_old_I_frame_N_r_on_queue
+
+  # Management data-link XID negotiation trigger.
+  - name: MDL_NEGOTIATE_request
+
+subroutine:
+  # Subroutine calls — figc4.7 territory. The dispatcher routes each
+  # through a registry; DefaultSubroutineRegistry pre-populates with
+  # no-op stubs that get replaced once figc4.7 is transcribed.
+  - name: Establish_Data_Link
+    aliases:
+      - "Establish Data Link"      # figc4.6 title-case spelling
+  - name: Clear_Exception_Conditions
+  - name: UI_Check
+  - name: Select_T1_Value
+    aliases:
+      - "Select T1 Value"          # figc4.7 internal call shape
+  - name: Check_I_Frame_Acknowledged
+    aliases:
+      - "Check I Frames Acknowledged"  # figc4.4 figure spelling (plural)
+      - "Check I Frame Acknowledged"   # figc4.5 figure spelling (singular)
+  - name: Check_Need_For_Response
+  - name: Transmit_Enquiry
+  - name: Invoke_Retransmission
+  - name: N_r_Error_Recovery
+  - name: Establish_Extended_Data_Link    # figc4.7 redraw added
+  - name: Set_Version_2_0                 # figc4.7 redraw added
+  - name: Set_Version_2_2                 # figc4.7 redraw added
+  - name: Enquiry_Response                # figc4.7 redraw — unified body
+  - name: Enquiry_Response_F_0
+  - name: Enquiry_Response_F_1
+    aliases:
+      - "Enquiry Response (F = 1)"        # figc4.7 Check_Need_For_Response subroutine-call label
+
+  # Management-Data-Link parameter application (Appendix C5.2/C5.3 +
+  # §6.3.2 — prose-bootstrap, verification_pending). PLACEHOLDER for the
+  # figc5.3–figc5.8 per-parameter "reverts to" negotiation subroutines
+  # (Classes of Procedures / Optional Functions / N1 / Window / Retry /
+  # T1). Invoked from the figc5.2 Negotiating XID-response-received path.
+  # The decomposed subroutine bodies are figure-dependent and are NOT
+  # transcribed by the prose bootstrap — they are the figc5.x graphml
+  # backfill. No figc4.7-style subroutine page defines this body yet;
+  # downstream subroutine registries treat it as a (currently no-op)
+  # named call until the backfill lands.
+  - name: Apply Negotiated Parameters

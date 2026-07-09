@@ -1,0 +1,15 @@
+{
+  "DataLink_TimerRecovery": {
+    "srej-received": {
+      "comment": "SREJ-received column of figc4.5 (the figc4.5e page region) — the paths corrected in ax25sdl#55 / PR #69. Anchors n214/n215/n232 are the pre-correction go-back-N nodes; the renderer ignores anchors that no longer exist, so this definition is valid before and after the correction and the crop box is identical in both states.",
+      "nodes": [
+        "n205", "n206", "n207", "n208", "n209", "n210", "n211", "n212",
+        "n213", "n214", "n215", "n216", "n217", "n218", "n219", "n220",
+        "n221", "n222", "n223", "n224", "n225", "n226", "n227", "n228",
+        "n229", "n230", "n231", "n232", "n233"
+      ],
+      "restrict": true,
+      "pad": 50
+    }
+  }
+}

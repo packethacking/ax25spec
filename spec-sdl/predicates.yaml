@@ -1,0 +1,142 @@
+# Canonical guard-predicate (decision) catalog. Entries here normalise
+# figure-verbatim predicate spellings to a single canonical atom used in
+# the generated guard expressions. Predicates not listed are rejected by
+# the catalog-completeness lint (unlike actions.yaml's soft passthrough)
+# — every decision `predicate:` must resolve to an entry here, mirroring
+# how every action verb must resolve to an actions.yaml entry once a
+# catalog is present.
+#
+# Why this file exists: an SDL transition's `guard:` is a boolean
+# expression over decision predicates. Each `predicate:` field in a
+# *.sdl.yaml is a single atom (the codegen composes them into the
+# conjunction the figure draws — `not X and Y` etc.); this file is the
+# vocabulary of those atoms. It is the guard analogue of actions.yaml.
+#
+# Two historical spellings leaked through before this catalog existed:
+#   - the early hand-authored style (`V_s_eq_V_a`, `acknowledge_pending`,
+#     `srej_enabled`) that the downstream runtimes registered bindings
+#     under; and
+#   - the post-walker-normalisation style the package emits today
+#     (`vs_eq_va`, `ack_pending`, `SREJ_enabled`).
+# The C# `GuardEvaluator.PredicateAliases` map (m0lte/packet.net) and the
+# TS `session-bindings.ts` reconcile those two spellings at RUNTIME by
+# hand. Moving the vocabulary into this catalog — and emitting a typed
+# closed `Ax25Guard` set from it — lets those consumers bind exhaustively
+# against the typed atom and delete their runtime alias layers (Part B).
+#
+# `name:` is the canonical atom — the exact spelling the generated
+# `.g.*` guard expressions carry, and the spelling a consumer binds to.
+# `aliases:` lists alternate spellings that appear in *.sdl.yaml decision
+# `predicate:` fields and collapse to the canonical (same lint discipline
+# as actions.yaml: every declared alias must be referenced by some YAML
+# decision, or codegen errors). Where the historic packet.net binding
+# name differs from the canonical, it's recorded in a `# legacy binding:`
+# comment so Part B's exhaustive re-binding has the mapping — those names
+# are NOT aliases (no YAML page spells a predicate that way).
+#
+# Grouped by what the predicate tests. The group key is documentation
+# only (predicates have no kind the way actions do); the codegen treats
+# the whole file as one flat namespace.
+
+# Send/receive sequence-variable comparisons (§4.2.4, §6.x). Compare the
+# send state V(s), acknowledge state V(a), receive state V(r), and the
+# received N(s)/N(r) sequence numbers; `k` is the window size.
+sequence_variables:
+  - name: vs_eq_va
+    # legacy binding: V_s_eq_V_a
+  - name: vs_eq_va_plus_k
+    # legacy binding: V_s_eq_V_a_plus_k
+  - name: vs_eq_X
+    # legacy binding: v_s_eq_x
+  - name: vs_eq_nr
+    # V(s) == N(r). Emitted by the figc4.5 / figc4.4 recovery-complete
+    # paths after the "V(a) := N(r)" assignment: ax25sdl#53's stale-read
+    # substitution rewrites the figure's `vs_eq_va` decision into the
+    # post-assignment `vs_eq_nr`. Same comparison the figure labels
+    # "V(s) = N(r)?". legacy binding: n_r_eq_v_s (packet.net maps it onto
+    # nr_eq_vs's binding — both are N(r)==V(s)).
+  - name: ns_eq_vr
+    # legacy binding: N_s_eq_V_r
+  - name: ns_gt_vr_plus_1
+    # legacy binding: N_s_gt_V_r_plus_1
+  - name: nr_eq_va
+    # legacy binding: n_r_eq_v_a
+  - name: nr_eq_vs
+    # legacy binding: n_r_eq_v_s
+  - name: va_le_nr_le_vs
+    # legacy binding: V_a_le_N_r_le_V_s
+
+# Poll/Final-bit and command/response role tests (§4.3.x, §6.x). Drawn on
+# received frames; the compound `*_and_*` atoms are single opaque atoms
+# the figure draws as one decision diamond.
+frame_role:
+  - name: command
+  - name: response
+  - name: P_eq_1
+  - name: F_eq_1
+  - name: P_or_F_eq_1
+  - name: command_and_P_eq_1
+    # legacy binding: command_and_p_eq_1
+  - name: response_and_F_eq_1
+    # legacy binding: response_and_f_eq_1
+  - name: F_eq_1_and_frame_eq_RR_or_frame_eq_RNR_or_frame_eq_I
+    # legacy binding: f_eq_1_and_supervisory_or_i
+
+# Session flags (§6.x). Boolean session state the SDL tests directly.
+flags:
+  - name: ack_pending
+    # The acknowledge-pending flag (figc4.4 ctx.AcknowledgePending). The
+    # figures draw it both upper- and lower-case. legacy binding:
+    # acknowledge_pending
+    aliases:
+      - ACK_pending        # figc4.4 upper-case figure spelling
+  - name: own_receiver_busy
+    # legacy binding: own_receiver_busy
+    aliases:
+      - own_receive_busy   # figc4.4 figure typo (drops the 'r')
+  - name: peer_receiver_busy
+    # legacy binding: peer_receiver_busy
+    aliases:
+      - peer_busy          # figc4.4 figure spelling (drops 'receiver')
+  - name: layer_3_initiated
+  - name: able_to_establish
+
+# Reject / selective-reject exception conditions (§4.3.2.3, §6.4.x).
+exceptions:
+  - name: reject_exception
+  - name: SREJ_enabled
+    # legacy binding: srej_enabled
+  - name: sreject_exception_gt_0
+    # legacy binding: srej_exception_gt_0
+  - name: out_of_sequence_frames_in_receive_buffer
+  - name: vr_I_frame_stored
+    # V(r) I-frame stored? — the figc4.4 / figc4.5 stored-frame drain loop
+    # predicate. The package preserves the spec variable `I`'s capital, so
+    # it emits `vr_I_frame_stored`. legacy binding: vr_i_frame_stored
+
+# Timer state (§6.7.x). T1 retransmission timer.
+timers:
+  - name: T1_running
+  - name: T1_expired
+    # legacy binding: t1_expired
+
+# Retry counter vs limits (§6.x, Appendix C5.3). RC is the retry count;
+# N2 the data-link retry limit; NM201 the management retry limit.
+retry_counter:
+  - name: RC_eq_0
+    # legacy binding: rc_eq_0
+  - name: RC_eq_N2
+  - name: RC_eq_NM201
+
+# Version / modulus selection (§6.3.2). mod-8 vs mod-128 (SABM vs SABME)
+# and the negotiated v2.2 capability.
+version_mode:
+  - name: mod_8
+  - name: mod_128
+  - name: version_2_2
+
+# Frame-content validity (§6.x). Single opaque atom the figure draws as
+# one decision diamond.
+frame_content:
+  - name: info_field_length_le_N1_and_content_is_octet_aligned
+    # legacy binding: info_field_valid

@@ -1,0 +1,1446 @@
+# Cross-reference annotations for timer_recovery.sdl.yaml.
+#
+# The SDL skeleton in timer_recovery.sdl.yaml is regenerated from
+# DataLink_TimerRecovery.graphml; the human-curated notes + per-implementation
+# citations live here so they survive regeneration.
+#
+# Schema: spec-sdl/schema/sdl-citations.schema.json.
+#
+# Keys under transitions: are the transition ids from timer_recovery.sdl.yaml.
+# If the tool regenerates with different ids (e.g. branch suffixes change),
+# the keys here need re-matching.
+#
+# IMPLEMENTATION MAP for the TimerRecovery (figc4.5) machine — where each impl
+# keeps the connected-mode recovery logic, and how it models the state:
+#   - direwolf: src/ax25_link.c. Has an explicit `state_4_timer_recovery`
+#     distinct from `state_3_connected`; most frame handlers `switch (S->state)`
+#     and many merge the 3/4 cases. This is the closest structural match to
+#     figc4.5.
+#   - rax25: src/state.rs. FUSES Connected + TimerRecovery into one `Connected`
+#     struct carrying a `ConnectedState` enum {Connected, TimerRecovery}. The
+#     single `impl State for Connected` block serves BOTH states; only `rr`
+#     dispatches on the enum (rr_connected vs rr_timer_recovery). CONSEQUENCE:
+#     `rnr`, `rej`, `srej` are NOT overridden in that impl, so when received in
+#     TimerRecovery they hit the base-trait no-op stubs ("TODO: unexpected ...",
+#     src/state.rs:970/991/1007) — i.e. rax25 does NOT handle RNR/REJ/SREJ
+#     receipt in TimerRecovery at all. SREJ *generation* is likewise a stub
+#     (src/state.rs:1682/1698, `// TODO: ... Action::SendSrej`).
+#   - linux_oot: net/ax25/ax25_std_in.c `ax25_std_state4_machine` IS the
+#     TimerRecovery state (AX25_STATE_4), distinct from state3. Go-back-N only:
+#     there is NO AX25_SREJ case anywhere in the std machine — REJ/RR(F) recover
+#     by ax25_requeue_frames(). Timers in net/ax25/ax25_std_timer.c.
+#   - linbpq: L2Code.c. NO distinct TimerRecovery state — connected mode is
+#     L2STATE 5 (and 6 = REJ-sent), recovery is driven by the POLLSENT flag +
+#     RR(P) polling. mod-8 only (FRAMES[8] tx slots). Notably linbpq DOES
+#     implement single-frame SREJ resend (SFRAME, L2Code.c:2283).
+#
+# #55 (SREJ: selective-single-frame vs go-back-N), de-facto picture:
+#   - linbpq      : SELECTIVE SINGLE-FRAME. SREJ(F) resends only FRAMES[N(S)]
+#                   (L2Code.c:2283-2397), Multi-SREJ via info field.
+#   - direwolf    : SELECTIVE SINGLE-FRAME. resend_for_srej() resends the one
+#                   I frame with N(S)=N(R) (+ Multi-SREJ from info), and the
+#                   author explicitly #if-0's out the 2006 go-back-N
+#                   invoke_retransmission() calling it a bad cut-n-paste from
+#                   the REJ chart (src/ax25_link.c:4181-4186). BUT the state-4
+#                   SREJ path is largely dead: on T1 expiry direwolf backs up
+#                   via invoke_retransmission (go-back-N) instead of re-SREJ
+#                   (author "Detour 1" note, src/ax25_link.c:5848-5855).
+#   - linux_oot   : GO-BACK-N ONLY. No SREJ path at all in the std machine.
+#   - rax25       : NOT IMPLEMENTED. SREJ receive falls to a no-op stub; SREJ
+#                   send is a TODO.
+#   So the figc4.5e "Invoke Retransmission" (go-back-N) on the SREJ handler that
+#   #55 questions matches NOBODY's selective implementation — direwolf & linbpq
+#   both do single-frame selective; the only go-back-N-on-a-missing-frame impls
+#   (linux, and direwolf's T1 fallback) reach it via REJ / T1 recovery, never as
+#   the SREJ-received action. Corroborates that the figc4.5e SREJ box is errata.
+
+pinned_refs:
+  linbpq:
+    repo: https://github.com/M0LTE/linbpq
+    commit: 88a68988b446187cc5f7a2dfdbe33d1cc3ebd46f
+  direwolf:
+    repo: https://github.com/wb2osz/direwolf
+    commit: a231971a652bfb574a4bae9a5d875fbce53d2267
+  rax25:
+    repo: https://github.com/ThomasHabets/rax25
+    commit: d97b7ab725620497d5444e7393969b8d6f9ae58d
+  linux_oot:
+    repo: https://github.com/linux-netdev/mod-orphan
+    commit: 40188e901024be90f50fc37ba1ba3a84678dfe12
+
+transitions:
+  t01_dl_disconnect_request:
+    notes: >-
+      DL-DISCONNECT request while in TimerRecovery: discard I queue, RC:=0, send
+      DISC(P=1), Stop T3 / Start T1, → AwaitingRelease. AGREEMENT: direwolf
+      handles states 3 & 4 identically here. DIVERGENCE on the RC value and the
+      AwaitingRelease step. direwolf goes to state_2 (AwaitingRelease) like the
+      figure but SET_RC(0) with a comment "I think this should be 1". rax25
+      fuses the two states and goes to AwaitingRelease. linbpq has no
+      TimerRecovery state and defers: if frames are still unacked it only sets
+      DISCPENDING and waits for ACKMSG to fire the DISC (so it does NOT discard
+      the queue or DISC immediately the way the figure does).
+    references:
+    - source: spec_prose
+      cite: "§6.3.4"
+      quote: >-
+        While in the information-transfer state, either TNC may indicate a
+        request to disconnect the link by transmitting a DISC command frame and
+        starting timer T1.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: dl_disconnect_request
+      line: 1170
+      note: "state_3/state_4 merged: discard_i_queue, SET_RC(0), DISC cmd P=1, STOP_T3/START_T1, → state_2 (AwaitingRelease)"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::disconnect
+      line: 1472
+      note: serves both Connected+TimerRecovery; clear_iframe_queue, rc=0, T1 start, T3 stop, SendDisc{pf:true}, → AwaitingRelease
+    - source: linbpq
+      path: L4Code.c
+      function: CLOSECURRENTSESSION
+      line: 1018
+      note: "sets L2FLAGS|=DISCPENDING (L4Code.c:1112) when data still queued; DISC actually sent later from ACKMSG (L2Code.c:3714) when TX_Q drains — defers vs figure's immediate DISC"
+  t02_dl_data_request:
+    notes: >-
+      DL-DATA request in TimerRecovery just appends to the I-frame queue
+      (internal "Push on I Frame Queue"); transmission is driven separately by
+      I-Frame-Pops-Off-Queue / LM-SEIZE. AGREEMENT across all four: data is
+      enqueued the same way regardless of Connected vs TimerRecovery.
+    references:
+    - source: spec_prose
+      cite: "§6.4.1"
+      quote: >-
+        Whenever a TNC has an I frame to transmit, it sends the I frame with the
+        N(S) of the control field equal to its current send state variable V(S).
+    - source: direwolf
+      path: src/ax25_link.c
+      function: dl_data_request
+      line: 1238
+      note: "len<=paclen → data_request_good_size appends to I-frame queue; state_3/state_4 share the same append+lm_seize path"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::data
+      line: 1491
+      note: appends to obuf (serves both states), then flush(); does not preserve app frame boundaries
+    - source: linbpq
+      path: L2Code.c
+      function: SDETX
+      line: 3195
+      note: "TX_Q drained into FRAMES[SDTSLOT] tx slots; window-bounded by Outstanding>=LINKWINDOW (3190). Enqueue is state-independent"
+  t03_i_frame_pops_off_queue_no_no_yes:
+    notes: >-
+      I-frame ready, peer not busy, window not full → transmit it: N(s):=V(s),
+      N(R):=V(r), I command, V(s)++, clear ack pending; this branch is "T1
+      already running" so the timers are left alone. AGREEMENT: all impls send
+      the next I frame and bump V(s). DIVERGENCE on the T1-running test:
+      direwolf (author erratum) and rax25 lean toward ALWAYS restarting T1 on
+      send rather than honouring the "T1 running?" branch; the figure leaves T1
+      untouched here.
+    references:
+    - source: spec_prose
+      cite: "§6.4.1"
+      quote: >-
+        After the I frame is sent, the send state variable is incremented by
+        one. If timer T1 is not running, it is started. If timer T1 is running,
+        it is restarted.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: i_frame_pop_off_queue
+      line: 6516
+      note: builds I frame, V(s)++, acknowledge_pending=0; author erratum prefers unconditional STOP_T3/START_T1 over the figure's T1-running branch
+    - source: rax25
+      path: src/state.rs
+      function: Data::flush
+      line: 886
+      note: "vs++, ack pending cleared; `if !t1.running { stop T3; start T1 }` — only arms T1 when not already running (this t03 branch). TODO notes Direwolf's always-restart advice"
+    - source: linbpq
+      path: L2Code.c
+      function: SDETX
+      line: 3185
+      note: "Outstanding=LINKNS-LINKOWS window check then sends from FRAMES[]; no t03/t04 T1-state distinction"
+  t03_i_frame_pops_off_queue_no_no_no:
+    notes: >-
+      Same as t03_i_frame_pops_off_queue_no_no_yes but the "T1 Running?" branch
+      is No, so after sending the I frame the figure does Stop T3 / Start T1.
+      AGREEMENT: this Stop-T3/Start-T1-on-send is exactly what direwolf and
+      rax25 do unconditionally (see their erratum/TODO notes), so they collapse
+      t03's Yes/No T1 branches into one.
+    references:
+    - source: spec_prose
+      cite: "§6.4.1"
+      quote: >-
+        If timer T1 is not running, it is started. If timer T1 is running, it is
+        restarted.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: i_frame_pop_off_queue
+      line: 6516
+      note: unconditional STOP_T3/START_T1 after sending I frame covers this T1-not-running branch
+    - source: rax25
+      path: src/state.rs
+      function: Data::flush
+      line: 891
+      note: "`if !t1.running { t3.stop(); t1.start(srt) }` — the T1-not-running case"
+  t05_dl_flow_off_request_yes:
+    notes: >-
+      DL-FLOW-OFF when not already busy: set own-receiver-busy, send RNR(F=0),
+      clear ack pending. DIVERGENCE: no impl models own-receiver-busy as a
+      first-class DL-FLOW-OFF primitive the way the figure does. direwolf's
+      author notes the own_receiver_busy path is effectively unreachable ("we
+      currently don't have a way to set own_receiver_busy"). linux sets/clears
+      AX25_COND_OWN_RX_BUSY from socket buffer pressure, not a primitive. linbpq
+      decides RNR dynamically at supervisory-send time (RR_OR_RNR, QCOUNT).
+    references:
+    - source: spec_prose
+      cite: "§6.4.10"
+      quote: >-
+        Whenever a TNC enters a busy condition, it indicates this by sending an
+        RNR response at the next opportunity.
+    - source: linbpq
+      path: L2Code.c
+      function: RR_OR_RNR
+      line: 4143
+      note: returns RR vs RNR computed dynamically from receiver-busy condition at send time; no explicit DL-FLOW-OFF primitive
+    - source: linux_oot
+      path: net/ax25/ax25_std_timer.c
+      function: ax25_std_heartbeat_expiry
+      line: 64
+      note: "OWN_RX_BUSY driven by sk_rmem buffer pressure, cleared via heartbeat (RR F=0) — not a DL-FLOW-OFF primitive"
+  t06_dl_flow_on_request_yes_no:
+    notes: >-
+      DL-FLOW-ON when busy and T1 not running: clear own-receiver-busy, RR(P=0),
+      clear ack pending, Stop T3 / Start T1. Same divergence as t05 — busy is
+      not a primitive in these impls. linux clears OWN_RX_BUSY in the heartbeat
+      and sends RR(F=0); linbpq clears RNRSENT and sends a supervisory command
+      when no longer busy.
+    references:
+    - source: linux_oot
+      path: net/ax25/ax25_std_timer.c
+      function: ax25_std_heartbeat_expiry
+      line: 64
+      note: when rmem pressure clears, drops OWN_RX_BUSY + ACK_PENDING and sends RR(POLLOFF) response — closest analogue to DL-FLOW-ON
+    - source: linbpq
+      path: L2Code.c
+      function: L2TimerProc
+      line: 3501
+      note: "RNRSENT set & no longer busy → SendSupervisCmd (RR/RNR P) (3516); closest analogue to DL-FLOW-ON"
+  t07_dl_connect_request:
+    notes: >-
+      DL-CONNECT request while already in TimerRecovery: discard I queue,
+      Establish Data Link (SABM/SABME), set layer-3-initiated. Stays
+      TimerRecovery in the figure (the SABM round-trip then moves it on).
+      AGREEMENT: direwolf handles states 3 & 4 the same — re-establish. linux
+      rejects a connect on an already-up socket (-EISCONN), so it does NOT
+      implement re-establishment-from-connected.
+    references:
+    - source: spec_prose
+      cite: "§6.3.6.2"
+      quote: >-
+        If sent and received SABM(E) or DISC command frames are the same, both
+        TNCs send a UA response at the earliest opportunity, and both devices
+        enter the indicated state.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: dl_connect_request
+      line: 989
+      note: "state_3/state_4 fall-through: discard_i_queue, establish_data_link, layer_3_initiated=1"
+    - source: linux_oot
+      path: net/ax25/af_ax25.c
+      function: ax25_connect
+      line: 1227
+      note: already STATE_3/4 → -EISCONN; Linux does not re-establish from a connected state
+  t11_ua_received:
+    notes: >-
+      Unexpected UA in TimerRecovery: DL-ERROR(C), Establish Data Link, clear
+      layer-3-initiated, → AwaitingConnection. AGREEMENT: direwolf and rax25
+      both re-establish (direwolf merges states 3/4 → state_1; does not branch
+      on F). DIVERGENCE: linux has no AX25_UA case in the state4 switch → silent
+      default (no DL-ERROR(C), no re-establish); linbpq similarly drops a UA in
+      the connected states. rax25 emits DlError::C (its note flags 2017 spec's
+      DlError::K as "undocumented").
+    references:
+    - source: spec_prose
+      cite: "§6.5 ¶2"
+      quote: >-
+        A TNC initiates a reset procedure whenever it receives an unexpected UA
+        response frame, or after receipt of a FRMR frame from a TNC using an
+        older version of the protocol.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: ua_frame
+      line: 4948
+      note: "state_3/state_4 merged: error C, establish_data_link, → state_1 (or 5 if modulo 128). Does NOT branch on F bit (figure's two F paths collapsed)"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::ua
+      line: 1748
+      note: 'serves both states; DlError::C, establish_data_link, → AwaitingConnection. Author: 2017 spec says DlError::K, which is undocumented'
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 409
+      note: "no AX25_UA case in the STATE_4 switch → default break (silent). DIVERGENCE: figure calls for DL-ERROR(C)+re-establish"
+  t12_dm_received:
+    notes: >-
+      DM received in TimerRecovery: DL-ERROR(E), DL-DISCONNECT indication,
+      discard I queue, Stop T1, Stop T3, → Disconnected. STRONG AGREEMENT — all
+      four tear the link down on DM. direwolf merges states 3/4 (does not branch
+      on F, though the figure has only one path here anyway); rax25 marks it
+      "Done."; linux ax25_disconnect(ECONNRESET); linbpq InformPartner(LINKLOST).
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: dm_frame
+      line: 4696
+      note: "state_3/state_4 merged: error E, server_link_terminated, discard queue, STOP_T1/STOP_T3, → state_0"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::dm
+      line: 1523
+      note: serves both states; "Done." — clear queue, stop T1/T3, DlError::E, → Disconnected
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 299
+      note: "AX25_DM → ax25_disconnect(ECONNRESET) → STATE_0. Ignores F bit"
+    - source: linbpq
+      path: L2Code.c
+      function: SFRAME
+      line: 2265
+      note: "DM is a U-frame, handled in L2_PROCESS not SFRAME; connected-state DM → InformPartner(LINKLOST)+CLEAROUTLINK (no explicit DL-ERROR(E))"
+  t13_sabm_received_no:
+    notes: >-
+      SABM while in TimerRecovery, V(s)!=V(a): reset to v2.0, UA, clear exception
+      conditions, DL-ERROR(F), discard I queue, DL-CONNECT indication, stop
+      timers, zero V(s)/V(a)/V(r), → Connected. AGREEMENT on the reset shape.
+      DIVERGENCE: direwolf merges states 3/4 and only differs from state 3 by
+      calling set_version_2_0/2_2 in state 4 (line 4454); it always emits the
+      server_link_established (DL-CONNECT) when vs!=va. linux collapses all SABM/
+      SABME handling with no per-V-state branching.
+    references:
+    - source: spec_prose
+      cite: "§6.3.3"
+      quote: >-
+        If the TNC receives a SABM(E) command while in the information-transfer
+        state, it follows the resetting procedure outlined in Section 6.5.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: sabm_e_frame
+      line: 4442
+      note: "state_3/state_4 merged; the ONE difference is set_version_2_0/2_2 in state_4 (4454). UA F=p, clear_exception_conditions, error F, discard queue if vs!=va + link_established, reset V(), STOP_T1/START_T3, → state_3"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::sabm
+      line: 1506
+      note: set_version_2 then sabm_or_sabme() (shared by both states); discards queue + DL-Connect indication when vs!=va
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 271
+      note: "combined SABM/SABME case: UA, reset V(), condition=0, n2count=0, → STATE_3, ax25_requeue_frames. No per-F or per-V-state branch"
+  t13_sabm_received_yes:
+    notes: >-
+      SABM in TimerRecovery, V(s)==V(a) (no unacked data): silent reset — UA,
+      clear exceptions, DL-ERROR(F), but NO DL-CONNECT indication / queue
+      discard, → Connected. Same impls as t13_sabm_received_no; the vs==va guard
+      is exactly the `if (S->vs != S->va)` test direwolf and rax25 use to decide
+      whether to emit the connect indication.
+    references:
+    - source: spec_prose
+      cite: "§6.3.3"
+      quote: >-
+        If the TNC receives a SABM(E) command while in the information-transfer
+        state, it follows the resetting procedure outlined in Section 6.5.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: sabm_e_frame
+      line: 4468
+      note: "vs==va: falls past the `if (S->vs != S->va)` block, so no discard / no link_established; still UA + reset + → state_3"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::sabm_or_sabme
+      line: 1433
+      note: "`if data.vs != data.va` guards the queue-clear + DL-Connect; vs==va skips it"
+  t14_sabme_received_no:
+    notes: >-
+      SABME in TimerRecovery, V(s)!=V(a): same as the SABM t13 path but Set
+      Version 2.2. DIVERGENCE: direwolf and linux merge SABM and SABME into one
+      handler distinguished only by the modulus/version set (direwolf's
+      `extended` bool only routes set_version; structural collapse vs figc4.5).
+    references:
+    - source: spec_prose
+      cite: "§6.3.3"
+      quote: >-
+        If the TNC receives a SABM(E) command while in the information-transfer
+        state, it follows the resetting procedure outlined in Section 6.5.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: sabm_e_frame
+      line: 4454
+      note: SABM/SABME share the body; `extended` only selects set_version_2_2 vs set_version_2_0 in state_4
+    - source: rax25
+      path: src/state.rs
+      function: Connected::sabme
+      line: 1515
+      note: set_version_2_2 then shared sabm_or_sabme()
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 271
+      note: combined SABM/SABME; AX25_EMODULUS/EWINDOW selected for SABME (277)
+  t14_sabme_received_yes:
+    notes: >-
+      SABME in TimerRecovery, V(s)==V(a): silent reset to v2.2, no DL-CONNECT
+      indication. See t13_sabm_received_yes — same vs==va guard, version 2.2.
+    references:
+    - source: rax25
+      path: src/state.rs
+      function: Connected::sabm_or_sabme
+      line: 1447
+      note: "rc=0 reset is Connected-only; author TODO 'should this be set also for TimerRecovery?'. vs==va skips the connect indication"
+    - source: direwolf
+      path: src/ax25_link.c
+      function: sabm_e_frame
+      line: 4468
+      note: vs==va path, extended → set_version_2_2; no connect indication
+  t15_frmr_received:
+    notes: >-
+      FRMR in TimerRecovery: DL-ERROR(K), set version 2.0, Establish Data Link,
+      clear layer-3-initiated, → AwaitingConnection. AGREEMENT: direwolf and
+      rax25 both re-establish; direwolf adds set_version_2_0 ("FRMR can only be
+      sent by v2.0") which the figure omits, and merges states 3/4 → state_1.
+      linux maps FRMR (and ILLEGAL) to establish_data_link + STATE_1 with no
+      DL-ERROR(K) report and no inspection of FRMR info bytes. DIVERGENCE:
+      linbpq's FRMRHACK treats FRMR as DM (link lost) rather than re-establish.
+    references:
+    - source: spec_prose
+      cite: "§6.5 ¶2"
+      quote: >-
+        after receipt of a FRMR frame from a TNC using an older version of the
+        protocol.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: frmr_frame
+      line: 5010
+      note: "state_3/state_4 merged: error K, set_version_2_0 (erratum: not in flow chart), establish_data_link, layer_3_initiated=0, → state_1"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::frmr
+      line: 1760
+      note: serves both states; layer3_initiated=false, DlError::K, establish_data_link, → AwaitingConnection
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 403
+      note: "AX25_FRMR/AX25_ILLEGAL → establish_data_link + STATE_1. No DL-ERROR(K); FRMR info bytes ignored"
+    - source: linbpq
+      path: L2Code.c
+      function: SDFRMR
+      line: 3846
+      note: "FRMRHACK build (L2Code.c:24) treats inbound FRMR as link-lost (DM-like) rather than the figure's DL-ERROR(K)+Establish"
+  t16_ui_received_yes:
+    notes: >-
+      UI command with P=1 in TimerRecovery: UI Check then Enquiry Response(F=1).
+      DIVERGENCE: direwolf and linux process UI frames OUTSIDE the connected
+      state machine (UI is intercepted before LAPB dispatch), so the figure's
+      UI-Check / enquiry-response-on-poll path is mostly vestigial. direwolf's
+      ui_frame only acts on cmd&&P=1 (sends RR/RNR response). rax25 does run
+      ui_check and sends an enquiry_response when the poll bit is set.
+    references:
+    - source: spec_prose
+      cite: "§6.3.7"
+      quote: >-
+        A received UI frame with the P bit set causes a response to be
+        transmitted. This response is a DM frame when in the disconnected state,
+        or an RR (or RNR, if appropriate) frame in the information transfer
+        state.
+    - source: rax25
+      path: src/state.rs
+      function: Connected::ui
+      line: 1770
+      note: serves both states; ui_check(cr,len) then enquiry_response(true) when packet.push (poll)
+    - source: direwolf
+      path: src/ax25_link.c
+      function: ui_frame
+      line: 5108
+      note: "only acts when cr==cmd && pf==1; UI normally bypasses the DLSM entirely (header note 5102-5104)"
+    - source: linux_oot
+      path: net/ax25/ax25_in.c
+      function: ax25_rcv
+      line: 229
+      note: UI intercepted before the state machine; handled state-independently, no enquiry-response-in-state-4 path
+  t17_disc_received:
+    notes: >-
+      DISC in TimerRecovery: discard I queue, F:=P, UA, DL-DISCONNECT
+      indication, Stop T1, Stop T3, → Disconnected. STRONG AGREEMENT — all four
+      ack with UA(F=P) and tear down. direwolf merges states 3/4. linbpq sends
+      UA + CLEAROUTLINK.
+    references:
+    - source: spec_prose
+      cite: "§6.3.4 ¶2"
+      quote: >-
+        After receiving a valid DISC command, the TNC sends a UA response frame
+        and enters the disconnected state.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: disc_frame
+      line: 4557
+      note: "state_3/state_4 merged: discard queue, UA F=p, server_link_terminated, STOP_T1/STOP_T3, → state_0"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::disc
+      line: 1537
+      note: serves both states; "Done." — clear queue, stop T1/T3, SendUa{pf:p.poll}, EOF, → Disconnected
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 294
+      note: "AX25_DISC → UA(pf) response, ax25_disconnect(0) → STATE_0"
+  t18_rr_received_no_no_yes:
+    notes: >-
+      RR received, NOT response-with-F=1 and NOT command-with-P=1 (i.e. plain
+      RR, no poll/final), N(R) in window: V(a):=N(r), stay. Acknowledges
+      outstanding I frames without leaving recovery. AGREEMENT: all impls clear
+      peer-busy and advance V(a) from a valid N(R) regardless of P/F. direwolf
+      state_4 sets V(a) and (its v1.5 enhancement) jumps back to state_3 if
+      caught up. rax25 update_ack(nr). linux ax25_frames_acked(nr).
+    references:
+    - source: spec_prose
+      cite: "§6.4.6"
+      quote: >-
+        Whenever an I or S frame is correctly received, even in a busy
+        condition, the N(R) of the received frame is checked to see if it
+        includes an acknowledgement of outstanding sent I frames.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: rr_rnr_frame
+      line: 3634
+      note: "state_4, not (resp&F=1): SET_VA(nr) on good N(R); v1.5 enhancement returns to state_3 if vs==va (3647-3656)"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::rr_timer_recovery
+      line: 1410
+      note: "command-or-no-poll path: update_ack(nr) on in-range N(R); the auto-return-to-Connected on caught-up is present but #if-0'd off (Direwolf-stuck-state TODO)"
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 328
+      note: "RR/RNR non-(resp&pf): enquiry_response if cmd&pf, then ax25_frames_acked(nr) on valid N(R)"
+  t18_rr_received_no_no_no:
+    notes: >-
+      Plain RR (no P/F), N(R) out of window → N(r) Recovery (re-establish via
+      the v2.0 path here), stay/→ AwaitingConnection. AGREEMENT: a bad N(R)
+      triggers establish_data_link in direwolf/rax25/linux. DIVERGENCE: linbpq
+      routes all bad-N(R) to FRMR (SDFRMR) rather than N(r) error recovery; the
+      next-state also differs (figc4.5 keeps TimerRecovery for the v2.0 branch,
+      whereas direwolf/rax25/linux go to AwaitingConnection / STATE_1).
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: rr_rnr_frame
+      line: 3658
+      note: "bad N(R): nr_error_recovery → state_1 (or state_5 if modulo 128, author enhancement)"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::rr_timer_recovery
+      line: 1425
+      note: "N(R) out of range: nr_error_recovery → AwaitingConnection"
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 331
+      note: "!ax25_validate_nr → ax25_std_nr_error_recovery + STATE_1"
+    - source: linbpq
+      path: L2Code.c
+      function: SDNRCHK
+      line: 2968
+      note: "bad N(R) sets SDREJF|=SDNRER → SFRAME calls SDFRMR (FRMR). DIVERGENCE: FRMR rather than N(r) error recovery"
+  t18_rr_received_yes_yes_no:
+    notes: >-
+      RR RESPONSE with F=1 (the timeout-recovery reply), N(R) in window, V(s) !=
+      V(a): this is the heart of T1 recovery. Stop T1, Select T1 Value, V(a):=
+      N(r), then INVOKE RETRANSMISSION (go-back-N: resend everything from N(r)
+      to V(s)), Stop T3 / Start T1, set ack pending. AGREEMENT — go-back-N here
+      is universal: direwolf invoke_retransmission(nr), rax25 invoke_retrans-
+      mission, linux ax25_requeue_frames. (Contrast with the SREJ handler, which
+      the impls do single-frame; here on RR(F) recovery everyone backs up.)
+    references:
+    - source: spec_prose
+      cite: "§6.4.11"
+      quote: >-
+        If the originating TNC's timer T1 expires while awaiting the distant
+        TNC's acknowledgement of an I frame transmitted, the originating TNC
+        restarts timer T1 and transmits an appropriate supervisory command frame
+        (RR or RNR) with the P bit set.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: rr_rnr_frame
+      line: 3580
+      note: "state_4, resp&F=1, good N(R), vs!=va: SET_VA, invoke_retransmission(nr) (go-back-N), then author addition STOP_T3/START_T1/ack=0 (3600-3611)"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::rr_timer_recovery
+      line: 1393
+      note: "!cr&&poll, vs!=va: update_ack then invoke_retransmission(nr) (resends whole iframe_resend_queue), T3 stop/T1 start, ack pending=true (2017 spec)"
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 317
+      note: "RR resp&pf, valid N(R), vs!=va: ax25_requeue_frames (go-back-N from V(a))"
+    - source: linbpq
+      path: L2Code.c
+      function: SFRAME
+      line: 2481
+      note: "RR(F) with POLLSENT outstanding → RESETNS(N(r)) resets V(s) so SDETX resends from N(r) (go-back-N). RESETNS counts (LINKNS-NS)&7 frames"
+  t18_rr_received_yes_yes_yes:
+    notes: >-
+      RR RESPONSE with F=1, N(R) in window, V(s)==V(a) (everything acked): the
+      recovery succeeded. Start T3, RC:=0, → Connected. AGREEMENT: all impls
+      that model a distinct recovery state return to Connected when caught up.
+      direwolf SET_RC(0)+state_3; rax25 rc=0+Connected; linux start_t3+STATE_3.
+      linbpq has no separate state — ACKMSG just stops the timer and clears
+      POLLSENT when fully acked.
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: rr_rnr_frame
+      line: 3595
+      note: "state_4, resp&F=1, good N(R), vs==va: START_T3, SET_RC(0), → state_3"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::rr_timer_recovery
+      line: 1387
+      note: "vs==va: t3.start, rc=0 (2017 spec), → Connected"
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 314
+      note: "RR resp&pf, valid N(R), vs==va: ax25_start_t3timer, → STATE_3, n2count=0"
+    - source: linbpq
+      path: L2Code.c
+      function: ACKMSG
+      line: 3683
+      note: "when LINKWS==LINKNS (all acked) and not retrying, L2TIMER=0 + clear POLLSENT (3706-3710) — equivalent of returning to the idle/Connected condition"
+  t19_rnr_received_no_no_no:
+    notes: >-
+      RNR (no P/F), N(R) out of window → N(r) Recovery. RNR differs from RR only
+      in setting Peer Busy. DIVERGENCE FOR #-context: rax25 does NOT override
+      `rnr` in its Connected/TimerRecovery impl, so RNR received in TimerRecovery
+      hits the base-trait no-op stub ("TODO: unexpected RNR", src/state.rs:1007)
+      — rax25 effectively ignores RNR in recovery. direwolf and linux share the
+      RR path, only additionally setting peer_receiver_busy / PEER_RX_BUSY.
+    references:
+    - source: spec_prose
+      cite: "§6.4.9"
+      quote: >-
+        Whenever a TNC receives an RNR frame, it stops transmitting I frames
+        until the busy condition is cleared.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: rr_rnr_frame
+      line: 3576
+      note: "RNR shares rr_rnr_frame; state_4 sets peer_receiver_busy=!ready then identical N(R)/recovery logic to RR"
+    - source: rax25
+      path: src/state.rs
+      function: State::rnr
+      line: 1007
+      note: "DIVERGENCE: Connected/TimerRecovery impl does NOT override rnr → base no-op stub 'TODO: unexpected RNR'. RNR in recovery is dropped"
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 303
+      note: "RR/RNR combined case; RNR only differs by setting AX25_COND_PEER_RX_BUSY (308)"
+  t19_rnr_received_yes_yes_no:
+    notes: >-
+      RNR RESPONSE F=1, N(R) in window, V(s)!=V(a): like t18_rr_received_yes_yes_no
+      (Stop T1, V(a):=N(r), Invoke Retransmission go-back-N, Stop T3/Start T1,
+      set ack pending) but peer is busy. direwolf/linux reach this through the
+      shared RR/RNR handler; rax25 drops RNR (no override). Note direwolf's
+      check_i_frame_ackd special-cases peer_receiver_busy to keep T3 running.
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: rr_rnr_frame
+      line: 3580
+      note: "RNR resp&F=1 uses the same state_4 path as RR; peer_receiver_busy=1 set first. invoke_retransmission still runs (go-back-N)"
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 317
+      note: "shared RR/RNR; resp&pf, vs!=va → ax25_requeue_frames"
+    - source: rax25
+      path: src/state.rs
+      function: State::rnr
+      line: 1007
+      note: "no rnr override → no-op stub; this F=1 recovery path is NOT handled by rax25"
+  t19_rnr_received_yes_yes_yes:
+    notes: >-
+      RNR RESPONSE F=1, N(R) in window, V(s)==V(a): caught up despite busy peer →
+      Start T3, RC:=0, → Connected. Same as t18_rr_received_yes_yes_yes via the
+      shared RR/RNR handlers (direwolf, linux). rax25 does not handle RNR here.
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: rr_rnr_frame
+      line: 3595
+      note: "shared RR/RNR state_4, resp&F=1, vs==va: START_T3, SET_RC(0), → state_3"
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 314
+      note: "shared RR/RNR; vs==va → start_t3, STATE_3"
+  t20_lm_seize_confirm_yes:
+    notes: >-
+      LM-SEIZE confirm with ack pending: clear ack pending, Enquiry Response
+      (F=0), LM-RELEASE request. DIVERGENCE: the LM-SEIZE/RELEASE handshake is a
+      direwolf concept (medium-access seizure); the figure's state-4 LM-SEIZE
+      originally had LM-SEIZE-request (errata: 2006 changed to LM-RELEASE so
+      states 3/4 match). linux/linbpq have no LM-SEIZE primitive — they use a
+      deferred-ack timer (T2 / L2ACKREQ) instead.
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: lm_seize_confirm
+      line: 2202
+      note: "state_3/state_4 merged: i_frame_pop_off_queue, then if acknowledge_pending → enquiry_response(F=0). Erratum note 2244: 2006 uses LM-RELEASE so 3/4 identical"
+    - source: linux_oot
+      path: net/ax25/ax25_std_timer.c
+      function: ax25_std_t2timer_expiry
+      line: 79
+      note: "no LM-SEIZE; T2 expiry sends the deferred ack (timeout_response) when ACK_PENDING — the figc4.5 LM-SEIZE-confirm analogue"
+    - source: linbpq
+      path: L2Code.c
+      function: L2TimerProc
+      line: 3526
+      note: "no LM-SEIZE; delayed-ack L2ACKREQ counts down then SEND_RR_RESP(F=0) (3533) — deferred-ack analogue"
+  t20_lm_seize_confirm_no:
+    notes: >-
+      LM-SEIZE confirm, no ack pending: just LM-RELEASE request (nothing to ack).
+      direwolf merges states 3/4 and pops the I-frame queue first; if nothing was
+      ack-pending it sends no enquiry response. No LM analogue in linux/linbpq.
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: lm_seize_confirm
+      line: 2223
+      note: "state_3/state_4: i_frame_pop_off_queue; acknowledge_pending false → no enquiry_response, transmitter releases when queue empty"
+  t21_t1_expiry_no:
+    notes: >-
+      T1 expiry in TimerRecovery, RC != N2 (retries remain): Transmit Enquiry
+      (RR/RNR command P=1), RC:=RC+1, stay in TimerRecovery. STRONG AGREEMENT —
+      this is the core retry poll. direwolf SET_RC(rc+1)+transmit_enquiry; rax25
+      rc+=1 (TimerRecovery branch) + transmit_enquiry; linux n2count++ +
+      transmit_enquiry; linbpq L2RETRIES++ + SendSupervisCmd (RR(P)).
+    references:
+    - source: spec_prose
+      cite: "§6.4.11"
+      quote: >-
+        the originating TNC restarts timer T1 and transmits an appropriate
+        supervisory command frame (RR or RNR) with the P bit set.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: t1_expiry
+      line: 5570
+      note: "state_4, rc!=n2: SET_RC(rc+1), transmit_enquiry, keep state_4"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::t1
+      line: 1704
+      note: "single t1() for both states; TimerRecovery branch sets rc+=1, then if rc!=n2 → transmit_enquiry + stay TimerRecovery"
+    - source: linux_oot
+      path: net/ax25/ax25_std_timer.c
+      function: ax25_std_t1timer_expiry
+      line: 161
+      note: "STATE_4, n2count!=n2: n2count++, ax25_std_transmit_enquiry; then recompute/restart T1 (173-174)"
+    - source: linbpq
+      path: L2Code.c
+      function: L2TIMEOUT
+      line: 3822
+      note: "state 5+ (connected), retries<N2: L2RETRIES++ then SendSupervisCmd (RR/RNR P=1) (3843)"
+  t21_t1_expiry_yes_yes_yes:
+    notes: >-
+      T1 expiry, RC==N2 (retries exhausted), V(s)==V(a), Peer Busy: DL-ERROR(U)
+      (extended peer-busy), DL-DISCONNECT indication, discard I queue, DM(F=0),
+      → Disconnected. AGREEMENT on giving up at N2. direwolf reproduces all
+      three error variants (U/T/I) via the va!=vs / peer_busy tests; rax25 picks
+      U/T/I with a match on (vs==va, peer_busy); linux just ax25_disconnect-
+      (ETIMEDOUT)+DM (no DL-ERROR distinction); linbpq InformPartner(RETRIEDOUT)+
+      DISC (no DM-F=0, no U/T/I split).
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: t1_expiry
+      line: 5523
+      note: "state_4, rc==n2: peer_receiver_busy branch → Protocol Error U; discard_i_queue, DM F=0, → state_0 (5534-5567)"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::t1
+      line: 1719
+      note: "rc==n2: DlError = match (vs==va, peer_receiver_busy): (true,true)=>U; SendDm{pf:false}, → Disconnected"
+    - source: linux_oot
+      path: net/ax25/ax25_std_timer.c
+      function: ax25_std_t1timer_expiry
+      line: 162
+      note: "STATE_4, n2count==n2: DM(POLLON) + ax25_disconnect(ETIMEDOUT). No U/T/I error distinction, no peer-busy branch"
+    - source: linbpq
+      path: L2Code.c
+      function: L2TIMEOUT
+      line: 3828
+      note: "state 5+, retries>=N2: InformPartner(RETRIEDOUT) + DISC + state 4 (closing). No DM(F=0); no peer-busy/U-T-I split"
+  t21_t1_expiry_yes_yes_no:
+    notes: >-
+      T1 expiry, RC==N2, V(s)==V(a), Peer NOT busy: DL-ERROR(T) (no response to
+      enquiry) instead of U, then identical disconnect (discard queue, DM(F=0),
+      → Disconnected). Same impls as t21_t1_expiry_yes_yes_yes — the (vs==va,
+      peer_busy==false) leg selects DlError::T.
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: t1_expiry
+      line: 5541
+      note: "state_4, rc==n2, !peer_receiver_busy, va==vs: Protocol Error T (no response to enquiry); DM F=0 → state_0"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::t1
+      line: 1722
+      note: "(vs==va, peer_busy=false) => DlError::T; SendDm{pf:false}, → Disconnected"
+  t21_t1_expiry_yes_no:
+    notes: >-
+      T1 expiry, RC==N2, V(s) != V(a): DL-ERROR(I) (N2 timeouts, unacked sent
+      data), discard queue, DM(F=0), → Disconnected. direwolf's va!=vs branch →
+      Error I; rax25's (vs==va==false) leg → DlError::I.
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: t1_expiry
+      line: 5527
+      note: "state_4, rc==n2, va!=vs: Protocol Error I (unacknowledged sent data); DM F=0 → state_0"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::t1
+      line: 1720
+      note: "(vs==va false, _) => DlError::I"
+  t22_i_received_no:
+    notes: >-
+      I frame received as a RESPONSE (Command? = No) in TimerRecovery: protocol
+      error — DL-ERROR(O), discard I frame, stay. DIVERGENCE: rax25's author
+      rejects the spec here — emits DlError::S not O ("not even remotely correct,
+      since O means packet too big") for a non-command I frame, and notes the
+      TimerRecovery (page 96) version has the same unlabelled-yes/no nonsense.
+      direwolf/linux funnel I frames through one handler without this command/
+      response error check.
+    references:
+    - source: rax25
+      path: src/state.rs
+      function: Connected::iframe
+      line: 1552
+      note: "!command_response → DlError::S (not O); author: spec's O 'not even remotely correct'. Applies to both Connected and TimerRecovery"
+    - source: direwolf
+      path: src/ax25_link.c
+      function: i_frame
+      line: 2648
+      note: "state_3/state_4 entry; no command/response error check — bad cases handled by N(R)/length tests instead"
+  t22_i_received_yes_yes_no:
+    notes: >-
+      I frame, valid length, N(R) out of window → N(r) Recovery, → Awaiting-
+      Connection. AGREEMENT: a bad N(R) on an I frame re-establishes the link in
+      direwolf/rax25/linux (linbpq → FRMR). direwolf merges states 3/4 for this.
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: i_frame
+      line: 2747
+      note: "state_3/state_4, good length, !is_good_nr: nr_error_recovery → state_1 (or 5 if modulo 128)"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::iframe
+      line: 1571
+      note: "!in_range(va,nr,vs) → nr_error_recovery → AwaitingConnection (serves both states)"
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 367
+      note: "AX25_I, !ax25_validate_nr → ax25_std_nr_error_recovery + STATE_1"
+  t22_i_received_yes_yes_yes_yes_yes:
+    notes: >-
+      I frame, N(R) ok, Own Receiver Busy, P=1: discard the I frame contents,
+      F:=1, N(r):=V(r), send RNR, clear ack pending. Same own-busy caveat as t05
+      — direwolf flags the own_receiver_busy path as effectively unreachable;
+      linux drives OWN_RX_BUSY from socket buffer pressure and, when busy, only
+      sends an enquiry_response if polled (no V(r) advance).
+    references:
+    - source: spec_prose
+      cite: "§6.4.2.2"
+      quote: >-
+        If the TNC is in a busy condition, it ignores any received I frames
+        without reporting this condition, other than repeating the indication of
+        the busy condition.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: i_frame
+      line: 2707
+      note: "own_receiver_busy && p==1: send RNR response F=1 (states 3/4 same in 2006). Author: 'should be unreachable ... no way to set own_receiver_busy'"
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 373
+      note: "OWN_RX_BUSY: ax25_std_enquiry_response only if pf, then break — no V(r) advance"
+  t22_i_received_yes_yes_yes_no_yes_yes:
+    notes: >-
+      I frame, N(R) ok, own NOT busy, N(s)==V(r) (in sequence), P=1: deliver
+      (V(r)++, clear reject exception, decrement sreject exception, DL-DATA
+      indication), drain any stored in-sequence frames, then F:=1/N(r):=V(r)/RR/
+      clear ack pending. AGREEMENT on in-order delivery + RR(F=1) on poll.
+      DIVERGENCE: the "stored V(r) I frame" resequencing loop is fully realised
+      only in direwolf (rxdata_by_ns drain) and linbpq (RXFRAMES replay); rax25's
+      loop is a `while false` stub ("TODO: check for stored out of order
+      frames"). direwolf merges states 3/4 via i_frame_continued.
+    references:
+    - source: spec_prose
+      cite: "§6.4.2.1"
+      quote: >-
+        the receiving TNC sends an RR frame with N(R) equal to V(R).
+    - source: direwolf
+      path: src/ax25_link.c
+      function: i_frame_continued
+      line: 2906
+      note: "ns==vr: V(r)++, deliver, then while rxdata_by_ns[vr] drain stored out-of-order frames; p=1 → RR response F=1 (2927-2941). Shared by states 3 & 4"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::iframe
+      line: 1618
+      note: "ns==vr: vr++, reject_exception=false, sreject_exception--, Deliver; stored-frame loop is `while false` (TODO); poll → SendRr F=1"
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 378
+      note: "ns==vr: vr++, ax25_rx_iframe (delivers + drains its own reseq), clear REJECT; pf → enquiry_response. No SREJ store/loop"
+    - source: linbpq
+      path: L2Code.c
+      function: PROC_I_FRAME
+      line: 2723
+      note: "in-sequence delivery then replays stored RXFRAMES[] (resequencing); P-bit → SEND_RR_RESP"
+  t22_i_received_yes_yes_yes_no_yes_no_no:
+    notes: >-
+      In-sequence I frame, own not busy, P=0, no ack pending: deliver + drain
+      stored, then set ack pending + LM-SEIZE request (arrange a deferred ack).
+      AGREEMENT on the deferred-ack intent. DIVERGENCE on mechanism: direwolf
+      lm_seize_request; linux sets ACK_PENDING + starts T2; rax25 sets
+      acknowledge_pending with a "LM seize request (?)" comment but emits no
+      concrete seize; linbpq sets L2ACKREQ delayed-ack timer.
+    references:
+    - source: spec_prose
+      cite: "§6.4.2.1"
+      quote: >-
+        The receiving TNC may wait a small period of time before sending the RR
+        frame to be sure additional I frames are not being transmitted.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: i_frame_continued
+      line: 2942
+      note: "ns==vr, p=0, !acknowledge_pending: acknowledge_pending=1 then lm_seize_request"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::iframe
+      line: 1644
+      note: "in-order, no poll, !acknowledge_pending: set acknowledge_pending=true; comment 'LM seize request (?)' — no concrete seize emitted"
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 387
+      note: "ns==vr, !pf, !ACK_PENDING: set ACK_PENDING + ax25_start_t2timer (T2 = deferred-ack analogue of LM-SEIZE)"
+  t22_i_received_yes_yes_yes_no_yes_no_yes:
+    notes: >-
+      In-sequence I frame, own not busy, P=0, ack ALREADY pending: deliver +
+      drain stored, then nothing more (the pending ack will batch). direwolf/
+      linux take the no-op tail; rax25 returns after setting/leaving ack pending.
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: i_frame_continued
+      line: 2942
+      note: "ns==vr, p=0, acknowledge_pending already set: skip lm_seize_request (will piggyback / T-fire later)"
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 387
+      note: "ns==vr, !pf, ACK_PENDING already set: the `if (!ACK_PENDING)` guard is false → no new T2, batch"
+  t22_i_received_yes_yes_yes_no_no_yes_yes:
+    notes: >-
+      Out-of-sequence I frame (N(s)!=V(r)) with REJECT exception already set,
+      P=1: discard contents, F:=1/N(r):=V(r)/RR/clear ack pending (re-ack our
+      expected V(r) without sending another REJ). AGREEMENT: with a reject
+      already outstanding, all impls discard the duplicate/out-of-order frame
+      and only respond (RR F=1) if polled. direwolf/linux share the handler;
+      linbpq L2STATE==6 (REJ-sent) drops it.
+    references:
+    - source: spec_prose
+      cite: "§6.4.4.1"
+      quote: >-
+        When an I frame is received with a correct FCS, but its send sequence
+        number N(S) does not match the current receiver's receive state
+        variable, the frame is discarded.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: i_frame_continued
+      line: 2956
+      note: "reject_exception set, ns!=vr: discard; only if p=1 send RR response F=1 (2963-2972). Shared states 3/4"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::iframe
+      line: 1651
+      note: "reject_exception already set: discard (implicit); respond RR F=1 only if polled (serves both states)"
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 393
+      note: "ns!=vr, COND_REJECT set: if pf → enquiry_response only; otherwise discard, no new REJ"
+  t22_i_received_yes_yes_yes_no_no_no_no:
+    notes: >-
+      Out-of-sequence I frame, no reject exception, SREJ NOT enabled (mod-8 / v2.0
+      style): the classic go-back-N REJ path — discard, set reject exception,
+      F:=P, N(r):=V(r), send REJ, set ack pending. AGREEMENT: this is what
+      everyone does when SREJ is off. linux is REJ-only (no SREJ alternative at
+      all). direwolf srej_none branch. rax25 !srej_enabled branch. linbpq
+      L2STATE=6 + REJ.
+    references:
+    - source: spec_prose
+      cite: "§6.4.4.1"
+      quote: >-
+        A REJ frame is sent with a receive sequence number equal to one higher
+        than the last correctly received I frame if an uncleared N(S) sequence
+        error condition has not been previously established.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: i_frame_continued
+      line: 2974
+      note: "srej_enable==srej_none: set reject_exception, REJ response F=P, ack pending cleared"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::iframe
+      line: 1663
+      note: "!srej_enabled: reject_exception=true, SendRej{pf:p.poll,nr:vr}. Author TODO 'wait a bit before REJ?'"
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 396
+      note: "ns!=vr, !COND_REJECT: set COND_REJECT, REJ(pf) RESPONSE, clear ACK_PENDING. Linux: go-back-N only, no SREJ branch"
+    - source: linbpq
+      path: L2Code.c
+      function: SDIFRM
+      line: 2517
+      note: "out-of-sequence stored in RXFRAMES[NS]; REJ vs SREJ chosen in RR_OR_RNR. L2STATE→6 (REJ-sent)"
+  t22_i_received_yes_yes_yes_no_no_no_yes_no_no:
+    notes: >-
+      Out-of-sequence I frame, no reject exception, SREJ enabled, no sreject
+      exception yet, and N(s) is NOT > V(r)+1 (exactly ONE frame missing): save
+      the frame, N(r):=V(r), F:=1, Sreject++, send SREJ. This is the SREJ
+      GENERATION single-gap case central to #55. DIVERGENCE: direwolf generates
+      SREJ but follows X.25 2.4.6.4 (Multi-SREJ, F-bit logic) rather than the
+      figc4.5 SDL, and only in modulo-128. rax25 increments sreject_exception but
+      the actual SREJ send is a TODO stub (no Action::SendSrej). linux NEVER
+      generates SREJ. linbpq generates SREJ from RR_OR_RNR.
+    references:
+    - source: spec_prose
+      cite: "§6.4.4.3"
+      quote: >-
+        If only one frame is missing, a SREJ frame is sent with a receive
+        sequence number equal to the value N(R) of the missing frame.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: i_frame_continued
+      line: 3018
+      note: "SREJ-enabled, is_ns_in_window: save to rxdata_by_ns, then send_srej_frames for the gap. Author erratum 3014: 'AX.25 ... did not handle SREJ very well. Based on X.25 section 2.4.6.4.' Multi-SREJ, mod-128 only"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::iframe
+      line: 1697
+      note: "single-frame gap (ns==vr+1), SREJ enabled: sreject_exception++, ack pending cleared. SREJ SEND IS A STUB: 'TODO: Action::SendSrej(final=false, nr=vr)' (1698)"
+    - source: linbpq
+      path: L2Code.c
+      function: RR_OR_RNR
+      line: 4143
+      note: "linbpq chooses SREJ vs REJ for a stored out-of-order frame here (single-frame selective). No-SREJ-generation only when peer is v1"
+  t22_i_received_yes_yes_yes_no_no_no_yes_no_yes:
+    notes: >-
+      Out-of-sequence I frame, SREJ enabled, no sreject exception, and N(s) >
+      V(r)+1 (TWO OR MORE frames missing): the figc4.5e SREJ/REJ rule — fall back
+      to REJ (discard, set reject exception, F:=P, REJ, set ack pending) rather
+      than SREJ. AGREEMENT with §6.4.4.3 and with direwolf/X.25 (gap>1 → REJ path)
+      and rax25 (ns != vr+1 → SendRej). linux always REJ regardless.
+    references:
+    - source: spec_prose
+      cite: "§6.4.4.3"
+      quote: >-
+        if N(S) indicates 2 or more frames are missing, a REJ frame is
+        transmitted.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: i_frame_continued
+      line: 3102
+      note: "X.25 2.4.6.4 (a): N(S) not in window → discard, respond if P=1 (direwolf's window logic supersedes the SDL gap>1 test)"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::iframe
+      line: 1688
+      note: "ns != (vr+1)%mod (gap>1): SendRej{pf:p.poll,nr:vr}, ack pending cleared. Comment 'Maybe a version of if in_range(p.ns)' TODO"
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 396
+      note: "any out-of-sequence → REJ (go-back-N); Linux never distinguishes a 1-frame gap for SREJ"
+  t22_i_received_yes_yes_yes_no_no_no_yes_yes:
+    notes: >-
+      Out-of-sequence I frame, SREJ enabled, sreject exception ALREADY > 0: save
+      frame, N(r):=V(r), F:=0, Sreject++, send SREJ(F=0) (additional SREJ while
+      an earlier one is unresolved). DIVERGENCE: direwolf realises the
+      cumulative/multi-gap SREJ via X.25-derived send_srej_frames (with F=0 for
+      additional gaps); rax25 increments sreject_exception but again the SREJ send
+      is a TODO stub. linux: not implemented (REJ only).
+    references:
+    - source: spec_prose
+      cite: "§6.4.4.2"
+      quote: >-
+        If an SREJ condition is already pending, an SREJ will be sent with P=0.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: i_frame_continued
+      line: 3049
+      note: "additional gap while SREJ pending: send_srej_frames for the new gap (F-bit per X.25 2.4.6.4 b)). Cumulative SREJ avoidance logic 3068-3099"
+    - source: rax25
+      path: src/state.rs
+      function: Connected::iframe
+      line: 1680
+      note: "sreject_exception>0: sreject_exception++, ack pending cleared. SREJ SEND IS A STUB: 'TODO: Action::SendSrej(final=false, nr=p.ns)' (1682)"
+  t23_rej_received_no_no_yes_no:
+    notes: >-
+      REJ (no P/F response, no command-P), N(R) in window, V(s)!=V(a): V(a):=
+      N(r) then INVOKE RETRANSMISSION (go-back-N from N(r)), Stop T3 / Start T1,
+      clear ack pending. REJ recovery is GO-BACK-N everywhere — this is the
+      uncontested case. STRONG AGREEMENT: direwolf invoke_retransmission(nr);
+      rax25 — BUT rax25 does NOT override `rej` in its Connected/TimerRecovery
+      impl, so REJ in TimerRecovery hits the no-op stub (src/state.rs:970); linux
+      ax25_requeue_frames; linbpq RESETNS (resets V(s) to N(r)).
+    references:
+    - source: spec_prose
+      cite: "§6.4.7"
+      quote: >-
+        After receiving a REJ frame, the transmitting TNC sets its send state
+        variable to the same value as the REJ frame's received sequence number
+        in the control field. The TNC then retransmits any I frame(s)
+        outstanding at the next available opportunity.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: rej_frame
+      line: 3846
+      note: "state_4, !(resp&P=1), good N(R), vs!=va: invoke_retransmission(nr) (go-back-N), STOP_T3/START_T1, ack=0 (3885-3899). Note 3890: 'RR/RNR state 4 is identical but doesn't have invoke_retransmission here'"
+    - source: rax25
+      path: src/state.rs
+      function: State::rej
+      line: 970
+      note: "DIVERGENCE: Connected/TimerRecovery impl does NOT override rej → base no-op stub 'TODO: unexpected REJ'. REJ in recovery is dropped by rax25"
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 355
+      note: "AX25_REJ, !(resp&pf): enquiry_response if cmd&pf, ax25_frames_acked(nr) + ax25_requeue_frames (go-back-N) on valid N(R)"
+    - source: linbpq
+      path: L2Code.c
+      function: SFRAME
+      line: 2481
+      note: "REJ collapses to treatasRR; on POLLSENT, RESETNS(N(r)) resets V(s)→N(r) so SDETX resends from there (go-back-N). REJ not handled as a distinct opcode"
+  t23_rej_received_yes_yes_no:
+    notes: >-
+      REJ RESPONSE F=1, N(R) in window, V(s)!=V(a): Stop T1, Select T1 Value,
+      V(a):=N(r), Invoke Retransmission (go-back-N), Stop T3 / Start T1, clear
+      ack pending; stays TimerRecovery. Same go-back-N agreement as
+      t23_rej_received_no_no_yes_no; direwolf's resp&P=1 leg, linux's resp&pf
+      leg. rax25 still drops REJ (no override).
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: rej_frame
+      line: 3850
+      note: "state_4, resp&P=1, good N(R), vs!=va: STOP_T1, select_t1_value, invoke_retransmission(nr), STOP_T3/START_T1, ack=0"
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 338
+      note: "AX25_REJ, pf&resp, valid N(R), vs!=va: ax25_requeue_frames (go-back-N), stays in recovery"
+    - source: rax25
+      path: src/state.rs
+      function: State::rej
+      line: 970
+      note: "no rej override → no-op stub; this REJ(F=1) recovery path is NOT handled by rax25"
+  t23_rej_received_yes_yes_yes:
+    notes: >-
+      REJ RESPONSE F=1, N(R) in window, V(s)==V(a) (REJ but everything actually
+      acked): Start T3, RC:=0, → Connected. direwolf resp&P=1 vs==va leg returns
+      to state_3; linux REJ resp&pf vs==va → start_t3 + STATE_3. rax25 drops REJ.
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: rej_frame
+      line: 3855
+      note: "state_4, resp&P=1, good N(R), vs==va: START_T3, SET_RC(0), → state_3"
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 343
+      note: "AX25_REJ, pf&resp, valid N(R), vs==va: ax25_start_t3timer, → STATE_3"
+  t24_srej_received_yes_yes_yes_no:
+    notes: >-
+      verification_pending (ax25sdl#55): transcribed faithfully from figc4.5e,
+      where this SREJ path (response, F=1, frames still outstanding / V(s) != V(a))
+      is drawn as ERRATA — green "Push frame onto queue" plus red "Invoke
+      Retransmission". As drawn it makes the SREJ handler do go-back-N (Invoke
+      Retransmission re-queues every unacked I-frame N(r)..V(s)) using the generic
+      fresh-DL-DATA push verb. That contradicts (a) the prose: §4.3.2.4 / §6.4.8
+      say SREJ requests retransmission of the SINGLE I-frame N(r) and that "I
+      frames transmitted following the I frame indicated by the SREJ frame are not
+      retransmitted", and (b) the figc4.4 (Connected) SREJ handler, which uses
+      "Push Old I Frame N(r) on Queue" with NO Invoke Retransmission. The
+      spec-correct behaviour is single-frame selective retransmit. Tom confirmed
+      (2026-05-28) these boxes are errata (red/green) and likely buggy/unimplemented
+      design; kept faithful to the figure pending an upstream ruling and raised with
+      packethacking/ax25spec. Separately, "Push Frame Onto Queue" (internal_out,
+      fresh-DL-DATA verb) on an SREJ_received trigger carries no payload, which can
+      crash a naive consumer mid-transition — runtime robustness tracked at
+      m0lte/packet.net#225.
+
+      IMPLEMENTATION EVIDENCE (#55): NO deployed impl does the go-back-N "Invoke
+      Retransmission" that this errata box draws. direwolf and linbpq both do
+      SINGLE-FRAME selective retransmit on SREJ; linux has no SREJ path; rax25's
+      SREJ receive is an unimplemented no-op. direwolf in particular has the
+      go-back-N invoke_retransmission for exactly this V(s)!=V(a) state-4 SREJ
+      case but #if-0's it OUT in favour of resend_for_srej (single frame),
+      calling the 2006 go-back-N a bad "cut-n-paste from the REJ flow chart"
+      (src/ax25_link.c:4181-4186). This is direct multi-impl corroboration that
+      the errata box is wrong.
+    references:
+    - source: spec_prose
+      cite: "§4.3.2.4"
+      quote: >-
+        The selective reject frame is used by the receiving TNC to request
+        retransmission of the single I frame numbered N(R). ... I frames
+        transmitted following the I frame indicated by the SREJ frame are not
+        retransmitted as the result of receiving a SREJ frame. ... The SREJ frame
+        is only sent as a response.
+    - source: spec_prose
+      cite: "§6.4.8"
+      quote: >-
+        the transmitting TNC retransmits the individual I frame indicated by the
+        N(R) contained in the SREJ at the next available opportunity. After
+        retransmitting the frame above, new I frames may be retransmitted
+        subsequently if they become available.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: srej_frame
+      line: 4128
+      note: "state_4 SREJ, good N(R), vs!=va: #if 1 (ORIGINAL spec) resend_for_srej (SINGLE frame N(S)=N(R), + Multi-SREJ); #else the 2006 invoke_retransmission (go-back-N) is DISABLED. Author 4181-4186: '... cut-n-paste from the REJ flow chart and this particular place did not get changed.' = the errata this transition draws"
+    - source: direwolf
+      path: src/ax25_link.c
+      function: resend_for_srej
+      line: 4216
+      note: "the actual SREJ resend: ONE I frame with N(S)=N(R) from txdata_by_ns[nr], plus optional Multi-SREJ sequence numbers parsed from the info field. Single-frame selective, NOT go-back-N"
+    - source: linbpq
+      path: L2Code.c
+      function: SFRAME
+      line: 2283
+      note: "SREJ(F) response: resend ONLY FRAMES[N(S)] (single frame decoded from control byte), Multi-SREJ via info field. Single-frame selective. (linbpq has no separate TimerRecovery state — same code serves recovery)"
+    - source: rax25
+      path: src/state.rs
+      function: State::srej
+      line: 991
+      note: "Connected/TimerRecovery impl does NOT override srej → base no-op stub 'TODO: unexpected SREJ'. rax25 does not act on received SREJ at all"
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 270
+      note: "no AX25_SREJ case in the STATE_4 switch at all — linux is go-back-N (REJ) only, never processes a received SREJ"
+  t24_srej_received_yes_yes_no_no:
+    notes: >-
+      verification_pending (ax25sdl#55): same disputed SREJ errata as
+      t24_srej_received_yes_yes_yes_no, F=0 branch — generic "Push frame onto
+      queue" + go-back-N "Invoke Retransmission" where §4.3.2.4 / §6.4.8 and the
+      figc4.4 SREJ handler call for single-frame selective retransmit. Faithful to
+      figc4.5e (errata); raised upstream.
+
+      IMPLEMENTATION EVIDENCE (#55): SREJ with F=0 does not acknowledge (N(R)
+      does not advance V(a)) — see linbpq SDNRCHK (SREJ without F returns without
+      ACK) and the §4.3.2.4 quote. The retransmit, where performed, is again
+      single-frame: direwolf only SET_VA when f=1 and otherwise resend_for_srej
+      the single requested frame; linbpq only resends on SREJ(F). The go-back-N
+      Invoke Retransmission this box draws matches no impl.
+    references:
+    - source: spec_prose
+      cite: "§4.3.2.4"
+      quote: >-
+        if the P/F bit in the SREJ frame is set to "0", then the N(R) of the SREJ
+        frame does not indicate acknowledgement of I frames.
+    - source: linbpq
+      path: L2Code.c
+      function: SDNRCHK
+      line: 2954
+      note: "SREJ without F (F=0) returns early WITHOUT calling ACKMSG — i.e. N(R) does not ack, matching §4.3.2.4. Retransmit happens only on SREJ(F) in SFRAME:2303"
+    - source: direwolf
+      path: src/ax25_link.c
+      function: srej_frame
+      line: 4130
+      note: "SET_VA(nr) guarded by `if (f)` — F=0 does NOT advance V(a); resend is still resend_for_srej (single frame), never go-back-N"
+  t24_srej_received_no_yes_yes_no:
+    notes: >-
+      verification_pending (ax25sdl#55): command (Response=No) SREJ path, P=1,
+      frames still outstanding — figc4.5e draws "Invoke Retransmission" (go-back-N)
+      here. Doubly questionable: §4.3.2.4 marks the SREJ COMMAND form for removal
+      ("(remove Command and) Response" — SREJ is response-only in v2.2), and the
+      go-back-N contradicts SREJ's single-frame selective semantics (see
+      t24_srej_received_yes_yes_yes_no). Faithful to the figure (errata); raised
+      upstream.
+
+      IMPLEMENTATION EVIDENCE (#55): the SREJ-COMMAND form is rejected by the
+      impls too — direwolf and X.25 treat SREJ as response-only and OMIT the
+      command path entirely; linbpq's SREJ resend is gated on `MSGFLAG & RESP`
+      (response only). So both the command form AND the go-back-N this box draws
+      are unsupported by deployed code.
+    references:
+    - source: spec_prose
+      cite: "§4.3.2.4"
+      quote: >-
+        The SREJ frame is only sent as a response.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: srej_frame
+      line: 4122
+      note: "state_4: 'The flow chart splits into two paths for command/response ... Command path has been omitted because SREJ can only be response.' — direwolf does NOT implement the SREJ-command branch this transition encodes"
+    - source: linbpq
+      path: L2Code.c
+      function: SFRAME
+      line: 2299
+      note: "SREJ resend gated on `if (MSGFLAG & RESP)` — only SREJ responses act; an SREJ command would not trigger a resend"
+  t24_srej_received_no_yes_no_no:
+    notes: >-
+      verification_pending (ax25sdl#55): command (Response=No) SREJ path, P=0 —
+      same as t24_srej_received_no_yes_yes_no (vestigial command-SREJ form +
+      go-back-N where selective is specified). Faithful to figc4.5e (errata);
+      raised upstream.
+
+      IMPLEMENTATION EVIDENCE (#55): as with the P=1 command branch, no impl
+      acts on an SREJ command (response-only), and the retransmit semantics where
+      implemented are single-frame, not the go-back-N this box draws.
+    references:
+    - source: spec_prose
+      cite: "§4.3.2.4"
+      quote: >-
+        The SREJ frame is only sent as a response.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: srej_frame
+      line: 4122
+      note: "command path omitted (SREJ response-only); see t24_srej_received_no_yes_yes_no"
+  t24_srej_received_no_yes_yes_yes:
+    notes: >-
+      SREJ command (Response=No), V(a)<=N(r)<=V(s), P=1, then V(a):=N(r), Check I
+      Frame Acknowledged, V(s)==V(a) → stay TimerRecovery (all acked, nothing to
+      resend). The benign all-caught-up SREJ-command branch. As above, deployed
+      impls do not implement the SREJ-command form (direwolf omits it; linbpq
+      gates on RESP; linux has no SREJ; rax25 stub).
+    references:
+    - source: spec_prose
+      cite: "§4.3.2.4"
+      quote: >-
+        If the P/F bit in the SREJ frame is set to "1", then I frames numbered up
+        to N(R)-1 inclusive are considered as acknowledged.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: srej_frame
+      line: 4122
+      note: "SREJ-command branch omitted entirely (response-only). The vs==va all-acked case would, for a response, return to state_3 (4140-4156)"
+  t24_srej_received_yes_yes_yes_yes:
+    notes: >-
+      SREJ RESPONSE, V(a)<=N(r)<=V(s), F=1, V(a):=N(r), Check I Frame Acked,
+      V(s)==V(a): Start T3, RC:=0, → Connected (SREJ(F) acked everything). This
+      is the clean SREJ-success exit. direwolf: state_4 SREJ, good N(R), f → SET_VA;
+      if vs==va → START_T3/SET_RC(0)/state_3 (and it notes this case is probably
+      unreachable). linbpq SREJ(F) advances window via SDNRCHK→ACKMSG. linux: no
+      SREJ. rax25: stub.
+    references:
+    - source: spec_prose
+      cite: "§6.4.8"
+      quote: >-
+        If the P bit was set, then all frames up to N(R)-1 are acknowledged.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: srej_frame
+      line: 4140
+      note: "state_4 SREJ, good N(R), f=1, vs==va: START_T3, SET_RC(0), → state_3. Author 4142-4148 thinks this branch is unreachable"
+    - source: linbpq
+      path: L2Code.c
+      function: SDNRCHK
+      line: 2954
+      note: "SREJ with F: falls to GoodNR → LINKWS=N(R) + ACKMSG releases acked frames (window advance). If that empties the window, ACKMSG stops the timer (3683-3710)"
+  t24_srej_received_yes_yes_no_yes:
+    notes: >-
+      SREJ RESPONSE, N(R) in window, F=0, V(s)==V(a): F=0 means N(R) does NOT
+      acknowledge, but V(s)==V(a) anyway → Start T3, RC:=0, → Connected. linbpq
+      SDNRCHK confirms the F=0 no-ack rule. direwolf would resend_for_srej the
+      single requested frame; the vs==va branch returns to state_3.
+    references:
+    - source: spec_prose
+      cite: "§4.3.2.4"
+      quote: >-
+        if the P/F bit in the SREJ frame is set to "0", then the N(R) of the SREJ
+        frame does not indicate acknowledgement of I frames.
+    - source: linbpq
+      path: L2Code.c
+      function: SDNRCHK
+      line: 2954
+      note: "SREJ F=0 returns before ACKMSG (no acknowledgement), matching the figure's F=0 = no-ack premise"
+  t24_srej_received_yes_yes_no_no:
+    notes: >-
+      verification_pending (ax25sdl#55): SREJ RESPONSE, N(R) in window, F=0, V(s)
+      != V(a) — the same disputed errata block as t24_srej_received_yes_yes_yes_no
+      ("Push Frame Onto Queue" + LM-DATA Request + Invoke Retransmission go-back-N).
+      As drawn it does go-back-N on an F=0 SREJ; spec text (§4.3.2.4 / §6.4.8) and
+      every deployed impl say single-frame selective retransmit (and F=0 = no ack).
+
+      IMPLEMENTATION EVIDENCE (#55): direwolf does resend_for_srej (single frame)
+      here, NOT invoke_retransmission, with the go-back-N explicitly #if-0'd out;
+      linbpq resends only the single FRAMES[N(S)]; linux has no SREJ path; rax25
+      no-ops. No impl does the go-back-N this box draws.
+    references:
+    - source: direwolf
+      path: src/ax25_link.c
+      function: srej_frame
+      line: 4157
+      note: "state_4 SREJ, good N(R), vs!=va: #if 1 resend_for_srej (single frame) and the go-back-N invoke_retransmission is in the #else (disabled). F=0 also means no SET_VA (4130 guarded by `if (f)`)"
+    - source: rax25
+      path: src/state.rs
+      function: State::srej
+      line: 991
+      note: "no srej override → no-op stub; rax25 does not act on this SREJ branch"
+  t25_all_other_primitives__from_lower_layer:
+    notes: >-
+      Catch-all for unmatched lower-layer primitives in TimerRecovery — no
+      action, stay. AGREEMENT: all impls silently ignore unrecognised frame types
+      in the connected/recovery states (direwolf/linux default switch break,
+      linbpq ReleaseBuffer).
+    references:
+    - source: linux_oot
+      path: net/ax25/ax25_std_in.c
+      function: ax25_std_state4_machine
+      line: 409
+      note: "default: break — any unmatched frametype silently ignored in STATE_4"
+  t26_all_other_primitives__from_upper_layer:
+    notes: >-
+      Catch-all for unmatched upper-layer primitives in TimerRecovery — no
+      action, stay. Same as t25; no impl does anything special for an unhandled
+      upper-layer primitive in recovery.
+    references:
+    - source: linbpq
+      path: L2Code.c
+      function: SDETX
+      line: 3131
+      note: "no explicit 'all other upper primitives' handler; unrecognised L4 requests simply don't enqueue tx data"

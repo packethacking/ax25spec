@@ -1,0 +1,106 @@
+# PROSE-DERIVED BOOTSTRAP — NOT a figure-faithful transcription.
+#
+# This page was hand-authored from the AX.25 v2.2 (rev 4, Oct 2025) spec
+# PROSE only. The Management Data-Link figures figc5.1 (Ready) and
+# figc5.2 (Negotiating) were never redrawn as graphml in this repo, and
+# the published PNGs are unreliable (all-black render). Per a deliberate,
+# Tom-directed exception to the repo's graphml→YAML flow, the MDL
+# negotiation-exchange FSM is bootstrapped from §2.6, §5.1, §5.2, §6.3.2
+# and Appendix C5.3 text. NO figc5.x image was opened or inferred from.
+#
+# Every transition below carries a verification_pending note and a
+# spec_prose citation of the section(s) it was derived from. The
+# figc5.x graphml redraw + figure-faithful transcription is a pending
+# backfill task; until then this page MUST NOT be mistaken for a
+# figure transcription. coverage is `partial` because the prose does
+# not enumerate catch-all columns or the XID-command-reception paths
+# for this state (those are figc5.1 figure detail — see backfill scope).
+#
+# DO NOT regenerate this file from graphml — there is no graphml source.
+
+machine: management_data_link
+state: Ready
+coverage: partial
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc5.1
+  url: https://raw.githubusercontent.com/packethacking/ax25spec/main/doc/ax.25.2.2.4_Oct_25.md
+
+# Variables read/written by this state (documentation-only):
+#   RC     — retry count (Appendix C5.3 "Variables").
+#   NM201  — maximum number of retries of the XID command (C5.3).
+# Timer: TM201 — retry timer for management functions (C5.3 "Timers").
+variables:
+  - RC
+  - NM201
+
+# No decision diamonds on this page: the only prose-clear inputs to
+# Ready (MDL-NEGOTIATE Request, and an unexpected XID response) are
+# encoded as unguarded columns. The XID-command-reception P=1 check
+# (error A) is figc5.1 detail and is intentionally NOT encoded here.
+
+transitions:
+
+  # ── MDL-NEGOTIATE Request → start the single XID command/response
+  #    exchange. The initiator of the AX.25 connection sends an XID
+  #    command after it receives the UA frame (C5.3 ¶3). We emit the
+  #    XID command, zero the retry count, start the management retry
+  #    timer TM201, and move to Negotiating to await the peer's reply.
+  - id: t01_mdl_negotiate_request
+    on: MDL_NEGOTIATE_request
+    on_label: MDL-NEGOTIATE Request
+    path:
+      - { action: "RC := 0", kind: processing }
+      - { action: XID_command, kind: signal_lower }
+      - { action: Start TM201, kind: processing }
+    next: Negotiating
+    notes: >-
+      verification_pending (prose-derived bootstrap; figc5.1 graphml redraw
+      pending — see backfill task). Derived from Appendix C5.3 ¶3 ("The
+      station initiating the AX.25 connection will send an XID command
+      after it receives the UA frame") + C5.3 Variables/Timers (RC,
+      NM201, TM201). The ORDER of the three steps (RC:=0, send XID,
+      start TM201) and the XID command's P=1 bit are NOT stated by the
+      prose — error A ("XID command without P=1", C5.3 Error Codes)
+      implies the command carries P=1, but the exact action ordering
+      and the P-bit assignment box are figc5.1 detail and unverified.
+      The DL→MDL handoff that raises this input is the data-link
+      figc4.6 (AwaitingV22Connection) UA-received path, which emits
+      `MDL-NEGOTIATE Request` (internal_out) on a successful v2.2
+      connect — see spec-sdl/.../data-link/yaml/awaiting_v22_connection.sdl.yaml.
+    references:
+      - source: spec_prose
+        cite: "§C5.3 ¶3"
+        quote: "The station initiating the AX.25 connection will send an XID command after it receives the UA frame."
+      - source: spec_prose
+        cite: "§6.3.2 ¶1"
+        quote: "Parameter negotiation occurs only before the connection is made. It is accomplished by sending the XID command frame and receiving the XID response frame."
+      - source: spec_prose
+        cite: "§5.1"
+        quote: "MDL-NEGOTIATE Request. The Layer 3 entity uses this primitive to request the Data-link State Machine to notify/negotiate."
+
+  # ── Unexpected XID response in Ready. Error code B is literally
+  #    "Unexpected XID response" (C5.3 Error Codes); Ready is the state
+  #    in which an XID response is unexpected (we have not sent an XID
+  #    command, so we are not awaiting a response). Reported to Layer 3
+  #    via MDL-ERROR Indicate; stay in Ready.
+  - id: t02_xid_response_received
+    on: XID_response_received
+    on_label: XID
+    path:
+      - { action: "MDL-ERROR Indicate (B)", kind: signal_upper }
+    next: Ready
+    notes: >-
+      verification_pending (prose-derived bootstrap; figc5.1 graphml redraw
+      pending — see backfill task). The EXISTENCE of error B ("Unexpected
+      XID response", §C5.3 Error Codes) is prose-clear, and Ready is the
+      defensible state for it (no XID command outstanding). But the
+      figc5.1 column for a received XID response — whether it is drawn at
+      all in Ready, what (if any) frame is emitted, and the precise
+      MDL-ERROR letter wiring — is unverified figure detail. Encoded as
+      the most defensible reading of the error-code list, NOT from a
+      figure.
+    references:
+      - source: spec_prose
+        cite: "§C5.3 Error Codes"
+        quote: "B — Unexpected XID response."
