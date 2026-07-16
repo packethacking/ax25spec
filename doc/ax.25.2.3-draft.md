@@ -2,7 +2,7 @@
 
 # AX.25 Link Access Protocol for Amateur Packet Radio
 
-**Version 2.3 Revision 1: 24 May 2026**
+**Version 2.3 Revision 0: 24 May 2026**
 
 Copyright (c) 1997 by Tucson Amateur Packet Radio Corporation. Portions Copyright (c) 1984, 1993 by The American Radio Relay League, Inc.
 
@@ -15,7 +15,7 @@ Copyright (c) 1997 by Tucson Amateur Packet Radio Corporation. Portions Copyrigh
 
 ## Changes from Version 2.2
 
-*This section is not part of the protocol. It summarises how this draft differs from [AX.25 v2.2 Revision 4, October 2025](ax.25.2.2.4_Oct_25.md) — the final revision of version 2.2 — and links to the discussion behind each change. Bracketed text such as "[need to fix this]" marks the editors' outstanding working notes. As of Revision 1 (24 May 2026) this draft changes no on-air protocol behaviour: it is an editorial and reference-modernisation pass. Protocol-level change proposals are tracked in the [issue tracker](https://github.com/packethacking/ax25spec/issues). Please keep this table up to date as the draft evolves: rows are in chronological order, oldest first (ties broken by document order) — append new changes at the bottom. Each iteration of this draft is marked with an annotated git tag (`ax25-v2.3.1.0`, `ax25-v2.3.1.1`, …); the tag `ax25-v2.3.1` is reserved for the version the working group eventually releases.*
+*This section is not part of the protocol. It summarises how this draft differs from [AX.25 v2.2 Revision 4, October 2025](ax.25.2.2.4_Oct_25.md) — the final revision of version 2.2 — and links to the discussion behind each change. Bracketed text such as "[need to fix this]" marks the editors' outstanding working notes. As of Revision 1 (24 May 2026) this draft changes no on-air protocol behaviour: it is an editorial and reference-modernisation pass. Protocol-level change proposals are tracked in the [issue tracker](https://github.com/packethacking/ax25spec/issues). Please keep this table up to date as the draft evolves: rows are in chronological order, oldest first (ties broken by document order) — append new changes at the bottom. Each iteration of this draft is marked with an annotated git tag (`ax25-v2.3.0.0`, `ax25-v2.3.0.1`, …); the tag `ax25-v2.3.0` is reserved for the version the working group eventually releases.*
 
 | Section(s) | Change | Author(s) | Date | References |
 |------------|--------|-----------|------|------------|
@@ -26,6 +26,7 @@ Copyright (c) 1997 by Tucson Amateur Packet Radio Corporation. Portions Copyrigh
 | §5, Appendices C1–C6 and D | All layer-to-layer primitives renamed to SDL dot notation ("DL-DATA Request" → "DL-DATA.Request") and "Indicate" corrected to "Indication" throughout (the primitive types are Request, Indication and Confirm). Inconsistent v2.2 forms ("LMSEIZE Confirm", "LM Release Request", "DLCONNECT request", "HW-AOS Indicate") were normalised, and the appendix primitive summary lists regrouped under the correct Received/Sent headings. Collateral damage from the mass find-replace was subsequently repaired. | Bill Beech, NJ7P (sweep); Tom Fanning, M0LTE (cleanup) | 24–27 May 2026 | groups.io: [msg 115](https://groups.io/g/ax25/message/115), [msg 120](https://groups.io/g/ax25/message/120); PRs [#26](https://github.com/packethacking/ax25spec/pull/26), [#27](https://github.com/packethacking/ax25spec/pull/27), [#28](https://github.com/packethacking/ax25spec/pull/28) |
 | Appendix C4.3 | Placeholder "T2 [need to fix this]" added to the data-link state machine timer summary: v2.2 refers to a T2 response-delay timer but never properly defines it. | Bill Beech, NJ7P (raised by John Langner, WB2OSZ) | 24 May 2026 | groups.io: [T2 Timer](https://groups.io/g/ax25/topic/119409052); issues [#25](https://github.com/packethacking/ax25spec/issues/25), [#16](https://github.com/packethacking/ax25spec/issues/16) |
 | Appendix C6 | Retitled "Segmenter/Reassembler State Machines". The editors intend to split the segmenter and reassembler into two separate state machines in a future revision. | Bill Beech, NJ7P | 24 May 2026 | groups.io: [msg 115](https://groups.io/g/ax25/message/115); issues [#29](https://github.com/packethacking/ax25spec/issues/29), [#15](https://github.com/packethacking/ax25spec/issues/15) |
+| Title page, revision history | Renumbered from "Version 2.3 Revision 1" (v2.3.1) to "Version 2.3 Revision 0" (v2.3.0): the working group's first v2.3 release will be v2.3.0, and iterations of this draft are tagged `ax25-v2.3.0.N`. | Tom Fanning, M0LTE | 16 July 2026 | PR [#75](https://github.com/packethacking/ax25spec/pull/75) |
 
 Original: 1993 Version 1
 
@@ -54,7 +55,7 @@ Code Implementation:
 Please note that this Markdown edition is a conversion (and subsequent manual/AI-assisted clean-up) from source PDF/docx documents and as such may contain differences, which we hope through collaboration will be resolved by the community through contributions to this document, made via issues and PRs. 
 [may be able to remove the V2.2 stuff above]
 
-Revision: 2026 Version 2.3.1
+Revision: 2026 Version 2.3.0
 
 Editors: William A. Beech, NJ7P, nj7p@nj7p.org, [others]  
 
@@ -103,7 +104,7 @@ Douglas E. Nielsen, N7LEM
 Jack Taylor, N7OO, SK
 [may be able to remove the V2.2 stuff above]
 
-May 2026, Revision 1
+May 2026, Revision 0
 
 William A. Beech, NJ7P 
 Douglas E. Nielsen, N7LEM 
