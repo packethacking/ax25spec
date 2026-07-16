@@ -368,7 +368,7 @@ Layer 3 requests services from the data-link layer via command/response interact
 
 The primitives that are exchanged between the data-link layer and adjacent layers are of the following four types:
 - REQUEST primitive type: used by a higher layer to request a service from the next lower layer.
-- INDICATION primitive type: used by the next lower layer to provide a service to notify the next higher layer of any specific activity that is service related. INDICATION primitive may be the result of an activity of the lower layer related to the primitive type REQUEST at the peer entity.
+- INDICATION primitive type: used by the next lower layer to provide a service to notify the next higher layer of any specific activity that is service related. The INDICATION primitive may be the result of an activity of the lower layer related to the primitive type REQUEST at the peer entity.
 - RESPONSE primitive type: used by a layer to acknowledge receipt from a lower layer of the primitive type INDICATION. AX.25 does not use the RESPONSE primitive. Actual frames will be sent as shown in the example below with the UA frame.
 - CONFIRM primitive type: used by the upper layer to provide the requested service to confirm that the activity has been completed by the lower layer.
 
@@ -572,7 +572,7 @@ Figure 3.4 shows a typical AX.25 frame in the non-repeater mode of operation.
 
 **Figure 3.4 Non-Repeater AX.25 Frame.**
 
-The frame shown is an I frame, not going through a Layer 2 repeater, from N7LEM(SSID=0) to NJ7P (SSID=0), without a Layer 3 protocol. The P/F bit is set; the receive sequence number \[N(R)\] is 1; the send sequence number \[N(S)\] is 7.
+The frame shown is an I frame, not going through a Layer 2 repeater, from N7LEM (SSID=0) to NJ7P (SSID=0), without a Layer 3 protocol. The P/F bit is set; the receive sequence number \[N(R)\] is 1; the send sequence number \[N(S)\] is 7.
 
 ### 3.12.2 Destination Subfield Encoding
 
@@ -634,6 +634,10 @@ If a frame is to go through Layer 2 amateur packet repeater(s), an additional ad
 
 The H bit is set to "0" on frames going to a repeater. The repeater changes the H bit to "1" before it retransmits the frame. Stations monitor and repeat frames that meet the following conditions:
 
+- The frame is addressed to this station in a repeater address subfield
+- The H bit in its repeater address subfield is 0
+- All previous H bits are set to one
+
 Figure 3.7 shows how the repeater address subfield is encoded. Figure 3.8 is an example of a complete frame after being repeated.
 
 | Octet         | ASCII | Binary       | Hex  |
@@ -652,6 +656,8 @@ Figure 3.7 shows how the repeater address subfield is encoded. Figure 3.8 is an 
 
 Where:
 - The top octet is the first octet sent, with bit 0 being sent first and bit 7 sent last of each octet.
+- As with the source and destination address subfields discussed above, bit 0 of each octet is the HDLC address extension bit. It is set to "0" on all but the last address octet, where it is set to "1".
+- The "R" bits are reserved in the same manner as in the source and destination subfields.
 - The "H" bit is the has-been-repeated bit. It is set to "0" when a frame has not been repeated and set to "1" by the repeating station when repeated.
 
 | Octet         | ASCII | Binary       | Hex  |
@@ -1007,11 +1013,11 @@ The encoding of each PI/PL/PV applicable to AX.25 is detailed in Figure 4.5. Som
 | | | | Reserved \* |   | 7-15 | 0 |
 | HDLC Optional Functions | 3 | 3 | 1 Reserved \* | E | 0 | 0 |
 | | | | 2 REJ command/response | E | 1 | 0/1 |
-| | | | 3A SREJ command/response \* | E | 2 | 0/1 |
+| | | | 3A SREJ command/response | E | 2 | 0/1 |
 | | | | 4 UI command/response \* | E | 3 | 0 |
 | | | | 5 SIM command/RIM response \* | E | 4 | 0 |
 | | | | 6 UP command \* | E | 5 | 0 |
-| | | | 7A Basic address | E | 6 | 0 |
+| | | | 7A Basic address \* | E | 6 | 0 |
 | | | | 7B Extended address | E | 7 | 1 |
 | | | | 8 Delete I response \* | E | 8 | 0 |
 | | | | 9 Delete I command \* | E | 9 | 0 |
@@ -1024,11 +1030,11 @@ The encoding of each PI/PL/PV applicable to AX.25 is detailed in Figure 4.5. Som
 | | | | 14B 32-bit FCS \* | E | 16 | 0 |
 | | | | 15A Synchronous Tx | E | 17 | 1 |
 | | | | 15B Start/stop Tx \* | E | 18 | 0 |
-| | | | 15C Start/stop (async) Basic Flow Ctl | E | 19 | 0 |
+| | | | 15C Start/stop Basic Flow Ctl\* | E | 19 | 0 |
 | | | | 15D Start/stop Octet Transparent \* | E | 20 | 0 |
-| | | | 3B SREJ Multiframe | E | 21 | 0/1 |
-| | | | 16 segmenter/reassembler | E | 22 | 0/1 |
-| | | | Reserved | E | 23 | 0 |
+| | | | 3B SREJ Multiframe \* | E | 21 | 0/1 |
+| | | | 16 Segmenter/Reassembler | E | 22 | 0/1 |
+| | | | Reserved \* | E | 23 | 0 |
 | I Field Length Tx | 5 | N | Max I fields length Tx (bits)N1\*8 \* | B | NA | B |
 | I Field Length Rx | 6 | N | Max I fields length Rx (bits)N1\*8 \* | B | NA | B |
 | Window Size Tx | 7 | 1 | Window Size k (frames) Tx \* | B B | 0-6 <br /> 7 | 0-127 <br /> 0 |
@@ -1037,7 +1043,7 @@ The encoding of each PI/PL/PV applicable to AX.25 is detailed in Figure 4.5. Som
 
 **Figure 4.5 Parameter Negotiation - Parameter Field Elements.**
 
-Note: that Type E is a bit field and Type B is a numeric field of N octets. 32
+Note: that Type E is a bit field and Type B is a numeric field of N octets.
 
 Parameter field elements marked \* are defined in ISO 8885. They are shown for compatibility purposes only and are not needed to negotiate the features of this version of AX.25.
 
@@ -1458,13 +1464,12 @@ This version of AX.25 implements the priority acknowledgement procedure.
 This feature precludes a non-priority frame from being transmitted during slot 0, the time when the TNC receiving the previous frame would be expected to send an acknowledgement.
 
 ### 6.4.4 Reception of Out-of-Sequence Frames
-#### 6.4.4.1 Implicit Reject (REJ) Recovery
-(REJ)*
+#### 6.4.4.1 Implicit Reject (REJ)
 
 When an I frame is received with a correct FCS, but it’s send sequence number N(S) does not match the current receiver’s receive state variable, the frame is discarded. A REJ frame is sent with a receive sequence number equal to one higher than the last correctly received I frame if an uncleared N(S) sequence error condition has not been previously established. The received state variable and poll bit of the discarded frame is checked and acted upon, if necessary. This mode requires no frame queuing and frame resequencing at the receiver.
 However, because the mode requires transmission of frames that may not be in error, its throughput is not as high as selective reject. This mode is ineffective on systems with long round-trip delays and high data rates.
 
-#### 6.4.4.2 Selective Reject (SREJ) Recovery
+#### 6.4.4.2 Selective Reject (SREJ)
 
 When an I frame is received with a correct FCS, but it’s send sequence number N(S) does not match the current receiver’s receive state variable, the frame is retained. SREJ frames are sent with a receive sequence number equal to the value N(R) of the missing frame, and P=1 if an uncleared SREJ condition has not been previously established. If an SREJ condition is already pending, an SREJ will be sent with P=0. The received state variable and poll bit of the received frame are checked and acted upon, if necessary.
 
