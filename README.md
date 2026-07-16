@@ -2,7 +2,7 @@
 
 [doc/ax.25.2.2.4_Oct_25.md](doc/ax.25.2.2.4_Oct_25.md) is a Markdown version of AX.25 Link Access Protocol for Amateur Packet Radio version 2.2 Revision 4: 27 October 2025
 
-[doc/ax.25.2.3-draft.md](doc/ax.25.2.3-draft.md) is an in-progress draft of a v2.3 AX.25 spec. The filename is stable across revisions; each revision of the draft is marked with an annotated git tag (`ax25-v2.3.1`, `ax25-v2.3.2`, …) matching the document's own "Version 2.3 Revision N" numbering, and the draft's changelog table records what changed. Tags are namespaced with `ax25-` so revisions of the other specs in this repo can be tagged alongside.
+[doc/ax.25.2.3-draft.md](doc/ax.25.2.3-draft.md) is an in-progress draft of a v2.3 AX.25 spec. The filename is stable across revisions; each iteration of the draft is marked with an annotated git tag (`ax25-v2.3.1.0`, `ax25-v2.3.1.1`, `ax25-v2.3.1.2`, …). The first three components are the version the working group will eventually release (v2.3.1 — the number chosen by the author); the fourth increments per draft iteration, and `ax25-v2.3.1` itself is reserved for the release. The draft's changelog table records what changed. Tags are namespaced with `ax25-` so revisions of the other specs in this repo can be tagged alongside.
 
 [doc/kiss-tnc-protocol.md](doc/kiss-tnc-protocol.md) is a Markdown version of the KISS TNC protocol specification.
 
