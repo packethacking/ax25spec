@@ -1,4 +1,4 @@
-![](media/fig_cover.jpeg)
+![](media/ax.25.2.3-draft/fig_cover.jpeg)
 
 # AX.25 Link Access Protocol for Amateur Packet Radio
 
@@ -1743,7 +1743,7 @@ The test symbol is used for branching. The text written within the symbol is pos
 The subroutine symbol is used to encapsulate frequently used sequences of steps; the name of the subroutine is written within the symbol. The expansion of the subroutine is listed at the end of the SDL machine description. Subroutine expansions begin with a subroutine start symbol,
 flow down the page through the specified sequence of operations, and end with the return-from-subroutine symbol. Note that subroutines are not permitted to contain states, nor are they permitted to branch into different return legs. Each subroutine has a single point of return.
 
-![Figure C1.1 SDL Symbol Definitions](media/figc1.1.png)
+![Figure C1.1 SDL Symbol Definitions](media/ax.25.2.3-draft/figc1.1.png)
 
 **Figure C1.1 SDL Symbol Definitions**
 
@@ -1834,35 +1834,35 @@ Timers:
 - T105 — Remote Receiver Sync - T106 — Ten Minute Transmission Limit
 - T107 — Anti-Hogging Limit - T108 — Receiver Startup
 
-![Figure C2a.1 Simplex Physical Ready State](media/figc2a.1.png)
+![Figure C2a.1 Simplex Physical Ready State](media/ax.25.2.3-draft/figc2a.1.png)
 
 **Figure C2a.1 Simplex Physical Ready State.**
 
-![Figure C2a.2 Simplex Physical Receiving State](media/figc2a.2.png)
+![Figure C2a.2 Simplex Physical Receiving State](media/ax.25.2.3-draft/figc2a.2.png)
 
 **Figure C2a.2 Simplex Physical Receiving State.**
 
-![Figure C2a.3 Simplex Physical Transmitter Suppression State](media/figc2a.3.png)
+![Figure C2a.3 Simplex Physical Transmitter Suppression State](media/ax.25.2.3-draft/figc2a.3.png)
 
 **Figure C2a.3 Simplex Physical Transmitter Suppression State.**
 
-![Figure C2a.4 Simplex Physical Transmitter Start State](media/figc2a.4.png)
+![Figure C2a.4 Simplex Physical Transmitter Start State](media/ax.25.2.3-draft/figc2a.4.png)
 
 **Figure C2a.4 Simplex Physical Transmitter Start State.**
 
-![Figure C2a.5 Simplex Physical Transmitting State](media/figc2a.5.png)
+![Figure C2a.5 Simplex Physical Transmitting State](media/ax.25.2.3-draft/figc2a.5.png)
 
 **Figure C2a.5 Simplex Physical Transmitting State.**
 
-![Figure C2a.6. Simplex Physical Digipeating State](media/figc2a.6.png)
+![Figure C2a.6. Simplex Physical Digipeating State](media/ax.25.2.3-draft/figc2a.6.png)
 
 **Figure C2a.6. Simplex Physical Digipeating State.**
 
-![Figure C2a.7 Simplex Physical Receiver Start State](media/figc2a.7.png)
+![Figure C2a.7 Simplex Physical Receiver Start State](media/ax.25.2.3-draft/figc2a.7.png)
 
 **Figure C2a.7 Simplex Physical Receiver Start State.**
 
-![Figure C2a.s Simplex Physical Subroutines](media/figc2a.s.png)
+![Figure C2a.s Simplex Physical Subroutines](media/ax.25.2.3-draft/figc2a.s.png)
 
 **Figure C2a.s Simplex Physical Subroutines.**
 
@@ -1938,23 +1938,23 @@ Timers:
 - T106 — 10-minute transmission limit 
 - T107 — anti-hogging limit
 
-![Figure C2b.1 Duplex Physical Receiver Ready State](media/figc2b.1.png)
+![Figure C2b.1 Duplex Physical Receiver Ready State](media/ax.25.2.3-draft/figc2b.1.png)
 
 **Figure C2b.1 Duplex Physical Receiver Ready State.**
 
-![Figure C2b.2 Duplex Physical Receiving State](media/figc2b.2.png)
+![Figure C2b.2 Duplex Physical Receiving State](media/ax.25.2.3-draft/figc2b.2.png)
 
 **Figure C2b.2 Duplex Physical Receiving State.**
 
-![Figure C2b.3 Duplex Physical Transmitter Ready State](media/figc2b.3.png)
+![Figure C2b.3 Duplex Physical Transmitter Ready State](media/ax.25.2.3-draft/figc2b.3.png)
 
 **Figure C2b.3 Duplex Physical Transmitter Ready State.**
 
-![Figure C2b.4 Duplex Physical Transmitter Start State](media/figc2b.4.png)
+![Figure C2b.4 Duplex Physical Transmitter Start State](media/ax.25.2.3-draft/figc2b.4.png)
 
 **Figure C2b.4 Duplex Physical Transmitter Start State.**
 
-![Figure C2b.5 Duplex Physical Transmitting State](media/figc2b.5.png)
+![Figure C2b.5 Duplex Physical Transmitting State](media/ax.25.2.3-draft/figc2b.5.png)
 
 **Figure C2b.5 Duplex Physical Transmitting State.**
 
@@ -2036,19 +2036,19 @@ This list is cleared when all Data-link State Machines with frames to send have 
 Timers:
 - No timers used.
 
-![Figure C3.1 Link Multiplexer Idle State](media/figc3.1.png)
+![Figure C3.1 Link Multiplexer Idle State](media/ax.25.2.3-draft/figc3.1.png)
 
 **Figure C3.1 Link Multiplexer Idle State.**
 
-![Figure C3.2 Link Multiplexer Seize Pending State](media/figc3.2.png)
+![Figure C3.2 Link Multiplexer Seize Pending State](media/ax.25.2.3-draft/figc3.2.png)
 
 **Figure C3.2 Link Multiplexer Seize Pending State.**
 
-![Figure C3.3 Link Multiplexer Seized State](media/figc3.3.png)
+![Figure C3.3 Link Multiplexer Seized State](media/ax.25.2.3-draft/figc3.3.png)
 
 **Figure C3.3 Link Multiplexer Seized State.**
 
-![Figure C3.4 Link Multiplexer Subroutines](media/figc3.4.png)
+![Figure C3.4 Link Multiplexer Subroutines](media/ax.25.2.3-draft/figc3.4.png)
 
 **Figure C3.4 Link Multiplexer Subroutines.**
 
@@ -2167,63 +2167,63 @@ Timers:
 Queues:
 - I Frame Queue — queue of information to be transmitted in I frames.
 
-![Figure C4.1 Data Link Disconnected State](media/figc4.1.png)
+![Figure C4.1 Data Link Disconnected State](media/ax.25.2.3-draft/figc4.1.png)
 
 **Figure C4.1 Data Link Disconnected State.**
 
-![Figure C4.2 Data Link Awaiting Connection State](media/figc4.2.jpeg)
+![Figure C4.2 Data Link Awaiting Connection State](media/ax.25.2.3-draft/figc4.2.jpeg)
 
 **Figure C4.2 Data Link Awaiting Connection State.**
 
-![Figure C4.3 Data Link Awaiting Release State](media/figc4.3.png)
+![Figure C4.3 Data Link Awaiting Release State](media/ax.25.2.3-draft/figc4.3.png)
 
 **Figure C4.3 Data Link Awaiting Release State.**
 
-![Figure C4.4a Data Link Connected State](media/figc4.4a.png)
+![Figure C4.4a Data Link Connected State](media/ax.25.2.3-draft/figc4.4a.png)
 
 **Figure C4.4a Data Link Connected State.**
 
-![Figure C4.4b Data Link Connected State. (Continued)](media/figc4.4b.png)
+![Figure C4.4b Data Link Connected State. (Continued)](media/ax.25.2.3-draft/figc4.4b.png)
 
 **Figure C4.4b Data Link Connected State. (Continued)**
 
-![Figure C4.4c Data Link Connected State. (Continued)](media/figc4.4c.png)
+![Figure C4.4c Data Link Connected State. (Continued)](media/ax.25.2.3-draft/figc4.4c.png)
 
 **Figure C4.4c Data Link Connected State. (Continued)**
 
-![Figure C4.5a Data Link Timer Recovery State](media/figc4.5a.png)
+![Figure C4.5a Data Link Timer Recovery State](media/ax.25.2.3-draft/figc4.5a.png)
 
 **Figure C4.5a Data Link Timer Recovery State.**
 
-![Figure C4.5b Data Link Timer Recovery State. (Continued)](media/figc4.5b.png)
+![Figure C4.5b Data Link Timer Recovery State. (Continued)](media/ax.25.2.3-draft/figc4.5b.png)
 
 **Figure C4.5b Data Link Timer Recovery State. (Continued)**
 
-![Figure C4.5c Data Link Timer Recovery State. (Continued)](media/figc4.5c.png)
+![Figure C4.5c Data Link Timer Recovery State. (Continued)](media/ax.25.2.3-draft/figc4.5c.png)
 
 **Figure C4.5c Data Link Timer Recovery State. (Continued)**
 
-![Figure C4.5d Data Link Timer Recovery State. (Continued)](media/figc4.5d.png)
+![Figure C4.5d Data Link Timer Recovery State. (Continued)](media/ax.25.2.3-draft/figc4.5d.png)
 
 **Figure C4.5d Data Link Timer Recovery State. (Continued)**
 
-![Figure C4.5e Data Link Timer Recovery State. (Continued)](media/figc4.5e.png)
+![Figure C4.5e Data Link Timer Recovery State. (Continued)](media/ax.25.2.3-draft/figc4.5e.png)
 
 **Figure C4.5e Data Link Timer Recovery State. (Continued)**
 
-![Figure C4.6a Data Link Awaiting V2.2 Connection State](media/figc4.6a.jpeg)
+![Figure C4.6a Data Link Awaiting V2.2 Connection State](media/ax.25.2.3-draft/figc4.6a.jpeg)
 
 **Figure C4.6a Data Link Awaiting V2.2 Connection State.**
 
-![Figure C4.6b Data Link Awaiting V2.2 Connection State (Continued)](media/figc4.6b.png)
+![Figure C4.6b Data Link Awaiting V2.2 Connection State (Continued)](media/ax.25.2.3-draft/figc4.6b.png)
 
 **Figure C4.6b Data Link Awaiting V2.2 Connection State (Continued)**
 
-![Figure C4.7a Data Link Subroutines](media/figc4.7a.png)
+![Figure C4.7a Data Link Subroutines](media/ax.25.2.3-draft/figc4.7a.png)
 
 **Figure C4.7a Data Link Subroutines.**
 
-![Figure C4.7b Data Link Subroutines. (Continued)](media/figc4.7b.png)
+![Figure C4.7b Data Link Subroutines. (Continued)](media/ax.25.2.3-draft/figc4.7b.png)
 
 **Figure C4.7b Data Link Subroutines. (Continued)**
 
@@ -2283,35 +2283,35 @@ Variables:
 Timers:
 - TM201 — Retry timer for management functions.
 
-![Figure C5.1 Management Data Link Ready State](media/figc5.1.png)
+![Figure C5.1 Management Data Link Ready State](media/ax.25.2.3-draft/figc5.1.png)
 
 **Figure C5.1 Management Data Link Ready State.**
 
-![Figure C5.2 Management Data Link Negotiating State](media/figc5.2.png)
+![Figure C5.2 Management Data Link Negotiating State](media/ax.25.2.3-draft/figc5.2.png)
 
 **Figure C5.2 Management Data Link Negotiating State.**
 
-![Figure C5.3 MDL Classes of Procedures Negotiation Subroutines](media/figc5.3.png)
+![Figure C5.3 MDL Classes of Procedures Negotiation Subroutines](media/ax.25.2.3-draft/figc5.3.png)
 
 **Figure C5.3 MDL Classes of Procedures Negotiation Subroutines.**
 
-![Figure C5.4 MDL Optional Functions Subroutines](media/figc5.4.png)
+![Figure C5.4 MDL Optional Functions Subroutines](media/ax.25.2.3-draft/figc5.4.png)
 
 **Figure C5.4 MDL Optional Functions Subroutines.**
 
-![Figure C5.5 MDL N1 Negotiation Subroutines](media/figc5.5.png)
+![Figure C5.5 MDL N1 Negotiation Subroutines](media/ax.25.2.3-draft/figc5.5.png)
 
 **Figure C5.5 MDL N1 Negotiation Subroutines.**
 
-![Figure C5.6 MDL Window Negotiation Subroutines](media/figc5.6.png)
+![Figure C5.6 MDL Window Negotiation Subroutines](media/ax.25.2.3-draft/figc5.6.png)
 
 **Figure C5.6 MDL Window Negotiation Subroutines.**
 
-![Figure C5.7 MDL Retry Notification Subroutines](media/figc5.7.png)
+![Figure C5.7 MDL Retry Notification Subroutines](media/ax.25.2.3-draft/figc5.7.png)
 
 **Figure C5.7 MDL Retry Notification Subroutines**
 
-![Figure C5.8 MDL T1 Negotiation Subroutines](media/figc5.8.png)
+![Figure C5.8 MDL T1 Negotiation Subroutines](media/ax.25.2.3-draft/figc5.8.png)
 
 **Figure C5.8 MDL T1 Negotiation Subroutines.**
 
@@ -2398,19 +2398,19 @@ The reassembler state machine also insists that, once the transmission of a segm
 
 As mentioned above, the use of connection-oriented data link procedures is recommended when segmentation is anticipated on data links with even moderately low collision levels. If connectionless data link procedures (UI frames) are used to carry segments, the loss of a single UI frame will result in the loss of the entire segmented large data unit; higher level attempts at recovery will significantly increase congestion on the physical channel.
 
-![Figure C-6.1 Segmenter Ready State](media/figc6.1.png)
+![Figure C-6.1 Segmenter Ready State](media/ax.25.2.3-draft/figc6.1.png)
 
 **Figure C-6.1 Segmenter Ready State.**
 
-![Figure C-6.2 Reassembler Ready State](media/figc6.2.png)
+![Figure C-6.2 Reassembler Ready State](media/ax.25.2.3-draft/figc6.2.png)
 
 **Figure C-6.2 Reassembler Ready State.**
 
-![Figure C-6.3 Reassembler Assembling Data State](media/figc6.3.png)
+![Figure C-6.3 Reassembler Assembling Data State](media/ax.25.2.3-draft/figc6.3.png)
 
 **Figure C-6.3 Reassembler Assembling Data State.**
 
-![Figure C-6.4 Reassembler Assembling Unit Data State](media/figc6.4.png)
+![Figure C-6.4 Reassembler Assembling Unit Data State](media/ax.25.2.3-draft/figc6.4.png)
 
 **Figure C-6.4 Reassembler Assembling Unit Data State.**
 
