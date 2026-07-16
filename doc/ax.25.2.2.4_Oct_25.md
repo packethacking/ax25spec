@@ -1838,6 +1838,7 @@ The test symbol is used for branching. The text written within the symbol is pos
 The subroutine symbol is used to encapsulate frequently used sequences of steps; the name of the subroutine is written within the symbol. The expansion of the subroutine is listed at the end of the SDL machine description. Subroutine expansions begin with a subroutine start symbol,
 flow down the page through the specified sequence of operations, and end with the return-from-subroutine symbol. Note that subroutines are not permitted to contain states, nor are they permitted to branch into different return legs. Each subroutine has a single point of return.
 
+<!-- Transcription note: this figure reproduces the source document verbatim, including its known defect — the "Signal reception from Lower Layer" / "Signal Reception from Upper Layer" labels on the two input-symbol examples are swapped relative to the notch convention described in the C1.2 text. The corrected figure (with a clarifying footer) is carried in the v2.3 draft. See https://groups.io/g/ax25/topic/119518085 and issue #37. -->
 ![Figure C1.1 SDL Symbol Definitions](media/ax.25.2.2.4_Oct_25/figc1.1.png)
 
 **Figure C1.1 SDL Symbol Definitions**
