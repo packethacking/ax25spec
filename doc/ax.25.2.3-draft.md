@@ -2537,7 +2537,8 @@ The other primitives work in groups of four with the request from the station A 
         |   .Request     |-------------------->| DL-CONNECT     |
         |                |                     |   .Indication  |
         |                |                     |                |
-        |                |    UA Response      |                |
+        |                |                     |  UA Response   |
+        |                |    UA Response      |<---------------|
         | DL-CONNECT     |<--------------------|                |
         |   .Confirm     |                     |                |
         |                |                     |                |
@@ -2547,7 +2548,8 @@ The other primitives work in groups of four with the request from the station A 
         |   .Request     |-------------------->| MDL-NEGOTIATE  |
         |                |                     |   .Indication  |
         |                |                     |                |
-        |                |    XID Response     |                |
+        |                |                     |  XID Response  |
+        |                |    XID Response     |<---------------|
         | MDL-NEGOTIATE  |<--------------------|                |
         |   .Confirm     |                     |                |
         |                |                     |                |
@@ -2557,7 +2559,8 @@ The other primitives work in groups of four with the request from the station A 
         |   .Request     |-------------------->| DL-DATA        |
         |                |                     |   .Indication  |
         |                |                     |                |
-        |                |    RR               |                |
+        |                |                     |      RR        |
+        |                |    RR Frame         |<---------------|
         | DL-DATA        |<--------------------|                |
         |   .Confirm     |                     |                |
         |                |                     |                |
@@ -2567,7 +2570,8 @@ The other primitives work in groups of four with the request from the station A 
         |   .Request     |-------------------->| DL-DISCONNECT  |
         |                |                     |   .Indication  |
         |                |                     |                |
-        |                |    DM Response      |                |
+        |                |                     |  DM Response   |
+        |                |    DM Response      |<---------------|
         | DL-DISCONNECT  |<--------------------|                |
         |   .Confirm     |                     |                |
         |                |                     |                |
