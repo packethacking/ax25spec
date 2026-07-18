@@ -53,6 +53,15 @@
 #   both do single-frame selective; the only go-back-N-on-a-missing-frame impls
 #   (linux, and direwolf's T1 fallback) reach it via REJ / T1 recovery, never as
 #   the SREJ-received action. Corroborates that the figc4.5e SREJ box is errata.
+#
+#   CORRECTION APPLIED (2026-07-02, ax25sdl#55): the four affected t24_srej_*_no
+#   paths in DataLink_TimerRecovery.graphml now encode single-frame selective
+#   retransmit (Push Old I Frame N(r) on Queue → LM-DATA Request → Stop T3 /
+#   Start T1 / Clear Acknowledge Pending), mirroring the figc4.4 Connected SREJ
+#   handler; the go-back-N Invoke Retransmission boxes are removed. This is a
+#   deliberate adjudicated deviation from figc4.5e as drawn, raised upstream as
+#   packethacking/ax25spec#38; verification_pending stays on those transitions
+#   until the upstream figure is corrected.
 
 pinned_refs:
   linbpq:
@@ -1192,23 +1201,26 @@ transitions:
       note: "AX25_REJ, pf&resp, valid N(R), vs==va: ax25_start_t3timer, → STATE_3"
   t24_srej_received_yes_yes_yes_no:
     notes: >-
-      verification_pending (ax25sdl#55): transcribed faithfully from figc4.5e,
-      where this SREJ path (response, F=1, frames still outstanding / V(s) != V(a))
-      is drawn as ERRATA — green "Push frame onto queue" plus red "Invoke
-      Retransmission". As drawn it makes the SREJ handler do go-back-N (Invoke
-      Retransmission re-queues every unacked I-frame N(r)..V(s)) using the generic
-      fresh-DL-DATA push verb. That contradicts (a) the prose: §4.3.2.4 / §6.4.8
-      say SREJ requests retransmission of the SINGLE I-frame N(r) and that "I
-      frames transmitted following the I frame indicated by the SREJ frame are not
-      retransmitted", and (b) the figc4.4 (Connected) SREJ handler, which uses
-      "Push Old I Frame N(r) on Queue" with NO Invoke Retransmission. The
-      spec-correct behaviour is single-frame selective retransmit. Tom confirmed
-      (2026-05-28) these boxes are errata (red/green) and likely buggy/unimplemented
-      design; kept faithful to the figure pending an upstream ruling and raised with
-      packethacking/ax25spec. Separately, "Push Frame Onto Queue" (internal_out,
-      fresh-DL-DATA verb) on an SREJ_received trigger carries no payload, which can
-      crash a naive consumer mid-transition — runtime robustness tracked at
-      m0lte/packet.net#225.
+      verification_pending (ax25sdl#55, upstream packethacking/ax25spec#38):
+      CORRECTED TRANSCRIPTION — deliberately deviates from figc4.5e as drawn.
+      The figure draws this SREJ path (response, F=1, frames still outstanding /
+      V(s) != V(a)) as ERRATA — green "Push frame onto queue" plus red "Invoke
+      Retransmission", i.e. go-back-N using the generic fresh-DL-DATA push verb.
+      That contradicts (a) the prose: §4.3.2.4 / §6.4.8 say SREJ requests
+      retransmission of the SINGLE I-frame N(r) and that "I frames transmitted
+      following the I frame indicated by the SREJ frame are not retransmitted";
+      §4.4.4 frames go-back-N as the pre-SREJ behaviour SREJ supersedes; and
+      (b) the figc4.4 (Connected) SREJ handler, which uses "Push Old I Frame
+      N(r) on Queue" with NO Invoke Retransmission. Tom confirmed the boxes are
+      errata (2026-05-28), raised packethacking/ax25spec#38, and adjudicated the
+      correction (2026-07-02): this path now encodes single-frame selective
+      retransmit (Push Old I Frame N(r) on Queue | LM-DATA Request | Stop T3 |
+      Start T1 | Clear Acknowledge Pending → TimerRecovery), mirroring figc4.4.
+      verification_pending stays until the upstream figure is corrected.
+      Separately, the figure's "Push Frame Onto Queue" (fresh-DL-DATA verb) on
+      an SREJ_received trigger carries no payload, which crashed the packet.net
+      consumer mid-transition and wedged the session with T1 stopped
+      (m0lte/packet.net#225) — the corrected verb takes N(r), not a payload.
 
       IMPLEMENTATION EVIDENCE (#55): NO deployed impl does the go-back-N "Invoke
       Retransmission" that this errata box draws. direwolf and linbpq both do
@@ -1262,11 +1274,14 @@ transitions:
       note: "no AX25_SREJ case in the STATE_4 switch at all — linux is go-back-N (REJ) only, never processes a received SREJ"
   t24_srej_received_yes_yes_no_no:
     notes: >-
-      verification_pending (ax25sdl#55): same disputed SREJ errata as
-      t24_srej_received_yes_yes_yes_no, F=0 branch — generic "Push frame onto
-      queue" + go-back-N "Invoke Retransmission" where §4.3.2.4 / §6.4.8 and the
-      figc4.4 SREJ handler call for single-frame selective retransmit. Faithful to
-      figc4.5e (errata); raised upstream.
+      verification_pending (ax25sdl#55, upstream packethacking/ax25spec#38):
+      CORRECTED TRANSCRIPTION — same adjudicated correction as
+      t24_srej_received_yes_yes_yes_no, F=0 branch. figc4.5e draws generic "Push
+      frame onto queue" + go-back-N "Invoke Retransmission"; corrected
+      (2026-07-02) to single-frame selective retransmit per §4.3.2.4 / §6.4.8
+      and the figc4.4 SREJ handler. F=0 additionally means N(R) does not
+      acknowledge (no V(a) advance on this branch — unchanged).
+      verification_pending stays until the upstream figure is corrected.
 
       IMPLEMENTATION EVIDENCE (#55): SREJ with F=0 does not acknowledge (N(R)
       does not advance V(a)) — see linbpq SDNRCHK (SREJ without F returns without
@@ -1290,15 +1305,30 @@ transitions:
       function: srej_frame
       line: 4130
       note: "SET_VA(nr) guarded by `if (f)` — F=0 does NOT advance V(a); resend is still resend_for_srej (single frame), never go-back-N"
+    - source: direwolf
+      path: src/ax25_link.c
+      function: srej_frame
+      line: 4157
+      note: "state_4 SREJ, good N(R), vs!=va: #if 1 resend_for_srej (single frame) and the go-back-N invoke_retransmission is in the #else (disabled) — the behaviour this corrected transition now encodes"
+    - source: rax25
+      path: src/state.rs
+      function: State::srej
+      line: 991
+      note: "no srej override → no-op stub; rax25 does not act on this SREJ branch"
   t24_srej_received_no_yes_yes_no:
     notes: >-
-      verification_pending (ax25sdl#55): command (Response=No) SREJ path, P=1,
-      frames still outstanding — figc4.5e draws "Invoke Retransmission" (go-back-N)
-      here. Doubly questionable: §4.3.2.4 marks the SREJ COMMAND form for removal
-      ("(remove Command and) Response" — SREJ is response-only in v2.2), and the
-      go-back-N contradicts SREJ's single-frame selective semantics (see
-      t24_srej_received_yes_yes_yes_no). Faithful to the figure (errata); raised
-      upstream.
+      verification_pending (ax25sdl#55, upstream packethacking/ax25spec#38):
+      CORRECTED TRANSCRIPTION — command (Response=No) SREJ path, P=1, frames
+      still outstanding. figc4.5e draws "Invoke Retransmission" (go-back-N)
+      here; corrected (2026-07-02) to route through the same single-frame
+      selective retransmit chain as the response paths (Push Old I Frame N(r)
+      on Queue | LM-DATA Request | Stop T3 | Start T1 | Clear Acknowledge
+      Pending), mirroring figc4.4 which retransmits the single frame for every
+      in-window SREJ. The command form itself remains as drawn even though
+      §4.3.2.4 marks it for removal ("(remove Command and) Response" — SREJ is
+      response-only in v2.2): dropping the column is upstream's call, not ours
+      (#55: "if retained they should also be selective, not go-back-N").
+      verification_pending stays until the upstream figure is corrected.
 
       IMPLEMENTATION EVIDENCE (#55): the SREJ-COMMAND form is rejected by the
       impls too — direwolf and X.25 treat SREJ as response-only and OMIT the
@@ -1322,10 +1352,13 @@ transitions:
       note: "SREJ resend gated on `if (MSGFLAG & RESP)` — only SREJ responses act; an SREJ command would not trigger a resend"
   t24_srej_received_no_yes_no_no:
     notes: >-
-      verification_pending (ax25sdl#55): command (Response=No) SREJ path, P=0 —
-      same as t24_srej_received_no_yes_yes_no (vestigial command-SREJ form +
-      go-back-N where selective is specified). Faithful to figc4.5e (errata);
-      raised upstream.
+      verification_pending (ax25sdl#55, upstream packethacking/ax25spec#38):
+      CORRECTED TRANSCRIPTION — command (Response=No) SREJ path, P=0; same
+      adjudicated correction as t24_srej_received_no_yes_yes_no (vestigial
+      command-SREJ form retained as drawn, retransmit corrected from go-back-N
+      to the single-frame selective chain, 2026-07-02). P=0 additionally means
+      no acknowledgement (no V(a) advance on this branch — unchanged).
+      verification_pending stays until the upstream figure is corrected.
 
       IMPLEMENTATION EVIDENCE (#55): as with the P=1 command branch, no impl
       acts on an SREJ command (response-only), and the retransmit semantics where
@@ -1398,29 +1431,6 @@ transitions:
       function: SDNRCHK
       line: 2954
       note: "SREJ F=0 returns before ACKMSG (no acknowledgement), matching the figure's F=0 = no-ack premise"
-  t24_srej_received_yes_yes_no_no:
-    notes: >-
-      verification_pending (ax25sdl#55): SREJ RESPONSE, N(R) in window, F=0, V(s)
-      != V(a) — the same disputed errata block as t24_srej_received_yes_yes_yes_no
-      ("Push Frame Onto Queue" + LM-DATA Request + Invoke Retransmission go-back-N).
-      As drawn it does go-back-N on an F=0 SREJ; spec text (§4.3.2.4 / §6.4.8) and
-      every deployed impl say single-frame selective retransmit (and F=0 = no ack).
-
-      IMPLEMENTATION EVIDENCE (#55): direwolf does resend_for_srej (single frame)
-      here, NOT invoke_retransmission, with the go-back-N explicitly #if-0'd out;
-      linbpq resends only the single FRAMES[N(S)]; linux has no SREJ path; rax25
-      no-ops. No impl does the go-back-N this box draws.
-    references:
-    - source: direwolf
-      path: src/ax25_link.c
-      function: srej_frame
-      line: 4157
-      note: "state_4 SREJ, good N(R), vs!=va: #if 1 resend_for_srej (single frame) and the go-back-N invoke_retransmission is in the #else (disabled). F=0 also means no SET_VA (4130 guarded by `if (f)`)"
-    - source: rax25
-      path: src/state.rs
-      function: State::srej
-      line: 991
-      note: "no srej override → no-op stub; rax25 does not act on this SREJ branch"
   t25_all_other_primitives__from_lower_layer:
     notes: >-
       Catch-all for unmatched lower-layer primitives in TimerRecovery — no

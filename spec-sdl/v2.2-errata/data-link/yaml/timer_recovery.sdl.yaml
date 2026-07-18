@@ -1174,7 +1174,11 @@ transitions:
       - { action: "V(a) := N(r)", kind: processing }
       - { action: Check I Frame Acknowledged, kind: subroutine }
       - { decision: srej_vs_eq_va, branch: No }
-      - { action: Invoke Retransmission, kind: subroutine }
+      - { action: Push Old I Frame N(r) on Queue, kind: internal_out }
+      - { action: LM-DATA Request, kind: signal_lower }
+      - { action: Stop T3, kind: processing }
+      - { action: Start T1, kind: processing }
+      - { action: Clear Acknowledge Pending, kind: processing }
     next: TimerRecovery
 
   - id: t24_srej_received_no_yes_no_yes
@@ -1197,7 +1201,11 @@ transitions:
       - { decision: srej_va_le_nr_le_vs, branch: Yes }
       - { decision: srej_p_eq_1, branch: No }
       - { decision: srej_vs_eq_va, branch: No }
-      - { action: Invoke Retransmission, kind: subroutine }
+      - { action: Push Old I Frame N(r) on Queue, kind: internal_out }
+      - { action: LM-DATA Request, kind: signal_lower }
+      - { action: Stop T3, kind: processing }
+      - { action: Start T1, kind: processing }
+      - { action: Clear Acknowledge Pending, kind: processing }
     next: TimerRecovery
 
   - id: t24_srej_received_no_no_no
@@ -1278,12 +1286,11 @@ transitions:
       - { action: "V(a) := N(r)", kind: processing }
       - { action: Check I Frame Acknowledged, kind: subroutine }
       - { decision: srej_vs_eq_va, branch: No }
-      - { action: Push Frame Onto Queue, kind: internal_out }
+      - { action: Push Old I Frame N(r) on Queue, kind: internal_out }
       - { action: LM-DATA Request, kind: signal_lower }
       - { action: Stop T3, kind: processing }
       - { action: Start T1, kind: processing }
       - { action: Clear Acknowledge Pending, kind: processing }
-      - { action: Invoke Retransmission, kind: subroutine }
     next: TimerRecovery
 
   - id: t24_srej_received_yes_yes_no_yes
@@ -1312,12 +1319,11 @@ transitions:
       - { decision: srej_va_le_nr_le_vs, branch: Yes }
       - { decision: srej_f_eq_1, branch: No }
       - { decision: srej_vs_eq_va, branch: No }
-      - { action: Push Frame Onto Queue, kind: internal_out }
+      - { action: Push Old I Frame N(r) on Queue, kind: internal_out }
       - { action: LM-DATA Request, kind: signal_lower }
       - { action: Stop T3, kind: processing }
       - { action: Start T1, kind: processing }
       - { action: Clear Acknowledge Pending, kind: processing }
-      - { action: Invoke Retransmission, kind: subroutine }
     next: TimerRecovery
 
   - id: t25_all_other_primitives__from_lower_layer
