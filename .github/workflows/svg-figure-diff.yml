@@ -1,0 +1,125 @@
+name: svg figure diff
+
+# ─── Posts the structural change list for every figure a PR touches, so a
+#     reviewer does not have to spot a one-diamond change by eye in a 5500px
+#     auto-laid-out render. See tools/svgdiff/ and the README section
+#     "Reviewing a figure change". This is a reviewer aid, never a gate: it
+#     reports, it does not fail the PR. The drift gates live in ci.yml.
+#
+#     Fires on PRs that change an SVG. workflow_dispatch takes a PR number so
+#     the report can be regenerated on demand for a PR opened before this
+#     workflow existed, or re-run after the tool changes.
+#
+#     Fork PRs get a read-only token, so the change list goes to the job
+#     summary for those; same-repo PRs additionally get a sticky comment.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '**.svg'
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: PR number to report on
+        required: true
+
+concurrency:
+  group: svg-figure-diff-${{ github.event.pull_request.number || inputs.pr }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  svg-figure-diff:
+    name: svg figure diff
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      # Full history: the report compares the PR head against the point the
+      # branch forked from, which needs the merge base to be reachable.
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: resolve the revisions to compare
+        id: revs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          INPUT_PR: ${{ inputs.pr }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          SAME_REPO: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT" = workflow_dispatch ]; then
+            pr="$INPUT_PR"
+            # The head of a dispatched PR is not part of this checkout yet.
+            git fetch -q origin "refs/pull/$pr/head"
+            base=$(gh pr view "$pr" --json baseRefOid --jq .baseRefOid)
+            head=$(gh pr view "$pr" --json headRefOid --jq .headRefOid)
+            same=$(gh pr view "$pr" --json isCrossRepository --jq 'if .isCrossRepository then "false" else "true" end')
+          else
+            pr="$PR_NUMBER"; base="$PR_BASE"; head="$PR_HEAD"; same="$SAME_REPO"
+          fi
+          {
+            echo "pr=$pr"
+            echo "base=$base"
+            echo "head=$head"
+            echo "same_repo=$same"
+          } >> "$GITHUB_OUTPUT"
+          echo "PR #$pr: $base..$head (same-repo: $same)"
+
+      # Writes report.md plus one self-contained HTML viewer per changed
+      # figure into build/svgdiff/. Python stdlib only — no setup step.
+      - name: diff the changed figures
+        run: |
+          set -euo pipefail
+          python3 tools/svgdiff/svg_diff.py \
+            "${{ steps.revs.outputs.base }}" "${{ steps.revs.outputs.head }}" \
+            --all --merge-base --format markdown > report.md
+          cat report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: upload the interactive viewers
+        uses: actions/upload-artifact@v4
+        with:
+          name: svg-figure-diff-${{ steps.revs.outputs.pr }}
+          path: build/svgdiff/*.html
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: post the change list on the PR
+        if: steps.revs.outputs.same_repo == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ steps.revs.outputs.pr }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          marker='<!-- svg-figure-diff -->'
+          {
+            printf '%s\n' "$marker"
+            cat report.md
+            printf '\nInteractive viewers — swipe, onion-skin, blink, and a clickable change list that zooms to each change — are attached to [this run](%s) as the `svg-figure-diff` artifact: download, unzip, open the HTML.\n' "$RUN_URL"
+            printf '\n<sub>Locally: `python3 tools/svgdiff/svg_diff.py main HEAD --all --merge-base`</sub>\n'
+          } > body.md
+          # Sticky: rewrite our own comment in place rather than stacking a new
+          # one on every push. Matched by the marker, not by author.
+          id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
+                 --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | head -n1)
+          if [ -n "$id" ]; then
+            jq -Rs '{body: .}' body.md > payload.json
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" --input payload.json > /dev/null
+            echo "updated comment $id"
+          else
+            gh pr comment "$PR" --body-file body.md
+          fi
+
+      - name: note that fork PRs cannot be commented on
+        if: steps.revs.outputs.same_repo != 'true'
+        run: echo "::notice::Fork PR — the figure change list is in this run's job summary; the read-only token cannot post a comment."
