@@ -31,6 +31,26 @@ The derived-artifact chain: **graphml → yaml happens here** — CI's `transcri
 
 The transcription discipline (shape classes, encode-then-verify, revision provenance) is documented in ax25sdl's [docs/](https://github.com/packet-net/ax25sdl/tree/main/docs) (`sdl-primer.md`, `sdl-transcription-runbook.md`).
 
+### Reviewing a figure change — `tools/svgdiff/`
+
+The svg/ renders are auto-laid-out, so adding one node reflows the whole page and a plain image diff of the render is unreadable: a single added decision diamond moves nearly every edge by a few pixels. [tools/svgdiff/svg_diff.py](tools/svgdiff/svg_diff.py) diffs the figure's **structure** instead — nodes, edge endpoints and free labels get position-independent signatures, so layout movement cancels out and only genuinely added or removed content is reported.
+
+```sh
+# every SVG that differs on a PR branch, against the point it forked from
+python3 tools/svgdiff/svg_diff.py main my-branch --all --merge-base
+```
+
+```
+spec-sdl/v2.2-errata/data-link/svg/DataLink_Connected.svg
+  + node   V(r) < N(s) < V(r) + k?
+  + edge   N(s) == V(r)? → V(r) < N(s) < V(r) + k?
+  + edge   V(r) < N(s) < V(r) + k? → Discard Contents of I Frame
+  − edge   N(s) == V(r)? → Reject Exception?
+  viewer: build/svgdiff/svgdiff-DataLink_Connected.html
+```
+
+Alongside the change list it writes a self-contained HTML viewer per figure (both renders embedded; no network, no dependencies) with new/old/swipe/onion-skin/blink/difference views and a clickable change list that zooms straight to each change. `--format markdown` emits the same list as a table for a PR comment; `--no-html` skips the viewers. Output lands in the gitignored `build/svgdiff/`.
+
 Please feel free to raise issues and PRs vs this repo.
 
 ## Future targets

@@ -1,0 +1,290 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>SVG diff &mdash; __NAME__</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 13px system-ui, sans-serif; background: #1b1d21; color: #e6e6e6; }
+  header { padding: 8px 12px; background: #24262b; border-bottom: 1px solid #3a3d44;
+           display: flex; flex-wrap: wrap; gap: 14px; align-items: center; position: sticky; top: 0; z-index: 5; }
+  .title { font-weight: 600; }
+  .revs { color: #9aa0aa; font-family: ui-monospace, monospace; font-size: 12px; }
+  .group { display: flex; gap: 4px; align-items: center; }
+  button { font: inherit; background: #33363d; color: #e6e6e6; border: 1px solid #474b54;
+           border-radius: 5px; padding: 4px 10px; cursor: pointer; }
+  button:hover { background: #3d414a; }
+  button.on { background: #4b7bd4; border-color: #4b7bd4; color: #fff; }
+  label { color: #9aa0aa; }
+  #layout { display: flex; height: calc(100vh - 46px); }
+  #list { width: 320px; flex: none; overflow: auto; background: #24262b; border-right: 1px solid #3a3d44; }
+  #list .row { padding: 6px 10px; border-bottom: 1px solid #2e3138; cursor: pointer; display: flex; gap: 8px; }
+  #list .row:hover { background: #2e3138; }
+  #list .row.on { background: #34435e; }
+  #list .k { font-family: ui-monospace, monospace; font-size: 11px; flex: none; width: 13px; text-align: center; }
+  #list .added .k { color: #46c46a; } #list .removed .k { color: #ff5d7a; }
+  #list .w { color: #7d838d; font-size: 11px; flex: none; width: 38px; }
+  #list .t { word-break: break-word; }
+  #list .empty { padding: 12px; color: #7d838d; }
+  #stage { position: relative; overflow: auto; flex: 1; background: #fff; }
+  #wrap { position: relative; transform-origin: 0 0; }
+  #wrap canvas { position: absolute; top: 0; left: 0; display: block; }
+  #cOld, #cNew, #cDiff { image-rendering: auto; }
+  #cBox { pointer-events: none; }
+  #status { color: #9aa0aa; margin-left: auto; }
+  .hint { color: #7d838d; }
+</style>
+<header>
+  <span class="title">__NAME__</span>
+  <span class="revs">__OLDREV__ &rarr; __NEWREV__</span>
+  <span class="group">
+    <button data-mode="new" class="on">New</button>
+    <button data-mode="old">Old</button>
+    <button data-mode="swipe">Swipe</button>
+    <button data-mode="onion">Onion</button>
+    <button data-mode="blink">Blink</button>
+    <button data-mode="diff">Difference</button>
+  </span>
+  <span class="group" id="onionCtl" hidden>
+    <label>old <input type="range" id="onion" min="0" max="100" value="50"> new</label>
+  </span>
+  <span class="group">
+    <button id="prev">&larr; prev</button>
+    <button id="next">next change &rarr;</button>
+    <button id="boxes" class="on">Boxes</button>
+    <button id="src" class="on" title="Structural: added/removed nodes, labels and edges, immune to layout reflow. Pixel: raw rendered differences.">Structural</button>
+  </span>
+  <span class="group">
+    <label>zoom</label>
+    <button data-zoom="-1">&minus;</button>
+    <button data-zoom="fit">fit</button>
+    <button data-zoom="1x">1:1</button>
+    <button data-zoom="+1">+</button>
+  </span>
+  <span id="status">rendering&hellip;</span>
+</header>
+<div id="layout">
+<aside id="list"></aside>
+<div id="stage"><div id="wrap">
+  <canvas id="cOld"></canvas><canvas id="cNew"></canvas>
+  <canvas id="cDiff"></canvas><canvas id="cBox"></canvas>
+</div></div>
+</div>
+<script>
+const OLD_SRC = "__OLD__", NEW_SRC = "__NEW__";
+const STRUCT = __STRUCT__, STATS = __STATS__;
+const BLOCK = 4, TOL = 24, GAP = 3;   // px per block, channel tolerance, merge gap in blocks
+const stage = document.getElementById('stage'), wrap = document.getElementById('wrap');
+const cOld = document.getElementById('cOld'), cNew = document.getElementById('cNew');
+const cDiff = document.getElementById('cDiff'), cBox = document.getElementById('cBox');
+const status = document.getElementById('status');
+let W = 0, H = 0, regions = [], pixelRegions = [], cur = -1, mode = 'new', zoom = 1;
+let showBoxes = true, structural = true, blinkTimer = null;
+
+function load(src) {
+  return new Promise((res, rej) => {
+    const im = new Image();
+    im.onload = () => res(im); im.onerror = rej; im.src = src;
+  });
+}
+
+function paint(im) {
+  const c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const g = c.getContext('2d', { willReadFrequently: true });
+  g.fillStyle = '#fff'; g.fillRect(0, 0, W, H);
+  g.drawImage(im, 0, 0, im.naturalWidth, im.naturalHeight);
+  return c;
+}
+
+function findRegions(a, b) {
+  const bw = Math.ceil(W / BLOCK), bh = Math.ceil(H / BLOCK);
+  const mask = new Uint8Array(bw * bh);
+  for (let y = 0; y < H; y++) {
+    const row = y * W * 4, by = (y / BLOCK) | 0;
+    for (let x = 0; x < W; x++) {
+      const i = row + x * 4;
+      if (Math.abs(a[i] - b[i]) > TOL || Math.abs(a[i+1] - b[i+1]) > TOL || Math.abs(a[i+2] - b[i+2]) > TOL)
+        mask[by * bw + ((x / BLOCK) | 0)] = 1;
+    }
+  }
+  // dilate so nearby changes cluster into one region
+  const dil = new Uint8Array(mask);
+  for (let y = 0; y < bh; y++) for (let x = 0; x < bw; x++) {
+    if (!mask[y * bw + x]) continue;
+    for (let dy = -GAP; dy <= GAP; dy++) for (let dx = -GAP; dx <= GAP; dx++) {
+      const ny = y + dy, nx = x + dx;
+      if (ny >= 0 && ny < bh && nx >= 0 && nx < bw) dil[ny * bw + nx] = 1;
+    }
+  }
+  const seen = new Uint8Array(bw * bh), out = [], stack = [];
+  for (let s = 0; s < dil.length; s++) {
+    if (!dil[s] || seen[s]) continue;
+    let x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1, n = 0;
+    stack.push(s); seen[s] = 1;
+    while (stack.length) {
+      const p = stack.pop(), px = p % bw, py = (p / bw) | 0;
+      if (mask[p]) n++;
+      if (px < x0) x0 = px; if (px > x1) x1 = px;
+      if (py < y0) y0 = py; if (py > y1) y1 = py;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+        const ny = py + dy, nx = px + dx;
+        if (ny < 0 || ny >= bh || nx < 0 || nx >= bw) continue;
+        const q = ny * bw + nx;
+        if (dil[q] && !seen[q]) { seen[q] = 1; stack.push(q); }
+      }
+    }
+    if (n < 2) continue;   // ignore single-block speckle
+    out.push({ x: x0 * BLOCK - 6, y: y0 * BLOCK - 6,
+               w: (x1 - x0 + 1) * BLOCK + 12, h: (y1 - y0 + 1) * BLOCK + 12,
+               kind: 'pixel', what: 'px', side: 'new', text: `${n * BLOCK * BLOCK} px` });
+  }
+  out.sort((p, q) => (p.y - q.y) || (p.x - q.x));
+  return out;
+}
+
+function drawBoxes() {
+  const g = cBox.getContext('2d');
+  g.clearRect(0, 0, W, H);
+  if (!showBoxes) return;
+  const lw = Math.max(2, 2.5 / zoom);
+  const col = { added: '46,196,106', removed: '255,93,122', pixel: '255,45,85' };
+  regions.forEach((r, i) => {
+    const c = col[r.kind] || col.pixel;
+    g.lineWidth = i === cur ? lw * 1.8 : lw;
+    g.strokeStyle = `rgba(${c},${i === cur ? 1 : .5})`;
+    g.strokeRect(r.x, r.y, r.w, r.h);
+    if (i === cur) { g.fillStyle = `rgba(${c},.12)`; g.fillRect(r.x, r.y, r.w, r.h); }
+  });
+}
+
+function applyMode() {
+  clearInterval(blinkTimer); blinkTimer = null;
+  cOld.style.display = cNew.style.display = cDiff.style.display = 'none';
+  cNew.style.clipPath = ''; cOld.style.opacity = cNew.style.opacity = 1;
+  document.getElementById('onionCtl').hidden = mode !== 'onion';
+  if (mode === 'new') cNew.style.display = 'block';
+  else if (mode === 'old') cOld.style.display = 'block';
+  else if (mode === 'diff') cDiff.style.display = 'block';
+  else if (mode === 'swipe') { cOld.style.display = cNew.style.display = 'block'; setSwipe(0.5); }
+  else if (mode === 'onion') {
+    cOld.style.display = cNew.style.display = 'block';
+    cNew.style.opacity = document.getElementById('onion').value / 100;
+  } else if (mode === 'blink') {
+    cOld.style.display = 'block'; cNew.style.display = 'block';
+    let on = true;
+    blinkTimer = setInterval(() => { on = !on; cNew.style.opacity = on ? 1 : 0; }, 600);
+  }
+}
+function setSwipe(f) { cNew.style.clipPath = `inset(0 0 0 ${f * 100}%)`; }
+
+function setZoom(z, anchor) {
+  zoom = Math.max(0.05, Math.min(8, z));
+  wrap.style.transform = `scale(${zoom})`;
+  wrap.style.width = (W * zoom) + 'px'; wrap.style.height = (H * zoom) + 'px';
+  drawBoxes();
+  if (anchor) goto(cur, true);
+}
+function renderList() {
+  const el = document.getElementById('list');
+  if (!regions.length) { el.innerHTML = '<div class="empty">No differences found.</div>'; return; }
+  el.innerHTML = regions.map((r, i) =>
+    `<div class="row ${r.kind}" data-i="${i}"><span class="k">${r.kind === 'removed' ? '−' : '+'}</span>` +
+    `<span class="w">${r.what}</span><span class="t"></span></div>`).join('');
+  [...el.querySelectorAll('.row')].forEach((row, i) => {
+    row.querySelector('.t').textContent = regions[i].text;
+    row.onclick = () => goto(i);
+  });
+}
+
+function goto(i, keep) {
+  if (!regions.length) return;
+  cur = ((i % regions.length) + regions.length) % regions.length;
+  const r = regions[cur];
+  // content that only exists on one side is invisible in the other view
+  if (r.side === 'old' && mode === 'new') setMode('old');
+  else if (r.side === 'new' && mode === 'old') setMode('new');
+  const rows = document.querySelectorAll('#list .row');
+  rows.forEach(x => x.classList.remove('on'));
+  if (rows[cur]) { rows[cur].classList.add('on'); rows[cur].scrollIntoView({ block: 'nearest' }); }
+  stage.scrollLeft = (r.x + r.w / 2) * zoom - stage.clientWidth / 2;
+  stage.scrollTop = (r.y + r.h / 2) * zoom - stage.clientHeight / 2;
+  drawBoxes();
+  if (!keep) status.textContent = `change ${cur + 1} of ${regions.length}`;
+}
+
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll('[data-mode]').forEach(b => b.classList.toggle('on', b.dataset.mode === m));
+  applyMode();
+}
+
+function useSource() {
+  regions = structural ? STRUCT : pixelRegions;
+  cur = -1;
+  renderList(); drawBoxes();
+  status.textContent = structural
+    ? `${STRUCT.length} structural change${STRUCT.length === 1 ? '' : 's'} · ` +
+      `nodes ${STATS.old.nodes}→${STATS.new.nodes}, edges ${STATS.old.edges}→${STATS.new.edges}`
+    : `${pixelRegions.length} changed pixel region${pixelRegions.length === 1 ? '' : 's'}`;
+  if (regions.length) goto(0, true);
+}
+
+(async () => {
+  const [a, b] = await Promise.all([load(OLD_SRC), load(NEW_SRC)]);
+  W = Math.max(a.naturalWidth, b.naturalWidth); H = Math.max(a.naturalHeight, b.naturalHeight);
+  for (const c of [cOld, cNew, cDiff, cBox]) { c.width = W; c.height = H; }
+  const oc = paint(a), nc = paint(b);
+  cOld.getContext('2d').drawImage(oc, 0, 0);
+  cNew.getContext('2d').drawImage(nc, 0, 0);
+  const da = oc.getContext('2d').getImageData(0, 0, W, H).data;
+  const db = nc.getContext('2d').getImageData(0, 0, W, H).data;
+
+  // difference view: faded new render, changed pixels in magenta
+  const dg = cDiff.getContext('2d'), img = dg.createImageData(W, H);
+  for (let i = 0; i < da.length; i += 4) {
+    const changed = Math.abs(da[i] - db[i]) > TOL || Math.abs(da[i+1] - db[i+1]) > TOL || Math.abs(da[i+2] - db[i+2]) > TOL;
+    if (changed) { img.data[i] = 255; img.data[i+1] = 0; img.data[i+2] = 110; img.data[i+3] = 255; }
+    else { const v = 235 + (db[i] >> 4); img.data[i] = img.data[i+1] = img.data[i+2] = Math.min(v, 255); img.data[i+3] = 255; }
+  }
+  dg.putImageData(img, 0, 0);
+
+  pixelRegions = findRegions(da, db);
+  setZoom(Math.min(stage.clientWidth / W, stage.clientHeight / H));
+  applyMode();
+  useSource();
+})();
+
+document.querySelectorAll('[data-mode]').forEach(btn => btn.onclick = () => setMode(btn.dataset.mode));
+document.getElementById('src').onclick = e => {
+  structural = !structural;
+  e.target.classList.toggle('on', structural);
+  e.target.textContent = structural ? 'Structural' : 'Pixel';
+  useSource();
+};
+document.querySelectorAll('[data-zoom]').forEach(btn => btn.onclick = () => {
+  const z = btn.dataset.zoom;
+  if (z === 'fit') setZoom(Math.min(stage.clientWidth / W, stage.clientHeight / H), true);
+  else if (z === '1x') setZoom(1, true);
+  else setZoom(zoom * (z === '+1' ? 1.4 : 1 / 1.4), true);
+});
+document.getElementById('onion').oninput = e => { cNew.style.opacity = e.target.value / 100; };
+document.getElementById('next').onclick = () => goto(cur + 1);
+document.getElementById('prev').onclick = () => goto(cur - 1);
+document.getElementById('boxes').onclick = e => {
+  showBoxes = !showBoxes; e.target.classList.toggle('on', showBoxes); drawBoxes();
+};
+stage.addEventListener('mousemove', e => {
+  if (mode !== 'swipe') return;
+  const r = stage.getBoundingClientRect();
+  setSwipe(Math.max(0, Math.min(1, (e.clientX - r.left + stage.scrollLeft) / (W * zoom))));
+});
+stage.addEventListener('wheel', e => {
+  if (!e.ctrlKey) return;
+  e.preventDefault(); setZoom(zoom * (e.deltaY < 0 ? 1.15 : 1 / 1.15), true);
+}, { passive: false });
+addEventListener('keydown', e => {
+  if (e.key === 'n') goto(cur + 1);
+  else if (e.key === 'p') goto(cur - 1);
+  else if (e.key >= '1' && e.key <= '6') document.querySelectorAll('[data-mode]')[+e.key - 1].click();
+});
+</script>
