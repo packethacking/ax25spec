@@ -110,8 +110,11 @@ jobs:
           } > body.md
           # Sticky: rewrite our own comment in place rather than stacking a new
           # one on every push. Matched by the marker, not by author.
+          # awk, not `head -n1`: head closes the pipe early, which under
+          # `set -o pipefail` turns a multi-page listing into a SIGPIPE failure.
           id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate \
-                 --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | head -n1)
+                 --jq ".[] | select(.body | startswith(\"$marker\")) | .id" \
+               | awk 'NR == 1')
           if [ -n "$id" ]; then
             jq -Rs '{body: .}' body.md > payload.json
             gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" --input payload.json > /dev/null
