@@ -141,8 +141,11 @@ class Model:
         for n in self.nodes:
             n["label"] = " ".join(n["labels"])
             n["sig"] = n["sig"] + (n["label"],)
+        # Anchoring needs the node labels above, so it is a second pass.
+        for t in self.free:
+            t["anchor"] = self.nearest((t["x"], t["y"]), max_dist=220)
 
-    def nearest(self, pt):
+    def nearest(self, pt, max_dist=60):
         """Label of the node closest to a point (for naming edge endpoints)."""
         x, y = pt[0] - self.ox, pt[1] - self.oy
         best, bd = None, 1e18
@@ -155,7 +158,7 @@ class Model:
                 best, bd = n, d
             if d == 0:
                 break
-        if best is None or bd > 60 * 60:
+        if best is None or bd > max_dist * max_dist:
             return "(unattached)"
         return (best["label"] or "(unlabelled)")[:60]
 
@@ -167,19 +170,31 @@ class Model:
         return out
 
 
-def _multidiff(old_items, new_items, key):
-    """Return (added, removed) after cancelling equal-signature pairs."""
-    oc, nc = Counter(key(i) for i in old_items), Counter(key(i) for i in new_items)
-    add_keys, rem_keys = nc - oc, oc - nc
-    added, removed = [], []
-    for items, counts, sink in ((new_items, add_keys, added), (old_items, rem_keys, removed)):
-        left = Counter(counts)
-        for i in items:
-            k = key(i)
-            if left.get(k, 0):
-                left[k] -= 1
-                sink.append(i)
-    return added, removed
+def _multidiff(old_items, new_items, *keys):
+    """Return (added, removed) after cancelling old/new pairs.
+
+    Each key in turn is one cancellation pass, finest first. A fine key (a
+    label's text *and* the node it sits by) picks the right instance to
+    report; a coarser fallback (the text alone) still cancels an item whose
+    anchor merely moved, so a reflow cannot invent an add/remove pair.
+    Matching by the coarse key alone would keep the counts right but report
+    an arbitrary instance -- and so point the reviewer at the wrong place.
+    """
+    old_left, new_left = list(old_items), list(new_items)
+    for key in keys:
+        buckets = defaultdict(list)
+        for i in old_left:
+            buckets[key(i)].append(i)
+        matched, survivors = set(), []
+        for i in new_left:
+            bucket = buckets.get(key(i))
+            if bucket:
+                matched.add(id(bucket.pop()))
+            else:
+                survivors.append(i)
+        new_left = survivors
+        old_left = [i for i in old_left if id(i) not in matched]
+    return new_left, old_left
 
 
 def diff(old_bytes, new_bytes):
@@ -192,13 +207,15 @@ def diff(old_bytes, new_bytes):
             regions.append({"kind": kind, "what": "node", "side": "new" if kind == "added" else "old",
                             "box": x["box"], "text": x["label"] or f'({x["sig"][0]} shape)'})
 
-    add, rem = _multidiff(o.free, n.free, lambda x: x["t"])
+    add, rem = _multidiff(o.free, n.free,
+                          lambda x: (x["t"], x["anchor"]), lambda x: x["t"])
     for src, kind in ((add, "added"), (rem, "removed")):
         for x in src:
             regions.append({"kind": kind, "what": "label", "side": "new" if kind == "added" else "old",
                             "box": [round(x["x"] - (n if kind == "added" else o).ox - 40, 1),
                                     round(x["y"] - (n if kind == "added" else o).oy - 16, 1), 80.0, 22.0],
-                            "text": x["t"]})
+                            "text": (f'{x["t"]}  (by {x["anchor"]})'
+                                     if x["anchor"] != "(unattached)" else x["t"])})
 
     oe, ne = o.edge_sigs(), n.edge_sigs()
     for sig in set(ne) - set(oe):
