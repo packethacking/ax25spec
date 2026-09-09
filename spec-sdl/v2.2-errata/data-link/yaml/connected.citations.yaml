@@ -88,6 +88,24 @@
 # t67/t68/t69 (stored-frame drain loop) merged into their respective in-seq keys
 # because the loop_while is now embedded inside the SDL transition; no separate key.
 
+#
+# 2026-09-09: CORRECTION APPLIED (#40) — out-of-window duplicate-discard
+# guard added to the I-received out-of-sequence arm. A new decision
+# "V(r) < N(s) < V(r) + k?" (i_vr_lt_ns_lt_vr_plus_k) sits between
+# "N(s) == V(r)?":No and "Reject Exception?", so every out-of-sequence
+# path gained a guard:Yes step and the six keys were re-suffixed
+# (insert "yes_" after "..._no_no_"):
+#   t26_i_received_yes_yes_yes_no_no_yes_yes       -> ..._no_no_yes_yes_yes
+#   t26_i_received_yes_yes_yes_no_no_yes_no        -> ..._no_no_yes_yes_no
+#   t26_i_received_yes_yes_yes_no_no_no_no         -> ..._no_no_yes_no_no
+#   t26_i_received_yes_yes_yes_no_no_no_yes_yes    -> ..._no_no_yes_no_yes_yes
+#   t26_i_received_yes_yes_yes_no_no_no_yes_no_no  -> ..._no_no_yes_no_yes_no_no
+#   t26_i_received_yes_yes_yes_no_no_no_yes_no_yes -> ..._no_no_yes_no_yes_no_yes
+# CAUTION: the ids t26_i_received_yes_yes_yes_no_no_no_{yes,no} are
+# RE-MINTED for the two new guard:No discard transitions — the pre-#40
+# entry under ..._no_no_no_no (the REJ arm) is a DIFFERENT path from
+# today's ..._no_no_no_no (out-of-window, not polled).
+
 pinned_refs:
   linbpq:
     repo: https://github.com/M0LTE/linbpq
@@ -1383,7 +1401,7 @@ transitions:
       line: 4185
       note: Second replay loop in RR_OR_RNR — replays RXFRAMES when about to send
         supervisory response
-  t26_i_received_yes_yes_yes_no_no_yes_yes:
+  t26_i_received_yes_yes_yes_no_no_yes_yes_yes:
     references:
     - source: spec_prose
       cite: §6.4.4.1
@@ -1405,7 +1423,7 @@ transitions:
       function: SDIFRM
       line: 2670
       note: L2STATE==6 (REJ Sent) drops out of REJ when in-sequence frame arrives
-  t26_i_received_yes_yes_yes_no_no_yes_no:
+  t26_i_received_yes_yes_yes_no_no_yes_yes_no:
     references:
     - source: spec_prose
       cite: §6.4.4.1
@@ -1422,7 +1440,7 @@ transitions:
       function: Connected::iframe
       line: 1651
       note: same handler as yes branch
-  t26_i_received_yes_yes_yes_no_no_no_no:
+  t26_i_received_yes_yes_yes_no_no_yes_no_no:
     references:
     - source: spec_prose
       cite: §6.4.4.1
@@ -1452,7 +1470,7 @@ transitions:
       line: 242
       note: 'REJ F=pf RESPONSE on first out-of-sequence I, ACK_PENDING cleared.
         Linux: go-back-N only — no SREJ alternative'
-  t26_i_received_yes_yes_yes_no_no_no_yes_yes:
+  t26_i_received_yes_yes_yes_no_no_yes_no_yes_yes:
     references:
     - source: spec_prose
       cite: §6.4.4.2
@@ -1469,7 +1487,7 @@ transitions:
       line: 1680
       note: 'sreject_exception > 0: increment + clear ack_pending. TODO: actual
         SendSrej not implemented'
-  t26_i_received_yes_yes_yes_no_no_no_yes_no_no:
+  t26_i_received_yes_yes_yes_no_no_yes_no_yes_no_no:
     references:
     - source: spec_prose
       cite: §6.4.4.2
@@ -1494,7 +1512,7 @@ transitions:
       function: SDIFRM
       line: 2636
       note: Out-of-sequence stored in RXFRAMES[NS]; SREJ vs REJ chosen in RR_OR_RNR:4230
-  t26_i_received_yes_yes_yes_no_no_no_yes_no_yes:
+  t26_i_received_yes_yes_yes_no_no_yes_no_yes_no_yes:
     references:
     - source: spec_prose
       cite: §6.4.4.2
@@ -1512,3 +1530,71 @@ transitions:
       line: 1688
       note: 'p.ns != (vr+1) % modulus: SendRej path (gap > 1). Comment "Maybe a
         version of if in_range(p.ns)" TODO'
+  t26_i_received_yes_yes_yes_no_no_no_yes:
+    notes: >-
+      ERRATUM (#40): out-of-window duplicate, P=1. N(s) fails the new
+      window guard V(r) < N(s) < V(r)+k (k = the window size this
+      receiver granted) — the frame duplicates an I frame already
+      received and acknowledged, typically a checkpoint retransmission
+      that crossed with our acknowledgement. Discard it, raise no
+      REJ/SREJ exception (there is no missing frame, so no coherent
+      SREJ N(R) exists), and answer the poll RR F=1 N(r)=V(r). The
+      route merges into the pre-existing reject-exception discard arm;
+      no new action boxes. Before the guard the figure treated the
+      duplicate as a fresh out-of-sequence frame — saving stale data
+      into the receive buffer and, with an empty sender queue, raising
+      an SREJ exception that nothing can ever clear (observed on air
+      against BPQ 6.0.24.79, 2026-09-09; §4.4.4 then re-sends the
+      SREJ F=1 on every poll indefinitely — see #40).
+    references:
+    - source: spec_prose
+      cite: "§4.4.2"
+      quote: >-
+        If SREJ has been negotiated and the N(s) is in the range
+        "greater-than V(r)" and "less-than V(r)+k," the information
+        field is saved; otherwise, it is discarded.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: is_ns_in_window
+      line: 3102
+      note: >-
+        X.25 2.4.6.4 (a): N(S) outside the window — discard, respond
+        only if P=1. CAUTION: direwolf bounds the window with the
+        GENEROUS_K 63 constant, which collapses at modulo 8 (63 mod 8 =
+        7); the figure's bound is the receiver's granted k, never a
+        constant.
+    - source: linbpq
+      path: L2Code.c
+      function: SDIFRM
+      line: 2576
+      note: >-
+        Negative evidence (the defect this guard fixes): CheckNSLoop's
+        bare `if (NS != LINK->LINKNR)` has no lower bound, so the
+        out-of-window duplicate is stored in RXFRAMES and pins L2STATE 6
+        — producing the never-clearing SREJ R F loop captured in #40.
+        (Paths verified at linbpq 560e9fc; the pinned commit predates
+        BPQ's partial mitigation.)
+  t26_i_received_yes_yes_yes_no_no_no_no:
+    notes: >-
+      ERRATUM (#40): out-of-window duplicate, not polled. As the P=1 arm
+      but with nothing to answer: discard, no exception, no emission.
+      The N(R) of the duplicate was still processed upstream (Check I
+      Frames Acknowledged precedes the guard). Sender-side live-window
+      guards (packet.net EmitOldIFrame; linbpq's treatasRR at
+      L2Code.c:2316; direwolf resend_for_srej finding txdata == NULL)
+      absorb the spurious SREJs this path used to emit, which is why the
+      receiver-side gap went unnoticed — absence of observed breakage is
+      not evidence the figure was sound here.
+    references:
+    - source: spec_prose
+      cite: "§4.4.2"
+      quote: >-
+        The receiver will not acknowledge this frame or any other I
+        frames until N(S) matches V(R).
+    - source: direwolf
+      path: src/ax25_link.c
+      function: is_ns_in_window
+      line: 3102
+      note: >-
+        X.25 2.4.6.4 (a): N(S) outside the window and P=0 — discard
+        with no response.
