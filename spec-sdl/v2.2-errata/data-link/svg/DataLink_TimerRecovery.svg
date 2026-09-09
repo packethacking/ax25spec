@@ -266,8 +266,8 @@
 <path d="M 4246.08 2377.78 L 4284.46 2318.59 L 4284.46 2128.99 L 4313.69 2143" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 4433.69 1853.65 L 4496.46 1902.57" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <text x="4474.74" y="1889.85" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
-<path d="M 4556.46 1996.99 L 4556.46 2034.09" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<text x="4526.46" y="2019.74" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 4686.78 2024.8 L 4616.46 2046" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="4656.78" y="2047.55" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
 <path d="M 4603.72 2094.09 L 4666.06 2133.65" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 4726.06 2219.39 L 4726.06 2263.79" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <text x="4726.06" y="2237.95" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
@@ -288,8 +288,8 @@
 <path d="M 4551.35 2609.75 L 4551.35 2653.28" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 4489.87 2370.2 L 4464.46 2370.2 L 4464.46 2635.39 L 4496.91 2653.28" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <text x="4464.47" y="2386.8" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
-<path d="M 4616.46 1967.42 L 4877.11 2046" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<text x="4660.95" y="1985.04" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 4806.78 2024.8 L 4877.11 2046" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="4851.28" y="2042.41" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
 <path d="M 4937.11 2111.74 L 4937.11 2178.99" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <text x="4937.11" y="2149.55" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
 <path d="M 4937.11 2265.39 L 4937.11 2295.39" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
@@ -367,6 +367,10 @@
 <path d="M 5659.1 416.61 L 5659.1 455.07" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 1880.16 -255.7 L 5415.15 370.04" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 1880.16 -256.21 L 5599.1 370.55" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 4616.46 1967.42 L 4686.78 1988.62" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="4660.17" y="1989.62" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 4556.46 1996.99 L 4556.46 2034.09" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="4571.12" y="2024.57" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
 <g transform="translate(1760.16 -296.32) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
     <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
   </g>
@@ -1436,11 +1440,11 @@
   </g>
 </g>
 <text x="4226.64" y="2409.24" font-size="12" text-anchor="middle">V(r) &lt;- V(r) - 1</text>
-<g transform="translate(4496.46 1901.68) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+<g transform="translate(4686.78 1959.06) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
     <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
   </g>
 </g>
-<text x="4556.46" y="1950.79" font-size="12" text-anchor="middle">Reject Exception?</text>
+<text x="4746.78" y="2008.17" font-size="12" text-anchor="middle">Reject Exception?</text>
 <g transform="translate(4496.46 2034.09) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
     <rect x="1.0" y="1.0" width="118" height="58" />
   </g>
@@ -1776,4 +1780,10 @@
   </g>
 </g>
 <text x="5475.15" y="486.52" font-size="12" text-anchor="middle">4 Timer Recovery</text>
+<g transform="translate(4496.46 1901.68) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="4556.46" y="1950.79" font-size="12" text-anchor="middle">V(r) &lt; N(s) &lt;</text>
+<text x="4556.46" y="1965.86" font-size="12" text-anchor="middle">V(r) + k?</text>
 </svg>
