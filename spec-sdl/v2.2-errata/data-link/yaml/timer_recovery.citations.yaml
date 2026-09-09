@@ -63,6 +63,23 @@
 #   packethacking/ax25spec#38; verification_pending stays on those transitions
 #   until the upstream figure is corrected.
 
+#
+# 2026-09-09: CORRECTION APPLIED (#40) — out-of-window duplicate-discard
+# guard added to the I-received out-of-sequence arm, identical to the
+# figc4.4 Connected splice: new decision "V(r) < N(s) < V(r) + k?"
+# (i_vr_lt_ns_lt_vr_plus_k) between "N(s) == V(r)?":No and "Reject
+# Exception?"; its No arm merges into the existing discard / P==1?
+# chain. Existing keys re-suffixed (insert "yes_" after "..._no_no_"):
+#   t22_i_received_yes_yes_yes_no_no_yes_yes       -> ..._no_no_yes_yes_yes
+#   t22_i_received_yes_yes_yes_no_no_no_no         -> ..._no_no_yes_no_no
+#   t22_i_received_yes_yes_yes_no_no_no_yes_yes    -> ..._no_no_yes_no_yes_yes
+#   t22_i_received_yes_yes_yes_no_no_no_yes_no_no  -> ..._no_no_yes_no_yes_no_no
+#   t22_i_received_yes_yes_yes_no_no_no_yes_no_yes -> ..._no_no_yes_no_yes_no_yes
+# (..._no_no_yes_no — reject exception set, not polled — had no entry.)
+# CAUTION: t22_i_received_yes_yes_yes_no_no_no_{yes,no} are RE-MINTED
+# for the two new guard:No discard transitions; the pre-#40
+# ..._no_no_no_no entry (the REJ arm) described a different path.
+
 pinned_refs:
   linbpq:
     repo: https://github.com/M0LTE/linbpq
@@ -976,7 +993,7 @@ transitions:
       function: ax25_std_state4_machine
       line: 387
       note: "ns==vr, !pf, ACK_PENDING already set: the `if (!ACK_PENDING)` guard is false → no new T2, batch"
-  t22_i_received_yes_yes_yes_no_no_yes_yes:
+  t22_i_received_yes_yes_yes_no_no_yes_yes_yes:
     notes: >-
       Out-of-sequence I frame (N(s)!=V(r)) with REJECT exception already set,
       P=1: discard contents, F:=1/N(r):=V(r)/RR/clear ack pending (re-ack our
@@ -1006,7 +1023,7 @@ transitions:
       function: ax25_std_state4_machine
       line: 393
       note: "ns!=vr, COND_REJECT set: if pf → enquiry_response only; otherwise discard, no new REJ"
-  t22_i_received_yes_yes_yes_no_no_no_no:
+  t22_i_received_yes_yes_yes_no_no_yes_no_no:
     notes: >-
       Out-of-sequence I frame, no reject exception, SREJ NOT enabled (mod-8 / v2.0
       style): the classic go-back-N REJ path — discard, set reject exception,
@@ -1041,7 +1058,7 @@ transitions:
       function: SDIFRM
       line: 2517
       note: "out-of-sequence stored in RXFRAMES[NS]; REJ vs SREJ chosen in RR_OR_RNR. L2STATE→6 (REJ-sent)"
-  t22_i_received_yes_yes_yes_no_no_no_yes_no_no:
+  t22_i_received_yes_yes_yes_no_no_yes_no_yes_no_no:
     notes: >-
       Out-of-sequence I frame, no reject exception, SREJ enabled, no sreject
       exception yet, and N(s) is NOT > V(r)+1 (exactly ONE frame missing): save
@@ -1072,7 +1089,7 @@ transitions:
       function: RR_OR_RNR
       line: 4143
       note: "linbpq chooses SREJ vs REJ for a stored out-of-order frame here (single-frame selective). No-SREJ-generation only when peer is v1"
-  t22_i_received_yes_yes_yes_no_no_no_yes_no_yes:
+  t22_i_received_yes_yes_yes_no_no_yes_no_yes_no_yes:
     notes: >-
       Out-of-sequence I frame, SREJ enabled, no sreject exception, and N(s) >
       V(r)+1 (TWO OR MORE frames missing): the figc4.5e SREJ/REJ rule — fall back
@@ -1100,7 +1117,7 @@ transitions:
       function: ax25_std_state4_machine
       line: 396
       note: "any out-of-sequence → REJ (go-back-N); Linux never distinguishes a 1-frame gap for SREJ"
-  t22_i_received_yes_yes_yes_no_no_no_yes_yes:
+  t22_i_received_yes_yes_yes_no_no_yes_no_yes_yes:
     notes: >-
       Out-of-sequence I frame, SREJ enabled, sreject exception ALREADY > 0: save
       frame, N(r):=V(r), F:=0, Sreject++, send SREJ(F=0) (additional SREJ while
@@ -1123,6 +1140,59 @@ transitions:
       function: Connected::iframe
       line: 1680
       note: "sreject_exception>0: sreject_exception++, ack pending cleared. SREJ SEND IS A STUB: 'TODO: Action::SendSrej(final=false, nr=p.ns)' (1682)"
+  t22_i_received_yes_yes_yes_no_no_no_yes:
+    notes: >-
+      ERRATUM (#40): out-of-window duplicate, P=1 — TimerRecovery copy of
+      the figc4.4 Connected guard:No arm; see connected.citations.yaml
+      t26_i_received_yes_yes_yes_no_no_no_yes for the full rationale.
+      Timer Recovery is where the trigger actually fires in the on-air
+      capture: the peer's checkpoint retransmission (figc4.5 Invoke
+      Retransmission, driven by a stale F=1 N(R)) is what delivers the
+      already-acknowledged N(s) here. Discard, no exception, RR F=1
+      N(r)=V(r).
+    references:
+    - source: spec_prose
+      cite: "§4.4.2"
+      quote: >-
+        If SREJ has been negotiated and the N(s) is in the range
+        "greater-than V(r)" and "less-than V(r)+k," the information
+        field is saved; otherwise, it is discarded.
+    - source: direwolf
+      path: src/ax25_link.c
+      function: is_ns_in_window
+      line: 3102
+      note: >-
+        X.25 2.4.6.4 (a): N(S) outside the window — discard, respond
+        only if P=1. Handler shared between states 3 and 4, so the
+        Connected caveats (GENEROUS_K vs negotiated k) apply here
+        unchanged.
+    - source: linbpq
+      path: L2Code.c
+      function: SDIFRM
+      line: 2576
+      note: >-
+        Negative evidence: no lower bound in CheckNSLoop; linbpq has no
+        distinct state 4, so the same code path produces the pinned
+        L2STATE 6 / unsatisfiable-SREJ failure from #40.
+  t22_i_received_yes_yes_yes_no_no_no_no:
+    notes: >-
+      ERRATUM (#40): out-of-window duplicate, not polled — TimerRecovery
+      copy of the figc4.4 arm; see connected.citations.yaml
+      t26_i_received_yes_yes_yes_no_no_no_no. Discard, no exception, no
+      emission; N(R) already processed by Check I Frames Acknowledged.
+    references:
+    - source: spec_prose
+      cite: "§4.4.2"
+      quote: >-
+        The receiver will not acknowledge this frame or any other I
+        frames until N(S) matches V(R).
+    - source: direwolf
+      path: src/ax25_link.c
+      function: is_ns_in_window
+      line: 3102
+      note: >-
+        X.25 2.4.6.4 (a): N(S) outside the window and P=0 — discard
+        with no response.
   t23_rej_received_no_no_yes_no:
     notes: >-
       REJ (no P/F response, no command-P), N(R) in window, V(s)!=V(a): V(a):=

@@ -110,6 +110,9 @@ decisions:
   - id: i_ack_pending
     question: "Ack Pending?"
     predicate: ack_pending
+  - id: i_vr_lt_ns_lt_vr_plus_k
+    question: "V(r) < N(s) < V(r) + k?"
+    predicate: vr_lt_ns_lt_vr_plus_k
   - id: i_reject_exception
     question: "Reject Exception?"
     predicate: reject_exception
@@ -809,7 +812,7 @@ transitions:
       - { action: Clear Acknowledge Pending, kind: processing }
     next: Connected
 
-  - id: t26_i_received_yes_yes_yes_no_no_yes_yes
+  - id: t26_i_received_yes_yes_yes_no_no_yes_yes_yes
     on: I_received
     on_label: I
     path:
@@ -819,6 +822,7 @@ transitions:
       - { action: Check I Frames Acknowledged, kind: subroutine }
       - { decision: i_own_receiver_busy, branch: No }
       - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_vr_lt_ns_lt_vr_plus_k, branch: Yes }
       - { decision: i_reject_exception, branch: Yes }
       - { action: Discard Contents of I Frame, kind: processing }
       - { decision: i_p_eq_1, branch: Yes }
@@ -828,7 +832,7 @@ transitions:
       - { action: Clear Acknowledge Pending, kind: processing }
     next: Connected
 
-  - id: t26_i_received_yes_yes_yes_no_no_yes_no
+  - id: t26_i_received_yes_yes_yes_no_no_yes_yes_no
     on: I_received
     on_label: I
     path:
@@ -838,12 +842,13 @@ transitions:
       - { action: Check I Frames Acknowledged, kind: subroutine }
       - { decision: i_own_receiver_busy, branch: No }
       - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_vr_lt_ns_lt_vr_plus_k, branch: Yes }
       - { decision: i_reject_exception, branch: Yes }
       - { action: Discard Contents of I Frame, kind: processing }
       - { decision: i_p_eq_1, branch: No }
     next: Connected
 
-  - id: t26_i_received_yes_yes_yes_no_no_no_no
+  - id: t26_i_received_yes_yes_yes_no_no_yes_no_no
     on: I_received
     on_label: I
     path:
@@ -853,6 +858,7 @@ transitions:
       - { action: Check I Frames Acknowledged, kind: subroutine }
       - { decision: i_own_receiver_busy, branch: No }
       - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_vr_lt_ns_lt_vr_plus_k, branch: Yes }
       - { decision: i_reject_exception, branch: No }
       - { decision: i_srej_enabled, branch: No }
       - { action: Discard Contents of I Frame, kind: processing }
@@ -863,7 +869,7 @@ transitions:
       - { action: Clear Acknowledge Pending, kind: processing }
     next: Connected
 
-  - id: t26_i_received_yes_yes_yes_no_no_no_yes_yes
+  - id: t26_i_received_yes_yes_yes_no_no_yes_no_yes_yes
     on: I_received
     on_label: I
     path:
@@ -873,6 +879,7 @@ transitions:
       - { action: Check I Frames Acknowledged, kind: subroutine }
       - { decision: i_own_receiver_busy, branch: No }
       - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_vr_lt_ns_lt_vr_plus_k, branch: Yes }
       - { decision: i_reject_exception, branch: No }
       - { decision: i_srej_enabled, branch: Yes }
       - { action: Save Contents of I Frame, kind: processing }
@@ -883,7 +890,7 @@ transitions:
       - { action: SREJ, kind: signal_lower }
     next: Connected
 
-  - id: t26_i_received_yes_yes_yes_no_no_no_yes_no_yes
+  - id: t26_i_received_yes_yes_yes_no_no_yes_no_yes_no_yes
     on: I_received
     on_label: I
     path:
@@ -893,6 +900,7 @@ transitions:
       - { action: Check I Frames Acknowledged, kind: subroutine }
       - { decision: i_own_receiver_busy, branch: No }
       - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_vr_lt_ns_lt_vr_plus_k, branch: Yes }
       - { decision: i_reject_exception, branch: No }
       - { decision: i_srej_enabled, branch: Yes }
       - { action: Save Contents of I Frame, kind: processing }
@@ -906,7 +914,7 @@ transitions:
       - { action: Clear Acknowledge Pending, kind: processing }
     next: Connected
 
-  - id: t26_i_received_yes_yes_yes_no_no_no_yes_no_no
+  - id: t26_i_received_yes_yes_yes_no_no_yes_no_yes_no_no
     on: I_received
     on_label: I
     path:
@@ -916,6 +924,7 @@ transitions:
       - { action: Check I Frames Acknowledged, kind: subroutine }
       - { decision: i_own_receiver_busy, branch: No }
       - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_vr_lt_ns_lt_vr_plus_k, branch: Yes }
       - { decision: i_reject_exception, branch: No }
       - { decision: i_srej_enabled, branch: Yes }
       - { action: Save Contents of I Frame, kind: processing }
@@ -925,6 +934,40 @@ transitions:
       - { action: "F := 1", kind: processing }
       - { action: Increment Sreject Exception, kind: processing }
       - { action: SREJ, kind: signal_lower }
+    next: Connected
+
+  - id: t26_i_received_yes_yes_yes_no_no_no_yes
+    on: I_received
+    on_label: I
+    path:
+      - { decision: i_command, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receiver_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_vr_lt_ns_lt_vr_plus_k, branch: No }
+      - { action: Discard Contents of I Frame, kind: processing }
+      - { decision: i_p_eq_1, branch: Yes }
+      - { action: "F := 1", kind: processing }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: RR, kind: signal_lower }
+      - { action: Clear Acknowledge Pending, kind: processing }
+    next: Connected
+
+  - id: t26_i_received_yes_yes_yes_no_no_no_no
+    on: I_received
+    on_label: I
+    path:
+      - { decision: i_command, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receiver_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_vr_lt_ns_lt_vr_plus_k, branch: No }
+      - { action: Discard Contents of I Frame, kind: processing }
+      - { decision: i_p_eq_1, branch: No }
     next: Connected
 
   - id: t26_i_received_yes_yes_yes_yes_yes
