@@ -79,12 +79,17 @@
 #   t09+t67 in_seq_p_eq_1 (loop)          → t26_i_received_yes_yes_yes_no_yes_yes
 #   t10+t68 in_seq_p_eq_0_ack_pending     → t26_i_received_yes_yes_yes_no_yes_no_yes
 #   t11+t69 in_seq_p_eq_0_no_ack_pending  → t26_i_received_yes_yes_yes_no_yes_no_no
-#   t12_..._reject_exception_p_eq_1        → t26_i_received_yes_yes_yes_no_no_yes_yes
-#   t13_..._reject_exception_p_eq_0        → t26_i_received_yes_yes_yes_no_no_yes_no
-#   t17_..._out_of_seq_srej_disabled       → t26_i_received_yes_yes_yes_no_no_no_no
-#   t16_..._srej_enabled_existing_excep    → t26_i_received_yes_yes_yes_no_no_no_yes_yes
-#   t14_..._srej_enabled_no_excep_in_range → t26_i_received_yes_yes_yes_no_no_no_yes_no_no
-#   t15_..._srej_enabled_no_excep_far_skip → t26_i_received_yes_yes_yes_no_no_no_yes_no_yes
+#   t12_..._reject_exception_p_eq_1        → t26_i_received_yes_yes_yes_no_no_yes_yes_yes
+#   t13_..._reject_exception_p_eq_0        → t26_i_received_yes_yes_yes_no_no_yes_yes_no
+#   t17_..._out_of_seq_srej_disabled       → t26_i_received_yes_yes_yes_no_no_yes_no_no
+#   t16_..._srej_enabled_existing_excep    → t26_i_received_yes_yes_yes_no_no_yes_no_yes_yes
+#   t14_..._srej_enabled_no_excep_in_range → t26_i_received_yes_yes_yes_no_no_yes_no_yes_no_no
+#   t15_..._srej_enabled_no_excep_far_skip → t26_i_received_yes_yes_yes_no_no_yes_no_yes_no_yes
+#   (the six t26 ids above were re-suffixed 2026-09-09 by the #40 guard
+#   splice — see the CORRECTION APPLIED note below. The pre-#40
+#   spellings t26_i_received_yes_yes_yes_no_no_no_{yes,no} now name the
+#   two NEW out-of-window guard:No discard transitions, which have no
+#   LLM-era ancestor.)
 # t67/t68/t69 (stored-frame drain loop) merged into their respective in-seq keys
 # because the loop_while is now embedded inside the SDL transition; no separate key.
 

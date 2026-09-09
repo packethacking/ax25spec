@@ -67,11 +67,12 @@ sequence_variables:
     # legacy binding: V_a_le_N_r_le_V_s
   - name: vr_lt_ns_lt_vr_plus_k
     # V(r) < N(s) < V(r)+k (modulo comparison; open interval per §4.4.2
-    # and X.25 §2.4.6.4(b)): is the out-of-sequence I frame's N(s)
-    # inside the receive window granted by this receiver? k is the
-    # window size this TNC granted, never a constant. Added by the
-    # packethacking/ax25spec#40 erratum: N(s) outside the window is a
-    # duplicate of an already-acknowledged frame — discard, raise no
+    # — the window-membership test X.25 §2.4.6.4(b) asks): is the
+    # out-of-sequence I frame's N(s) inside the receive window granted
+    # by this receiver? k is the window size this TNC granted, never a
+    # constant. Added by the packethacking/ax25spec#40 erratum: a frame
+    # failing this test is disposed of per X.25 §2.4.6.4(a) — it is a
+    # duplicate of an already-acknowledged frame; discard, raise no
     # REJ/SREJ exception, respond (RR F=1) only to P=1. New atom: no
     # legacy binding; runtimes must bind it before consuming the
     # regenerated backends.
