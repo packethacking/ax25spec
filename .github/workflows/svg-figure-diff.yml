@@ -86,7 +86,7 @@ jobs:
           cat report.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: upload the interactive viewers
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: svg-figure-diff-${{ steps.revs.outputs.pr }}
           path: build/svgdiff/*.html
