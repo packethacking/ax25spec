@@ -33,6 +33,7 @@ import argparse
 import base64
 import html
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -89,6 +90,11 @@ def build_viewer(name: str, oldrev: str, newrev: str,
 SIGN = {"added": "+", "removed": "−"}
 
 
+def short(rev: str) -> str:
+    """Abbreviate a full object name; leave branch and tag names alone."""
+    return rev[:8] if re.fullmatch(r"[0-9a-f]{40}", rev) else rev
+
+
 def report_text(results: list[dict], oldrev: str, newrev: str) -> str:
     lines = []
     for res in results:
@@ -102,14 +108,14 @@ def report_text(results: list[dict], oldrev: str, newrev: str) -> str:
         if res["html"]:
             lines.append(f"  viewer: {res['html']}")
     if not results:
-        lines.append(f"no SVG differs between {oldrev} and {newrev}")
+        lines.append(f"no SVG differs between {short(oldrev)} and {short(newrev)}")
     return "\n".join(lines).lstrip("\n")
 
 
 def report_markdown(results: list[dict], oldrev: str, newrev: str) -> str:
     if not results:
-        return f"No SVG figure differs between `{oldrev}` and `{newrev}`."
-    out = [f"### SVG figure changes (`{oldrev}` → `{newrev}`)", ""]
+        return f"No SVG figure differs between `{short(oldrev)}` and `{short(newrev)}`."
+    out = [f"### SVG figure changes (`{short(oldrev)}` → `{short(newrev)}`)", ""]
     for res in results:
         out.append(f"**`{res['path']}`**")
         if res["note"]:
@@ -153,8 +159,12 @@ def main() -> int:
     a = ap.parse_args()
 
     oldrev = a.oldrev
+    old_label = a.oldrev
     if a.merge_base:
         oldrev = git("merge-base", a.oldrev, a.newrev).strip()
+        named = git("rev-parse", a.oldrev).strip()
+        old_label = (short(oldrev) if oldrev == named
+                     else f"{short(oldrev)} (merge base with {short(a.oldrev)})")
 
     paths = a.paths
     if a.all or not paths:
@@ -179,14 +189,14 @@ def main() -> int:
         if not a.no_html:
             dest = out_dir / f"svgdiff-{Path(path).stem}.html"
             dest.write_text(
-                build_viewer(Path(path).name, a.oldrev, a.newrev,
+                build_viewer(Path(path).name, old_label, short(a.newrev),
                              old_bytes, new_bytes, res["regions"], res["stats"]),
                 encoding="utf-8")
             res["html"] = str(dest.relative_to(REPO)) if dest.is_relative_to(REPO) else str(dest)
         results.append(res)
 
     render = report_markdown if a.format == "markdown" else report_text
-    text = render(results, a.oldrev, a.newrev)
+    text = render(results, old_label, a.newrev)
     try:
         print(text)
     except UnicodeEncodeError:                      # legacy Windows console codepage
