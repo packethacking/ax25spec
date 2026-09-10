@@ -25,7 +25,7 @@ The source documents are in [/src](src).
 | `spec-sdl/**/yaml/*.citations.yaml` | Human-curated evidence/citation sidecars | Normative |
 | `spec-sdl/**/svg/` | Figure renders — the human-reviewable visual diff for figure changes (regenerate with `python3 tools/render/render_all.py`) | Derived |
 | `spec-sdl/**/mmd/*.g.mmd` | Mermaid renderings (emitted by ax25sdl's codegen) | Derived |
-| `spec-sdl/schema/`, `events.yaml`, `predicates.yaml`, `actions.yaml`, `lint-targets.yaml` | The SDL YAML DSL schema + canonical event/predicate/action catalogues | Normative |
+| `spec-sdl/schema/`, `events.yaml`, `predicates.yaml`, `actions.yaml` | The SDL YAML DSL schema + canonical event/predicate/action catalogues | Normative |
 
 The derived-artifact chain: **graphml → yaml happens here** — CI's `transcribe-drift` job regenerates the yaml with the [packet-net/ax25sdl](https://github.com/packet-net/ax25sdl) tooling commit pinned in [.github/ax25sdl-tooling-ref](.github/ax25sdl-tooling-ref) and fails on drift. **yaml → generated code happens downstream** in packet-net/ax25sdl, which consumes this repo as a pinned git submodule and emits ready-to-use state tables for C#, TypeScript, Go, Rust, C, Python and JSON. Figure/spec changes are made **here**; a pin-bump PR in ax25sdl then regenerates the language backends.
 
