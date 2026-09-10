@@ -89,6 +89,20 @@
 # node, edge or decision was added or removed, so no transition id moved
 # and no key here was re-matched.
 
+#
+# 2026-09-10: CORRECTION APPLIED (#43): the DL-FLOW-OFF column's "Own
+# Receiver Busy?" decision has its Yes and No edge labels swapped, so the
+# action stack runs when the station is NOT busy and the already-busy arm
+# is the no-op; and a "N(r) := V(r)" processing box is inserted before
+# "RNR Response" on that arm and before "RR Command" on the DL-FLOW-ON
+# busy arm (ax25sdl explorer note H3). Keys re-matched because the
+# walker's suffix follows the edge label:
+#   t05_dl_flow_off_request_yes (actions)  -> t05_dl_flow_off_request_no
+#   t05_dl_flow_off_request_no  (no-op)    -> t05_dl_flow_off_request_yes
+# t06_dl_flow_on_request_yes_yes / yes_no keep their ids and gain the
+# staging step. Same change as figc4.4; the figc4.5
+# boxes carry the explicit F = 0 / P = 0.
+
 pinned_refs:
   linbpq:
     repo: https://github.com/M0LTE/linbpq
@@ -218,8 +232,41 @@ transitions:
       function: Data::flush
       line: 891
       note: "`if !t1.running { t3.stop(); t1.start(srt) }` — the T1-not-running case"
-  t05_dl_flow_off_request_yes:
+  t05_dl_flow_off_request_no:
     notes: >-
+      ERRATUM (#43): the action stack (Set Own Receiver Busy, N(r) := V(r),
+      RNR Response, Clear Acknowledge Pending) now hangs off the No arm of
+      "Own Receiver Busy?"; the figure drew it on the Yes arm with the No
+      arm returning straight to the state, so a not-busy station could
+      never enter the busy condition through DL-FLOW-OFF, which is the
+      primitive's whole purpose (5.3: "temporarily suspend the flow of
+      incoming information"; 6.4.10: "Whenever a TNC enters a busy
+      condition, it indicates this by sending an RNR response at the next
+      opportunity"). The mirror DL-FLOW-ON column acts on its Yes (busy)
+      arm and is unchanged. Re-keyed from t05_dl_flow_off_request_yes: the
+      walker's Yes/No suffix follows the edge label, so the ids swapped
+      meaning. The "N(r) := V(r)" box before the RNR is new (H3, see
+      t06_dl_flow_on_request_yes_no): every other RR/RNR emission on these
+      pages stages N(r) first and the ax25sdl interpreter treats an
+      unstaged emission as a machine error, so without it the arm would
+      fail the moment it became reachable. Evidence: ax25sdl explorer
+      calibration row #43 (docs/explorer.md; Connected seed, A sends 2,
+      B's layer 3 turns flow off after its first delivery, no faults: the
+      busy-tracks-flow invariant fires at 3 steps with B taking the empty
+      not-busy arm and staying not-busy and silent; with that check off
+      the flow-off-delivery invariant fires at 5; tests Defect43_* in
+      CalibrationTests.cs); golden trace
+      traces/dl-flow-off-sets-busy.trace.yaml (expected_failure on #43;
+      expects own_receiver_busy true and an RNR response carrying V(r));
+      packet.net quirk Ax25Spec43DlFlowOffEntersBusy (default on; inverts
+      the own_receiver_busy guard for DL_FLOW_OFF_request only). No
+      implementation corroboration exists: neither direwolf
+      (src/ax25_link.c: "dl_flow_off - not implemented", "we currently
+      don't have a way to set own_receiver_busy") nor linbpq exposes the
+      primitive, so the fix rests on the prose, the figure contradicting
+      its own primitive and the DL-FLOW-ON symmetry. figc4.5 copy of the figc4.4
+      column, with RNR Response (F = 0); same swap, same staging box.
+
       DL-FLOW-OFF when not already busy: set own-receiver-busy, send RNR(F=0),
       clear ack pending. DIVERGENCE: no impl models own-receiver-busy as a
       first-class DL-FLOW-OFF primitive the way the figure does. direwolf's
@@ -243,8 +290,25 @@ transitions:
       function: ax25_std_heartbeat_expiry
       line: 64
       note: "OWN_RX_BUSY driven by sk_rmem buffer pressure, cleared via heartbeat (RR F=0) — not a DL-FLOW-OFF primitive"
+  t05_dl_flow_off_request_yes:
+    notes: >-
+      ERRATUM (#43): already busy, so DL-FLOW-OFF is a no-op. This is the
+      figure's former No arm, re-keyed from t05_dl_flow_off_request_no; the
+      action stack moved to the No arm, see t05_dl_flow_off_request_no.
+    references: []
+
   t06_dl_flow_on_request_yes_no:
     notes: >-
+      ERRATUM (#43, H3): "N(r) := V(r)" is now staged immediately before the
+      RR Command, as every other RR/RNR emission on these pages stages it
+      (Transmit Enquiry, Enquiry Response, the I-frame arms); the figure
+      omitted the box on both flow-control busy arms. ax25sdl
+      docs/explorer.md, Novel findings H3, pinned by
+      Defect43_Note_The_Busy_Arms_Emit_RNR_And_RR_Without_N_r_Staging: the
+      interpreter treats an emission without a staged N(r) as a machine
+      error, so the arm had to be made executable in the same change that
+      makes it reachable. Every implementation sends N(r) = V(r) here.
+
       DL-FLOW-ON when busy and T1 not running: clear own-receiver-busy, RR(P=0),
       clear ack pending, Stop T3 / Start T1. Same divergence as t05 — busy is
       not a primitive in these impls. linux clears OWN_RX_BUSY in the heartbeat
@@ -261,6 +325,18 @@ transitions:
       function: L2TimerProc
       line: 3501
       note: "RNRSENT set & no longer busy → SendSupervisCmd (RR/RNR P) (3516); closest analogue to DL-FLOW-ON"
+  t06_dl_flow_on_request_yes_yes:
+    notes: >-
+      ERRATUM (#43, H3): "N(r) := V(r)" is now staged immediately before the
+      RR Command, as every other RR/RNR emission on these pages stages it
+      (Transmit Enquiry, Enquiry Response, the I-frame arms); the figure
+      omitted the box on both flow-control busy arms. ax25sdl
+      docs/explorer.md, Novel findings H3, pinned by
+      Defect43_Note_The_Busy_Arms_Emit_RNR_And_RR_Without_N_r_Staging: the
+      interpreter treats an emission without a staged N(r) as a machine
+      error, so the arm had to be made executable in the same change that
+      makes it reachable. Every implementation sends N(r) = V(r) here.
+    references: []
   t07_dl_connect_request:
     notes: >-
       DL-CONNECT request while already in TimerRecovery: discard I queue,

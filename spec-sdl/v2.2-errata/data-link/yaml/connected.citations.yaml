@@ -28,6 +28,8 @@
 #   t23_dl_unit_data_request              → t04_dl_unit_data_request
 #   t25_dl_flow_off_when_already_busy     → t05_dl_flow_off_request_yes
 #   t24_dl_flow_off_when_not_busy         → t05_dl_flow_off_request_no
+#     (2026-09-10, #43: the action stack moved from the _yes to the _no arm;
+#     the two rows above still name the right ids, their content swapped.)
 #   t28_dl_flow_on_when_not_busy          → t06_dl_flow_on_request_no
 #   t27_dl_flow_on_when_busy_and_t1_running    → t06_dl_flow_on_request_yes_yes
 #   t26_dl_flow_on_when_busy_and_t1_not_running→ t06_dl_flow_on_request_yes_no
@@ -110,6 +112,19 @@
 # RE-MINTED for the two new guard:No discard transitions — the pre-#40
 # entry under ..._no_no_no_no (the REJ arm) is a DIFFERENT path from
 # today's ..._no_no_no_no (out-of-window, not polled).
+
+#
+# 2026-09-10: CORRECTION APPLIED (#43): the DL-FLOW-OFF column's "Own
+# Receiver Busy?" decision has its Yes and No edge labels swapped, so the
+# action stack runs when the station is NOT busy and the already-busy arm
+# is the no-op; and a "N(r) := V(r)" processing box is inserted before
+# "RNR Response" on that arm and before "RR Command" on the DL-FLOW-ON
+# busy arm (ax25sdl explorer note H3). Keys re-matched because the
+# walker's suffix follows the edge label:
+#   t05_dl_flow_off_request_yes (actions)  -> t05_dl_flow_off_request_no
+#   t05_dl_flow_off_request_no  (no-op)    -> t05_dl_flow_off_request_yes
+# t06_dl_flow_on_request_yes_yes / yes_no keep their ids and gain the
+# staging step.
 
 pinned_refs:
   linbpq:
@@ -316,7 +331,39 @@ transitions:
       line: 1645
       note: 'SOCK_DGRAM path: builds UI directly, bypasses LAPB state machine. Same
         path in any state'
-  t05_dl_flow_off_request_yes:
+  t05_dl_flow_off_request_no:
+    notes: >-
+      ERRATUM (#43): the action stack (Set Own Receiver Busy, N(r) := V(r),
+      RNR Response, Clear Acknowledge Pending) now hangs off the No arm of
+      "Own Receiver Busy?"; the figure drew it on the Yes arm with the No
+      arm returning straight to the state, so a not-busy station could
+      never enter the busy condition through DL-FLOW-OFF, which is the
+      primitive's whole purpose (5.3: "temporarily suspend the flow of
+      incoming information"; 6.4.10: "Whenever a TNC enters a busy
+      condition, it indicates this by sending an RNR response at the next
+      opportunity"). The mirror DL-FLOW-ON column acts on its Yes (busy)
+      arm and is unchanged. Re-keyed from t05_dl_flow_off_request_yes: the
+      walker's Yes/No suffix follows the edge label, so the ids swapped
+      meaning. The "N(r) := V(r)" box before the RNR is new (H3, see
+      t06_dl_flow_on_request_yes_no): every other RR/RNR emission on these
+      pages stages N(r) first and the ax25sdl interpreter treats an
+      unstaged emission as a machine error, so without it the arm would
+      fail the moment it became reachable. Evidence: ax25sdl explorer
+      calibration row #43 (docs/explorer.md; Connected seed, A sends 2,
+      B's layer 3 turns flow off after its first delivery, no faults: the
+      busy-tracks-flow invariant fires at 3 steps with B taking the empty
+      not-busy arm and staying not-busy and silent; with that check off
+      the flow-off-delivery invariant fires at 5; tests Defect43_* in
+      CalibrationTests.cs); golden trace
+      traces/dl-flow-off-sets-busy.trace.yaml (expected_failure on #43;
+      expects own_receiver_busy true and an RNR response carrying V(r));
+      packet.net quirk Ax25Spec43DlFlowOffEntersBusy (default on; inverts
+      the own_receiver_busy guard for DL_FLOW_OFF_request only). No
+      implementation corroboration exists: neither direwolf
+      (src/ax25_link.c: "dl_flow_off - not implemented", "we currently
+      don't have a way to set own_receiver_busy") nor linbpq exposes the
+      primitive, so the fix rests on the prose, the figure contradicting
+      its own primitive and the DL-FLOW-ON symmetry.
     references:
     - source: spec_prose
       cite: §6.4.10
@@ -328,7 +375,11 @@ transitions:
       line: 4238
       note: RNR decided dynamically at supervisory-send time (QCOUNT<20 or session
         busy). No explicit DL-FLOW-OFF primitive
-  t05_dl_flow_off_request_no:
+  t05_dl_flow_off_request_yes:
+    notes: >-
+      ERRATUM (#43): already busy, so DL-FLOW-OFF is a no-op. This is the
+      figure's former No arm, re-keyed from t05_dl_flow_off_request_no; the
+      action stack moved to the No arm, see t05_dl_flow_off_request_no.
     references: []
   t06_dl_flow_on_request_no:
     references:
@@ -338,8 +389,28 @@ transitions:
       line: 3621
       note: RR(P) sent with PFBIT, L2TIMER restart via L2SENDCOMMAND
   t06_dl_flow_on_request_yes_yes:
+    notes: >-
+      ERRATUM (#43, H3): "N(r) := V(r)" is now staged immediately before the
+      RR Command, as every other RR/RNR emission on these pages stages it
+      (Transmit Enquiry, Enquiry Response, the I-frame arms); the figure
+      omitted the box on both flow-control busy arms. ax25sdl
+      docs/explorer.md, Novel findings H3, pinned by
+      Defect43_Note_The_Busy_Arms_Emit_RNR_And_RR_Without_N_r_Staging: the
+      interpreter treats an emission without a staged N(r) as a machine
+      error, so the arm had to be made executable in the same change that
+      makes it reachable. Every implementation sends N(r) = V(r) here.
     references: []
   t06_dl_flow_on_request_yes_no:
+    notes: >-
+      ERRATUM (#43, H3): "N(r) := V(r)" is now staged immediately before the
+      RR Command, as every other RR/RNR emission on these pages stages it
+      (Transmit Enquiry, Enquiry Response, the I-frame arms); the figure
+      omitted the box on both flow-control busy arms. ax25sdl
+      docs/explorer.md, Novel findings H3, pinned by
+      Defect43_Note_The_Busy_Arms_Emit_RNR_And_RR_Without_N_r_Staging: the
+      interpreter treats an emission without a staged N(r) as a machine
+      error, so the arm had to be made executable in the same change that
+      makes it reachable. Every implementation sends N(r) = V(r) here.
     references:
     - source: linbpq
       path: L2Code.c

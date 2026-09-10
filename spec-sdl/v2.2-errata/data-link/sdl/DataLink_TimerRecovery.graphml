@@ -562,6 +562,22 @@ Start T1</y:NodeLabel>
         </y:SVGNode>
       </data>
     </node>
+    <node id="n244">
+      <data key="d4" xml:space="preserve"/>
+      <data key="d5" xml:space="preserve"><![CDATA[Processing description]]></data>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="60.0" width="120.0" x="867.490758791866" y="679.7674452881605"/>
+          <y:Fill color="#FFFFFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="21.09375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="19.453125">N(r) &lt;- V(r)</y:NodeLabel>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="5"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
     <node id="n34">
       <data key="d4" xml:space="preserve"/>
       <data key="d5" xml:space="preserve"><![CDATA[Processing description]]></data>
@@ -578,12 +594,28 @@ Start T1</y:NodeLabel>
         </y:SVGNode>
       </data>
     </node>
+    <node id="n245">
+      <data key="d4" xml:space="preserve"/>
+      <data key="d5" xml:space="preserve"><![CDATA[Processing description]]></data>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="60.0" width="120.0" x="1017.490758791866" y="679.7674452881605"/>
+          <y:Fill color="#FFFFFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="21.09375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="19.453125">N(r) &lt;- V(r)</y:NodeLabel>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="5"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
     <node id="n35">
       <data key="d4" xml:space="preserve"/>
       <data key="d5" xml:space="preserve"><![CDATA[Signal generation to lower layer]]></data>
       <data key="d6">
         <y:SVGNode>
-          <y:Geometry height="71.89795918367352" width="108.23183673469384" x="873.3748404245191" y="679.7674452881605"/>
+          <y:Geometry height="71.89795918367352" width="108.23183673469384" x="873.3748404245191" y="775.386099726812"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="36.1875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="108.23183673469384" x="0.0" xml:space="preserve" y="17.855229591836746">RNR Response (F = 0)</y:NodeLabel>
@@ -599,7 +631,7 @@ Start T1</y:NodeLabel>
       <data key="d5" xml:space="preserve"><![CDATA[Signal generation to lower layer]]></data>
       <data key="d6">
         <y:SVGNode>
-          <y:Geometry height="71.89795918367352" width="108.23183673469384" x="1023.3748404245191" y="679.7674452881605"/>
+          <y:Geometry height="71.89795918367352" width="108.23183673469384" x="1023.3748404245191" y="775.386099726812"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="36.1875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="108.23183673469384" x="0.0" xml:space="preserve" y="17.855229591836746">RR Command (P = 0)</y:NodeLabel>
@@ -615,7 +647,7 @@ Start T1</y:NodeLabel>
       <data key="d5" xml:space="preserve"><![CDATA[Processing description]]></data>
       <data key="d6">
         <y:SVGNode>
-          <y:Geometry height="60.0" width="120.0" x="867.490758791866" y="781.6654044718339"/>
+          <y:Geometry height="60.0" width="120.0" x="867.490758791866" y="877.2840589104853"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="36.1875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="11.90625">Clear Acknowledge Pending</y:NodeLabel>
@@ -631,7 +663,7 @@ Start T1</y:NodeLabel>
       <data key="d5" xml:space="preserve"><![CDATA[Processing description]]></data>
       <data key="d6">
         <y:SVGNode>
-          <y:Geometry height="60.0" width="120.0" x="1017.490758791866" y="781.6654044718339"/>
+          <y:Geometry height="60.0" width="120.0" x="1017.490758791866" y="877.2840589104853"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="36.1875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="11.90625">Clear Acknowledge Pending</y:NodeLabel>
@@ -647,7 +679,7 @@ Start T1</y:NodeLabel>
       <data key="d5" xml:space="preserve"><![CDATA[Test or decision]]></data>
       <data key="d6">
         <y:SVGNode>
-          <y:Geometry height="95.30448979591836" width="120.0" x="1017.490758791866" y="890.4641799820381"/>
+          <y:Geometry height="95.30448979591836" width="120.0" x="1017.490758791866" y="986.0828344206896"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="21.09375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="37.105369897959235">T1 Running?</y:NodeLabel>
@@ -663,7 +695,7 @@ Start T1</y:NodeLabel>
       <data key="d5" xml:space="preserve"><![CDATA[Processing description]]></data>
       <data key="d6">
         <y:SVGNode>
-          <y:Geometry height="60.0" width="120.0" x="1017.490758791866" y="1030.1686697779564"/>
+          <y:Geometry height="60.0" width="120.0" x="1017.490758791866" y="1125.7873242166079"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="36.1875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="11.90625">Stop T3
@@ -680,7 +712,7 @@ Start T1</y:NodeLabel>
       <data key="d5" xml:space="preserve"><![CDATA[State]]></data>
       <data key="d6">
         <y:SVGNode>
-          <y:Geometry height="60.0" width="120.0" x="867.490758791866" y="1126.4456497599956"/>
+          <y:Geometry height="60.0" width="120.0" x="867.490758791866" y="1222.064304198647"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="21.09375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="19.453125">4 Timer Recovery</y:NodeLabel>
@@ -4246,7 +4278,7 @@ Clear Acknowledge Pending</y:NodeLabel>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" configuration="AutoFlippingLabel" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" verticalTextPosition="bottom" visible="true" width="24.677734375" x="-12.338892087040222" xml:space="preserve" y="4.991291251444636">Yes<y:LabelModel><y:SmartEdgeLabelModel autoRotationEnabled="false" defaultAngle="0.0" defaultDistance="10.0"/></y:LabelModel><y:ModelParameter><y:SmartEdgeLabelModelParameter angle="0.0" distance="30.0" distanceToCenter="true" position="center" ratio="0.0" segment="0"/></y:ModelParameter><y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="anywhere" sideReference="relative_to_edge_flow"/></y:EdgeLabel>
+          <y:EdgeLabel alignment="center" configuration="AutoFlippingLabel" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" verticalTextPosition="bottom" visible="true" width="19.33984375" x="-9.669921875" xml:space="preserve" y="4.991291251444636">No<y:LabelModel><y:SmartEdgeLabelModel autoRotationEnabled="false" defaultAngle="0.0" defaultDistance="10.0"/></y:LabelModel><y:ModelParameter><y:SmartEdgeLabelModelParameter angle="0.0" distance="30.0" distanceToCenter="true" position="center" ratio="0.0" segment="0"/></y:ModelParameter><y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="anywhere" sideReference="relative_to_edge_flow"/></y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -4262,7 +4294,7 @@ Clear Acknowledge Pending</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e35" source="n33" target="n35">
+    <edge id="e35" source="n33" target="n244">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4272,7 +4304,7 @@ Clear Acknowledge Pending</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e36" source="n34" target="n36">
+    <edge id="e36" source="n34" target="n245">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -4348,11 +4380,11 @@ Clear Acknowledge Pending</y:NodeLabel>
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
             <y:Point x="994.3459329518633" y="538.9164248799972"/>
-            <y:Point x="994.3459329518633" y="1014.1164248799972"/>
+            <y:Point x="994.3459329518633" y="1109.7350793186488"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" configuration="AutoFlippingLabel" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" verticalTextPosition="bottom" visible="true" width="19.33984375" x="-8.821242341105517" xml:space="preserve" y="11.318622291267161">No<y:LabelModel><y:SmartEdgeLabelModel autoRotationEnabled="false" defaultAngle="0.0" defaultDistance="10.0"/></y:LabelModel><y:ModelParameter><y:SmartEdgeLabelModelParameter angle="0.0" distance="30.0" distanceToCenter="true" position="right" ratio="0.00187082032306415" segment="1"/></y:ModelParameter><y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="anywhere" sideReference="relative_to_edge_flow"/></y:EdgeLabel>
+          <y:EdgeLabel alignment="center" configuration="AutoFlippingLabel" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" verticalTextPosition="bottom" visible="true" width="24.677734375" x="-8.821242341105517" xml:space="preserve" y="11.318622291267161">Yes<y:LabelModel><y:SmartEdgeLabelModel autoRotationEnabled="false" defaultAngle="0.0" defaultDistance="10.0"/></y:LabelModel><y:ModelParameter><y:SmartEdgeLabelModelParameter angle="0.0" distance="30.0" distanceToCenter="true" position="right" ratio="0.00187082032306415" segment="1"/></y:ModelParameter><y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="anywhere" sideReference="relative_to_edge_flow"/></y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -4362,7 +4394,7 @@ Clear Acknowledge Pending</y:NodeLabel>
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
             <y:Point x="1001.7059329518632" y="539.7164248799972"/>
-            <y:Point x="1001.7059329518632" y="1023.7164248799971"/>
+            <y:Point x="1001.7059329518632" y="1119.3350793186487"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
@@ -6769,6 +6801,26 @@ Clear Acknowledge Pending</y:NodeLabel>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
           <y:EdgeLabel alignment="center" configuration="AutoFlippingLabel" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" verticalTextPosition="bottom" visible="true" width="19.33984375" x="4.992315168814457" xml:space="preserve" y="14.025246321948316">No<y:LabelModel><y:SmartEdgeLabelModel autoRotationEnabled="false" defaultAngle="0.0" defaultDistance="10.0"/></y:LabelModel><y:ModelParameter><y:SmartEdgeLabelModelParameter angle="0.0" distance="30.0" distanceToCenter="true" position="center" ratio="0.0" segment="0"/></y:ModelParameter><y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="anywhere" sideReference="relative_to_edge_flow"/></y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e274" source="n244" target="n35">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e275" source="n245" target="n36">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>

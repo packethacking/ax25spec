@@ -41,24 +41,24 @@
 <path d="M 927.49 407.95 L 927.49 448.4" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 1073.97 410.61 L 1075.59 449.91" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 927.49 543.7 L 927.49 584.15" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<text x="927.49" y="562.24" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<text x="927.49" y="562.24" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
 <path d="M 1077.49 543.7 L 1077.49 584.15" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <text x="1077.49" y="568.12" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
 <path d="M 927.49 644.15 L 927.49 679.77" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 1077.49 644.15 L 1077.49 679.77" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<path d="M 1077.49 751.67 L 1077.49 781.67" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<path d="M 927.49 751.67 L 927.49 781.67" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<path d="M 1077.49 841.67 L 1077.49 890.46" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<path d="M 1077.49 985.77 L 1077.49 1030.17" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<text x="1077.49" y="1004.32" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
-<path d="M 1030.75 1090.17 L 969.77 1129.31" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<path d="M 927.49 841.67 L 927.49 1126.45" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<path d="M 960.69 517.34 L 994.35 538.92 L 994.35 1014.12 L 941.58 1126.45" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<text x="985.07" y="520.54" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
-<path d="M 1042.72 516.08 L 1001.71 539.72 L 1001.71 1023.72 L 944.27 1126.45" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1077.49 847.28 L 1077.49 877.28" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 927.49 847.28 L 927.49 877.28" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1077.49 937.28 L 1077.49 986.08" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1077.49 1081.39 L 1077.49 1125.79" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="1077.49" y="1099.94" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 1030.75 1185.79 L 969.77 1224.93" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 927.49 937.28 L 927.49 1222.06" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 960.69 517.34 L 994.35 538.92 L 994.35 1109.74 L 941.58 1222.06" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="985.07" y="520.54" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 1042.72 516.08 L 1001.71 539.72 L 1001.71 1119.34 L 944.27 1222.06" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <text x="1029.2" y="544.23" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
-<path d="M 1056.31 968.95 L 948.1 1126.45" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<text x="1036.51" y="1001.97" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 1056.31 1064.57 L 948.1 1222.06" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="1036.51" y="1097.59" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
 <path d="M 1222.49 410.61 L 1222.49 584.15" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 1222.23 644.15 L 1221.87 685.72" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 1221.61 745.72 L 1221.61 781.67" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
@@ -371,6 +371,8 @@
 <text x="4643.67" y="1984.64" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
 <path d="M 4556.46 1996.99 L 4556.46 2034.09" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <text x="4571.12" y="2024.57" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 927.49 739.77 L 927.49 775.39" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1077.49 739.77 L 1077.49 775.39" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <g transform="translate(1760.16 -296.32) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
     <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
   </g>
@@ -575,52 +577,62 @@
 </g>
 <text x="927.49" y="608.06" font-size="12" text-anchor="middle">Set Own Receiver</text>
 <text x="927.49" y="623.13" font-size="12" text-anchor="middle">Busy</text>
+<g transform="translate(867.49 679.77) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="927.49" y="711.22" font-size="12" text-anchor="middle">N(r) &lt;- V(r)</text>
 <g transform="translate(1017.49 584.15) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
     <rect x="1.0" y="1.0" width="118" height="58" />
   </g>
 </g>
 <text x="1077.49" y="608.06" font-size="12" text-anchor="middle">Clear Own</text>
 <text x="1077.49" y="623.13" font-size="12" text-anchor="middle">Receiver Busy</text>
-<g transform="translate(873.37 679.77) scale(0.9 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
-    <polygon points="0,0 102,0 120,30.0 102,60 0,60" />
-  </g>
-</g>
-<text x="927.49" y="709.62" font-size="12" text-anchor="middle">RNR Response (F</text>
-<text x="927.49" y="724.69" font-size="12" text-anchor="middle">= 0)</text>
-<g transform="translate(1023.37 679.77) scale(0.9 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
-    <polygon points="0,0 102,0 120,30.0 102,60 0,60" />
-  </g>
-</g>
-<text x="1077.49" y="709.62" font-size="12" text-anchor="middle">RR Command (P =</text>
-<text x="1077.49" y="724.69" font-size="12" text-anchor="middle">0)</text>
-<g transform="translate(867.49 781.67) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+<g transform="translate(1017.49 679.77) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
     <rect x="1.0" y="1.0" width="118" height="58" />
   </g>
 </g>
-<text x="927.49" y="805.57" font-size="12" text-anchor="middle">Clear Acknowledge</text>
-<text x="927.49" y="820.64" font-size="12" text-anchor="middle">Pending</text>
-<g transform="translate(1017.49 781.67) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+<text x="1077.49" y="711.22" font-size="12" text-anchor="middle">N(r) &lt;- V(r)</text>
+<g transform="translate(873.37 775.39) scale(0.9 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 102,0 120,30.0 102,60 0,60" />
+  </g>
+</g>
+<text x="927.49" y="805.24" font-size="12" text-anchor="middle">RNR Response (F</text>
+<text x="927.49" y="820.31" font-size="12" text-anchor="middle">= 0)</text>
+<g transform="translate(1023.37 775.39) scale(0.9 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 102,0 120,30.0 102,60 0,60" />
+  </g>
+</g>
+<text x="1077.49" y="805.24" font-size="12" text-anchor="middle">RR Command (P =</text>
+<text x="1077.49" y="820.31" font-size="12" text-anchor="middle">0)</text>
+<g transform="translate(867.49 877.28) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
     <rect x="1.0" y="1.0" width="118" height="58" />
   </g>
 </g>
-<text x="1077.49" y="805.57" font-size="12" text-anchor="middle">Clear Acknowledge</text>
-<text x="1077.49" y="820.64" font-size="12" text-anchor="middle">Pending</text>
-<g transform="translate(1017.49 890.46) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+<text x="927.49" y="901.19" font-size="12" text-anchor="middle">Clear Acknowledge</text>
+<text x="927.49" y="916.26" font-size="12" text-anchor="middle">Pending</text>
+<g transform="translate(1017.49 877.28) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="1077.49" y="901.19" font-size="12" text-anchor="middle">Clear Acknowledge</text>
+<text x="1077.49" y="916.26" font-size="12" text-anchor="middle">Pending</text>
+<g transform="translate(1017.49 986.08) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
     <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
   </g>
 </g>
-<text x="1077.49" y="939.57" font-size="12" text-anchor="middle">T1 Running?</text>
-<g transform="translate(1017.49 1030.17) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+<text x="1077.49" y="1035.19" font-size="12" text-anchor="middle">T1 Running?</text>
+<g transform="translate(1017.49 1125.79) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
     <rect x="1.0" y="1.0" width="118" height="58" />
   </g>
 </g>
-<text x="1077.49" y="1054.07" font-size="12" text-anchor="middle">Stop T3</text>
-<text x="1077.49" y="1069.15" font-size="12" text-anchor="middle">Start T1</text>
-<g transform="translate(867.49 1126.45) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+<text x="1077.49" y="1149.69" font-size="12" text-anchor="middle">Stop T3</text>
+<text x="1077.49" y="1164.77" font-size="12" text-anchor="middle">Start T1</text>
+<g transform="translate(867.49 1222.06) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
     <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
   </g>
 </g>
-<text x="927.49" y="1157.9" font-size="12" text-anchor="middle">4 Timer Recovery</text>
+<text x="927.49" y="1253.52" font-size="12" text-anchor="middle">4 Timer Recovery</text>
 <g transform="translate(1162.49 584.15) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
     <rect x="1.0" y="1.0" width="118" height="58" />
   </g>
