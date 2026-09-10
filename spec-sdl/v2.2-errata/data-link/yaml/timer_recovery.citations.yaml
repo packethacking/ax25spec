@@ -80,6 +80,15 @@
 # for the two new guard:No discard transitions; the pre-#40
 # ..._no_no_no_no entry (the REJ arm) described a different path.
 
+#
+# 2026-09-10: CORRECTION APPLIED (#47): the stored-I-frame drain loop in the
+# three in-sequence I-received arms (t22_i_received_yes_yes_yes_no_yes_yes,
+# ..._no_yes_no_no and ..._no_yes_no_yes) now reads "V(r) := V(r) + 1", as
+# the structurally identical figc4.4 loop does; the figure drew
+# "V(r) := V(r) - 1". Label-only change on one processing box (n180): no
+# node, edge or decision was added or removed, so no transition id moved
+# and no key here was re-matched.
+
 pinned_refs:
   linbpq:
     repo: https://github.com/M0LTE/linbpq
@@ -915,6 +924,25 @@ transitions:
       note: "OWN_RX_BUSY: ax25_std_enquiry_response only if pf, then break — no V(r) advance"
   t22_i_received_yes_yes_yes_no_yes_yes:
     notes: >-
+      ERRATUM (#47): the stored-frame drain loop body advances V(r)
+      ("V(r) := V(r) + 1"), as the identical figc4.4 loop does; the figure
+      drew "V(r) := V(r) - 1", which cancelled the pre-loop increment and
+      left V(r) on an already-delivered sequence number after the first
+      drained frame, so the peer's next in-window retransmit was accepted
+      as new and re-delivered upward. Evidence: ax25sdl explorer
+      calibration row #47 (docs/explorer.md; current tables, k=2, A 1
+      frame, B 3 frames, 2 drops, SREJ on, all checks on: the delivery
+      invariant fires at 24 steps with A delivering b1 twice; test
+      Defect47_At_K2_Fires_With_Every_Invariant_On); packet.net quirk
+      Ax25Spec47TimerRecoveryDrainAdvancesVR (default on; rewrites this
+      verb to the increment in ActionDispatcher, the only place the
+      decrement verb occurs); direwolf i_frame_continued drain
+      (src/ax25_link.c:2906-2924) advances vr with SET_VR(vr + 1) after
+      each stored frame it delivers and never decrements; linbpq
+      PROC_I_FRAME replays RXFRAMES[] forward likewise. Prose: 6.4.2.1
+      (the receiver "increments its receive state variable") and 6.4.4.2
+      (retained frames are delivered "in sequence number order").
+
       I frame, N(R) ok, own NOT busy, N(s)==V(r) (in sequence), P=1: deliver
       (V(r)++, clear reject exception, decrement sreject exception, DL-DATA
       indication), drain any stored in-sequence frames, then F:=1/N(r):=V(r)/RR/
@@ -933,6 +961,11 @@ transitions:
       function: i_frame_continued
       line: 2906
       note: "ns==vr: V(r)++, deliver, then while rxdata_by_ns[vr] drain stored out-of-order frames; p=1 → RR response F=1 (2927-2941). Shared by states 3 & 4"
+    - source: direwolf
+      path: src/ax25_link.c
+      function: i_frame_continued
+      line: 2924
+      note: "ERRATUM (#47) evidence: the drain loop's SET_VR(AX25MODULO(S->vr + 1, ...)) after each stored frame is delivered; V(r) only ever advances"
     - source: rax25
       path: src/state.rs
       function: Connected::iframe
@@ -950,6 +983,10 @@ transitions:
       note: "in-sequence delivery then replays stored RXFRAMES[] (resequencing); P-bit → SEND_RR_RESP"
   t22_i_received_yes_yes_yes_no_yes_no_no:
     notes: >-
+      ERRATUM (#47): drain loop body advances V(r) ("V(r) := V(r) + 1",
+      was "- 1"); see t22_i_received_yes_yes_yes_no_yes_yes for the full
+      rationale and evidence.
+
       In-sequence I frame, own not busy, P=0, no ack pending: deliver + drain
       stored, then set ack pending + LM-SEIZE request (arrange a deferred ack).
       AGREEMENT on the deferred-ack intent. DIVERGENCE on mechanism: direwolf
@@ -979,6 +1016,10 @@ transitions:
       note: "ns==vr, !pf, !ACK_PENDING: set ACK_PENDING + ax25_start_t2timer (T2 = deferred-ack analogue of LM-SEIZE)"
   t22_i_received_yes_yes_yes_no_yes_no_yes:
     notes: >-
+      ERRATUM (#47): drain loop body advances V(r) ("V(r) := V(r) + 1",
+      was "- 1"); see t22_i_received_yes_yes_yes_no_yes_yes for the full
+      rationale and evidence.
+
       In-sequence I frame, own not busy, P=0, ack ALREADY pending: deliver +
       drain stored, then nothing more (the pending ack will batch). direwolf/
       linux take the no-op tail; rax25 returns after setting/leaving ack pending.
