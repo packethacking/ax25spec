@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="3484.77" height="1681.77" viewBox="-344.37 -506.65 3484.77 1681.77" font-family="Helvetica, Arial, sans-serif">
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 1 L 9 5 L 0 9 z" fill="#000000"/></marker></defs>
 <rect x="-344.37" y="-506.65" width="3484.77" height="1681.77" fill="#FFFFFF"/>
-<path d="M 1670.62 -431.51 L -204.37 354.11" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<path d="M 1670.62 -428.78 L -9.37 351.38" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1679.71 -435.31 L -204.37 354.11" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1681.52 -433.85 L -14.64 353.83" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M -69.37 415.2 L -69.37 464.87" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M -69.37 524.87 L -69.37 559.75" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M -69.37 631.65 L -69.37 666.53" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
@@ -12,14 +12,14 @@
 <path d="M 88.77 646.27 L 88.77 698.77" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 88.77 758.77 L 88.77 798.24" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 88.77 858.24 L 88.77 910.5" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<path d="M 1671.7 -426.65 L 148.77 348.7" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<path d="M 148.77 494.91 L 217.45 698.77" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<text x="169.24" y="559.87" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
-<path d="M 1681.23 -426.65 L 413.71 343.3" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1683.19 -432.5 L 145.14 350.55" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 148.75 494.88 L 217.45 698.77" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="169.23" y="559.84" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 1687.06 -430.19 L 413.71 343.3" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 354.53 415.2 L 354.53 447.22" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 274.94 656.27 L 247.17 698.77" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<path d="M 294.55 542.52 L 294.55 596.27" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<text x="289.55" y="573.26" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 294.55 494.88 L 294.55 596.27" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="280.55" y="549.78" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
 <path d="M 447.53 620.18 L 447.53 620.18" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <text x="447.53" y="624.38" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
 <path d="M 447.53 667.83 L 447.53 724.55" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
@@ -29,12 +29,12 @@
 <path d="M 450.47 1040.12 L 450.47 1095.12" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 507.53 620.18 L 644.2 620.18 L 644.2 620.18" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <text x="522.18" y="624.38" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
-<path d="M 584.2 754.56 L 502.15 834.74" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<text x="566.87" y="775.69" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 584.2 754.55 L 502.15 834.74" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="566.88" y="775.68" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
 <path d="M 644.2 802.2 L 644.2 848.94" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <text x="644.2" y="826.52" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
 <path d="M 644.2 949.94 L 644.2 969.59 L 532.42 969.59 L 532.42 694.39 L 465.22 694.39 L 456.35 724.55" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<path d="M 1698.55 -426.65 L 832.63 383.22" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1698.79 -426.87 L 832.63 383.22" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 794.2 455.12 L 794.2 492.23" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 794.2 660.1 L 794.2 660.1" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <text x="794.2" y="664.3" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
@@ -56,17 +56,17 @@
 <path d="M 1535.26 455.12 L 1535.26 508.16" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 1535.26 580.06 L 1535.26 619.21" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 1729.43 -426.65 L 1697.15 383.22" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<path d="M 1719.57 455.12 L 1746.99 496.45" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1719.57 455.12 L 1757.89 512.9" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 1778.6 591.76 L 1778.6 591.76" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <text x="1748.6" y="625.72" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes (Note: assumed; missing from spec)</text>
-<path d="M 1838.6 544.13 L 1877.8 599.47 L 1877.8 766.67 L 1833.86 787.99" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<text x="1843.51" y="607.17" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No (Note: assumed; missing from spec)</text>
+<path d="M 1838.59 544.11 L 1877.8 599.47 L 1877.8 766.67 L 1827.6 791.03" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="1843.5" y="607.16" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No (Note: assumed; missing from spec)</text>
 <path d="M 1777.09 728.49 L 1782.35 787.99" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 1741.14 -426.65 L 2025.08 383.22" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 2037.68 455.12 L 2037.68 514.11" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 2211.52 455.12 L 2211.52 514.11" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 2211.52 574.11 L 2211.52 633.09" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<path d="M 2151.52 680.75 L 2121.52 693.72" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 2151.52 680.75 L 2112.68 697.54" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <text x="2135.63" y="691.82" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
 <path d="M 2092.25 753.07 L 2141.26 823.98" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 2161.99 853.98 L 2161.99 853.98" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
@@ -78,7 +78,7 @@
 <path d="M 2577.12 455.12 L 2577.12 508.95" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 2577.12 568.95 L 2577.12 633.09" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 1759.62 -426.65 L 2542.37 383.22" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<path d="M 1765.1 -426.65 L 2695.91 383.22" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1764.6 -427.08 L 2695.91 383.22" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 2737.23 568.95 L 2737.23 633.09" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 2737.23 455.12 L 2737.23 508.95" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 2897.35 455.12 L 2897.35 508.95" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
@@ -87,10 +87,10 @@
 <path d="M 3060.4 455.12 L 3060.4 508.95" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 3060.4 568.95 L 3060.4 621.19" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 3060.4 693.09 L 3060.4 732.18" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<path d="M 1770.59 -426.65 L 2849.46 383.22" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<path d="M 1776.17 -426.65 L 3005.82 383.22" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1768.75 -428.02 L 2849.46 383.22" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1772.3 -429.2 L 3005.82 383.22" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <path d="M 1735.3 -426.65 L 1735.3 -426.65" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
-<path d="M 1859.5 460.45 L 1824.68 496.45" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1859.5 460.45 L 1804.66 517.15" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
 <g transform="translate(1670.62 -486.65) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
     <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
   </g>
