@@ -1,0 +1,14 @@
+# run h1-drop started 2026-09-10T20:48:31Z, tee args: --drop-tx-i 2
+axcall: connecting to GB7RDG...
+axcall: connected to GB7RDG (mod-8, window 4, paclen 256, SREJ on)
+Welcome to GB7RDG. Sysop M0LTE. Ports on 40m, 6m, 2m, 70cm. 
+Type  ?  for Help
+READNG:GB7RDG} See https://ukpacketradio.network/nodes:gb7rdg 
+READNG:GB7RDG} Nodes
+GB7WOK-1            BASTOK:GB7BSK       BDHBBS:GB7BDH-3     BDHBBS:GB7BDH-1     
+BSKBBS:GB7BSK-1     BSKCHT:GB7BSK-4     CSCHAT:GB7NDH-3     CSNODE:GB7NDH-2     
+NDHBBS:GB7NDH-1     PARKER:GB7LAN       RDGBBS:GB7RDG-2     RDGCHT:GB7RDG-1     
+WODCHT:GB7WOD-1     WOODLY:GB7WOD       
+axcall: disconnected
+# axcall exit 0
+# run h1-drop ended 2026-09-10T20:54:03Z
