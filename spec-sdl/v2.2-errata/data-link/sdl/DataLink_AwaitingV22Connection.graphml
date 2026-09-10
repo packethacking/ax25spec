@@ -1077,7 +1077,7 @@ T1V &lt;- 2 * SRT</y:NodeLabel>
       <data key="d5" xml:space="preserve"><![CDATA[Subroutine call]]></data>
       <data key="d6">
         <y:SVGNode>
-          <y:Geometry height="60.0" width="120.0" x="2483.8125" y="592.3748582874964"/>
+          <y:Geometry height="60.0" width="120.0" x="2483.8125" y="815.4997165749928"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="21.09375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="19.453125">Establish Data Link</y:NodeLabel>
@@ -1109,7 +1109,7 @@ T1V &lt;- 2 * SRT</y:NodeLabel>
       <data key="d5" xml:space="preserve"><![CDATA[Processing description]]></data>
       <data key="d6">
         <y:SVGNode>
-          <y:Geometry height="60.0" width="120.0" x="2483.8125" y="815.4997165749928"/>
+          <y:Geometry height="60.0" width="120.0" x="2483.8125" y="592.3748582874964"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="node_width" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="21.09375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="19.453125">Set Version 2.0</y:NodeLabel>
@@ -2023,7 +2023,7 @@ T1V &lt;- 2 * SRT</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e69" source="n65" target="n66">
+    <edge id="e69" source="n65" target="n68">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -2033,7 +2033,7 @@ T1V &lt;- 2 * SRT</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e70" source="n66" target="n67">
+    <edge id="e70" source="n68" target="n67">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -2043,7 +2043,7 @@ T1V &lt;- 2 * SRT</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e71" source="n67" target="n68">
+    <edge id="e71" source="n67" target="n66">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -2053,7 +2053,7 @@ T1V &lt;- 2 * SRT</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e72" source="n68" target="n69">
+    <edge id="e72" source="n66" target="n69">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
