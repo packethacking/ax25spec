@@ -301,13 +301,111 @@ def clip_to_rect(inside, outside, rect):
     return (x0 + dx * best_t, y0 + dy * best_t)
 
 
-def edge_polyline(edge, nodes):
+_ARC_STEPS = 8
+
+
+def _shape_ring(el, m):
+    """Ordered boundary points of the first drawn shape under `el`.
+
+    Unlike element_points, which yields every point of every element in no
+    particular order (it only ever feeds a bounding box), this returns a ring
+    that can be intersected with a segment.
+    """
+    tag = el.tag.split("}")[-1]
+    m = compose(m, parse_transform(el.get("transform")))
+    if tag == "polygon" and el.get("points"):
+        vals = [float(v) for v in re.split(r"[,\s]+", el.get("points").strip()) if v]
+        ring = [(vals[i], vals[i + 1]) for i in range(0, len(vals) - 1, 2)]
+    elif tag == "rect":
+        x, y = float(el.get("x", 0)), float(el.get("y", 0))
+        w, h = float(el.get("width", 0)), float(el.get("height", 0))
+        rx = min(float(el.get("rx", 0) or 0), w / 2)
+        ry = min(float(el.get("ry", el.get("rx", 0)) or 0), h / 2)
+        if rx <= 0 or ry <= 0:
+            ring = [(x, y), (x + w, y), (x + w, y + h), (x, y + h)]
+        else:
+            # corner centres, clockwise from top-left
+            ring = []
+            for cx, cy, a0 in ((x + rx, y + ry, math.pi),
+                               (x + w - rx, y + ry, -math.pi / 2),
+                               (x + w - rx, y + h - ry, 0.0),
+                               (x + rx, y + h - ry, math.pi / 2)):
+                for k in range(_ARC_STEPS + 1):
+                    a = a0 + (math.pi / 2) * k / _ARC_STEPS
+                    ring.append((cx + rx * math.cos(a), cy + ry * math.sin(a)))
+    elif tag in ("ellipse", "circle"):
+        cx, cy = float(el.get("cx", 0)), float(el.get("cy", 0))
+        rx = float(el.get("rx", el.get("r", 0)))
+        ry = float(el.get("ry", el.get("r", 0)))
+        steps = _ARC_STEPS * 4
+        ring = [(cx + rx * math.cos(2 * math.pi * k / steps),
+                 cy + ry * math.sin(2 * math.pi * k / steps)) for k in range(steps)]
+    elif tag == "path" and el.get("d"):
+        ring = list(path_points(el.get("d")))
+    else:
+        for child in el:
+            found = _shape_ring(child, m)
+            if found:
+                return found
+        return None
+    return [apply_matrix(m, px, py) for px, py in ring] if len(ring) >= 3 else None
+
+
+def node_ring(node, resources, cache={}):
+    """The node's outline in diagram coordinates, or None to fall back to its box."""
+    key = (node.refid, node.x, node.y, node.w, node.h)
+    if key in cache:
+        return cache[key]
+    res = resources.get(node.refid)
+    ring = None
+    if res:
+        group, (bx, by, bw, bh) = resource_group(res)
+        local = _shape_ring(group, IDENTITY)
+        if local:
+            sx = node.w / bw if bw else 1.0
+            sy = node.h / bh if bh else 1.0
+            ring = [(node.x + sx * (px - bx), node.y + sy * (py - by))
+                    for px, py in local]
+    cache[key] = ring
+    return ring
+
+
+def clip_to_ring(inside, outside, ring):
+    """Point where segment inside→outside first crosses the outline."""
+    x0, y0 = inside
+    dx, dy = outside[0] - x0, outside[1] - y0
+    best_t = 1.0
+    for i in range(len(ring)):
+        ax, ay = ring[i]
+        bx, by = ring[(i + 1) % len(ring)]
+        ex, ey = bx - ax, by - ay
+        den = dx * ey - dy * ex
+        if abs(den) < 1e-12:
+            continue
+        t = ((ax - x0) * ey - (ay - y0) * ex) / den
+        u = ((ax - x0) * dy - (ay - y0) * dx) / den
+        if 1e-9 < t < best_t and -1e-9 <= u <= 1 + 1e-9:
+            best_t = t
+    return (x0 + dx * best_t, y0 + dy * best_t)
+
+
+def clip_to_node(inside, outside, node, resources):
+    ring = node_ring(node, resources)
+    if ring is None:
+        return clip_to_rect(inside, outside, (node.x, node.y, node.w, node.h))
+    return clip_to_ring(inside, outside, ring)
+
+
+def edge_polyline(edge, nodes, resources):
     s, t = nodes[edge.src], nodes[edge.tgt]
     scx, scy = s.x + s.w / 2 + edge.sx, s.y + s.h / 2 + edge.sy
     tcx, tcy = t.x + t.w / 2 + edge.tx, t.y + t.h / 2 + edge.ty
     pts = [(scx, scy)] + edge.bends + [(tcx, tcy)]
-    pts[0] = clip_to_rect(pts[0], pts[1], (s.x, s.y, s.w, s.h))
-    pts[-1] = clip_to_rect(pts[-1], pts[-2], (t.x, t.y, t.w, t.h))
+    # Clip to the node's real outline, not its bounding box: on a diamond or
+    # hexagon the two differ by up to half the node's width, leaving the
+    # arrowhead floating in space short of the shape.
+    pts[0] = clip_to_node(pts[0], pts[1], s, resources)
+    pts[-1] = clip_to_node(pts[-1], pts[-2], t, resources)
     return pts
 
 
@@ -471,7 +569,7 @@ def render(nodes, edges, resources, crop=None, pad=0.0, restrict=None):
                 or rects_intersect((t.x, t.y, t.w, t.h), view_rect)
             ):
                 continue
-        pts = edge_polyline(e, nodes)
+        pts = edge_polyline(e, nodes, resources)
         d = "M " + " L ".join(f"{fnum(x)} {fnum(y)}" for x, y in pts)
         out.append(
             f'<path d="{d}" fill="none" stroke="#000000" stroke-width="1" '
