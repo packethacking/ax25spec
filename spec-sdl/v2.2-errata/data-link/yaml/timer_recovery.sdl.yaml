@@ -226,21 +226,22 @@ transitions:
       - { action: UI Command, kind: signal_lower }
     next: TimerRecovery
 
-  - id: t05_dl_flow_off_request_yes
-    on: DL_FLOW_OFF_request
-    on_label: DL-FLOW-OFF Request
-    path:
-      - { decision: dl_flow_off_own_receiver_busy, branch: Yes }
-      - { action: Set Own Receiver Busy, kind: processing }
-      - { action: RNR Response (F = 0), kind: signal_lower }
-      - { action: Clear Acknowledge Pending, kind: processing }
-    next: TimerRecovery
-
   - id: t05_dl_flow_off_request_no
     on: DL_FLOW_OFF_request
     on_label: DL-FLOW-OFF Request
     path:
       - { decision: dl_flow_off_own_receiver_busy, branch: No }
+      - { action: Set Own Receiver Busy, kind: processing }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: RNR Response (F = 0), kind: signal_lower }
+      - { action: Clear Acknowledge Pending, kind: processing }
+    next: TimerRecovery
+
+  - id: t05_dl_flow_off_request_yes
+    on: DL_FLOW_OFF_request
+    on_label: DL-FLOW-OFF Request
+    path:
+      - { decision: dl_flow_off_own_receiver_busy, branch: Yes }
     next: TimerRecovery
 
   - id: t06_dl_flow_on_request_yes_no
@@ -249,6 +250,7 @@ transitions:
     path:
       - { decision: dl_flow_on_own_receiver_busy, branch: Yes }
       - { action: Clear Own Receiver Busy, kind: processing }
+      - { action: "N(r) := V(r)", kind: processing }
       - { action: RR Command (P = 0), kind: signal_lower }
       - { action: Clear Acknowledge Pending, kind: processing }
       - { decision: dl_flow_on_t1_running, branch: No }
@@ -262,6 +264,7 @@ transitions:
     path:
       - { decision: dl_flow_on_own_receiver_busy, branch: Yes }
       - { action: Clear Own Receiver Busy, kind: processing }
+      - { action: "N(r) := V(r)", kind: processing }
       - { action: RR Command (P = 0), kind: signal_lower }
       - { action: Clear Acknowledge Pending, kind: processing }
       - { decision: dl_flow_on_t1_running, branch: Yes }
