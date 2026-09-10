@@ -2,7 +2,7 @@
 
 **What was built against the [decision brief](fuzzing-the-figures.md) on 10 September 2026, what it found, and what it could not find.**
 
-This is the report the brief asked for ("suggest a report first"). The one novel finding, H1, was reproduced on a faithful runtime and on air before it was filed; it is now [#91](https://github.com/packethacking/ax25spec/issues/91). Nothing else here has been filed.
+This is the report the brief asked for ("suggest a report first"). Nothing here has been filed as an erratum. The one novel finding is a hypothesis with independent corroboration, and the brief's evidence-class rule still applies: it is reproduced against a real implementation before anyone is asked to change working code.
 
 ---
 
@@ -13,7 +13,7 @@ This is the report the brief asked for ("suggest a report first"). The one novel
 - **The calibration score is 10 of 11.** Between the explorer's invariants and the golden traces, every known defect except #41 (a numeric timer property) is rediscovered. The explorer alone finds #40 on the pre-fix tables and goes silent on the fixed ones, and finds #42, #47, #9 and the #44/#48 connect-phase pair unprompted on the current tables, with counterexamples of 2 to 30 steps.
 - **One novel hypothesis, H1:** a station can enter Timer Recovery and never leave it, because figc4.5 exits only on an F=1 supervisory response and has no T3 arm, so an acknowledgement that arrives on an I frame strands it with T1 stopped. direwolf's source carries an author's note describing the same symptom and a coded workaround. It was the dominant signature on the exploration grid (66 of 116 violating cells), **it reproduces on packet.net's runtime in both quirk modes** ([packet.net#811](https://github.com/packet-net/packet.net/pull/811)), and **it reproduces on air**: M0LTE to GB7RDG on 40m, one dropped frame, and the stranded station sent no keepalive poll in 290 s where the control sent two ([transcripts](evidence/h1-timer-recovery-2026-09-10/)). With the figure run as drawn the retry counter also ratchets across recoveries on a working link until N2 declares it dead.
 - **Nothing else surfaced.** A 576-cell grid over the current tables produced no violation that is not H1, #42 or #47 at k of 4 or less.
-- Done since the first draft: #38 closed; the explorer gained flow-control moves and a v2.0 stub peer ([ax25sdl#90](https://github.com/packet-net/ax25sdl/pull/90)) and now reaches seven of the nine live defects on its own; H1 reproduced on air. H1 is filed as #91. Still to do: the figure fix for #91 with #9, the packet.net acknowledge-pending fix (#812), and the citation pass on Timer Recovery.
+- Done since the first draft: #38 closed; the explorer gained flow-control moves and a v2.0 stub peer ([ax25sdl#90](https://github.com/packet-net/ax25sdl/pull/90)) and now reaches seven of the nine live defects on its own; H1 reproduced on air. Still to do: file H1 as an erratum (evidence is complete), fix the two packet.net defects it exposed, and the citation pass on Timer Recovery.
 
 ---
 
@@ -104,7 +104,7 @@ Reading it plainly: the invariants have teeth. They discriminate on #40, redisco
 
 Hypotheses, not defects. Each has been asked the brief's question: does it depend on a choice the figure did not make?
 
-### H1. A station can enter Timer Recovery and never leave it (filed as [#91](https://github.com/packethacking/ax25spec/issues/91))
+### H1. A station can enter Timer Recovery and never leave it
 
 Shortest trace 20 steps: no SREJ, A sends 2 frames and B sends 3, one loss. A's second frame is lost. A's T1 expires and it polls. B's F=1 answer acknowledges only the first frame, so A retransmits and stays in Timer Recovery, which is what figc4.5 says. The retransmission gets through. The acknowledgement for it arrives on B's next I frame. In Timer Recovery that I frame runs `Check_I_Frame_Acknowledged`, whose N(r)=V(s) path stops T1 and starts T3, but the state stays Timer Recovery: figc4.5 leaves it only on an F=1 supervisory response, and it has no T3 expiry arm. A now sits in Timer Recovery with T1 stopped, nothing outstanding, RC=1, and no drawn path that will ever move it.
 
@@ -220,7 +220,7 @@ Timer Recovery is where H1 lives, where #38 and #47 lived, and where 41 percent 
 
 ## Recommended next steps
 
-1. **H1 is filed as [#91](https://github.com/packethacking/ax25spec/issues/91)** with the on-air transcript, the packet.net reproduction and the direwolf note as evidence, and the fix shape above alongside #9. The decision taken is to run the erratum rather than carry a packet.net quirk ahead of it, so until the figure fix lands any pdn node that recovers from a loss with the peer's data flowing loses its keepalive until it next sends.
+1. **File H1** as a figure-defect issue: the on-air transcript, the packet.net reproduction and the direwolf note are the evidence, and the fix shape above goes with #9. Decide in packet.net whether to carry a quirk (an exit to Connected on a clearing I-frame ack, direwolf's shape) ahead of the figure fix, since the runtime is exposed today: any pdn node that recovers from a loss with the peer's data flowing loses its keepalive until it next sends.
 2. **Differential against LinBPQ proper** (step 4 of the brief) remains open for the other hypotheses; the mirror of the H1 run, with LinBPQ as the recovering side, would say whether its retry counting has the #9 shape.
 3. **Fix the packet.net acknowledge-pending defect** left behind by inline retransmission ([packet.net#812](https://github.com/packet-net/packet.net/issues/812)), which is independent of the figure.
 4. **Close #38.**
