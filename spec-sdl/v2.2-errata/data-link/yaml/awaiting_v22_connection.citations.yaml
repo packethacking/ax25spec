@@ -582,60 +582,21 @@ transitions:
       note: 'else branch: n2count++, retransmit SABM or SABME based on current modulus.
         No Select_T1_Value — T1 implicitly restarted by ax25_send_control machinery'
   t14_frmr_received:
-    notes: >-
-      FRMR while negotiating v2.2: the peer is pre-v2.2 (§4.3.3.2, "A TNC
-      that uses a version of AX.25 prior to v2.2 responds with a FRMR"),
-      so re-initialise the timers, force v2.0, mark layer 3 initiated, run
-      the Establish Data Link subroutine (which now sends SABM, the modulo
-      being 8 again) and fall to AwaitingConnection (state 1).
+    notes: 'FRMR while negotiating v2.2 — peer is v2.0 (or pre-2.2 in v2.0
 
-      ERRATUM (#45): action order. The published v2.2 figure draws
-      "Establish Data Link" before "Set Version 2.0". Establish Data Link
-      (figc4.7) branches on the modulo and sends SABME while modulo 128 is
-      still in effect, so the drawn order re-sends the very SABME the peer
-      has just rejected: against a v2.0-only peer the fallback makes no
-      progress (FRMR again), and against a v2.2 peer it splits the modulo
-      (the responder adopts 128 from the SABME while this station proceeds
-      at 8 via Set Version 2.0 and state 1). The v2.3 figure swaps the two
-      boxes so Set Version 2.0 (and Set Layer 3 Initiated) precede
-      Establish Data Link and the re-establishment is a v2.0 SABM, which is
-      what §6.3.2 ("a version 2.0 connection is made" once a pre-2.2 peer
-      answers with FRMR) and §6.5 (reset "after receipt of a FRMR frame
-      from a TNC using an older version of the protocol") intend. Nothing
-      else on the arm changes: the timer re-initialisation, the Layer 3
-      Initiated flag and the exit to state 1 are as drawn. Evidence: the
-      ax25sdl golden trace frmr-fallback-downgrades-to-sabm (expects SABM
-      P=1 and version_2_2 false on this transition; expected_failure
-      against the pre-fix figure) and the two-station explorer's #45
-      calibration row in ax25sdl docs/explorer.md (awaiting-v22 seed,
-      v20-frmr stub peer, timer-free progress check: the pre-fix figure
-      emits SABME again and the link only comes up through figc4.2's T1
-      retry). direwolf already applies this reorder as an erratum in every
-      FRMR arm (references below).
+      mode), so re-initialise timers, run the Establish Data Link
 
-      Only direwolf implements this column. Its other erratum at 5047
-      flags a spec inconsistency re: layer_3_initiated: "State 1 clears
-      it. State 5 sets it. Why not the same?"
+      subroutine, force v2.0, and fall to AwaitingConnection (state 1).
+
+
+      Only direwolf implements this — with its own erratum at 5047
+
+      flagging spec inconsistency: "State 1 clears it. State 5 sets it.
+
+      Why not the same?" re: layer_3_initiated.
+
+      '
     references:
-    - source: spec_prose
-      cite: "§4.3.3.2"
-      quote: >-
-        If the TNC is not capable of accepting a SABME command, it responds
-        with a DM frame. A TNC that uses a version of AX.25 prior to v2.2
-        responds with a FRMR.
-    - source: spec_prose
-      cite: "§6.3.2"
-      quote: >-
-        Implementations of AX.25 prior to version 2.2 respond to an XID
-        command frame with a FRMR response frame. The TNC receiving the
-        FRMR uses a default set of parameters compatible with previous
-        versions of AX.25 and a version 2.0 connection is made.
-    - source: spec_prose
-      cite: "§6.5"
-      quote: >-
-        A TNC initiates a reset procedure whenever it receives an unexpected
-        UA response frame, or after receipt of a FRMR frame from a TNC using
-        an older version of the protocol.
     - source: direwolf
       path: src/ax25_link.c
       function: frmr_frame
@@ -643,17 +604,7 @@ transitions:
       note: 'case state_5 (5035-5051): INIT_T1V_SRT, set_version_2_0 (Erratum at
         5044: ''Need to force v2.0. This is not in flow chart''), establish_data_link,
         S->layer_3_initiated = 1 (Erratum at 5047: ''State 1 clears it. State 5
-        sets it. Why not the same?''), enter state_1. This is the #45 order:
-        set_version_2_0 runs before establish_data_link, so the re-establishment
-        goes out as SABM.'
-    - source: direwolf
-      path: src/ax25_link.c
-      function: frmr_frame
-      line: 5028
-      note: 'case state_3 / state_4 (5020-5033) apply the same force-v2.0-first
-        order: set_version_2_0 at 5028 (''Erratum: FRMR can only be sent by v2.0.
-        Need to force v2.0. Should be added to flow chart.'') then
-        establish_data_link at 5030.'
+        sets it. Why not the same?''), enter state_1'
   t15_sabme_received:
     notes: 'SABME from peer while our own SABME is in flight — collision
 
