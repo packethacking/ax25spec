@@ -4,8 +4,6 @@
 
 Written 10 September 2026, out of the [ax25spec#40](https://github.com/packethacking/ax25spec/issues/40) cascade. Positions marked *suggest* are recommendations, not decisions. A rendered version of this brief is also published as an artifact.
 
-**Status (10 September 2026, evening):** actioned. The findings, the calibration score and one novel hypothesis are in [fuzzing-the-figures-findings.md](fuzzing-the-figures-findings.md).
-
 ---
 
 ## Why this is newly possible
