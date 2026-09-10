@@ -23,11 +23,11 @@ stateDiagram-v2
     Connected --> Connected: t03_i_frame_pops_off_queue_no_no_no<br/>on: I_frame_pops_off_queue<br/>[not peer_receiver_busy and not vs_eq_va_plus_k and not T1_running]<br/>/ · N(s) := V(s)<br/>/ · N(r) := V(r)<br/>/ · P := 0<br/>/ ↓ I Command<br/>/ · V(s) := V(s) + 1<br/>/ · Clear Acknowledge Pending<br/>/ · Stop T3<br/>/ · Start T1
     Connected --> Connected: t03_i_frame_pops_off_queue_no_no_yes<br/>on: I_frame_pops_off_queue<br/>[not peer_receiver_busy and not vs_eq_va_plus_k and T1_running]<br/>/ · N(s) := V(s)<br/>/ · N(r) := V(r)<br/>/ · P := 0<br/>/ ↓ I Command<br/>/ · V(s) := V(s) + 1<br/>/ · Clear Acknowledge Pending
     Connected --> Connected: t04_dl_unit_data_request<br/>on: DL_UNIT_DATA_request<br/>/ ↓ UI Command
-    Connected --> Connected: t05_dl_flow_off_request_yes<br/>on: DL_FLOW_OFF_request<br/>[own_receiver_busy]<br/>/ · Set Own Receiver Busy<br/>/ ↓ RNR Response<br/>/ · Clear Acknowledge Pending
-    Connected --> Connected: t05_dl_flow_off_request_no<br/>on: DL_FLOW_OFF_request<br/>[not own_receiver_busy]
+    Connected --> Connected: t05_dl_flow_off_request_no<br/>on: DL_FLOW_OFF_request<br/>[not own_receiver_busy]<br/>/ · Set Own Receiver Busy<br/>/ · N(r) := V(r)<br/>/ ↓ RNR Response<br/>/ · Clear Acknowledge Pending
+    Connected --> Connected: t05_dl_flow_off_request_yes<br/>on: DL_FLOW_OFF_request<br/>[own_receiver_busy]
     Connected --> Connected: t06_dl_flow_on_request_no<br/>on: DL_FLOW_ON_request<br/>[not own_receiver_busy]
-    Connected --> Connected: t06_dl_flow_on_request_yes_yes<br/>on: DL_FLOW_ON_request<br/>[own_receiver_busy and T1_running]<br/>/ · Clear Own Receiver Busy<br/>/ ↓ RR Command<br/>/ · Clear Acknowledge Pending
-    Connected --> Connected: t06_dl_flow_on_request_yes_no<br/>on: DL_FLOW_ON_request<br/>[own_receiver_busy and not T1_running]<br/>/ · Clear Own Receiver Busy<br/>/ ↓ RR Command<br/>/ · Clear Acknowledge Pending<br/>/ · Stop T3<br/>/ · Start T1
+    Connected --> Connected: t06_dl_flow_on_request_yes_yes<br/>on: DL_FLOW_ON_request<br/>[own_receiver_busy and T1_running]<br/>/ · Clear Own Receiver Busy<br/>/ · N(r) := V(r)<br/>/ ↓ RR Command<br/>/ · Clear Acknowledge Pending
+    Connected --> Connected: t06_dl_flow_on_request_yes_no<br/>on: DL_FLOW_ON_request<br/>[own_receiver_busy and not T1_running]<br/>/ · Clear Own Receiver Busy<br/>/ · N(r) := V(r)<br/>/ ↓ RR Command<br/>/ · Clear Acknowledge Pending<br/>/ · Stop T3<br/>/ · Start T1
     Connected --> AwaitingConnection: t07_dl_connect_request_no<br/>on: DL_CONNECT_request<br/>[not version_2_2]<br/>/ · discard_I_frame_queue<br/>/ →() Establish_Data_Link<br/>/ · Set Layer 3 Initiated
     Connected --> AwaitingV22Connection: t07_dl_connect_request_yes<br/>on: DL_CONNECT_request<br/>[version_2_2]<br/>/ · discard_I_frame_queue<br/>/ →() Establish_Data_Link<br/>/ · Set Layer 3 Initiated
     Connected --> Connected: t08_all_other_primitives__from_upper_layer<br/>on: all_other_primitives__from_upper_layer
