@@ -813,7 +813,7 @@ transitions:
         body:
           - { action: Retrieve Stored V(r) I Frame, kind: processing }
           - { action: DL-DATA Indication, kind: signal_upper }
-          - { action: "V(r) := V(r) - 1", kind: processing }
+          - { action: "V(r) := V(r) + 1", kind: processing }
       - { decision: i_p_eq_1, branch: Yes }
       - { action: "F := 1", kind: processing }
       - { action: "N(r) := V(r)", kind: processing }
@@ -839,7 +839,7 @@ transitions:
         body:
           - { action: Retrieve Stored V(r) I Frame, kind: processing }
           - { action: DL-DATA Indication, kind: signal_upper }
-          - { action: "V(r) := V(r) - 1", kind: processing }
+          - { action: "V(r) := V(r) + 1", kind: processing }
       - { decision: i_p_eq_1, branch: No }
       - { decision: i_ack_pending, branch: No }
       - { action: Set Acknowledge Pending, kind: processing }
@@ -864,7 +864,7 @@ transitions:
         body:
           - { action: Retrieve Stored V(r) I Frame, kind: processing }
           - { action: DL-DATA Indication, kind: signal_upper }
-          - { action: "V(r) := V(r) - 1", kind: processing }
+          - { action: "V(r) := V(r) + 1", kind: processing }
       - { decision: i_p_eq_1, branch: No }
       - { decision: i_ack_pending, branch: Yes }
     next: TimerRecovery
