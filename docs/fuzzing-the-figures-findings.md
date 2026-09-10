@@ -220,6 +220,8 @@ Timer Recovery is where H1 lives, where #38 and #47 lived, and where 41 percent 
 
 ## Recommended next steps
 
+These are now tracked as the v2.3 verification programme, umbrella [#93](https://github.com/packethacking/ax25spec/issues/93): twelve verification issues (#94 to #105), each a self-contained brief with an acceptance criterion and a calibration gate, alongside the ranked figure fixes. The umbrella states precisely what closing everything establishes and what it does not.
+
 1. **H1 is filed as [#91](https://github.com/packethacking/ax25spec/issues/91)** with the on-air transcript, the packet.net reproduction and the direwolf note as evidence, and the fix shape above alongside #9. The decision taken is to run the erratum rather than carry a packet.net quirk ahead of it, so until the figure fix lands any pdn node that recovers from a loss with the peer's data flowing loses its keepalive until it next sends.
 2. **Differential against LinBPQ proper** (step 4 of the brief) remains open for the other hypotheses; the mirror of the H1 run, with LinBPQ as the recovering side, would say whether its retry counting has the #9 shape.
 3. **Fix the packet.net acknowledge-pending defect** left behind by inline retransmission ([packet.net#812](https://github.com/packet-net/packet.net/issues/812)), which is independent of the figure.
