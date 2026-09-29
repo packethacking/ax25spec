@@ -231,9 +231,9 @@ transitions:
     path:
       - { action: "SRT := Initial Default", kind: processing }
       - { action: "T1V := 2 * SRT", kind: processing }
-      - { action: Establish Data Link, kind: subroutine }
-      - { action: Set Layer 3 Initiated, kind: processing }
       - { action: Set Version 2.0, kind: processing }
+      - { action: Set Layer 3 Initiated, kind: processing }
+      - { action: Establish Data Link, kind: subroutine }
     next: AwaitingConnection
 
   - id: t15_sabme_received
