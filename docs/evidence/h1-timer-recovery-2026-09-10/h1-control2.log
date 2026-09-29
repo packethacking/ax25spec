@@ -1,0 +1,26 @@
+# session opened 21:54:52
+21:54:53.096 TX      M0LTE>GB7RDG XID  P/F=1 cmd
+21:54:54.444 RX      GB7RDG>M0LTE XID  P/F=1 rsp
+21:54:54.518 TX      M0LTE>GB7RDG SABM P/F=1 cmd
+21:54:55.554 RX      GB7RDG>M0LTE UA   P/F=1 rsp
+21:54:55.854 RX      GB7RDG>M0LTE I   N(s)=0 N(r)=0 P=1 cmd info=79
+21:54:55.878 TX      M0LTE>GB7RDG RR   N(r)=1 F/P=1 rsp
+21:55:00.756 RX      GB7RDG>GB7WOD RR   N(r)=3 F/P=1 rsp
+21:55:04.529 TX      M0LTE>GB7RDG I   N(s)=0 N(r)=1 P=0 cmd info=2
+21:55:06.235 RX      GB7RDG>M0LTE I   N(s)=1 N(r)=1 P=1 cmd info=63
+21:55:06.243 TX      M0LTE>GB7RDG RR   N(r)=2 F/P=1 rsp
+21:55:18.514 TX      M0LTE>GB7RDG I   N(s)=1 N(r)=2 P=0 cmd info=2
+21:55:20.548 RX      GB7RDG>M0LTE I   N(s)=2 N(r)=2 P=0 cmd info=150
+21:55:20.938 RX      GB7RDG>M0LTE I   N(s)=3 N(r)=2 P=0 cmd info=150
+21:55:21.057 RX      GB7RDG>M0LTE I   N(s)=4 N(r)=2 P=1 cmd info=5
+21:55:21.058 TX      M0LTE>GB7RDG RR   N(r)=5 F/P=1 rsp
+21:56:39.556 RX      GB7RDG>GB7WOD RR   N(r)=4 F/P=1 rsp
+21:57:21.067 TX      M0LTE>GB7RDG RR   N(r)=5 F/P=1 cmd
+21:57:22.154 RX      GB7RDG>ID UI   P/F=0 cmd
+21:57:22.274 RX      GB7RDG>M0LTE RR   N(r)=2 F/P=1 rsp
+21:59:21.001 RX      GB7RDG>GB7WOD RR   N(r)=4 F/P=1 rsp
+21:59:22.277 TX      M0LTE>GB7RDG RR   N(r)=5 F/P=1 cmd
+21:59:23.881 RX      GB7RDG>M0LTE RR   N(r)=2 F/P=1 rsp
+22:00:18.522 TX      M0LTE>GB7RDG DISC P/F=1 cmd
+22:00:19.786 RX      GB7RDG>M0LTE UA   P/F=1 rsp
+# session closed. counts: RX:I=5, RX:RR=5, RX:UA=2, RX:UI=1, RX:XID=1, TX:DISC=1, TX:I=2, TX:RR=5, TX:SABM=1, TX:XID=1
