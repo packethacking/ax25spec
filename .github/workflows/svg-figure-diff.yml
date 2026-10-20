@@ -14,8 +14,8 @@ name: svg figure diff
 #     summary for those; same-repo PRs additionally get a sticky comment.
 
 on:
+  # Every PR that touches an svg, whatever its base (stacked PRs too).
   pull_request:
-    branches: [main]
     paths:
       - '**.svg'
   workflow_dispatch:

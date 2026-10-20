@@ -3,8 +3,9 @@ name: ci
 on:
   push:
     branches: [main]
+  # Every PR, whatever its base: stacked PRs (based on another PR's
+  # branch) need their checks too.
   pull_request:
-    branches: [main]
   workflow_dispatch:
 
 concurrency:
