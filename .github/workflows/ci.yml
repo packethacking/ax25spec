@@ -48,7 +48,10 @@ jobs:
         # into its sibling yaml/ directory, so a new machine is covered as
         # soon as its first graphml lands. A machine with no sdl/ directory
         # (the prose-derived management-data-link bootstrap) has nothing to
-        # regenerate.
+        # regenerate. The transcriber itself fails the step on a graphml in
+        # another machine's directory, on two graphmls writing one yaml, on
+        # an orphan *.sdl.yaml with no graphml, and on any page or
+        # subroutine it cannot walk.
         run: |
           set -euo pipefail
           shopt -s nullglob

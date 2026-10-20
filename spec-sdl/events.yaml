@@ -76,20 +76,21 @@ internal:
   - queue_empty
 
 # Service primitives between Data-Link and Link Multiplexer. Named
-# <PREFIX>_<NAME>_<kind> like every primitive family, with the figure's
-# spelling kept: the Data Link pages draw LM-SEIZE Confirm, figc3.1 draws
-# LM-SIEZE Request (the C3 prose spells it SEIZE).
+# <PREFIX>_<NAME>_<kind> like every primitive family. figc3.1 and figc3.2
+# draw SIEZE; the transcriber maps it to the prose and Data Link spelling
+# SEIZE (packethacking/ax25spec#61), so each primitive has one id on every
+# machine. on_label keeps the figure's spelling.
 link_multiplexer:
   - LM_SEIZE_confirm
   - LM_RELEASE_request          # figc3.1 "LM-RELEASE Request"
   - LM_DATA_request             # figc3.1 "LM-DATA Request"
   - LM_EXPEDITED_DATA_request   # figc3.1 "LM-EXPEDITED-DATA Request"
-  - LM_SIEZE_request            # figc3.1 "LM-SIEZE Request"
+  - LM_SEIZE_request            # figc3.1 "LM-SIEZE Request" (#61)
 
 # Service primitives between the Link Multiplexer and the physical layer
-# (Appendix C3.2). Same convention and figure spelling (SIEZE).
+# (Appendix C3.2). Same convention, and the same SIEZE to SEIZE mapping.
 primitives_physical:
-  - PH_SIEZE_confirm            # figc3.1 "PH-SIEZE Confirm"
+  - PH_SEIZE_confirm            # figc3.1 "PH-SIEZE Confirm" (#61)
   - PH_DATA_indication          # figc3.1 "PH-DATA Indication"
   - PH_BUSY_indication          # figc3.1 "PH-BUSY Indication"
   - PH_QUIET_indication         # figc3.1 "PH-QUIET Indication"

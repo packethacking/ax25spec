@@ -93,14 +93,6 @@ transitions:
       - { action: "DL-ERROR Indication (C,D)", kind: signal_upper }
     next: Disconnected
 
-  - id: t11_ui_received_no
-    on: UI_received
-    on_label: UI
-    path:
-      - { action: UI Check, kind: subroutine }
-      - { decision: ui_p_eq_1, branch: No }
-    next: Disconnected
-
   - id: t11_ui_received_yes
     on: UI_received
     on_label: UI
@@ -111,20 +103,19 @@ transitions:
       - { action: DM, kind: signal_lower }
     next: Disconnected
 
+  - id: t11_ui_received_no
+    on: UI_received
+    on_label: UI
+    path:
+      - { action: UI Check, kind: subroutine }
+      - { decision: ui_p_eq_1, branch: No }
+    next: Disconnected
+
   - id: t12_disc_received
     on: DISC_received
     on_label: DISC
     path:
       - { action: "F := P", kind: processing }
-      - { action: DM, kind: signal_lower }
-    next: Disconnected
-
-  - id: t13_sabm_received_no
-    on: SABM_received
-    on_label: SABM
-    path:
-      - { action: "F := P", kind: processing }
-      - { decision: sabm_able_to_establish, branch: No }
       - { action: DM, kind: signal_lower }
     next: Disconnected
 
@@ -147,12 +138,12 @@ transitions:
       - { action: "RC := 0", kind: processing }
     next: Connected
 
-  - id: t14_sabme_received_no
-    on: SABME_received
-    on_label: SABME
+  - id: t13_sabm_received_no
+    on: SABM_received
+    on_label: SABM
     path:
       - { action: "F := P", kind: processing }
-      - { decision: sabme_able_to_establish, branch: No }
+      - { decision: sabm_able_to_establish, branch: No }
       - { action: DM, kind: signal_lower }
     next: Disconnected
 
@@ -174,3 +165,12 @@ transitions:
       - { action: Start T3, kind: processing }
       - { action: "RC := 0", kind: processing }
     next: Connected
+
+  - id: t14_sabme_received_no
+    on: SABME_received
+    on_label: SABME
+    path:
+      - { action: "F := P", kind: processing }
+      - { decision: sabme_able_to_establish, branch: No }
+      - { action: DM, kind: signal_lower }
+    next: Disconnected

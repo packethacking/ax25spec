@@ -33,8 +33,8 @@ transitions:
       - { action: Move all events submitted by current DL to Current Queue, kind: internal_out }
     next: SiezePending
 
-  - id: t04_lm_sieze_request
-    on: LM_SIEZE_request
+  - id: t04_lm_seize_request
+    on: LM_SEIZE_request
     on_label: LM-SIEZE Request
     path:
       - { action: PH-SIEZE Request, kind: signal_lower }
@@ -57,8 +57,8 @@ transitions:
       - { action: Clear Served DL List, kind: processing }
     next: Idle
 
-  - id: t07_ph_sieze_confirm
-    on: PH_SIEZE_confirm
+  - id: t07_ph_seize_confirm
+    on: PH_SEIZE_confirm
     on_label: PH-SIEZE Confirm
     path:
       - { action: PH-RELEASE Request, kind: signal_lower }

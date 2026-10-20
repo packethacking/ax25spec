@@ -89,24 +89,21 @@ decisions:
   - id: i_info_field_length_le_n1_and_content_is_octet_aligned
     question: "Info Field Length <= N1 and Content is Octet Aligned?"
     predicate: info_field_length_le_N1_and_content_is_octet_aligned
-  - id: i_version_2_2
-    question: "Version 2.2?"
-    predicate: version_2_2
   - id: i_va_le_nr_le_vs
     question: "V(a) <= N(r) <= V(s)?"
     predicate: va_le_nr_le_vs
   - id: i_own_receiver_busy
     question: "Own Receiver Busy?"
     predicate: own_receiver_busy
+  - id: i_p_eq_1
+    question: "P == 1?"
+    predicate: P_eq_1
   - id: i_ns_eq_vr
     question: "N(s) == V(r)?"
     predicate: ns_eq_vr
   - id: i_vr_i_frame_stored
     question: "V(r) I Frame Stored?"
     predicate: vr_I_frame_stored
-  - id: i_p_eq_1
-    question: "P == 1?"
-    predicate: P_eq_1
   - id: i_ack_pending
     question: "Ack Pending?"
     predicate: ack_pending
@@ -125,6 +122,9 @@ decisions:
   - id: i_ns_gt_vr_plus_1
     question: "N(s) > V(r) + 1?"
     predicate: ns_gt_vr_plus_1
+  - id: i_version_2_2
+    question: "Version 2.2?"
+    predicate: version_2_2
 
 transitions:
 
@@ -163,6 +163,21 @@ transitions:
       - { action: Push on I Frame Queue, kind: internal_out }
     next: Connected
 
+  - id: t03_i_frame_pops_off_queue_no_no_yes
+    on: I_frame_pops_off_queue
+    on_label: I Frame Pops Off I Frame Queue
+    path:
+      - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
+      - { decision: i_frame_pops_off_queue_vs_eq_va_plus_k, branch: No }
+      - { action: "N(s) := V(s)", kind: processing }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: "p := 0", kind: processing }
+      - { action: I Command, kind: signal_lower }
+      - { action: "V(s) := V(s) + 1", kind: processing }
+      - { action: Clear Acknowledge Pending, kind: processing }
+      - { decision: i_frame_pops_off_queue_t1_running, branch: Yes }
+    next: Connected
+
   - id: t03_i_frame_pops_off_queue_no_no_no
     on: I_frame_pops_off_queue
     on_label: I Frame Pops Off I Frame Queue
@@ -178,21 +193,6 @@ transitions:
       - { decision: i_frame_pops_off_queue_t1_running, branch: No }
       - { action: Stop T3, kind: processing }
       - { action: Start T1, kind: processing }
-    next: Connected
-
-  - id: t03_i_frame_pops_off_queue_no_no_yes
-    on: I_frame_pops_off_queue
-    on_label: I Frame Pops Off I Frame Queue
-    path:
-      - { decision: i_frame_pops_off_queue_peer_receiver_busy, branch: No }
-      - { decision: i_frame_pops_off_queue_vs_eq_va_plus_k, branch: No }
-      - { action: "N(s) := V(s)", kind: processing }
-      - { action: "N(r) := V(r)", kind: processing }
-      - { action: "p := 0", kind: processing }
-      - { action: I Command, kind: signal_lower }
-      - { action: "V(s) := V(s) + 1", kind: processing }
-      - { action: Clear Acknowledge Pending, kind: processing }
-      - { decision: i_frame_pops_off_queue_t1_running, branch: Yes }
     next: Connected
 
   - id: t04_dl_unit_data_request
@@ -219,13 +219,6 @@ transitions:
       - { decision: dl_flow_off_own_receiver_busy, branch: No }
     next: Connected
 
-  - id: t06_dl_flow_on_request_no
-    on: DL_FLOW_ON_request
-    on_label: DL-FLOW-ON Request
-    path:
-      - { decision: dl_flow_on_own_receiver_busy, branch: No }
-    next: Connected
-
   - id: t06_dl_flow_on_request_yes_yes
     on: DL_FLOW_ON_request
     on_label: DL-FLOW-ON Request
@@ -250,15 +243,12 @@ transitions:
       - { action: Start T1, kind: processing }
     next: Connected
 
-  - id: t07_dl_connect_request_no
-    on: DL_CONNECT_request
-    on_label: DL-CONNECT Request
+  - id: t06_dl_flow_on_request_no
+    on: DL_FLOW_ON_request
+    on_label: DL-FLOW-ON Request
     path:
-      - { action: Discard I Frame Queue, kind: processing }
-      - { action: Establish Data Link, kind: subroutine }
-      - { action: Set Layer 3 Initiated, kind: processing }
-      - { decision: dl_connect_version_2_2, branch: No }
-    next: AwaitingConnection
+      - { decision: dl_flow_on_own_receiver_busy, branch: No }
+    next: Connected
 
   - id: t07_dl_connect_request_yes
     on: DL_CONNECT_request
@@ -270,22 +260,21 @@ transitions:
       - { decision: dl_connect_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
+  - id: t07_dl_connect_request_no
+    on: DL_CONNECT_request
+    on_label: DL-CONNECT Request
+    path:
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Set Layer 3 Initiated, kind: processing }
+      - { decision: dl_connect_version_2_2, branch: No }
+    next: AwaitingConnection
+
   - id: t08_all_other_primitives__from_upper_layer
     on: all_other_primitives__from_upper_layer
     on_label: All Other Primitives
     path: []
     next: Connected
-
-  - id: t09_control_field_error_no
-    on: control_field_error
-    on_label: Control Field Error
-    path:
-      - { action: DL-ERROR Indication (L), kind: signal_upper }
-      - { action: Discard I Frame Queue, kind: processing }
-      - { action: Establish Data Link, kind: subroutine }
-      - { action: Set Layer 3 Initiated, kind: processing }
-      - { decision: control_field_error_version_2_2, branch: No }
-    next: AwaitingConnection
 
   - id: t09_control_field_error_yes
     on: control_field_error
@@ -298,15 +287,15 @@ transitions:
       - { decision: control_field_error_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
-  - id: t10_info_not_permitted_in_frame_no
-    on: info_not_permitted_in_frame
-    on_label: Info Not Permitted in Frame
+  - id: t09_control_field_error_no
+    on: control_field_error
+    on_label: Control Field Error
     path:
-      - { action: DL-ERROR Indication (M), kind: signal_upper }
+      - { action: DL-ERROR Indication (L), kind: signal_upper }
       - { action: Discard I Frame Queue, kind: processing }
       - { action: Establish Data Link, kind: subroutine }
       - { action: Set Layer 3 Initiated, kind: processing }
-      - { decision: info_not_permitted_in_frame_version_2_2, branch: No }
+      - { decision: control_field_error_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t10_info_not_permitted_in_frame_yes
@@ -320,15 +309,15 @@ transitions:
       - { decision: info_not_permitted_in_frame_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
-  - id: t11_u_or_s_frame_length_error_no
-    on: u_or_s_frame_length_error
-    on_label: U or S Frame Length Error
+  - id: t10_info_not_permitted_in_frame_no
+    on: info_not_permitted_in_frame
+    on_label: Info Not Permitted in Frame
     path:
-      - { action: DL-ERROR Indication (N), kind: signal_upper }
+      - { action: DL-ERROR Indication (M), kind: signal_upper }
       - { action: Discard I Frame Queue, kind: processing }
       - { action: Establish Data Link, kind: subroutine }
       - { action: Set Layer 3 Initiated, kind: processing }
-      - { decision: u_or_s_frame_length_error_version_2_2, branch: No }
+      - { decision: info_not_permitted_in_frame_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t11_u_or_s_frame_length_error_yes
@@ -341,6 +330,17 @@ transitions:
       - { action: Set Layer 3 Initiated, kind: processing }
       - { decision: u_or_s_frame_length_error_version_2_2, branch: Yes }
     next: AwaitingV22Connection
+
+  - id: t11_u_or_s_frame_length_error_no
+    on: u_or_s_frame_length_error
+    on_label: U or S Frame Length Error
+    path:
+      - { action: DL-ERROR Indication (N), kind: signal_upper }
+      - { action: Discard I Frame Queue, kind: processing }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Set Layer 3 Initiated, kind: processing }
+      - { decision: u_or_s_frame_length_error_version_2_2, branch: No }
+    next: AwaitingConnection
 
   - id: t12_t1_expiry
     on: T1_expiry
@@ -434,16 +434,6 @@ transitions:
       - { action: "RC := 0", kind: processing }
     next: Connected
 
-  - id: t16_frmr_received_no
-    on: FRMR_received
-    on_label: FRMR
-    path:
-      - { action: DL-ERROR Indication (K), kind: signal_upper }
-      - { action: Establish Data Link, kind: subroutine }
-      - { action: Clear Layer 3 Initiated, kind: processing }
-      - { decision: frmr_version_2_2, branch: No }
-    next: AwaitingConnection
-
   - id: t16_frmr_received_yes
     on: FRMR_received
     on_label: FRMR
@@ -454,14 +444,14 @@ transitions:
       - { decision: frmr_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
-  - id: t17_ua_received_no
-    on: UA_received
-    on_label: UA
+  - id: t16_frmr_received_no
+    on: FRMR_received
+    on_label: FRMR
     path:
       - { action: DL-ERROR Indication (K), kind: signal_upper }
       - { action: Establish Data Link, kind: subroutine }
       - { action: Clear Layer 3 Initiated, kind: processing }
-      - { decision: ua_version_2_2, branch: No }
+      - { decision: frmr_version_2_2, branch: No }
     next: AwaitingConnection
 
   - id: t17_ua_received_yes
@@ -473,6 +463,16 @@ transitions:
       - { action: Clear Layer 3 Initiated, kind: processing }
       - { decision: ua_version_2_2, branch: Yes }
     next: AwaitingV22Connection
+
+  - id: t17_ua_received_no
+    on: UA_received
+    on_label: UA
+    path:
+      - { action: DL-ERROR Indication (K), kind: signal_upper }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Clear Layer 3 Initiated, kind: processing }
+      - { decision: ua_version_2_2, branch: No }
+    next: AwaitingConnection
 
   - id: t18_ui_received_yes
     on: UI_received
@@ -524,17 +524,6 @@ transitions:
       - { action: Check I Frame Acknowledged, kind: subroutine }
     next: Connected
 
-  - id: t21_rr_received_no_no
-    on: RR_received
-    on_label: RR
-    path:
-      - { action: Clear Peer Busy, kind: processing }
-      - { action: Check Need For Response, kind: subroutine }
-      - { decision: rr_va_le_nr_le_vs, branch: No }
-      - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: rr_version_2_2, branch: No }
-    next: AwaitingConnection
-
   - id: t21_rr_received_no_yes
     on: RR_received
     on_label: RR
@@ -546,6 +535,17 @@ transitions:
       - { decision: rr_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
+  - id: t21_rr_received_no_no
+    on: RR_received
+    on_label: RR
+    path:
+      - { action: Clear Peer Busy, kind: processing }
+      - { action: Check Need For Response, kind: subroutine }
+      - { decision: rr_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: rr_version_2_2, branch: No }
+    next: AwaitingConnection
+
   - id: t22_rnr_received_yes
     on: RNR_received
     on_label: RNR
@@ -555,17 +555,6 @@ transitions:
       - { decision: rnr_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frame Acknowledged, kind: subroutine }
     next: Connected
-
-  - id: t22_rnr_received_no_no
-    on: RNR_received
-    on_label: RNR
-    path:
-      - { action: Set Peer Busy, kind: processing }
-      - { action: Check Need For Response, kind: subroutine }
-      - { decision: rnr_va_le_nr_le_vs, branch: No }
-      - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: rnr_version_2_2, branch: No }
-    next: AwaitingConnection
 
   - id: t22_rnr_received_no_yes
     on: RNR_received
@@ -577,6 +566,17 @@ transitions:
       - { action: N(r) Error Recovery, kind: subroutine }
       - { decision: rnr_version_2_2, branch: Yes }
     next: AwaitingV22Connection
+
+  - id: t22_rnr_received_no_no
+    on: RNR_received
+    on_label: RNR
+    path:
+      - { action: Set Peer Busy, kind: processing }
+      - { action: Check Need For Response, kind: subroutine }
+      - { decision: rnr_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: rnr_version_2_2, branch: No }
+    next: AwaitingConnection
 
   - id: t23_lm_seize_confirm_yes
     on: LM_SEIZE_confirm
@@ -633,17 +633,6 @@ transitions:
       - { action: Clear Acknowledge Pending, kind: processing }
     next: Connected
 
-  - id: t24_srej_received_no_no
-    on: SREJ_received
-    on_label: SREJ
-    path:
-      - { action: Clear Peer Busy, kind: processing }
-      - { action: Check Need For Response, kind: subroutine }
-      - { decision: srej_va_le_nr_le_vs, branch: No }
-      - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: srej_version_2_2, branch: No }
-    next: AwaitingConnection
-
   - id: t24_srej_received_no_yes
     on: SREJ_received
     on_label: SREJ
@@ -655,27 +644,16 @@ transitions:
       - { decision: srej_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
-  - id: t25_rej_received_no_no
-    on: REJ_received
-    on_label: REJ
+  - id: t24_srej_received_no_no
+    on: SREJ_received
+    on_label: SREJ
     path:
       - { action: Clear Peer Busy, kind: processing }
       - { action: Check Need For Response, kind: subroutine }
-      - { decision: rej_va_le_nr_le_vs, branch: No }
+      - { decision: srej_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: rej_version_2_2, branch: No }
+      - { decision: srej_version_2_2, branch: No }
     next: AwaitingConnection
-
-  - id: t25_rej_received_no_yes
-    on: REJ_received
-    on_label: REJ
-    path:
-      - { action: Clear Peer Busy, kind: processing }
-      - { action: Check Need For Response, kind: subroutine }
-      - { decision: rej_va_le_nr_le_vs, branch: No }
-      - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: rej_version_2_2, branch: Yes }
-    next: AwaitingV22Connection
 
   - id: t25_rej_received_yes
     on: REJ_received
@@ -692,53 +670,29 @@ transitions:
       - { action: Invoke Retransmission, kind: subroutine }
     next: Connected
 
-  - id: t26_i_received_yes_no_no
-    on: I_received
-    on_label: I
+  - id: t25_rej_received_no_yes
+    on: REJ_received
+    on_label: REJ
     path:
-      - { decision: i_command, branch: Yes }
-      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: No }
-      - { action: DL-ERROR Indication (O), kind: signal_upper }
-      - { action: Establish Data Link, kind: subroutine }
-      - { action: Clear Layer 3 Initiated, kind: processing }
-      - { decision: i_version_2_2, branch: No }
-    next: AwaitingConnection
-
-  - id: t26_i_received_yes_no_yes
-    on: I_received
-    on_label: I
-    path:
-      - { decision: i_command, branch: Yes }
-      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: No }
-      - { action: DL-ERROR Indication (O), kind: signal_upper }
-      - { action: Establish Data Link, kind: subroutine }
-      - { action: Clear Layer 3 Initiated, kind: processing }
-      - { decision: i_version_2_2, branch: Yes }
+      - { action: Clear Peer Busy, kind: processing }
+      - { action: Check Need For Response, kind: subroutine }
+      - { decision: rej_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: rej_version_2_2, branch: Yes }
     next: AwaitingV22Connection
 
-  - id: t26_i_received_yes_yes_no_no
-    on: I_received
-    on_label: I
+  - id: t25_rej_received_no_no
+    on: REJ_received
+    on_label: REJ
     path:
-      - { decision: i_command, branch: Yes }
-      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
-      - { decision: i_va_le_nr_le_vs, branch: No }
+      - { action: Clear Peer Busy, kind: processing }
+      - { action: Check Need For Response, kind: subroutine }
+      - { decision: rej_va_le_nr_le_vs, branch: No }
       - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: i_version_2_2, branch: No }
+      - { decision: rej_version_2_2, branch: No }
     next: AwaitingConnection
 
-  - id: t26_i_received_yes_yes_no_yes
-    on: I_received
-    on_label: I
-    path:
-      - { decision: i_command, branch: Yes }
-      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
-      - { decision: i_va_le_nr_le_vs, branch: No }
-      - { action: N(r) Error Recovery, kind: subroutine }
-      - { decision: i_version_2_2, branch: Yes }
-    next: AwaitingV22Connection
-
-  - id: t26_i_received_yes_yes_yes_no_yes_no_no
+  - id: t26_i_received_yes_yes_yes_yes_yes
     on: I_received
     on_label: I
     path:
@@ -746,24 +700,16 @@ transitions:
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
-      - { decision: i_own_receiver_busy, branch: No }
-      - { decision: i_ns_eq_vr, branch: Yes }
-      - { action: "V(r) := V(r) + 1", kind: processing }
-      - { action: Clear Reject Exception, kind: processing }
-      - { action: "Decrement Sreject Exception if > 0", kind: processing }
-      - { action: DL-DATA Indication, kind: signal_upper }
-      - loop_while: i_vr_i_frame_stored
-        body:
-          - { action: Retrieve Stored V(r) I Frame, kind: processing }
-          - { action: DL-DATA Indication, kind: signal_upper }
-          - { action: "V(r) := V(r) + 1", kind: processing }
-      - { decision: i_p_eq_1, branch: No }
-      - { decision: i_ack_pending, branch: No }
-      - { action: LM-SEIZE Request, kind: signal_lower }
-      - { action: Set Acknowledgement Pending, kind: processing }
+      - { decision: i_own_receiver_busy, branch: Yes }
+      - { action: Discard Contents of I Frame, kind: processing }
+      - { decision: i_p_eq_1, branch: Yes }
+      - { action: "F := 1", kind: processing }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: RR, kind: signal_lower }
+      - { action: Clear Acknowledge Pending, kind: processing }
     next: Connected
 
-  - id: t26_i_received_yes_yes_yes_no_yes_no_yes
+  - id: t26_i_received_yes_yes_yes_yes_no
     on: I_received
     on_label: I
     path:
@@ -771,19 +717,9 @@ transitions:
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
       - { decision: i_va_le_nr_le_vs, branch: Yes }
       - { action: Check I Frames Acknowledged, kind: subroutine }
-      - { decision: i_own_receiver_busy, branch: No }
-      - { decision: i_ns_eq_vr, branch: Yes }
-      - { action: "V(r) := V(r) + 1", kind: processing }
-      - { action: Clear Reject Exception, kind: processing }
-      - { action: "Decrement Sreject Exception if > 0", kind: processing }
-      - { action: DL-DATA Indication, kind: signal_upper }
-      - loop_while: i_vr_i_frame_stored
-        body:
-          - { action: Retrieve Stored V(r) I Frame, kind: processing }
-          - { action: DL-DATA Indication, kind: signal_upper }
-          - { action: "V(r) := V(r) + 1", kind: processing }
+      - { decision: i_own_receiver_busy, branch: Yes }
+      - { action: Discard Contents of I Frame, kind: processing }
       - { decision: i_p_eq_1, branch: No }
-      - { decision: i_ack_pending, branch: Yes }
     next: Connected
 
   - id: t26_i_received_yes_yes_yes_no_yes_yes
@@ -810,6 +746,54 @@ transitions:
       - { action: "N(r) := V(r)", kind: processing }
       - { action: RR, kind: signal_lower }
       - { action: Clear Acknowledge Pending, kind: processing }
+    next: Connected
+
+  - id: t26_i_received_yes_yes_yes_no_yes_no_yes
+    on: I_received
+    on_label: I
+    path:
+      - { decision: i_command, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receiver_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: Yes }
+      - { action: "V(r) := V(r) + 1", kind: processing }
+      - { action: Clear Reject Exception, kind: processing }
+      - { action: "Decrement Sreject Exception if > 0", kind: processing }
+      - { action: DL-DATA Indication, kind: signal_upper }
+      - loop_while: i_vr_i_frame_stored
+        body:
+          - { action: Retrieve Stored V(r) I Frame, kind: processing }
+          - { action: DL-DATA Indication, kind: signal_upper }
+          - { action: "V(r) := V(r) + 1", kind: processing }
+      - { decision: i_p_eq_1, branch: No }
+      - { decision: i_ack_pending, branch: Yes }
+    next: Connected
+
+  - id: t26_i_received_yes_yes_yes_no_yes_no_no
+    on: I_received
+    on_label: I
+    path:
+      - { decision: i_command, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receiver_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: Yes }
+      - { action: "V(r) := V(r) + 1", kind: processing }
+      - { action: Clear Reject Exception, kind: processing }
+      - { action: "Decrement Sreject Exception if > 0", kind: processing }
+      - { action: DL-DATA Indication, kind: signal_upper }
+      - loop_while: i_vr_i_frame_stored
+        body:
+          - { action: Retrieve Stored V(r) I Frame, kind: processing }
+          - { action: DL-DATA Indication, kind: signal_upper }
+          - { action: "V(r) := V(r) + 1", kind: processing }
+      - { decision: i_p_eq_1, branch: No }
+      - { decision: i_ack_pending, branch: No }
+      - { action: LM-SEIZE Request, kind: signal_lower }
+      - { action: Set Acknowledgement Pending, kind: processing }
     next: Connected
 
   - id: t26_i_received_yes_yes_yes_no_no_yes_yes_yes
@@ -846,27 +830,6 @@ transitions:
       - { decision: i_reject_exception, branch: Yes }
       - { action: Discard Contents of I Frame, kind: processing }
       - { decision: i_p_eq_1, branch: No }
-    next: Connected
-
-  - id: t26_i_received_yes_yes_yes_no_no_yes_no_no
-    on: I_received
-    on_label: I
-    path:
-      - { decision: i_command, branch: Yes }
-      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
-      - { decision: i_va_le_nr_le_vs, branch: Yes }
-      - { action: Check I Frames Acknowledged, kind: subroutine }
-      - { decision: i_own_receiver_busy, branch: No }
-      - { decision: i_ns_eq_vr, branch: No }
-      - { decision: i_vr_lt_ns_lt_vr_plus_k, branch: Yes }
-      - { decision: i_reject_exception, branch: No }
-      - { decision: i_srej_enabled, branch: No }
-      - { action: Discard Contents of I Frame, kind: processing }
-      - { action: Set Reject Exception, kind: processing }
-      - { action: "F := P", kind: processing }
-      - { action: "N(r) := V(r)", kind: processing }
-      - { action: REJ, kind: signal_lower }
-      - { action: Clear Acknowledge Pending, kind: processing }
     next: Connected
 
   - id: t26_i_received_yes_yes_yes_no_no_yes_no_yes_yes
@@ -936,6 +899,27 @@ transitions:
       - { action: SREJ, kind: signal_lower }
     next: Connected
 
+  - id: t26_i_received_yes_yes_yes_no_no_yes_no_no
+    on: I_received
+    on_label: I
+    path:
+      - { decision: i_command, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
+      - { decision: i_va_le_nr_le_vs, branch: Yes }
+      - { action: Check I Frames Acknowledged, kind: subroutine }
+      - { decision: i_own_receiver_busy, branch: No }
+      - { decision: i_ns_eq_vr, branch: No }
+      - { decision: i_vr_lt_ns_lt_vr_plus_k, branch: Yes }
+      - { decision: i_reject_exception, branch: No }
+      - { decision: i_srej_enabled, branch: No }
+      - { action: Discard Contents of I Frame, kind: processing }
+      - { action: Set Reject Exception, kind: processing }
+      - { action: "F := P", kind: processing }
+      - { action: "N(r) := V(r)", kind: processing }
+      - { action: REJ, kind: signal_lower }
+      - { action: Clear Acknowledge Pending, kind: processing }
+    next: Connected
+
   - id: t26_i_received_yes_yes_yes_no_no_no_yes
     on: I_received
     on_label: I
@@ -970,35 +954,51 @@ transitions:
       - { decision: i_p_eq_1, branch: No }
     next: Connected
 
-  - id: t26_i_received_yes_yes_yes_yes_yes
+  - id: t26_i_received_yes_yes_no_yes
     on: I_received
     on_label: I
     path:
       - { decision: i_command, branch: Yes }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
-      - { decision: i_va_le_nr_le_vs, branch: Yes }
-      - { action: Check I Frames Acknowledged, kind: subroutine }
-      - { decision: i_own_receiver_busy, branch: Yes }
-      - { action: Discard Contents of I Frame, kind: processing }
-      - { decision: i_p_eq_1, branch: Yes }
-      - { action: "F := 1", kind: processing }
-      - { action: "N(r) := V(r)", kind: processing }
-      - { action: RR, kind: signal_lower }
-      - { action: Clear Acknowledge Pending, kind: processing }
-    next: Connected
+      - { decision: i_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: i_version_2_2, branch: Yes }
+    next: AwaitingV22Connection
 
-  - id: t26_i_received_yes_yes_yes_yes_no
+  - id: t26_i_received_yes_yes_no_no
     on: I_received
     on_label: I
     path:
       - { decision: i_command, branch: Yes }
       - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
-      - { decision: i_va_le_nr_le_vs, branch: Yes }
-      - { action: Check I Frames Acknowledged, kind: subroutine }
-      - { decision: i_own_receiver_busy, branch: Yes }
-      - { action: Discard Contents of I Frame, kind: processing }
-      - { decision: i_p_eq_1, branch: No }
-    next: Connected
+      - { decision: i_va_le_nr_le_vs, branch: No }
+      - { action: N(r) Error Recovery, kind: subroutine }
+      - { decision: i_version_2_2, branch: No }
+    next: AwaitingConnection
+
+  - id: t26_i_received_yes_no_yes
+    on: I_received
+    on_label: I
+    path:
+      - { decision: i_command, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: No }
+      - { action: DL-ERROR Indication (O), kind: signal_upper }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Clear Layer 3 Initiated, kind: processing }
+      - { decision: i_version_2_2, branch: Yes }
+    next: AwaitingV22Connection
+
+  - id: t26_i_received_yes_no_no
+    on: I_received
+    on_label: I
+    path:
+      - { decision: i_command, branch: Yes }
+      - { decision: i_info_field_length_le_n1_and_content_is_octet_aligned, branch: No }
+      - { action: DL-ERROR Indication (O), kind: signal_upper }
+      - { action: Establish Data Link, kind: subroutine }
+      - { action: Clear Layer 3 Initiated, kind: processing }
+      - { decision: i_version_2_2, branch: No }
+    next: AwaitingConnection
 
   - id: t26_i_received_no
     on: I_received
