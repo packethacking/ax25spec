@@ -97,8 +97,9 @@ jobs:
   #     catalogue, decision, state-target and totality lint runs on the
   #     PR that changes a figure, not later at the ax25sdl pin bump. This
   #     is also what enforces spec-sdl/known-figure-defects.yaml: a listed
-  #     defect is a warning and keeps its machine withheld, and an entry
-  #     whose defect no longer occurs fails the job.
+  #     defect is a warning and keeps its machine withheld from
+  #     generation (every lint still runs on it), and an entry whose
+  #     defect no longer occurs fails the job.
   codegen-lint:
     name: codegen lint, every lint ax25sdl runs
     runs-on: ubuntu-latest
