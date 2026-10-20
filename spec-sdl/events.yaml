@@ -70,10 +70,29 @@ internal:
   - info_not_permitted_in_frame
   - info_field_permitted_in_frame
   - u_or_s_frame_length_error
+  # Link Multiplexer, figc3.1 (Idle) "Queue Empty", drawn as an Internal
+  # Signal Reception. The figure does not say which queue; the C3.3 prose
+  # describes the Awaiting Queue running empty.
+  - queue_empty
 
-# Service primitives between Data-Link and Link Multiplexer.
+# Service primitives between Data-Link and Link Multiplexer. Named
+# <PREFIX>_<NAME>_<kind> like every primitive family, with the figure's
+# spelling kept: the Data Link pages draw LM-SEIZE Confirm, figc3.1 draws
+# LM-SIEZE Request (the C3 prose spells it SEIZE).
 link_multiplexer:
   - LM_SEIZE_confirm
+  - LM_RELEASE_request          # figc3.1 "LM-RELEASE Request"
+  - LM_DATA_request             # figc3.1 "LM-DATA Request"
+  - LM_EXPEDITED_DATA_request   # figc3.1 "LM-EXPEDITED-DATA Request"
+  - LM_SIEZE_request            # figc3.1 "LM-SIEZE Request"
+
+# Service primitives between the Link Multiplexer and the physical layer
+# (Appendix C3.2). Same convention and figure spelling (SIEZE).
+primitives_physical:
+  - PH_SIEZE_confirm            # figc3.1 "PH-SIEZE Confirm"
+  - PH_DATA_indication          # figc3.1 "PH-DATA Indication"
+  - PH_BUSY_indication          # figc3.1 "PH-BUSY Indication"
+  - PH_QUIET_indication         # figc3.1 "PH-QUIET Indication"
 
 # Timer expiries.
 timers:
