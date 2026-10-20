@@ -41,17 +41,56 @@ jobs:
       - uses: actions/setup-dotnet@v5
         with:
           global-json-file: .ax25sdl-tooling/global.json
-      - name: regenerate yaml from graphml
+      - name: build the transcriber
+        run: dotnet build .ax25sdl-tooling/codegen/src/Packet.Sdl.Transcribe --configuration Release
+      - name: regenerate yaml from graphml, every machine
+        # Every spec-sdl/<revision>/<machine>/sdl/ directory is regenerated
+        # into its sibling yaml/ directory, so a new machine is covered as
+        # soon as its first graphml lands. A machine with no sdl/ directory
+        # (the prose-derived management-data-link bootstrap) has nothing to
+        # regenerate.
         run: |
-          dotnet run --project .ax25sdl-tooling/codegen/src/Packet.Sdl.Transcribe --configuration Release -- \
-            -i spec-sdl/v2.2-errata/data-link/sdl/ \
-            -o spec-sdl/v2.2-errata/data-link/yaml/
-      - name: assert no diff
-        run: |
-          if ! git diff --exit-code -- 'spec-sdl/v2.2-errata/data-link/yaml/*.sdl.yaml'; then
-            echo "::error::*.sdl.yaml files are out of sync with their *.graphml sources. Run \`dotnet run --project codegen/src/Packet.Sdl.Transcribe -- -i <this-repo>/spec-sdl/v2.2-errata/data-link/sdl/ -o <this-repo>/spec-sdl/v2.2-errata/data-link/yaml/\` from a packet-net/ax25sdl checkout at the ref in .github/ax25sdl-tooling-ref and commit the diff."
+          set -euo pipefail
+          shopt -s nullglob
+          dirs=(spec-sdl/*/*/sdl)
+          if [ ${#dirs[@]} -eq 0 ]; then
+            echo "::error::no spec-sdl/<revision>/<machine>/sdl/ directories found"
             exit 1
           fi
+          for sdl in "${dirs[@]}"; do
+            yaml="$(dirname "$sdl")/yaml"
+            echo "$sdl -> $yaml"
+            dotnet run --no-build --project .ax25sdl-tooling/codegen/src/Packet.Sdl.Transcribe --configuration Release -- \
+              -i "$sdl/" -o "$yaml/"
+          done
+      - name: assert no diff
+        # git status rather than git diff, so a yaml that should exist but
+        # was never committed (untracked after regeneration) also fails.
+        run: |
+          changes="$(git status --porcelain -- 'spec-sdl/*/yaml/*.sdl.yaml')"
+          if [ -n "$changes" ]; then
+            echo "$changes"
+            git diff -- 'spec-sdl/*/yaml/*.sdl.yaml'
+            echo "::error::*.sdl.yaml files are out of sync with their *.graphml sources. From a packet-net/ax25sdl checkout at the ref in .github/ax25sdl-tooling-ref, run \`dotnet run --project codegen/src/Packet.Sdl.Transcribe -- -i <this-repo>/spec-sdl/<revision>/<machine>/sdl/ -o <this-repo>/spec-sdl/<revision>/<machine>/yaml/\` for each machine and commit the result."
+            exit 1
+          fi
+
+  # ─── Schema: every committed *.sdl.yaml validates against
+  #     spec-sdl/schema/ (sdl-machine for state pages, sdl-subroutines for
+  #     subroutines pages).
+  schema:
+    name: schema, sdl.yaml against spec-sdl/schema
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: install validator dependencies
+        # A venv, because the runner's system Python refuses pip installs
+        # (PEP 668).
+        run: |
+          python3 -m venv "$RUNNER_TEMP/venv"
+          "$RUNNER_TEMP/venv/bin/pip" install --quiet jsonschema pyyaml
+      - name: validate
+        run: '"$RUNNER_TEMP/venv/bin/python" tools/schema/validate_sdl_yaml.py .'
 
   # ─── Render drift: the committed SVG renders in spec-sdl/**/svg/ are
   #     generated from the graphml by tools/render/render_all.py (Python
