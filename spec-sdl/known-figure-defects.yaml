@@ -1,0 +1,20 @@
+# Known figure defects: transitions that lead to a state which does not
+# exist, because the figure draws them that way. The transcription records
+# what is drawn; each entry here says the defect is known and filed.
+#
+# Read by packet-net/ax25sdl's codegen (run in this repo's CI by the
+# codegen-lint job). A listed defect is reported as a warning, and its
+# machine is withheld from generation while the entry is present. An entry
+# whose defect no longer occurs fails CI, so this list can't go stale: when
+# a figure is fixed, remove its entry in the same PR.
+#
+# Keys: machine and state of the page, the generated transition id, the
+# next: value the figure draws, and the issue that records it.
+
+defects:
+  - machine: link_mux
+    state: SiezePending
+    transition: t07_ph_seize_confirm
+    next: Sized
+    issue: https://github.com/packethacking/ax25spec/issues/121
+    note: Figure C3.2's PH-SIEZE Confirm column ends in "2 Sized"; the state is 2 Seized.

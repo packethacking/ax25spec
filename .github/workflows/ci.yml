@@ -92,6 +92,39 @@ jobs:
       - name: check graphml provenance
         run: python3 tools/provenance/check_graphml_provenance.py .
 
+  # ─── Codegen lint: run packet-net/ax25sdl's codegen (at the pinned
+  #     tooling ref) over spec-sdl/ without keeping its output, so every
+  #     catalogue, decision, state-target and totality lint runs on the
+  #     PR that changes a figure, not later at the ax25sdl pin bump. This
+  #     is also what enforces spec-sdl/known-figure-defects.yaml: a listed
+  #     defect is a warning and keeps its machine withheld, and an entry
+  #     whose defect no longer occurs fails the job.
+  codegen-lint:
+    name: codegen lint, every lint ax25sdl runs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: read ax25sdl tooling pin
+        id: pin
+        run: echo "ref=$(cat .github/ax25sdl-tooling-ref)" >> "$GITHUB_OUTPUT"
+      - name: check out pinned ax25sdl tooling
+        uses: actions/checkout@v6
+        with:
+          repository: packet-net/ax25sdl
+          ref: ${{ steps.pin.outputs.ref }}
+          path: .ax25sdl-tooling
+      - uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: .ax25sdl-tooling/global.json
+      - name: run codegen lints
+        # From the tooling checkout, so the totality lint finds its
+        # codegen/lint-known-findings.yaml. JSON output only, to a scratch
+        # directory: nothing is written into this repo.
+        working-directory: .ax25sdl-tooling
+        run: |
+          dotnet run --project codegen/src/Packet.Sdl.CodeGen --configuration Release -- \
+            --in "$GITHUB_WORKSPACE/spec-sdl" --json --json-out "$RUNNER_TEMP/codegen-lint-json"
+
   # ─── Schema: every committed *.sdl.yaml validates against
   #     spec-sdl/schema/ (sdl-machine for state pages, sdl-subroutines for
   #     subroutines pages).

@@ -1,0 +1,184 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120.24" height="1038.89" viewBox="-24.34 -20 1120.24 1038.89" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 1 L 9 5 L 0 9 z" fill="#000000"/></marker></defs>
+<rect x="-24.34" y="-20" width="1120.24" height="1038.89" fill="#FFFFFF"/>
+<path d="M 60 71.9 L 60 150" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 60 245.3 L 60 300" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="72" y="260.86" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 120 197.65 L 380 197.65 L 380 949.44 L 109.45 949.44" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="132" y="213.2" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 60 395.3 L 60 450" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="72" y="410.86" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 120 347.65 L 260 347.65 L 260 600" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="132" y="363.2" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 60 545.3 L 60 600" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="72" y="560.86" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 120 497.65 L 260 497.65 L 260 600" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="132" y="513.2" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 60 660 L 60 750" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 60 821.9 L 60 900" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 260 695.3 L 260 750" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="272" y="710.85" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 320 647.65 L 380 647.65 L 380 949.44 L 109.45 949.44" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="332" y="663.2" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 260 810 L 260 880 L 60 880 L 60 900" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 510 71.9 L 510 150" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 510 221.9 L 510 300" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 510 377.23 L 510 450" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 510 510 L 510 600" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 860 71.9 L 860 150" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 920 197.65 L 1010 197.65 L 1010 450" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="932" y="213.2" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 860 245.3 L 860 300" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="872" y="260.86" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 800 347.65 L 710 347.65 L 710 450" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="755" y="337.85" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 860 395.3 L 860 450" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="872" y="410.85" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 710 527.23 L 710 580 L 860 580 L 860 600" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 860 527.23 L 860 600" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1010 527.23 L 1010 580 L 860 580 L 860 600" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<g transform="translate(-4.34 0) scale(5.15 7.08) translate(-6.16 -6.64)" style="stroke-width:0.14"><g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 9.2383895,6.6360261 V 16.785243 H 28.040465 l 0,-10.1492169 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.260906;stroke-opacity:1" d="m 28.297226,6.8882035 c 2.832168,3.5304925 2.382971,6.6180825 1e-6,9.6450405 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.260911;stroke-opacity:1" d="m 8.9876443,6.8912318 c -2.8322152,3.5305292 -2.3830107,6.6181522 -10e-7,9.6451442 z" />
+  </g>
+</g>
+<text x="60" y="37.4" font-size="12" text-anchor="middle">Frame Received</text>
+<g transform="translate(0 150) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="60" y="199.11" font-size="12" text-anchor="middle">FCS OK?</text>
+<g transform="translate(0 300) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="60" y="349.11" font-size="12" text-anchor="middle">Digipeat Enabled?</text>
+<g transform="translate(0 450) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="60" y="499.11" font-size="12" text-anchor="middle">Am I to Digipeat</text>
+<text x="60" y="514.18" font-size="12" text-anchor="middle">Frame?</text>
+<g transform="translate(0 600) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="60" y="623.91" font-size="12" text-anchor="middle">Set "Has Been</text>
+<text x="60" y="638.98" font-size="12" text-anchor="middle">Digipeated" Flag</text>
+<text x="60" y="654.05" font-size="12" text-anchor="middle">in Frame</text>
+<g transform="translate(5.88 750) scale(0.9 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 102,0 120,30.0 102,60 0,60" />
+  </g>
+</g>
+<text x="60" y="779.01" font-size="11.16" text-anchor="middle">PH-EXPEDITED-DATA</text>
+<text x="60" y="793.03" font-size="11.16" text-anchor="middle">Request</text>
+<g transform="translate(200 600) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="260" y="649.11" font-size="12" text-anchor="middle">Addressed to Me?</text>
+<g transform="translate(202.94 750) scale(0.95 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="18,0 120,0 120,60 18,60 0,30.0" />
+  </g>
+</g>
+<text x="260" y="775.91" font-size="12" text-anchor="middle">LM-DATA</text>
+<text x="260" y="790.98" font-size="12" text-anchor="middle">Indication (Note</text>
+<text x="260" y="806.05" font-size="12" text-anchor="middle">1)</text>
+<g transform="translate(10.56 900) scale(10.88 10.88) translate(-14.01 -6.65)" style="stroke-width:0.09"><g>
+    <circle style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" cx="18.550999" cy="11.190404" r="4.5428672" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="m 15.319238,8.0506505 6.44052,6.2795065 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 15.319238,14.445167 21.828764,8.0736524 Z" />
+  </g>
+</g>
+<g transform="translate(445.66 0) scale(5.15 7.08) translate(-6.16 -6.64)" style="stroke-width:0.14"><g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 9.2383895,6.6360261 V 16.785243 H 28.040465 l 0,-10.1492169 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.260906;stroke-opacity:1" d="m 28.297226,6.8882035 c 2.832168,3.5304925 2.382971,6.6180825 1e-6,9.6450405 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.260911;stroke-opacity:1" d="m 8.9876443,6.8912318 c -2.8322152,3.5305292 -2.3830107,6.6181522 -10e-7,9.6451442 z" />
+  </g>
+</g>
+<text x="510" y="37.4" font-size="12" text-anchor="middle">Finish Current</text>
+<text x="510" y="52.47" font-size="12" text-anchor="middle">Transmission</text>
+<g transform="translate(455.88 150) scale(0.9 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 102,0 120,30.0 102,60 0,60" />
+  </g>
+</g>
+<text x="510" y="179.86" font-size="12" text-anchor="middle">PH-RELEASE</text>
+<text x="510" y="194.93" font-size="12" text-anchor="middle">Request</text>
+<g transform="translate(444.09 300) scale(3.64 3.83) translate(-29.09 -2.47)" style="stroke-width:0.26"><g>
+    <g transform="matrix(-1,0,0,1,73.847429,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 60.640436,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="510" y="334.52" font-size="12" text-anchor="middle">Pop All Frames off</text>
+<text x="510" y="349.59" font-size="12" text-anchor="middle">Current Queue and</text>
+<text x="510" y="364.66" font-size="12" text-anchor="middle">onto Served Queue</text>
+<g transform="translate(450 450) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="510" y="473.91" font-size="12" text-anchor="middle">Place Current DL</text>
+<text x="510" y="488.98" font-size="12" text-anchor="middle">on Served List.</text>
+<text x="510" y="504.05" font-size="12" text-anchor="middle">Current DL &lt;-</text>
+<text x="510" y="519.12" font-size="12" text-anchor="middle">Null</text>
+<g transform="translate(460.56 600) scale(10.88 10.88) translate(-14.01 -6.65)" style="stroke-width:0.09"><g>
+    <circle style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" cx="18.550999" cy="11.190404" r="4.5428672" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="m 15.319238,8.0506505 6.44052,6.2795065 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 15.319238,14.445167 21.828764,8.0736524 Z" />
+  </g>
+</g>
+<g transform="translate(795.66 0) scale(5.15 7.08) translate(-6.16 -6.64)" style="stroke-width:0.14"><g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 9.2383895,6.6360261 V 16.785243 H 28.040465 l 0,-10.1492169 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.260906;stroke-opacity:1" d="m 28.297226,6.8882035 c 2.832168,3.5304925 2.382971,6.6180825 1e-6,9.6450405 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.260911;stroke-opacity:1" d="m 8.9876443,6.8912318 c -2.8322152,3.5305292 -2.3830107,6.6181522 -10e-7,9.6451442 z" />
+  </g>
+</g>
+<text x="860" y="37.4" font-size="12" text-anchor="middle">Queue Event</text>
+<g transform="translate(800 150) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="860" y="199.11" font-size="12" text-anchor="middle">Requestor ==</text>
+<text x="860" y="214.18" font-size="12" text-anchor="middle">Current DL?</text>
+<g transform="translate(800 300) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="860" y="349.11" font-size="12" text-anchor="middle">Requestor on</text>
+<text x="860" y="364.18" font-size="12" text-anchor="middle">Served List?</text>
+<g transform="translate(644.09 450) scale(3.64 3.83) translate(-29.09 -2.47)" style="stroke-width:0.26"><g>
+    <g transform="matrix(-1,0,0,1,73.847429,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 60.640436,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="710" y="484.52" font-size="12" text-anchor="middle">Push on Served</text>
+<text x="710" y="499.59" font-size="12" text-anchor="middle">Queue</text>
+<g transform="translate(794.09 450) scale(3.64 3.83) translate(-29.09 -2.47)" style="stroke-width:0.26"><g>
+    <g transform="matrix(-1,0,0,1,73.847429,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 60.640436,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="860" y="484.52" font-size="12" text-anchor="middle">Push on Awaiting</text>
+<text x="860" y="499.59" font-size="12" text-anchor="middle">Queue</text>
+<g transform="translate(944.09 450) scale(3.64 3.83) translate(-29.09 -2.47)" style="stroke-width:0.26"><g>
+    <g transform="matrix(-1,0,0,1,73.847429,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 60.640436,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="1010" y="484.52" font-size="12" text-anchor="middle">Push On Current</text>
+<text x="1010" y="499.59" font-size="12" text-anchor="middle">Queue</text>
+<g transform="translate(810.56 600) scale(10.88 10.88) translate(-14.01 -6.65)" style="stroke-width:0.09"><g>
+    <circle style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" cx="18.550999" cy="11.190404" r="4.5428672" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="m 15.319238,8.0506505 6.44052,6.2795065 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 15.319238,14.445167 21.828764,8.0736524 Z" />
+  </g>
+</g>
+</svg>
