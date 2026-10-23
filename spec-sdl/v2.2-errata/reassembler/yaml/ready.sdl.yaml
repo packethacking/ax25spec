@@ -1,0 +1,91 @@
+# Auto-generated from Reassembler_Ready.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: reassembler
+state: Ready
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc6.2
+
+decisions:
+  - id: dl_data_segment_header_present
+    question: "Segment Header Present?"
+    predicate: segment_header_present
+  - id: dl_data_first_segment
+    question: "First Segment?"
+    predicate: first_segment
+  - id: dl_unit_data_segment_header_present
+    question: "Segment Header Present?"
+    predicate: segment_header_present
+  - id: dl_unit_data_first_segment
+    question: "First Segment?"
+    predicate: first_segment
+
+transitions:
+
+  - id: t01_dl_data_indication_yes_yes
+    on: DL_DATA_indication
+    on_label: DL-DATA Indication
+    path:
+      - { decision: dl_data_segment_header_present, branch: Yes }
+      - { decision: dl_data_first_segment, branch: Yes }
+      - { action: Allocate Buffers for All Segments, kind: processing }
+      - { action: Accumulate First Segment, kind: processing }
+      - { action: "N := Remaining Segment Number", kind: processing }
+      - { action: Start TR210, kind: processing }
+    next: ReassemblingData
+
+  - id: t01_dl_data_indication_yes_no
+    on: DL_DATA_indication
+    on_label: DL-DATA Indication
+    path:
+      - { decision: dl_data_segment_header_present, branch: Yes }
+      - { decision: dl_data_first_segment, branch: No }
+      - { action: "Discard: Segment", kind: processing }
+      - { action: DL-ERROR Indication (Z), kind: signal_upper }
+    next: Ready
+
+  - id: t01_dl_data_indication_no
+    on: DL_DATA_indication
+    on_label: DL-DATA Indication
+    path:
+      - { decision: dl_data_segment_header_present, branch: No }
+      - { action: DL-DATA Indication, kind: signal_upper }
+    next: Ready
+
+  - id: t02_dl_unit_data_indication_yes_yes
+    on: DL_UNIT_DATA_indication
+    on_label: DL-UNIT-DATA Indication
+    path:
+      - { decision: dl_unit_data_segment_header_present, branch: Yes }
+      - { decision: dl_unit_data_first_segment, branch: Yes }
+      - { action: Allocate Buffers for All Segments, kind: processing }
+      - { action: Accumulate First Segment, kind: processing }
+      - { action: "N := Remaining Segment Number", kind: processing }
+      - { action: Start TR210, kind: processing }
+    next: ReassemblingUnitData
+
+  - id: t02_dl_unit_data_indication_yes_no
+    on: DL_UNIT_DATA_indication
+    on_label: DL-UNIT-DATA Indication
+    path:
+      - { decision: dl_unit_data_segment_header_present, branch: Yes }
+      - { decision: dl_unit_data_first_segment, branch: No }
+      - { action: "Discard: Segment", kind: processing }
+      - { action: DL-ERROR Indication (Z), kind: signal_upper }
+    next: Ready
+
+  - id: t02_dl_unit_data_indication_no
+    on: DL_UNIT_DATA_indication
+    on_label: DL-UNIT-DATA Indication
+    path:
+      - { decision: dl_unit_data_segment_header_present, branch: No }
+      - { action: DL-UNIT-DATA Indication, kind: signal_upper }
+    next: Ready
+
+  - id: t03_all_other_dl_primitives__from_lower_layer
+    on: all_other_dl_primitives__from_lower_layer
+    on_label: All Other DL Primitives
+    path:
+      - { action: Send Unmodified Primitive, kind: signal_upper }
+    next: Ready

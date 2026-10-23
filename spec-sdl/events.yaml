@@ -13,6 +13,12 @@ primitives_upper:
   - DL_FLOW_OFF_request
   - DL_FLOW_ON_request
 
+# Service primitives from Data-Link up to the Reassembler (Annex C6),
+# drawn as receptions from the lower layer on figc6.2 to figc6.4.
+primitives_from_data_link:
+  - DL_DATA_indication          # figc6.2, figc6.3 "DL-DATA Indication"
+  - DL_UNIT_DATA_indication     # figc6.2, figc6.4 "DL-UNIT-DATA Indication"
+
 # Service primitives between Data-Link and Management Data-Link.
 primitives_mgmt:
   - MDL_NEGOTIATE_request
@@ -58,6 +64,11 @@ catchalls:
   - all_other_primitives__from_lower_layer
   - all_other_primitives__from_upper_layer
   - all_other_commands
+  # Segmenter and Reassembler (Annex C6) draw "All Other DL Primitives":
+  # from the upper layer on figc6.1, from the lower layer on figc6.2 to
+  # figc6.4.
+  - all_other_dl_primitives__from_upper_layer   # figc6.1 "All Other DL Primitives"
+  - all_other_dl_primitives__from_lower_layer   # figc6.2 to figc6.4 "All Other DL Primitives"
 
 # Internal events (queue / timer).
 internal:
@@ -103,3 +114,6 @@ timers:
   # "Timers"). Drives the Management-Data-Link Negotiating state's XID
   # command retransmit / give-up logic.
   - TM201_expiry
+  # TR210, the Reassembler's reassembly timer (figc6.3 and figc6.4
+  # "TR210 Expiry", drawn as a reception from the lower layer).
+  - TR210_expiry

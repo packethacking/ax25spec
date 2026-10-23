@@ -1,0 +1,98 @@
+# Auto-generated from Reassembler_ReassemblingUnitData.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: reassembler
+state: ReassemblingUnitData
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc6.4
+
+decisions:
+  - id: dl_unit_data_segment_pid_present
+    question: "Segment PID Present?"
+    predicate: segment_PID_present
+  - id: dl_unit_data_next_segment
+    question: "Next Segment?"
+    predicate: next_segment
+  - id: dl_unit_data_remaining_segments_eq_n
+    question: "Remaining Segments == N?"
+    predicate: remaining_segments_eq_N
+  - id: dl_unit_data_n_eq_0
+    question: "N == 0?"
+    predicate: N_eq_0
+
+transitions:
+
+  - id: t01_tr210_expiry
+    on: TR210_expiry
+    on_label: TR210 Expiry
+    path:
+      - { action: Discard All Accumulated Segments, kind: processing }
+      - { action: Free all Allocated Buffers, kind: processing }
+      - { action: DL-ERROR Indication (Z), kind: signal_upper }
+    next: Ready
+
+  - id: t02_dl_unit_data_indication_yes_yes_yes_yes
+    on: DL_UNIT_DATA_indication
+    on_label: DL-UNIT-DATA Indication
+    path:
+      - { decision: dl_unit_data_segment_pid_present, branch: Yes }
+      - { decision: dl_unit_data_next_segment, branch: Yes }
+      - { decision: dl_unit_data_remaining_segments_eq_n, branch: Yes }
+      - { decision: dl_unit_data_n_eq_0, branch: Yes }
+      - { action: Stop TR210, kind: processing }
+      - { action: Assemble Last Segment to Previous, kind: processing }
+      - { action: DL-UNIT-DATA Indication, kind: signal_upper }
+    next: Ready
+
+  - id: t02_dl_unit_data_indication_yes_yes_yes_no
+    on: DL_UNIT_DATA_indication
+    on_label: DL-UNIT-DATA Indication
+    path:
+      - { decision: dl_unit_data_segment_pid_present, branch: Yes }
+      - { decision: dl_unit_data_next_segment, branch: Yes }
+      - { decision: dl_unit_data_remaining_segments_eq_n, branch: Yes }
+      - { decision: dl_unit_data_n_eq_0, branch: No }
+      - { action: Restart TR210, kind: processing }
+      - { action: Assemble This Segment to Previous, kind: processing }
+    next: ReassemblingUnitData
+
+  - id: t02_dl_unit_data_indication_yes_yes_no
+    on: DL_UNIT_DATA_indication
+    on_label: DL-UNIT-DATA Indication
+    path:
+      - { decision: dl_unit_data_segment_pid_present, branch: Yes }
+      - { decision: dl_unit_data_next_segment, branch: Yes }
+      - { decision: dl_unit_data_remaining_segments_eq_n, branch: No }
+      - { action: Discard All Accumulated Segments, kind: processing }
+      - { action: Free all Allocated Buffers, kind: processing }
+      - { action: DL-ERROR Indication (Z), kind: signal_upper }
+    next: Ready
+
+  - id: t02_dl_unit_data_indication_yes_no
+    on: DL_UNIT_DATA_indication
+    on_label: DL-UNIT-DATA Indication
+    path:
+      - { decision: dl_unit_data_segment_pid_present, branch: Yes }
+      - { decision: dl_unit_data_next_segment, branch: No }
+      - { action: Discard All Accumulated Segments, kind: processing }
+      - { action: Free all Allocated Buffers, kind: processing }
+      - { action: DL-ERROR Indication (Z), kind: signal_upper }
+    next: Ready
+
+  - id: t02_dl_unit_data_indication_no
+    on: DL_UNIT_DATA_indication
+    on_label: DL-UNIT-DATA Indication
+    path:
+      - { decision: dl_unit_data_segment_pid_present, branch: No }
+      - { action: Discard All Accumulated Segments, kind: processing }
+      - { action: Free all Allocated Buffers, kind: processing }
+      - { action: DL-ERROR Indication (Z), kind: signal_upper }
+    next: Ready
+
+  - id: t03_all_other_dl_primitives__from_lower_layer
+    on: all_other_dl_primitives__from_lower_layer
+    on_label: All Other DL Primitives
+    path:
+      - { action: Send Unmodified Primitive, kind: signal_upper }
+    next: ReassemblingUnitData

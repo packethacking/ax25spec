@@ -169,3 +169,17 @@ defects:
     page: Negotiating
     call: "Complete Retry Negotiation"
     issue: https://github.com/packethacking/ax25spec/issues/131
+
+  # Figure C6.1 (Segmenter Ready) leads to two Reassembler states.
+  - machine: segmenter
+    state: Ready
+    transition: t01_dl_data_request_yes_no
+    next: ReassemblingData
+    issue: https://github.com/packethacking/ax25spec/issues/135
+    note: C6.1's DL-DATA Request column ends in "1 Reassembling Data", a Reassembler state.
+  - machine: segmenter
+    state: Ready
+    transition: t02_dl_unit_data_request_yes_no
+    next: ReassemblingUnitData
+    issue: https://github.com/packethacking/ax25spec/issues/135
+    note: C6.1's DL-UNIT-DATA Request column ends in "1 Reassembling Unit Data", a Reassembler state.
