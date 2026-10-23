@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="960" viewBox="-20 -20 1080 960" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 1 L 9 5 L 0 9 z" fill="#000000"/></marker></defs>
+<rect x="-20" y="-20" width="1080" height="960" fill="#FFFFFF"/>
+<path d="M 121.92 74.62 L 190 120" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 137.38 54.97 L 540 144.44" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 138.94 49.19 L 900 150.67" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 250 200 L 250 240" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 217.69 301.54 L 130 360" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="166.08" y="323.32" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 70 440 L 70 840" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 250 320 L 250 360" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="264" y="335.55" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 282.31 421.54 L 370 480" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="318.39" y="466.62" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 250 440 L 250 480" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="264" y="455.55" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 250 560 L 250 600" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 250 680 L 250 840" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 430 560 L 430 600" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 430 680 L 430 840" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 610 200 L 610 240" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 642.31 301.54 L 738.15 365.43" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="682.46" y="349.33" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 790 440 L 790 840" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 610 320 L 610 360" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="624" y="335.55" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 577.69 421.54 L 490 480" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="526.08" y="443.32" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 610 440 L 610 480" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="624" y="455.55" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 610 560 L 610 600" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 610 680 L 610 840" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 970 200 L 970 240" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 970 320 L 970 840" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<g transform="translate(0 0) scale(1.19 1.38) translate(-1 -1)" style="stroke-width:0.72"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="70" y="31.45" font-size="12" text-anchor="middle">0 Ready</text>
+<g transform="translate(180 120) scale(1.17 1.33) translate(0 0)" style="stroke-width:0.75"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 102,30.0 120,60 0,60" />
+  </g>
+</g>
+<text x="250" y="151.86" font-size="12" text-anchor="middle">DL-DATA Indication</text>
+<g transform="translate(540 120) scale(1.17 1.33) translate(0 0)" style="stroke-width:0.75"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 102,30.0 120,60 0,60" />
+  </g>
+</g>
+<text x="610" y="151.86" font-size="12" text-anchor="middle">DL-UNIT-DATA</text>
+<text x="610" y="166.93" font-size="12" text-anchor="middle">Indication</text>
+<g transform="translate(900 120) scale(1.17 1.33) translate(0 0)" style="stroke-width:0.75"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 102,30.0 120,60 0,60" />
+  </g>
+</g>
+<text x="970" y="151.86" font-size="12" text-anchor="middle">All Other DL</text>
+<text x="970" y="166.93" font-size="12" text-anchor="middle">Primitives</text>
+<g transform="translate(180 240) scale(1.17 1.33) translate(0 0)" style="stroke-width:0.75"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="250" y="289.11" font-size="12" text-anchor="middle">Segment Header</text>
+<text x="250" y="304.18" font-size="12" text-anchor="middle">Present?</text>
+<g transform="translate(180 360) scale(1.17 1.33) translate(0 0)" style="stroke-width:0.75"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="250" y="409.11" font-size="12" text-anchor="middle">First Segment?</text>
+<g transform="translate(0 360) scale(1.17 1.33) translate(0 0)" style="stroke-width:0.75"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="18,0 120,0 120,60 18,60 0,30.0" />
+  </g>
+</g>
+<text x="70" y="385.91" font-size="12" text-anchor="middle">DL-DATA Indication</text>
+<g transform="translate(180 480) scale(1.19 1.38) translate(-1 -1)" style="stroke-width:0.72"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="250" y="503.91" font-size="12" text-anchor="middle">Allocate Buffers for</text>
+<text x="250" y="518.98" font-size="12" text-anchor="middle">All Segments</text>
+<text x="250" y="534.05" font-size="12" text-anchor="middle">Accumulate First</text>
+<text x="250" y="549.12" font-size="12" text-anchor="middle">Segment</text>
+<g transform="translate(180 600) scale(1.19 1.38) translate(-1 -1)" style="stroke-width:0.72"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="250" y="623.91" font-size="12" text-anchor="middle">N &lt;- Remaining</text>
+<text x="250" y="638.98" font-size="12" text-anchor="middle">Segment Number</text>
+<text x="250" y="654.05" font-size="12" text-anchor="middle">Start TR210</text>
+<g transform="translate(360 480) scale(1.19 1.38) translate(-1 -1)" style="stroke-width:0.72"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="430" y="503.91" font-size="12" text-anchor="middle">Discard: Segment</text>
+<g transform="translate(360 600) scale(1.17 1.33) translate(0 0)" style="stroke-width:0.75"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="18,0 120,0 120,60 18,60 0,30.0" />
+  </g>
+</g>
+<text x="430" y="625.91" font-size="12" text-anchor="middle">DL-ERROR Indication</text>
+<text x="430" y="640.98" font-size="12" text-anchor="middle">(Z)</text>
+<g transform="translate(540 240) scale(1.17 1.33) translate(0 0)" style="stroke-width:0.75"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="610" y="289.11" font-size="12" text-anchor="middle">Segment Header</text>
+<text x="610" y="304.18" font-size="12" text-anchor="middle">Present?</text>
+<g transform="translate(540 360) scale(1.17 1.33) translate(0 0)" style="stroke-width:0.75"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="610" y="409.11" font-size="12" text-anchor="middle">First Segment?</text>
+<g transform="translate(720 360) scale(1.17 1.33) translate(0 0)" style="stroke-width:0.75"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="18,0 120,0 120,60 18,60 0,30.0" />
+  </g>
+</g>
+<text x="790" y="385.91" font-size="12" text-anchor="middle">DL-UNIT-DATA</text>
+<text x="790" y="400.98" font-size="12" text-anchor="middle">Indication</text>
+<g transform="translate(540 480) scale(1.19 1.38) translate(-1 -1)" style="stroke-width:0.72"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="610" y="503.91" font-size="12" text-anchor="middle">Allocate Buffers for</text>
+<text x="610" y="518.98" font-size="12" text-anchor="middle">All Segments</text>
+<text x="610" y="534.05" font-size="12" text-anchor="middle">Accumulate First</text>
+<text x="610" y="549.12" font-size="12" text-anchor="middle">Segment</text>
+<g transform="translate(540 600) scale(1.19 1.38) translate(-1 -1)" style="stroke-width:0.72"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="610" y="623.91" font-size="12" text-anchor="middle">N &lt;- Remaining</text>
+<text x="610" y="638.98" font-size="12" text-anchor="middle">Segment Number</text>
+<text x="610" y="654.05" font-size="12" text-anchor="middle">Start TR210</text>
+<g transform="translate(900 240) scale(1.17 1.33) translate(0 0)" style="stroke-width:0.75"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="18,0 120,0 120,60 18,60 0,30.0" />
+  </g>
+</g>
+<text x="970" y="265.91" font-size="12" text-anchor="middle">Send Unmodified</text>
+<text x="970" y="280.98" font-size="12" text-anchor="middle">Primitive</text>
+<g transform="translate(0 840) scale(1.19 1.38) translate(-1 -1)" style="stroke-width:0.72"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="70" y="871.45" font-size="12" text-anchor="middle">0 Ready</text>
+<g transform="translate(180 840) scale(1.19 1.38) translate(-1 -1)" style="stroke-width:0.72"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="250" y="871.45" font-size="12" text-anchor="middle">1 Reassembling Data</text>
+<g transform="translate(360 840) scale(1.19 1.38) translate(-1 -1)" style="stroke-width:0.72"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="430" y="871.45" font-size="12" text-anchor="middle">0 Ready</text>
+<g transform="translate(540 840) scale(1.19 1.38) translate(-1 -1)" style="stroke-width:0.72"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="610" y="871.45" font-size="12" text-anchor="middle">2 Reassembling Unit</text>
+<text x="610" y="886.53" font-size="12" text-anchor="middle">Data</text>
+<g transform="translate(720 840) scale(1.19 1.38) translate(-1 -1)" style="stroke-width:0.72"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="790" y="871.45" font-size="12" text-anchor="middle">0 Ready</text>
+<g transform="translate(900 840) scale(1.19 1.38) translate(-1 -1)" style="stroke-width:0.72"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="970" y="871.45" font-size="12" text-anchor="middle">0 Ready</text>
+</svg>
