@@ -1,0 +1,37 @@
+# Auto-generated from DuplexPhy_TransmitterStart.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: duplex_phy
+state: TransmitterStart
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc2b.4
+
+decisions:
+  - id: t105_expiry_interrupted
+    question: "Interrupted?"
+    predicate: interrupted
+
+transitions:
+
+  - id: t01_t105_expiry_yes
+    on: T105_expiry
+    on_label: T105 Expiry
+    path:
+      - { decision: t105_expiry_interrupted, branch: Yes }
+    next: Transmitting
+
+  - id: t01_t105_expiry_no
+    on: T105_expiry
+    on_label: T105 Expiry
+    path:
+      - { decision: t105_expiry_interrupted, branch: No }
+      - { action: PH-SIEZE Confirm, kind: signal_upper }
+    next: Transmitting
+
+  - id: t02_all_other_primitives__from_upper_layer
+    on: all_other_primitives__from_upper_layer
+    on_label: All Other Primitives
+    path:
+      - { action: Add to Normal Queue, kind: internal_out }
+    next: TransmitterStart

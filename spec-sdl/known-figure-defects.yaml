@@ -183,3 +183,10 @@ defects:
     next: ReassemblingUnitData
     issue: https://github.com/packethacking/ax25spec/issues/135
     note: C6.1's DL-UNIT-DATA Request column ends in "1 Reassembling Unit Data", a Reassembler state.
+
+  # Figure C2b.2 (Duplex Physical Receiving) draws no catch-all input.
+  - kind: missing_catchall
+    machine: duplex_phy
+    state: Receiving
+    issue: https://github.com/packethacking/ax25spec/issues/143
+    note: C2b.2 draws only HW-DATA Indication and HW-LOS Indication.
