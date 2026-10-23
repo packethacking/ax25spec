@@ -1,0 +1,25 @@
+%% This file was produced by codegen/src/Packet.Sdl.CodeGen from spec-sdl/v2.2-errata/reassembler/yaml/ready.sdl.yaml
+%% Do not edit by hand. Run `dotnet run --project codegen/src/Packet.Sdl.CodeGen` to regenerate.
+%%
+%% Source: ax.25.2.2.4_Oct_25, figure figc6.2
+%% Coverage: complete
+%%
+%% Important: this rendering is approximate and intentionally
+%% looks nothing like the original SDL figure. It is a machine-
+%% generated view of the transitions in the .sdl.yaml — useful
+%% for spotting transcription bugs (missing transitions, wrong
+%% destination state) but NOT a substitute for reading the spec
+%% figure itself. See docs/sdl-primer.md.
+
+stateDiagram-v2
+    direction LR
+
+    classDef focal fill:#fff5b1,stroke:#b08800;
+    class Ready focal
+    Ready --> ReassemblingData: t01_dl_data_indication_yes_yes<br/>on: DL_DATA_indication<br/>[segment_header_present and first_segment]<br/>/ · Allocate Buffers for All Segments<br/>/ · Accumulate First Segment<br/>/ · N := Remaining Segment Number<br/>/ · Start TR210
+    Ready --> Ready: t01_dl_data_indication_yes_no<br/>on: DL_DATA_indication<br/>[segment_header_present and not first_segment]<br/>/ · Discard: Segment<br/>/ ↑ DL-ERROR Indication (Z)
+    Ready --> Ready: t01_dl_data_indication_no<br/>on: DL_DATA_indication<br/>[not segment_header_present]<br/>/ ↑ DL_DATA_indication
+    Ready --> ReassemblingUnitData: t02_dl_unit_data_indication_yes_yes<br/>on: DL_UNIT_DATA_indication<br/>[segment_header_present and first_segment]<br/>/ · Allocate Buffers for All Segments<br/>/ · Accumulate First Segment<br/>/ · N := Remaining Segment Number<br/>/ · Start TR210
+    Ready --> Ready: t02_dl_unit_data_indication_yes_no<br/>on: DL_UNIT_DATA_indication<br/>[segment_header_present and not first_segment]<br/>/ · Discard: Segment<br/>/ ↑ DL-ERROR Indication (Z)
+    Ready --> Ready: t02_dl_unit_data_indication_no<br/>on: DL_UNIT_DATA_indication<br/>[not segment_header_present]<br/>/ ↑ DL_UNIT_DATA_indication
+    Ready --> Ready: t03_all_other_dl_primitives__from_lower_layer<br/>on: all_other_dl_primitives__from_lower_layer<br/>/ ↑ Send Unmodified Primitive

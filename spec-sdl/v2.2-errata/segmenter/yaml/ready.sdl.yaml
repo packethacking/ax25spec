@@ -1,0 +1,101 @@
+# Auto-generated from Segmenter_Ready.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: segmenter
+state: Ready
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc6.1
+
+decisions:
+  - id: dl_data_longer_than_n1_octets
+    question: "Longer than N1 Octets?"
+    predicate: longer_than_N1_octets
+  - id: dl_data_longer_than_n1_128
+    question: "Longer than (N1* 128)?"
+    predicate: longer_than_N1_128
+  - id: dl_data_all_segments_sent
+    question: "All Segments Sent?"
+    predicate: all_segments_sent
+  - id: dl_unit_data_longer_than_n1_octets
+    question: "Longer than N1 Octets?"
+    predicate: longer_than_N1_octets
+  - id: dl_unit_data_longer_than_n1_128
+    question: "Longer than (N1* 128)?"
+    predicate: longer_than_N1_128
+  - id: dl_unit_data_all_segments_sent
+    question: "All Segments Sent?"
+    predicate: all_segments_sent
+
+transitions:
+
+  - id: t01_dl_data_request_yes_yes
+    on: DL_DATA_request
+    on_label: DL-DATA Request
+    path:
+      - { decision: dl_data_longer_than_n1_octets, branch: Yes }
+      - { decision: dl_data_longer_than_n1_128, branch: Yes }
+      - { action: DL-ERROR Indication (Y), kind: signal_upper }
+    next: Ready
+
+  - id: t01_dl_data_request_yes_no
+    on: DL_DATA_request
+    on_label: DL-DATA Request
+    path:
+      - { decision: dl_data_longer_than_n1_octets, branch: Yes }
+      - { decision: dl_data_longer_than_n1_128, branch: No }
+      - { action: Divide into Segments, kind: processing }
+      - { action: Insert Segment header into each segment, kind: processing }
+      - loop_while: dl_data_all_segments_sent
+        branch: No
+        test: tail
+        body:
+          - { action: DL-DATA Request, kind: signal_lower }
+    next: ReassemblingData
+
+  - id: t01_dl_data_request_no
+    on: DL_DATA_request
+    on_label: DL-DATA Request
+    path:
+      - { decision: dl_data_longer_than_n1_octets, branch: No }
+      - { action: DL-DATA Request, kind: signal_lower }
+    next: Ready
+
+  - id: t02_dl_unit_data_request_yes_yes
+    on: DL_UNIT_DATA_request
+    on_label: DL-UNIT-DATA Request
+    path:
+      - { decision: dl_unit_data_longer_than_n1_octets, branch: Yes }
+      - { decision: dl_unit_data_longer_than_n1_128, branch: Yes }
+      - { action: DL-ERROR Indication (Y), kind: signal_upper }
+    next: Ready
+
+  - id: t02_dl_unit_data_request_yes_no
+    on: DL_UNIT_DATA_request
+    on_label: DL-UNIT-DATA Request
+    path:
+      - { decision: dl_unit_data_longer_than_n1_octets, branch: Yes }
+      - { decision: dl_unit_data_longer_than_n1_128, branch: No }
+      - { action: Divide into Segments, kind: processing }
+      - { action: Insert Segment header into each segment, kind: processing }
+      - loop_while: dl_unit_data_all_segments_sent
+        branch: No
+        test: tail
+        body:
+          - { action: DL-UNIT-DATA Request, kind: signal_lower }
+    next: ReassemblingUnitData
+
+  - id: t02_dl_unit_data_request_no
+    on: DL_UNIT_DATA_request
+    on_label: DL-UNIT-DATA Request
+    path:
+      - { decision: dl_unit_data_longer_than_n1_octets, branch: No }
+      - { action: DL-UNIT-DATA Request, kind: signal_lower }
+    next: Ready
+
+  - id: t03_all_other_dl_primitives__from_upper_layer
+    on: all_other_dl_primitives__from_upper_layer
+    on_label: All Other DL Primitives
+    path:
+      - { action: Send Unmodified Primitive, kind: signal_lower }
+    next: Ready
