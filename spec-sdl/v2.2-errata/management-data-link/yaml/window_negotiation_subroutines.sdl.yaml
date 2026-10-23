@@ -1,0 +1,71 @@
+# Auto-generated from ManagementDataLink_WindowNegotiationSubroutines.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: management_data_link
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc5.6
+
+subroutines:
+
+  - name: Initiate_Window_Notification
+    decisions:
+      - id: initiate_window_notification_k_notification_requested
+        question: "k Notification Requested?"
+        predicate: k_notification_requested
+    paths:
+      - id: t01_initiate_window_notification_yes
+        path:
+          - { decision: initiate_window_notification_k_notification_requested, branch: Yes }
+          - { action: Add Receive k Parameter field to XID Command, kind: processing }
+      - id: t02_initiate_window_notification_no
+        path:
+          - { decision: initiate_window_notification_k_notification_requested, branch: No }
+
+  - name: Window_Notification_Response
+    decisions:
+      - id: window_notification_response_k_parameter_field_present
+        question: "k Parameter Field Present?"
+        predicate: k_parameter_field_present
+      - id: window_notification_response_transmit_k_acceptable
+        question: "Transmit k Acceptable ?"
+        predicate: transmit_k_acceptable
+    paths:
+      - id: t01_window_notification_response_yes_yes
+        path:
+          - { decision: window_notification_response_k_parameter_field_present, branch: Yes }
+          - { decision: window_notification_response_transmit_k_acceptable, branch: Yes }
+          - { action: Accept Transmit k From XID Command, kind: processing }
+          - { action: Add Receive k Parameter field to XID Response, kind: processing }
+      - id: t02_window_notification_response_yes_no
+        path:
+          - { decision: window_notification_response_k_parameter_field_present, branch: Yes }
+          - { decision: window_notification_response_transmit_k_acceptable, branch: No }
+          - { action: Set Transmit k to Default, kind: processing }
+          - { action: Add Receive k Parameter field to XID Response, kind: processing }
+      - id: t03_window_notification_response_no
+        path:
+          - { decision: window_notification_response_k_parameter_field_present, branch: No }
+
+  - name: Complete_Window_Notification
+    decisions:
+      - id: complete_window_notification_k_parameter_field_present
+        question: "k Parameter Field Present?"
+        predicate: k_parameter_field_present
+      - id: complete_window_notification_transmit_k_acceptable
+        question: "Transmit k Acceptable ?"
+        predicate: transmit_k_acceptable
+    paths:
+      - id: t01_complete_window_notification_yes_yes
+        path:
+          - { decision: complete_window_notification_k_parameter_field_present, branch: Yes }
+          - { decision: complete_window_notification_transmit_k_acceptable, branch: Yes }
+          - { action: Accept Receive k from XID Response, kind: processing }
+      - id: t02_complete_window_notification_yes_no
+        path:
+          - { decision: complete_window_notification_k_parameter_field_present, branch: Yes }
+          - { decision: complete_window_notification_transmit_k_acceptable, branch: No }
+          - { action: Set Receive k to Default, kind: processing }
+      - id: t03_complete_window_notification_no
+        path:
+          - { decision: complete_window_notification_k_parameter_field_present, branch: No }

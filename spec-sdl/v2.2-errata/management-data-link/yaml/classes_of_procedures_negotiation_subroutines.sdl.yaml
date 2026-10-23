@@ -1,0 +1,72 @@
+# Auto-generated from ManagementDataLink_ClassesOfProceduresNegotiationSubroutines.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: management_data_link
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc5.3
+
+subroutines:
+
+  - name: Initiate_COP_Negotiation
+    decisions:
+      - id: initiate_cop_negotiation_cop_negotiation_requested
+        question: "COP Negotiation Requested?"
+        predicate: COP_negotiation_requested
+    paths:
+      - id: t01_initiate_cop_negotiation_yes
+        path:
+          - { decision: initiate_cop_negotiation_cop_negotiation_requested, branch: Yes }
+          - { action: Set Full or Half Duplex, kind: processing }
+          - { action: Add Receive COP Parameter field to XID Command, kind: processing }
+      - id: t02_initiate_cop_negotiation_no
+        path:
+          - { decision: initiate_cop_negotiation_cop_negotiation_requested, branch: No }
+
+  - name: COP_Negotiation_Response
+    decisions:
+      - id: cop_negotiation_response_cop_parameter_field_present
+        question: "COP Parameter Field Present?"
+        predicate: COP_parameter_field_present
+      - id: cop_negotiation_response_full_duplex_acceptable
+        question: "Full Duplex Acceptable ?"
+        predicate: full_duplex_acceptable
+    paths:
+      - id: t01_cop_negotiation_response_yes_yes
+        path:
+          - { decision: cop_negotiation_response_cop_parameter_field_present, branch: Yes }
+          - { decision: cop_negotiation_response_full_duplex_acceptable, branch: Yes }
+          - { action: Set Full Duplex, kind: processing }
+          - { action: Add Receive COP Parameter field to XID Response, kind: processing }
+      - id: t02_cop_negotiation_response_yes_no
+        path:
+          - { decision: cop_negotiation_response_cop_parameter_field_present, branch: Yes }
+          - { decision: cop_negotiation_response_full_duplex_acceptable, branch: No }
+          - { action: Set Half Duplex, kind: processing }
+          - { action: Add Receive COP Parameter field to XID Response, kind: processing }
+      - id: t03_cop_negotiation_response_no
+        path:
+          - { decision: cop_negotiation_response_cop_parameter_field_present, branch: No }
+
+  - name: Complete_COP_Negotiation
+    decisions:
+      - id: complete_cop_negotiation_cop_parameter_field_present
+        question: "COP Parameter Field Present?"
+        predicate: COP_parameter_field_present
+      - id: complete_cop_negotiation_full_duplex_acceptable
+        question: "Full Duplex Acceptable ?"
+        predicate: full_duplex_acceptable
+    paths:
+      - id: t01_complete_cop_negotiation_yes_yes
+        path:
+          - { decision: complete_cop_negotiation_cop_parameter_field_present, branch: Yes }
+          - { decision: complete_cop_negotiation_full_duplex_acceptable, branch: Yes }
+          - { action: Set Full Duplex, kind: processing }
+      - id: t02_complete_cop_negotiation_yes_no
+        path:
+          - { decision: complete_cop_negotiation_cop_parameter_field_present, branch: Yes }
+          - { decision: complete_cop_negotiation_full_duplex_acceptable, branch: No }
+          - { action: Set Half Duplex, kind: processing }
+      - id: t03_complete_cop_negotiation_no
+        path:
+          - { decision: complete_cop_negotiation_cop_parameter_field_present, branch: No }

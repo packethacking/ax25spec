@@ -1,0 +1,225 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="1140" viewBox="-20 -20 1360 1140" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 1 L 9 5 L 0 9 z" fill="#000000"/></marker></defs>
+<rect x="-20" y="-20" width="1360" height="1140" fill="#FFFFFF"/>
+<path d="M 60 60 L 60 130" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 100.89 57.8 L 207.11 130" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 113.57 48.21 L 400 145.56" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 116.91 42.89 L 600 152.35" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 119.15 36.7 L 1200 159.15" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 61.44 201.9 L 63.76 260" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 64.67 313.94 L 60.19 1040" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 450.9 313.94 L 75.51 1040" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 461.44 201.9 L 463.76 260" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 260 201.9 L 260 260" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 260 320 L 260 390" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 258.78 484.33 L 257.84 520" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="270.78" y="499.88" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 293.95 458.34 L 400 522.97" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="339.69" y="506.81" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 257.23 580 L 259.83 1040" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 455.82 591.9 L 458.58 650" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 460 710 L 460 1040" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 660 201.9 L 660 260" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 660 355.3 L 660 390" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="672" y="370.86" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 704.24 320.17 L 1007.93 406.1" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="852.27" y="380.81" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 660 450 L 660 520" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 660 580 L 660 650" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 660 710 L 660 780" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 675.38 780 L 844.62 450" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 860 450 L 860 520" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 860 580 L 860 650" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 859.32 710 L 857.74 780" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 857.4 840 L 859.66 1040" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1057.19 450 L 1059.86 1040" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1260 201.9 L 1260 260" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1260 355.3 L 1260 390" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="1272" y="370.86" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 1260 355.3 L 1260 1040" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="1272" y="370.86" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 1259.32 450 L 1257.74 520" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1257.23 580 L 1259.83 1040" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<g transform="translate(0 0) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="60" y="31.45" font-size="12" text-anchor="middle">1 Negotiating</text>
+<g transform="translate(0 130) scale(1 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="60" y="161.86" font-size="12" text-anchor="middle">MDL-NEGOTIATE</text>
+<text x="60" y="176.93" font-size="12" text-anchor="middle">Request</text>
+<polygon points="19.45,260 129.68,260 110.23,313.94 0,313.94" fill="#FFFFFF" stroke="#000000"/>
+<text x="64.84" y="280.87" font-size="12" text-anchor="middle">Requeue</text>
+<g transform="translate(0 1040) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="60" y="1071.45" font-size="12" text-anchor="middle">1 Negotiating</text>
+<g transform="translate(200 130) scale(1 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="260" y="161.86" font-size="12" text-anchor="middle">TM 201 Expiry</text>
+<g transform="translate(200 260) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="260" y="283.91" font-size="12" text-anchor="middle">RC ← RC + 1</text>
+<g transform="translate(200 390) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="260" y="439.11" font-size="12" text-anchor="middle">AC &gt; NM201?</text>
+<g transform="translate(200 520) scale(0.95 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="18,0 120,0 120,60 18,60 0,30.0" />
+  </g>
+</g>
+<text x="257.06" y="545.91" font-size="12" text-anchor="middle">MDL-ERROR</text>
+<text x="257.06" y="560.98" font-size="12" text-anchor="middle">Indication (C)</text>
+<g transform="translate(200 1040) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="260" y="1071.45" font-size="12" text-anchor="middle">0 Ready</text>
+<g transform="translate(400 130) scale(1 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 102,30.0 120,60 0,60" />
+  </g>
+</g>
+<text x="460" y="161.86" font-size="12" text-anchor="middle">XID Command</text>
+<polygon points="419.45,260 529.68,260 510.23,313.94 400,313.94" fill="#FFFFFF" stroke="#000000"/>
+<text x="464.84" y="280.87" font-size="12" text-anchor="middle">Requeue</text>
+<g transform="translate(400 520) scale(0.9 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 102,0 120,30.0 102,60 0,60" />
+  </g>
+</g>
+<text x="454.12" y="549.86" font-size="12" text-anchor="middle">Retransmit XID</text>
+<text x="454.12" y="564.93" font-size="12" text-anchor="middle">Command</text>
+<g transform="translate(400 650) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="460" y="673.91" font-size="12" text-anchor="middle">Start TM 201</text>
+<g transform="translate(400 1040) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="460" y="1071.45" font-size="12" text-anchor="middle">0 Ready</text>
+<g transform="translate(600 130) scale(1 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 102,30.0 120,60 0,60" />
+  </g>
+</g>
+<text x="660" y="161.86" font-size="12" text-anchor="middle">XID Response</text>
+<g transform="translate(600 260) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="660" y="309.11" font-size="12" text-anchor="middle">F == 1?</text>
+<g transform="translate(600 390) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+    <line x1="10" y1="1.0" x2="10" y2="59.0" />
+    <line x1="110" y1="1.0" x2="110" y2="59.0" />
+  </g>
+</g>
+<text x="660" y="421.45" font-size="12" text-anchor="middle">Complete Classes</text>
+<text x="660" y="436.53" font-size="12" text-anchor="middle">of Procedures</text>
+<text x="660" y="451.6" font-size="12" text-anchor="middle">Negotiation</text>
+<g transform="translate(600 520) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+    <line x1="10" y1="1.0" x2="10" y2="59.0" />
+    <line x1="110" y1="1.0" x2="110" y2="59.0" />
+  </g>
+</g>
+<text x="660" y="551.45" font-size="12" text-anchor="middle">Complete Optional</text>
+<text x="660" y="566.53" font-size="12" text-anchor="middle">Functions</text>
+<text x="660" y="581.6" font-size="12" text-anchor="middle">Negotiation</text>
+<g transform="translate(600 650) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+    <line x1="10" y1="1.0" x2="10" y2="59.0" />
+    <line x1="110" y1="1.0" x2="110" y2="59.0" />
+  </g>
+</g>
+<text x="660" y="681.45" font-size="12" text-anchor="middle">Complete N1</text>
+<text x="660" y="696.53" font-size="12" text-anchor="middle">Negotiation</text>
+<g transform="translate(600 780) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+    <line x1="10" y1="1.0" x2="10" y2="59.0" />
+    <line x1="110" y1="1.0" x2="110" y2="59.0" />
+  </g>
+</g>
+<text x="660" y="811.45" font-size="12" text-anchor="middle">Complete Window</text>
+<text x="660" y="826.53" font-size="12" text-anchor="middle">Negotiation</text>
+<g transform="translate(800 390) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+    <line x1="10" y1="1.0" x2="10" y2="59.0" />
+    <line x1="110" y1="1.0" x2="110" y2="59.0" />
+  </g>
+</g>
+<text x="860" y="421.45" font-size="12" text-anchor="middle">Complete Retry</text>
+<text x="860" y="436.53" font-size="12" text-anchor="middle">Negotiation</text>
+<g transform="translate(800 520) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+    <line x1="10" y1="1.0" x2="10" y2="59.0" />
+    <line x1="110" y1="1.0" x2="110" y2="59.0" />
+  </g>
+</g>
+<text x="860" y="551.45" font-size="12" text-anchor="middle">Complete T1</text>
+<text x="860" y="566.53" font-size="12" text-anchor="middle">Negotiation</text>
+<g transform="translate(800 650) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="860" y="673.91" font-size="12" text-anchor="middle">Stop TM201</text>
+<g transform="translate(800 780) scale(0.95 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="18,0 120,0 120,60 18,60 0,30.0" />
+  </g>
+</g>
+<text x="857.06" y="805.91" font-size="12" text-anchor="middle">MDL-NEGOTIATE</text>
+<text x="857.06" y="820.98" font-size="12" text-anchor="middle">Confirm</text>
+<g transform="translate(800 1040) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="860" y="1071.45" font-size="12" text-anchor="middle">0 Ready</text>
+<g transform="translate(1000 390) scale(0.95 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="18,0 120,0 120,60 18,60 0,30.0" />
+  </g>
+</g>
+<text x="1057.06" y="415.91" font-size="12" text-anchor="middle">MDL-ERROR</text>
+<text x="1057.06" y="430.98" font-size="12" text-anchor="middle">Indication (D)</text>
+<g transform="translate(1000 1040) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="1060" y="1071.45" font-size="12" text-anchor="middle">1 Negotiating</text>
+<g transform="translate(1200 130) scale(1 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 102,30.0 120,60 0,60" />
+  </g>
+</g>
+<text x="1260" y="161.86" font-size="12" text-anchor="middle">FRMR Response</text>
+<g transform="translate(1200 260) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="1260" y="309.11" font-size="12" text-anchor="middle">XID Rejected?</text>
+<g transform="translate(1200 390) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="1260" y="413.91" font-size="12" text-anchor="middle">Set Segmentor Off</text>
+<text x="1260" y="428.98" font-size="12" text-anchor="middle">Set Version 2.0</text>
+<text x="1260" y="444.05" font-size="12" text-anchor="middle">Defaults</text>
+<g transform="translate(1200 520) scale(0.95 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="18,0 120,0 120,60 18,60 0,30.0" />
+  </g>
+</g>
+<text x="1257.06" y="545.91" font-size="12" text-anchor="middle">MDL-ERROR</text>
+<text x="1257.06" y="560.98" font-size="12" text-anchor="middle">Indication (E)</text>
+<g transform="translate(1200 1040) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="1260" y="1071.45" font-size="12" text-anchor="middle">0 Ready</text>
+</svg>

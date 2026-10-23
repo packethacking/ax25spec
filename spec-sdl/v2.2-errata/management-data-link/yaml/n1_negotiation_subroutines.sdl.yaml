@@ -1,0 +1,71 @@
+# Auto-generated from ManagementDataLink_N1NegotiationSubroutines.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: management_data_link
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc5.5
+
+subroutines:
+
+  - name: Initiate_N1_Notification
+    decisions:
+      - id: initiate_n1_notification_n1_notification_requested
+        question: "N1 Notification Requested?"
+        predicate: N1_notification_requested
+    paths:
+      - id: t01_initiate_n1_notification_yes
+        path:
+          - { decision: initiate_n1_notification_n1_notification_requested, branch: Yes }
+          - { action: Add Receive N1 Parameter field to XID Command, kind: processing }
+      - id: t02_initiate_n1_notification_no
+        path:
+          - { decision: initiate_n1_notification_n1_notification_requested, branch: No }
+
+  - name: N1_Notification_Response
+    decisions:
+      - id: n1_notification_response_n1_parameter_field_present
+        question: "N1 Parameter Field Present?"
+        predicate: N1_parameter_field_present
+      - id: n1_notification_response_transmit_n1_acceptable
+        question: "Transmit N1 Acceptable ?"
+        predicate: transmit_N1_acceptable
+    paths:
+      - id: t01_n1_notification_response_yes_yes
+        path:
+          - { decision: n1_notification_response_n1_parameter_field_present, branch: Yes }
+          - { decision: n1_notification_response_transmit_n1_acceptable, branch: Yes }
+          - { action: Accept Transmit N1 From XID Command, kind: processing }
+          - { action: Add Receive N1 Parameter field to XID Response, kind: processing }
+      - id: t02_n1_notification_response_yes_no
+        path:
+          - { decision: n1_notification_response_n1_parameter_field_present, branch: Yes }
+          - { decision: n1_notification_response_transmit_n1_acceptable, branch: No }
+          - { action: Set Transmit N1 to Default, kind: processing }
+          - { action: Add Receive N1 Parameter field to XID Response, kind: processing }
+      - id: t03_n1_notification_response_no
+        path:
+          - { decision: n1_notification_response_n1_parameter_field_present, branch: No }
+
+  - name: Complete_N1_Notification
+    decisions:
+      - id: complete_n1_notification_n1_parameter_field_present
+        question: "N1 Parameter Field Present?"
+        predicate: N1_parameter_field_present
+      - id: complete_n1_notification_transmit_n1_acceptable
+        question: "Transmit N1 Acceptable ?"
+        predicate: transmit_N1_acceptable
+    paths:
+      - id: t01_complete_n1_notification_yes_yes
+        path:
+          - { decision: complete_n1_notification_n1_parameter_field_present, branch: Yes }
+          - { decision: complete_n1_notification_transmit_n1_acceptable, branch: Yes }
+          - { action: Accept Receive N1 from XID Response, kind: processing }
+      - id: t02_complete_n1_notification_yes_no
+        path:
+          - { decision: complete_n1_notification_n1_parameter_field_present, branch: Yes }
+          - { decision: complete_n1_notification_transmit_n1_acceptable, branch: No }
+          - { action: Set Receive N1 to Default, kind: processing }
+      - id: t03_complete_n1_notification_no
+        path:
+          - { decision: complete_n1_notification_n1_parameter_field_present, branch: No }
