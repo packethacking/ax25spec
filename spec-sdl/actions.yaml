@@ -141,30 +141,30 @@ signal_upper:
   - name: DL_ERROR_indication_N
   - name: DL_ERROR_indication_O
 
-  # Management-Data-Link → Layer 3 primitives (§5.1, Appendix C5.1 /
-  # C5.3 — prose-bootstrap, verification_pending). The MDL machine
-  # raises these to the Layer 3 entity. MDL-NEGOTIATE Confirm signals
-  # that notification/negotiation is complete; MDL-ERROR Indicate (X)
-  # signals it failed, with X one of the §C5.3 management error codes
-  # (A — XID command without P=1; B — Unexpected XID response; C —
-  # Management retry limit exceeded; D — XID response without F=1).
-  # The figures draw these in display form; the aliases canonicalise to
-  # the snake_case spellings a downstream dispatcher would case on,
-  # mirroring the DL_CONNECT_* / DL_ERROR_indication_* convention above.
-  # Only the codes actually emitted by the prose-bootstrap (B, C, D)
-  # are catalogued; error A's reception path is figc5.x backfill.
+  # Management-Data-Link to Layer 3 primitives (figc5.1, figc5.2). The
+  # figures draw MDL-ERROR with the error letter of §C5.3 in brackets,
+  # spelt "Indicate" on figc5.1 (A, B) and "Indication" on figc5.2 (C, D,
+  # E). The aliases canonicalise to the snake_case spellings a downstream
+  # dispatcher would case on, mirroring the DL_ERROR_indication_*
+  # convention above.
   - name: MDL_NEGOTIATE_confirm
     aliases:
       - "MDL-NEGOTIATE Confirm"
+  - name: MDL_ERROR_indicate_A
+    aliases:
+      - "MDL-ERROR Indicate (A)"       # figc5.1
   - name: MDL_ERROR_indicate_B
     aliases:
-      - "MDL-ERROR Indicate (B)"
+      - "MDL-ERROR Indicate (B)"       # figc5.1
   - name: MDL_ERROR_indicate_C
     aliases:
-      - "MDL-ERROR Indicate (C)"
+      - "MDL-ERROR Indication (C)"     # figc5.2
   - name: MDL_ERROR_indicate_D
     aliases:
-      - "MDL-ERROR Indicate (D)"
+      - "MDL-ERROR Indication (D)"     # figc5.2
+  - name: MDL_ERROR_indicate_E
+    aliases:
+      - "MDL-ERROR Indication (E)"     # figc5.2
 
 processing:
   # Queue-clearing verbs — three figure spellings, one semantic
@@ -234,6 +234,8 @@ processing:
   # data-link Start T1 / Stop T1 timer verbs (which pass through
   # uncatalogued); catalogued explicitly because TM201 is MDL-only.
   - name: Start TM201
+    aliases:
+      - "Start TM 201"             # figc5.2 spelling with a space
   - name: Stop TM201
 
   # Link-parameter assignments — Smoothed Round-Trip Time per §6.7.1.2
@@ -296,15 +298,3 @@ subroutine:
   - name: Enquiry_Response_F_1
     aliases:
       - "Enquiry Response (F = 1)"        # figc4.7 Check_Need_For_Response subroutine-call label
-
-  # Management-Data-Link parameter application (Appendix C5.2/C5.3 +
-  # §6.3.2 — prose-bootstrap, verification_pending). PLACEHOLDER for the
-  # figc5.3–figc5.8 per-parameter "reverts to" negotiation subroutines
-  # (Classes of Procedures / Optional Functions / N1 / Window / Retry /
-  # T1). Invoked from the figc5.2 Negotiating XID-response-received path.
-  # The decomposed subroutine bodies are figure-dependent and are NOT
-  # transcribed by the prose bootstrap — they are the figc5.x graphml
-  # backfill. No figc4.7-style subroutine page defines this body yet;
-  # downstream subroutine registries treat it as a (currently no-op)
-  # named call until the backfill lands.
-  - name: Apply Negotiated Parameters

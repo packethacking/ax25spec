@@ -162,3 +162,31 @@ link_multiplexer:
   - name: addressed_to_me            # figc3.4 "Addres-sed to Me?"
   - name: requestor_eq_current_DL    # figc3.4 "Requestor == Current DL?"
   - name: requestor_on_served_list   # figc3.4 "Requestor on Served List?"
+
+# Management Data Link (figc5.2 Negotiating, figc5.3 to figc5.8 negotiation
+# subroutines). Each parameter page asks whether its negotiation was
+# requested, whether the peer's XID carries the parameter field, and
+# whether the offered value is acceptable.
+management_data_link:
+  - name: AC_gt_NM201                 # figc5.2 "AC > NM201?" (the box above increments RC)
+  - name: XID_rejected                # figc5.2 "XID Rejected?"
+  - name: COP_negotiation_requested   # figc5.3 "COP Negotiation Requested?"
+  - name: COP_parameter_field_present # figc5.3 "COP Parameter Field Present?"
+  - name: full_duplex_acceptable      # figc5.3 "Full Duplex Acceptable ?"
+  - name: OF_negotiation_requested    # figc5.4 "OF Negotiation Requested?"
+  - name: OF_parameter_field_present  # figc5.4 "OF Parameter Field Present?"
+  - name: modulo_128_acceptable       # figc5.4 "Modulo 128 Acceptable ?"
+  - name: SREJ_or_REJ_acceptable      # figc5.4 "SREJ/REJ Acceptable ?"
+  - name: SREJ_acceptable             # figc5.4 "SREJ Acceptable ?"
+  - name: N1_notification_requested   # figc5.5 "N1 Notification Requested?"
+  - name: N1_parameter_field_present  # figc5.5 "N1 Parameter Field Present?"
+  - name: transmit_N1_acceptable      # figc5.5 "Transmit N1 Acceptable ?"
+  - name: k_notification_requested    # figc5.6 "k Notification Requested?"
+  - name: k_parameter_field_present   # figc5.6 "k Parameter Field Present?"
+  - name: transmit_k_acceptable       # figc5.6 "Transmit k Acceptable ?"
+  - name: N2_notification_requested   # figc5.7 "N2 Notification Requested?"
+  - name: N2_parameter_field_present  # figc5.7 "N2 Parameter Field Present?"
+  - name: transmit_N2_acceptable      # figc5.7 "Transmit N2 Acceptable ?"
+  - name: T1_negotiation_requested    # figc5.8 "T1 Negotiation Requested?"
+  - name: T1_parameter_field_present  # figc5.8 "T1 Parameter Field Present?"
+  - name: transmit_T1_acceptable      # figc5.8 "Transmit T1 Acceptable ?"

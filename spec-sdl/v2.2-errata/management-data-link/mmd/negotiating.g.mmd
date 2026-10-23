@@ -2,8 +2,7 @@
 %% Do not edit by hand. Run `dotnet run --project codegen/src/Packet.Sdl.CodeGen` to regenerate.
 %%
 %% Source: ax.25.2.2.4_Oct_25, figure figc5.2
-%% URL: https://raw.githubusercontent.com/packethacking/ax25spec/main/doc/ax.25.2.2.4_Oct_25.md
-%% Coverage: partial
+%% Coverage: complete
 %%
 %% Important: this rendering is approximate and intentionally
 %% looks nothing like the original SDL figure. It is a machine-
@@ -17,8 +16,9 @@ stateDiagram-v2
 
     classDef focal fill:#fff5b1,stroke:#b08800;
     class Negotiating focal
-    Negotiating --> Ready: t01_xid_response_received_yes<br/>on: XID_response_received<br/>[F_eq_1]<br/>/ →() Apply Negotiated Parameters<br/>/ · Stop TM201<br/>/ ↑ MDL_NEGOTIATE_confirm
-    Negotiating --> Negotiating: t01_xid_response_received_no<br/>on: XID_response_received<br/>[not F_eq_1]<br/>/ ↑ MDL_ERROR_indicate_D
-    Negotiating --> Ready: t02_frmr_received<br/>on: FRMR_received<br/>/ · set_version_2_0<br/>/ · Stop TM201<br/>/ ↑ MDL_NEGOTIATE_confirm
-    Negotiating --> Ready: t03_tm201_expiry_yes<br/>on: TM201_expiry<br/>[RC_eq_NM201]<br/>/ ↑ MDL_ERROR_indicate_C
-    Negotiating --> Negotiating: t03_tm201_expiry_no<br/>on: TM201_expiry<br/>[not RC_eq_NM201]<br/>/ · RC := RC + 1<br/>/ ↓ XID_command<br/>/ · Start TM201
+    Negotiating --> Ready: t02_tm201_expiry_yes<br/>on: TM201_expiry<br/>[AC_gt_NM201]<br/>/ · RC := RC + 1<br/>/ ↑ MDL_ERROR_indicate_C
+    Negotiating --> Ready: t02_tm201_expiry_no<br/>on: TM201_expiry<br/>[not AC_gt_NM201]<br/>/ · RC := RC + 1<br/>/ ↓ Retransmit XID Command<br/>/ · Start TM201
+    Negotiating --> Ready: t04_xid_response_received_yes<br/>on: XID_response_received<br/>[F_eq_1]<br/>/ →() Complete Classes of Procedures Negotiation<br/>/ →() Complete Optional Functions Negotiation<br/>/ →() Complete N1 Negotiation<br/>/ →() Complete Window Negotiation<br/>/ →() Complete Retry Negotiation<br/>/ →() Complete T1 Negotiation<br/>/ · Stop TM201<br/>/ ↑ MDL_NEGOTIATE_confirm
+    Negotiating --> Negotiating: t04_xid_response_received_no<br/>on: XID_response_received<br/>[not F_eq_1]<br/>/ ↑ MDL_ERROR_indicate_D
+    Negotiating --> Ready: t05_frmr_response_received_yes<br/>on: FRMR_response_received<br/>[XID_rejected]<br/>/ · Set Segmentor Off<br/>/ · Set Version 2.0 Defaults<br/>/ ↑ MDL_ERROR_indicate_E
+    Negotiating --> Ready: t05_frmr_response_received_no<br/>on: FRMR_response_received<br/>[not XID_rejected]
