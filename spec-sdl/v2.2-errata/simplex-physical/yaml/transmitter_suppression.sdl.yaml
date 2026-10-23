@@ -1,0 +1,149 @@
+# Auto-generated from SimplexPhy_TransmitterSuppression.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: simplex_phy
+state: TransmitterSuppression
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc2a.3
+
+decisions:
+  - id: t101_expiry_priority_queue_empty
+    question: "Priority Queue Empty?"
+    predicate: priority_queue_empty
+  - id: t101_expiry_r_lt_p
+    question: "R < p?"
+    predicate: R_lt_p
+  - id: t101_expiry_interrupted
+    question: "Interrupted?"
+    predicate: interrupted
+  - id: t102_expiry_priority_queue_empty
+    question: "Priority Queue Empty?"
+    predicate: priority_queue_empty
+  - id: t102_expiry_r_lt_p
+    question: "R < p?"
+    predicate: R_lt_p
+  - id: t102_expiry_interrupted
+    question: "Interrupted?"
+    predicate: interrupted
+
+transitions:
+
+  - id: t01_ph_expedited_data_request
+    on: PH_EXPEDITED_DATA_request
+    on_label: PH-EXPEDITED-DATA Request
+    path:
+      - { action: Add to Priority Queue, kind: internal_out }
+      - { action: Set Digipeating, kind: processing }
+      - { action: Start Transmitter, kind: subroutine }
+    next: TransmitterStart
+
+  - id: t02_all_other_primitives__from_upper_layer
+    on: all_other_primitives__from_upper_layer
+    on_label: All Other Primitives
+    path:
+      - { action: Add to Normal Queue, kind: internal_out }
+    next: TransmitterSuppression
+
+  - id: t03_t100_expiry
+    on: T100_expiry
+    on_label: T100 Expiry
+    path:
+      - { action: Clear Repeater Up, kind: processing }
+    next: TransmitterSuppression
+
+  - id: t04_t101_expiry_yes_yes_yes
+    on: T101_expiry
+    on_label: T101 Expiry
+    path:
+      - { decision: t101_expiry_priority_queue_empty, branch: Yes }
+      - { action: "R := Random Number in Range 0 to 255", kind: processing }
+      - { decision: t101_expiry_r_lt_p, branch: Yes }
+      - { decision: t101_expiry_interrupted, branch: Yes }
+      - { action: Start Transmitter, kind: subroutine }
+    next: TransmitterStart
+
+  - id: t04_t101_expiry_yes_yes_no
+    on: T101_expiry
+    on_label: T101 Expiry
+    path:
+      - { decision: t101_expiry_priority_queue_empty, branch: Yes }
+      - { action: "R := Random Number in Range 0 to 255", kind: processing }
+      - { decision: t101_expiry_r_lt_p, branch: Yes }
+      - { decision: t101_expiry_interrupted, branch: No }
+      - { action: Resume Processing Normal Queue, kind: processing }
+    next: Ready
+
+  - id: t04_t101_expiry_yes_no
+    on: T101_expiry
+    on_label: T101 Expiry
+    path:
+      - { decision: t101_expiry_priority_queue_empty, branch: Yes }
+      - { action: "R := Random Number in Range 0 to 255", kind: processing }
+      - { decision: t101_expiry_r_lt_p, branch: No }
+      - { action: Start T102, kind: processing }
+    next: TransmitterSuppression
+
+  - id: t04_t101_expiry_no
+    on: T101_expiry
+    on_label: T101 Expiry
+    path:
+      - { decision: t101_expiry_priority_queue_empty, branch: No }
+      - { action: Set Digipeater, kind: processing }
+      - { action: Start Transmitter, kind: subroutine }
+    next: TransmitterStart
+
+  - id: t05_t102_expiry_yes_yes_yes
+    on: T102_expiry
+    on_label: T102 Expiry
+    path:
+      - { decision: t102_expiry_priority_queue_empty, branch: Yes }
+      - { action: "R := Random Number in Range 0 to 255", kind: processing }
+      - { decision: t102_expiry_r_lt_p, branch: Yes }
+      - { decision: t102_expiry_interrupted, branch: Yes }
+      - { action: Start Transmitter, kind: subroutine }
+    next: TransmitterStart
+
+  - id: t05_t102_expiry_yes_yes_no
+    on: T102_expiry
+    on_label: T102 Expiry
+    path:
+      - { decision: t102_expiry_priority_queue_empty, branch: Yes }
+      - { action: "R := Random Number in Range 0 to 255", kind: processing }
+      - { decision: t102_expiry_r_lt_p, branch: Yes }
+      - { decision: t102_expiry_interrupted, branch: No }
+      - { action: Resume Processing Normal Queue, kind: processing }
+    next: Ready
+
+  - id: t05_t102_expiry_yes_no
+    on: T102_expiry
+    on_label: T102 Expiry
+    path:
+      - { decision: t102_expiry_priority_queue_empty, branch: Yes }
+      - { action: "R := Random Number in Range 0 to 255", kind: processing }
+      - { decision: t102_expiry_r_lt_p, branch: No }
+      - { action: Start T102, kind: processing }
+    next: TransmitterSuppression
+
+  - id: t05_t102_expiry_no
+    on: T102_expiry
+    on_label: T102 Expiry
+    path:
+      - { decision: t102_expiry_priority_queue_empty, branch: No }
+      - { action: Set Digipeater, kind: processing }
+      - { action: Start Transmitter, kind: subroutine }
+    next: TransmitterStart
+
+  - id: t06_hw_aos_indication
+    on: HW_AOS_indication
+    on_label: HW-AOS Indication
+    path:
+      - { action: Acquisition, kind: subroutine }
+    next: Receiving
+
+  - id: t07_all_other_primitives__from_lower_layer
+    on: all_other_primitives__from_lower_layer
+    on_label: All Other Primitives
+    path:
+      - { action: "Discard: Erroneous Primitive", kind: processing }
+    next: Ready

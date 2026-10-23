@@ -1,0 +1,105 @@
+# Auto-generated from SimplexPhy_Transmitting.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: simplex_phy
+state: Transmitting
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc2a.5
+
+decisions:
+  - id: t107_expiry_priority_queue_empty
+    question: "Priority Queue Empty?"
+    predicate: priority_queue_empty
+  - id: ph_release_priority_queue_empty
+    question: "Priority Queue Empty?"
+    predicate: priority_queue_empty
+
+transitions:
+
+  - id: t01_ph_expedited_data_request
+    on: PH_EXPEDITED_DATA_request
+    on_label: PH_EXPEDITED-DATA Request
+    path:
+      - { action: Add Frame to Priority Queue, kind: internal_out }
+    next: Transmitting
+
+  - id: t02_ph_seize_request
+    on: PH_SEIZE_request
+    on_label: PH-SIEZE Request
+    path:
+      - { action: PH-SIEZE Confirm, kind: signal_upper }
+    next: Transmitting
+
+  - id: t03_ph_data_request
+    on: PH_DATA_request
+    on_label: PH-DATA Request
+    path:
+      - { action: HW-DATA Request, kind: signal_lower }
+    next: Transmitting
+
+  - id: t04_all_other_primitives__from_upper_layer
+    on: all_other_primitives__from_upper_layer
+    on_label: All Other Primitives
+    path:
+      - { action: Add to Normal Queue, kind: internal_out }
+    next: Transmitting
+
+  - id: t05_t106_expiry
+    on: T106_expiry
+    on_label: T106 Expiry
+    path:
+      - { action: Stop T107, kind: processing }
+      - { action: Set Interrupted, kind: processing }
+      - { action: Suspend All Queue Processing, kind: processing }
+      - { action: Turn Off Transmitter, kind: signal_lower }
+      - { action: "Start T106 (T108?)", kind: processing }
+    next: ReceiverStart
+
+  - id: t06_t107_expiry_yes
+    on: T107_expiry
+    on_label: T107 Expiry
+    path:
+      - { action: Set Interrupted, kind: processing }
+      - { action: Suspend All Queue Processing, kind: processing }
+      - { decision: t107_expiry_priority_queue_empty, branch: Yes }
+      - { action: Stop T106, kind: processing }
+      - { action: Turn Off Transmitter, kind: signal_lower }
+      - { action: "Start T106 (T108?)", kind: processing }
+    next: ReceiverStart
+
+  - id: t06_t107_expiry_no
+    on: T107_expiry
+    on_label: T107 Expiry
+    path:
+      - { action: Set Interrupted, kind: processing }
+      - { action: Suspend All Queue Processing, kind: processing }
+      - { decision: t107_expiry_priority_queue_empty, branch: No }
+      - { action: Resume Processing Priority Queue, kind: processing }
+      - { action: (Set Digipeating), kind: processing }
+    next: Digipeating
+
+  - id: t07_ph_release_request_yes
+    on: PH_RELEASE_request
+    on_label: PH-RELEASE Request
+    path:
+      - { action: Stop T107, kind: processing }
+      - { action: Clear Interrupted, kind: processing }
+      - { action: Suspend All Queue Processing, kind: processing }
+      - { decision: ph_release_priority_queue_empty, branch: Yes }
+      - { action: Stop T106, kind: processing }
+      - { action: Turn Off Transmitter, kind: signal_lower }
+      - { action: "Start T106 (T108?)", kind: processing }
+    next: ReceiverStart
+
+  - id: t07_ph_release_request_no
+    on: PH_RELEASE_request
+    on_label: PH-RELEASE Request
+    path:
+      - { action: Stop T107, kind: processing }
+      - { action: Clear Interrupted, kind: processing }
+      - { action: Suspend All Queue Processing, kind: processing }
+      - { decision: ph_release_priority_queue_empty, branch: No }
+      - { action: Resume Processing Priority Queue, kind: processing }
+      - { action: (Set Digipeating), kind: processing }
+    next: Digipeating

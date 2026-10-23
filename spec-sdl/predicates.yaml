@@ -203,8 +203,11 @@ segmenter_reassembler:
   - name: remaining_segments_eq_N     # figc6.3, figc6.4 "Remaining Segments == N?"
   - name: N_eq_0                      # figc6.3, figc6.4 "N == 0?"
 
-# Physical layer (Annex C2a Simplex and C2b Duplex). interrupted is drawn
-# on figc2b.4 ("Interrup-ted?"); duplex sets it on T107 expiry and clears
-# it on PH-RELEASE Request (figc2b.5).
+# Physical layer (Annex C2a Simplex and C2b Duplex): queue state,
+# p-persistence, repeater keying, and the digipeating and interrupted flags.
 physical:
-  - name: interrupted                # figc2b.4 "Interrup-ted?"
+  - name: interrupted                # figc2b.4, figc2a.3, figc2a.4 "Interrup-ted?"
+  - name: priority_queue_empty       # figc2a.2, figc2a.3, figc2a.5 "Priority Queue Empty?"
+  - name: R_lt_p                     # figc2a.3 "R < p?"
+  - name: repeater_up                # figc2a.4 "Repeater Up?"
+  - name: digipeating                # figc2a.4 "Digipeat-ing?"

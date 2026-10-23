@@ -1,0 +1,68 @@
+# Auto-generated from SimplexPhy_Ready.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: simplex_phy
+state: Ready
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc2a.1
+
+transitions:
+
+  - id: t01_ph_expedited_data_request
+    on: PH_EXPEDITED_DATA_request
+    on_label: PH-EXPEDITED-DATA Request
+    path:
+      - { action: Add to Priority Queue, kind: internal_out }
+      - { action: Set Digipeating, kind: processing }
+      - { action: Start Transmitter, kind: subroutine }
+    next: TransmitterStart
+
+  - id: t02_ph_seize_request
+    on: PH_SEIZE_request
+    on_label: PH-SIEZE Request
+    path:
+      - { action: Clear Digipeating, kind: processing }
+      - { action: Start Transmitter, kind: subroutine }
+    next: TransmitterStart
+
+  - id: t03_ph_release_request
+    on: PH_RELEASE_request
+    on_label: PH-RELEASE Request
+    path: []
+    next: Ready
+
+  - id: t04_ph_data_request
+    on: PH_DATA_request
+    on_label: PH-DATA Request
+    path:
+      - { action: "Discard: Erroneous Primitive", kind: processing }
+    next: Ready
+
+  - id: t05_all_other_primitives__from_upper_layer
+    on: all_other_primitives__from_upper_layer
+    on_label: All Other Primitives
+    path:
+      - { action: Add to Normal Queue, kind: internal_out }
+    next: Ready
+
+  - id: t06_t102_expiry
+    on: T102_expiry
+    on_label: T102 Expiry
+    path:
+      - { action: Clear Repeater Up, kind: processing }
+    next: Ready
+
+  - id: t07_hw_aos_indication
+    on: HW_AOS_indication
+    on_label: HW-AOS Indication
+    path:
+      - { action: Acuisition, kind: subroutine }
+    next: Receiving
+
+  - id: t08_all_other_primitives__from_lower_layer
+    on: all_other_primitives__from_lower_layer
+    on_label: All Other Primitives
+    path:
+      - { action: "Discard: Erroneous Primitive", kind: processing }
+    next: Ready
