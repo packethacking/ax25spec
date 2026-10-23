@@ -1,0 +1,79 @@
+# Auto-generated from LinkMux_Seized.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: link_mux
+state: Seized
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc3.3
+
+transitions:
+
+  - id: t01_lm_expedited_data_request
+    on: LM_EXPEDITED_DATA_request
+    on_label: LM-EXPEDITED-DATA Request
+    path:
+      - { action: PH-EXPEDITED-DATA Request, kind: signal_lower }
+    next: Seized
+
+  - id: t02_lm_data_request
+    on: LM_DATA_request
+    on_label: LM-DATA Request
+    path:
+      - { action: PH-DATA Request, kind: signal_lower }
+    next: Seized
+
+  - id: t03_lm_seize_request
+    on: LM_SEIZE_request
+    on_label: LM-SIEZE Request
+    path:
+      - { action: LM-SIEZE Confirm, kind: signal_upper }
+    next: Seized
+
+  - id: t04_lm_release_request
+    on: LM_RELEASE_request
+    on_label: LM-RELEASE Request
+    path:
+      - { action: Finish Current Transmission, kind: subroutine }
+    next: Idle
+
+  - id: t05_current_queue_empty
+    on: current_queue_empty
+    on_label: Current Queue Empty
+    path:
+      - { action: Finish Current Transmission, kind: subroutine }
+    next: Idle
+
+  - id: t06_all_other_primitives__from_upper_layer
+    on: all_other_primitives__from_upper_layer
+    on_label: All Other Primitives
+    path:
+      - { action: Queue Event, kind: subroutine }
+    next: Idle
+
+  - id: t07_ph_seize_confirm
+    on: PH_SEIZE_confirm
+    on_label: PH-SIEZE Confirm
+    path: []
+    next: Seized
+
+  - id: t08_ph_data_indication
+    on: PH_DATA_indication
+    on_label: PH-DATA Indication
+    path:
+      - { action: Frame Received, kind: subroutine }
+    next: Seized
+
+  - id: t09_ph_busy_indication
+    on: PH_BUSY_indication
+    on_label: PH-BUSY Indication
+    path:
+      - { action: Suspend All Link Layer Timing, kind: processing }
+    next: Seized
+
+  - id: t10_ph_quiet_indication
+    on: PH_QUIET_indication
+    on_label: PH-Quiet Indication
+    path:
+      - { action: Resume All Link Layer Timing, kind: processing }
+    next: Seized

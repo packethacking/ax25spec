@@ -1,0 +1,192 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1645" height="1000" viewBox="-20 -20 1645 1000" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 1 L 9 5 L 0 9 z" fill="#000000"/></marker></defs>
+<rect x="-20" y="-20" width="1645" height="1000" fill="#FFFFFF"/>
+<path d="M 60 60 L 60 90" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 58.49 161.9 L 55.63 230" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 54.43 301.9 L 59.73 900" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 104.58 55.92 L 165.75 91.49" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 223.49 161.9 L 220.63 230" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 219.43 301.9 L 224.73 900" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 115.19 46.05 L 340.84 111.66" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 389.21 161.9 L 387.72 230" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 387.19 290 L 389.87 900" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 117.77 41.2 L 508.49 116.93" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 555 161.9 L 555 230" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 555 290 L 555 900" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 118.54 38.68 L 660 118.93" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 675.3 167.23 L 593.9 230" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 119.1 36.87 L 840.4 120.76" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 885 161.9 L 885 230" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 885 290 L 885 900" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 119.42 35.76 L 990 120.13" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1050 161.9 L 1050 900" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 119.5 34.94 L 1155 120.96" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1215 161.9 L 1215 230" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1215 290 L 1215 900" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 119.57 34.33 L 1320 121.59" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1380 161.9 L 1380 230" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1380 290 L 1380 900" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 119.61 33.85 L 1485 122.07" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1545 161.9 L 1545 230" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 1545 290 L 1545 900" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<g transform="translate(0 0) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="60" y="31.45" font-size="12" text-anchor="middle">1 Sieze Pending</text>
+<g transform="translate(0 90) scale(1 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="60" y="121.86" font-size="12" text-anchor="middle">LM-EXPEDITED-DATA</text>
+<text x="60" y="136.93" font-size="12" text-anchor="middle">Request</text>
+<g transform="translate(0 230) scale(0.9 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 102,0 120,30.0 102,60 0,60" />
+  </g>
+</g>
+<text x="54.12" y="259.01" font-size="11.16" text-anchor="middle">PH-EXPEDITED-DATA</text>
+<text x="54.12" y="273.03" font-size="11.16" text-anchor="middle">Request</text>
+<g transform="translate(0 900) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="60" y="931.45" font-size="12" text-anchor="middle">1 Seized</text>
+<g transform="translate(165 90) scale(1 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="225" y="121.86" font-size="12" text-anchor="middle">LM-DATA Request</text>
+<g transform="translate(165 230) scale(0.9 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 102,0 120,30.0 102,60 0,60" />
+  </g>
+</g>
+<text x="219.12" y="259.86" font-size="12" text-anchor="middle">PH-DATA Request</text>
+<g transform="translate(165 900) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="225" y="931.45" font-size="12" text-anchor="middle">1 Seized</text>
+<g transform="translate(330 90) scale(1 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="390" y="121.86" font-size="12" text-anchor="middle">LM-SIEZE Request</text>
+<g transform="translate(330 230) scale(0.95 1) translate(0 0)" style="stroke-width:1"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="18,0 120,0 120,60 18,60 0,30.0" />
+  </g>
+</g>
+<text x="387.06" y="255.91" font-size="12" text-anchor="middle">LM-SIEZE Confirm</text>
+<g transform="translate(330 900) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="390" y="931.45" font-size="12" text-anchor="middle">1 Seized</text>
+<g transform="translate(495 90) scale(1 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="555" y="121.86" font-size="12" text-anchor="middle">LM-RELEASE</text>
+<text x="555" y="136.93" font-size="12" text-anchor="middle">Request</text>
+<g transform="translate(495 230) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+    <line x1="10" y1="1.0" x2="10" y2="59.0" />
+    <line x1="110" y1="1.0" x2="110" y2="59.0" />
+  </g>
+</g>
+<text x="555" y="261.45" font-size="12" text-anchor="middle">Finish Current</text>
+<text x="555" y="276.53" font-size="12" text-anchor="middle">Transmission</text>
+<g transform="translate(495 900) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="555" y="931.45" font-size="12" text-anchor="middle">0 Idle</text>
+<g transform="translate(660 90) scale(3.94 3.83) translate(-3.32 -2.47)" style="stroke-width:0.25"><g>
+    <g transform="translate(-5.2697856,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l -3.252955,10.4094525 3.122838,9.758862 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 7.9372074,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="725.37" y="124.52" font-size="12" text-anchor="middle">Current Queue</text>
+<text x="725.37" y="139.59" font-size="12" text-anchor="middle">Empty</text>
+<g transform="translate(825 90) scale(1 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="885" y="121.86" font-size="12" text-anchor="middle">All Other</text>
+<text x="885" y="136.93" font-size="12" text-anchor="middle">Primitives</text>
+<g transform="translate(825 230) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+    <line x1="10" y1="1.0" x2="10" y2="59.0" />
+    <line x1="110" y1="1.0" x2="110" y2="59.0" />
+  </g>
+</g>
+<text x="885" y="261.45" font-size="12" text-anchor="middle">Queue Event</text>
+<g transform="translate(825 900) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="885" y="931.45" font-size="12" text-anchor="middle">0 Idle</text>
+<g transform="translate(990 90) scale(1 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 102,30.0 120,60 0,60" />
+  </g>
+</g>
+<text x="1050" y="121.86" font-size="12" text-anchor="middle">PH-SIEZE Confirm</text>
+<g transform="translate(990 900) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="1050" y="931.45" font-size="12" text-anchor="middle">2 Seized</text>
+<g transform="translate(1155 90) scale(1 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 102,30.0 120,60 0,60" />
+  </g>
+</g>
+<text x="1215" y="121.86" font-size="12" text-anchor="middle">PH-DATA</text>
+<text x="1215" y="136.93" font-size="12" text-anchor="middle">Indication</text>
+<g transform="translate(1155 230) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+    <line x1="10" y1="1.0" x2="10" y2="59.0" />
+    <line x1="110" y1="1.0" x2="110" y2="59.0" />
+  </g>
+</g>
+<text x="1215" y="261.45" font-size="12" text-anchor="middle">Frame Received</text>
+<g transform="translate(1155 900) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="1215" y="931.45" font-size="12" text-anchor="middle">1 Seized</text>
+<g transform="translate(1320 90) scale(1 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 102,30.0 120,60 0,60" />
+  </g>
+</g>
+<text x="1380" y="121.86" font-size="12" text-anchor="middle">PH-BUSY</text>
+<text x="1380" y="136.93" font-size="12" text-anchor="middle">Indication</text>
+<g transform="translate(1320 230) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="1380" y="253.91" font-size="12" text-anchor="middle">Suspend All Link</text>
+<text x="1380" y="268.98" font-size="12" text-anchor="middle">Layer Timing</text>
+<g transform="translate(1320 900) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="1380" y="931.45" font-size="12" text-anchor="middle">1 Seized</text>
+<g transform="translate(1485 90) scale(1 1.2) translate(0 0)" style="stroke-width:0.83"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 102,30.0 120,60 0,60" />
+  </g>
+</g>
+<text x="1545" y="121.86" font-size="12" text-anchor="middle">PH-Quiet</text>
+<text x="1545" y="136.93" font-size="12" text-anchor="middle">Indication</text>
+<g transform="translate(1485 230) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="1545" y="253.91" font-size="12" text-anchor="middle">Resume All Link</text>
+<text x="1545" y="268.98" font-size="12" text-anchor="middle">Layer Timing</text>
+<g transform="translate(1485 900) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="1545" y="931.45" font-size="12" text-anchor="middle">1 Seized</text>
+</svg>

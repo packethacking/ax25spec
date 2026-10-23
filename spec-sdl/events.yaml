@@ -74,6 +74,9 @@ internal:
   # Signal Reception. The figure does not say which queue; the C3.3 prose
   # describes the Awaiting Queue running empty.
   - queue_empty
+  # Link Multiplexer, figc3.2 (Sieze Pending) and figc3.3 (Seized)
+  # "Current Queue Empty", also an Internal Signal Reception.
+  - current_queue_empty
 
 # Service primitives between Data-Link and Link Multiplexer. Named
 # <PREFIX>_<NAME>_<kind> like every primitive family. figc3.1 and figc3.2
