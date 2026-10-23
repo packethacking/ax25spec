@@ -1,0 +1,31 @@
+# Auto-generated from DuplexPhy_TransmitterReady.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: duplex_phy
+state: TransmitterReady
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc2b.3
+
+transitions:
+
+  - id: t01_ph_seize_request
+    on: PH_SEIZE_request
+    on_label: PH-SIEZE Request
+    path:
+      - { action: Stsrt T103, kind: processing }
+      - { action: HW-TON Request, kind: signal_lower }
+    next: TransmitterStart
+
+  - id: t02_ph_release_request
+    on: PH_RELEASE_request
+    on_label: PH-RELEASE Request
+    path: []
+    next: TransmitterReady
+
+  - id: t03_all_other_primitives__from_upper_layer
+    on: all_other_primitives__from_upper_layer
+    on_label: All Other Primitives
+    path:
+      - { action: Add to Normal Queue, kind: internal_out }
+    next: TransmitterReady

@@ -1,0 +1,24 @@
+# Auto-generated from DuplexPhy_Receiving.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: duplex_phy
+state: Receiving
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc2b.2
+
+transitions:
+
+  - id: t01_hw_data_indication
+    on: HW_DATA_indication
+    on_label: HW-DATA Indication
+    path:
+      - { action: PH-DATA Indication, kind: signal_upper }
+    next: Receiving
+
+  - id: t02_hw_los_indication
+    on: HW_LOS_indication
+    on_label: HW-LOS Indication
+    path:
+      - { action: PH-QUIET Indication, kind: signal_upper }
+    next: ReceiverReady
