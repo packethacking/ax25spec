@@ -1,0 +1,25 @@
+# Auto-generated from DuplexPhy_ReceiverReady.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: duplex_phy
+state: ReceiverReady
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc2b.1
+
+transitions:
+
+  - id: t01_hw_aos_indication
+    on: HW_AOS_indication
+    on_label: HW-AOS Indication
+    path:
+      - { action: Stop All Timers, kind: processing }
+      - { action: PH-BUSY Indication, kind: signal_upper }
+    next: Receiving
+
+  - id: t02_all_other_primitives__from_lower_layer
+    on: all_other_primitives__from_lower_layer
+    on_label: All Other Primitives
+    path:
+      - { action: "Discard: Erroneous Primitive", kind: processing }
+    next: ReceiverReady

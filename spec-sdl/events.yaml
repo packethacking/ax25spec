@@ -104,6 +104,19 @@ primitives_physical:
   - PH_DATA_indication          # figc3.1 "PH-DATA Indication"
   - PH_BUSY_indication          # figc3.1 "PH-BUSY Indication"
   - PH_QUIET_indication         # figc3.1 "PH-QUIET Indication"
+  # Duplex Physical (figc2b.3 to figc2b.5) receives the requests the Link
+  # Multiplexer sends. figc2b.3 and figc2b.5 draw "PH-SIEZE Request" (#61).
+  - PH_SEIZE_request            # figc2b.3 "PH-SIEZE Request" (#61)
+  - PH_RELEASE_request          # figc2b.3 "PH-RELEASE Request"
+  - PH_DATA_request             # figc2b.5 "PH-DATA Request"
+  - PH_EXPEDITED_DATA_request   # figc2b.5 "PH-EXPEDITED_DATA Request"
+
+# Hardware primitives received by the Duplex Physical state machine from the
+# radio (figc2b.1 and figc2b.2), drawn as receptions from the lower layer.
+primitives_hardware:
+  - HW_AOS_indication           # figc2b.1 "HW-AOS Indication"
+  - HW_DATA_indication          # figc2b.2 "HW-DATA Indication"
+  - HW_LOS_indication           # figc2b.2 "HW-LOS Indication"
 
 # Timer expiries.
 timers:
@@ -117,3 +130,6 @@ timers:
   # TR210, the Reassembler's reassembly timer (figc6.3 and figc6.4
   # "TR210 Expiry", drawn as a reception from the lower layer).
   - TR210_expiry
+  # Duplex Physical timers, drawn as Internal Signal Receptions.
+  - T105_expiry                 # figc2b.4 "T105 Expiry" (remote receiver sync)
+  - T107_expiry                 # figc2b.5 "T107 Expiry" (anti-hogging limit)

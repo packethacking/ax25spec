@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="1205" viewBox="20 0 360 1205" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 1 L 9 5 L 0 9 z" fill="#000000"/></marker></defs>
+<rect x="20" y="0" width="360" height="1205" fill="#FFFFFF"/>
+<path d="M 100 65 L 100 160" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 127.69 65 L 244.62 160" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 100 250 L 100 300" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 160 347.65 L 190 347.65 L 190 1100 L 132.12 1140.19" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="172" y="363.2" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 100 395.3 L 100 440" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="112" y="410.85" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 100 530 L 100 1140" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 300 250 L 300 300" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 300 390 L 300 1140" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<g transform="translate(40 20) scale(1.02 0.78) translate(-1 -1)" style="stroke-width:0.98"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="100" y="51.45" font-size="12" text-anchor="middle">1 Transmitter</text>
+<text x="100" y="66.53" font-size="12" text-anchor="middle">Start</text>
+<g transform="translate(40 160) scale(3.62 4.46) translate(-3.32 -2.47)" style="stroke-width:0.22"><g>
+    <g transform="translate(-5.2697856,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l -3.252955,10.4094525 3.122838,9.758862 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 7.9372074,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="105.37" y="194.52" font-size="12" text-anchor="middle">T105 Expiry</text>
+<g transform="translate(40 300) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="100" y="349.11" font-size="12" text-anchor="middle">Interrupted?</text>
+<g transform="translate(40 440) scale(1 1.5) translate(0 0)" style="stroke-width:0.67"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="18,0 120,0 120,60 18,60 0,30.0" />
+  </g>
+</g>
+<text x="97.06" y="465.91" font-size="12" text-anchor="middle">PH-SIEZE Confirm</text>
+<g transform="translate(40 1140) scale(1.02 0.78) translate(-1 -1)" style="stroke-width:0.98"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="100" y="1171.45" font-size="12" text-anchor="middle">2 Transmitting</text>
+<g transform="translate(240 160) scale(1 1.5) translate(0 0)" style="stroke-width:0.67"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="0,0 120,0 120,60 0,60 18,30.0" />
+  </g>
+</g>
+<text x="300" y="191.86" font-size="12" text-anchor="middle">All Other</text>
+<text x="300" y="206.93" font-size="12" text-anchor="middle">Primitives</text>
+<g transform="translate(240 300) scale(3.32 4.46) translate(-29.09 -2.47)" style="stroke-width:0.22"><g>
+    <g transform="matrix(-1,0,0,1,73.847429,-6.7661445)">
+      <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 8.5877986,9.2383895 H 41.767929 l 2.992717,10.2142755 -3.122834,9.954039 H 8.5877986 Z" />
+    </g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 60.640436,2.5373039 V 22.575502" />
+  </g>
+</g>
+<text x="305.91" y="334.52" font-size="12" text-anchor="middle">Add to Normal Queue</text>
+<g transform="translate(240 1140) scale(1.02 0.78) translate(-1 -1)" style="stroke-width:0.98"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" rx="30.0" ry="30.0" />
+  </g>
+</g>
+<text x="300" y="1171.45" font-size="12" text-anchor="middle">1 Transmitter</text>
+<text x="300" y="1186.53" font-size="12" text-anchor="middle">Start</text>
+</svg>

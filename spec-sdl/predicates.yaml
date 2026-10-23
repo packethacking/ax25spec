@@ -202,3 +202,9 @@ segmenter_reassembler:
   - name: next_segment                # figc6.3, figc6.4 "Next Segment?"
   - name: remaining_segments_eq_N     # figc6.3, figc6.4 "Remaining Segments == N?"
   - name: N_eq_0                      # figc6.3, figc6.4 "N == 0?"
+
+# Physical layer (Annex C2a Simplex and C2b Duplex). interrupted is drawn
+# on figc2b.4 ("Interrup-ted?"); duplex sets it on T107 expiry and clears
+# it on PH-RELEASE Request (figc2b.5).
+physical:
+  - name: interrupted                # figc2b.4 "Interrup-ted?"

@@ -1,0 +1,21 @@
+%% This file was produced by codegen/src/Packet.Sdl.CodeGen from spec-sdl/v2.2-errata/duplex-physical/yaml/transmitter_start.sdl.yaml
+%% Do not edit by hand. Run `dotnet run --project codegen/src/Packet.Sdl.CodeGen` to regenerate.
+%%
+%% Source: ax.25.2.2.4_Oct_25, figure figc2b.4
+%% Coverage: complete
+%%
+%% Important: this rendering is approximate and intentionally
+%% looks nothing like the original SDL figure. It is a machine-
+%% generated view of the transitions in the .sdl.yaml, useful
+%% for spotting transcription bugs (missing transitions, wrong
+%% destination state) but NOT a substitute for reading the spec
+%% figure itself. See docs/sdl-primer.md.
+
+stateDiagram-v2
+    direction LR
+
+    classDef focal fill:#fff5b1,stroke:#b08800;
+    class TransmitterStart focal
+    TransmitterStart --> Transmitting: t01_t105_expiry_yes<br/>on: T105_expiry<br/>[interrupted]
+    TransmitterStart --> Transmitting: t01_t105_expiry_no<br/>on: T105_expiry<br/>[not interrupted]<br/>/ ↑ PH-SIEZE Confirm
+    TransmitterStart --> TransmitterStart: t02_all_other_primitives__from_upper_layer<br/>on: all_other_primitives__from_upper_layer<br/>/ ⇢ Add to Normal Queue
