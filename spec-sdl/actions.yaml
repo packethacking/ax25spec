@@ -101,6 +101,13 @@ signal_upper:
   # The figures draw these in display form ("DL-CONNECT Indication"); the
   # aliases canonicalise every figc spelling onto the snake_case name the
   # dispatcher cases on, so the generated tables only ever carry the canonical.
+  # Physical layer to Link Multiplexer (figc2a.x, figc2b.x). The figures
+  # spell SIEZE (#61), and C2a.4 draws an underscore for the dash; without
+  # one canonical name the two spellings collide as action-verb identifiers.
+  - name: PH_SEIZE_confirm
+    aliases:
+      - "PH-SIEZE Confirm"   # figc2b.4, figc2b.5, figc2a.5
+      - "PH_SIEZE Confirm"   # figc2a.4
   - name: DL_CONNECT_indication
     aliases:
       - "DL-CONNECT Indication"
@@ -167,6 +174,26 @@ signal_upper:
       - "MDL-ERROR Indication (E)"     # figc5.2
 
 processing:
+  # Bracketed actions on the Simplex Physical pages, beside unbracketed
+  # spellings of the same words elsewhere on C2a. What brackets mean is open
+  # (#69, item 5), so a bracketed form keeps its own name; the two would
+  # otherwise collide as action-verb identifiers.
+  - name: Set_Digipeating_bracketed
+    aliases:
+      - "(Set Digipeating)"   # figc2a.5
+  - name: Start_T100_bracketed
+    aliases:
+      - "(Start T100)"        # figc2a.6, beside the unbracketed "Start T100" of figc2a.3 and figc2a.4
+  # figc2a.s (Simplex Physical Subroutines) draws "Set Repeater Up." with a
+  # full stop; the same action as "Set Repeater Up" elsewhere on C2a.
+  - name: Set Repeater Up
+    aliases:
+      - "Set Repeater Up."
+  # figc2a.s also draws "Stop All Timers." with a full stop; C2b.1 draws
+  # "Stop All Timers".
+  - name: Stop All Timers
+    aliases:
+      - "Stop All Timers."
   # Queue-clearing verbs — three figure spellings, one semantic
   # operation (clear ctx.IFrameQueue). All three remain canonical
   # because they're drawn distinctly in different figures; the

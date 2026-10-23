@@ -1,0 +1,26 @@
+%% This file was produced by codegen/src/Packet.Sdl.CodeGen from spec-sdl/v2.2-errata/simplex-physical/yaml/ready.sdl.yaml
+%% Do not edit by hand. Run `dotnet run --project codegen/src/Packet.Sdl.CodeGen` to regenerate.
+%%
+%% Source: ax.25.2.2.4_Oct_25, figure figc2a.1
+%% Coverage: complete
+%%
+%% Important: this rendering is approximate and intentionally
+%% looks nothing like the original SDL figure. It is a machine-
+%% generated view of the transitions in the .sdl.yaml — useful
+%% for spotting transcription bugs (missing transitions, wrong
+%% destination state) but NOT a substitute for reading the spec
+%% figure itself. See docs/sdl-primer.md.
+
+stateDiagram-v2
+    direction LR
+
+    classDef focal fill:#fff5b1,stroke:#b08800;
+    class Ready focal
+    Ready --> TransmitterStart: t01_ph_expedited_data_request<br/>on: PH_EXPEDITED_DATA_request<br/>/ ⇢ Add to Priority Queue<br/>/ · Set Digipeating<br/>/ →() Start Transmitter
+    Ready --> TransmitterStart: t02_ph_seize_request<br/>on: PH_SEIZE_request<br/>/ · Clear Digipeating<br/>/ →() Start Transmitter
+    Ready --> Ready: t03_ph_release_request<br/>on: PH_RELEASE_request
+    Ready --> Ready: t04_ph_data_request<br/>on: PH_DATA_request<br/>/ · Discard: Erroneous Primitive
+    Ready --> Ready: t05_all_other_primitives__from_upper_layer<br/>on: all_other_primitives__from_upper_layer<br/>/ ⇢ Add to Normal Queue
+    Ready --> Ready: t06_t102_expiry<br/>on: T102_expiry<br/>/ · Clear Repeater Up
+    Ready --> Receiving: t07_hw_aos_indication<br/>on: HW_AOS_indication<br/>/ →() Acuisition
+    Ready --> Ready: t08_all_other_primitives__from_lower_layer<br/>on: all_other_primitives__from_lower_layer<br/>/ · Discard: Erroneous Primitive

@@ -1,0 +1,98 @@
+# Auto-generated from SimplexPhy_TransmitterStart.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: simplex_phy
+state: TransmitterStart
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc2a.4
+
+decisions:
+  - id: t103_expiry_repeater_up
+    question: "Repeater Up?"
+    predicate: repeater_up
+  - id: t105_expiry_digipeating
+    question: "Digipeating?"
+    predicate: digipeating
+  - id: t105_expiry_interrupted
+    question: "Interrupted?"
+    predicate: interrupted
+
+transitions:
+
+  - id: t01_ph_expedited_data_request
+    on: PH_EXPEDITED_DATA_request
+    on_label: PH-EXPEDITED-DATA Request
+    path:
+      - { action: Add Frame to Priority Queue, kind: internal_out }
+    next: TransmitterStart
+
+  - id: t02_all_other_primitives__from_upper_layer
+    on: all_other_primitives__from_upper_layer
+    on_label: All Other Primitives
+    path:
+      - { action: Add to Normal Queue, kind: internal_out }
+    next: TransmitterStart
+
+  - id: t03_t100_expiry
+    on: T100_expiry
+    on_label: T100 Expiry
+    path:
+      - { action: Clear Repeater Up, kind: processing }
+    next: TransmitterStart
+
+  - id: t04_t103_expiry_yes
+    on: T103_expiry
+    on_label: T103 Expiry
+    path:
+      - { decision: t103_expiry_repeater_up, branch: Yes }
+      - { action: Start T105, kind: processing }
+    next: TransmitterStart
+
+  - id: t04_t103_expiry_no
+    on: T103_expiry
+    on_label: T103 Expiry
+    path:
+      - { decision: t103_expiry_repeater_up, branch: No }
+      - { action: Start T104, kind: processing }
+    next: TransmitterStart
+
+  - id: t05_t104_expiry
+    on: T104_expiry
+    on_label: T104 Expiry
+    path:
+      - { action: Set Repeater Up, kind: processing }
+      - { action: Start T105, kind: processing }
+    next: TransmitterStart
+
+  - id: t06_t105_expiry_yes
+    on: T105_expiry
+    on_label: T105 Expiry
+    path:
+      - { action: Start T106, kind: processing }
+      - { decision: t105_expiry_digipeating, branch: Yes }
+      - { action: Resume Processing Priority Queue, kind: processing }
+    next: Digipeating
+
+  - id: t06_t105_expiry_no_yes
+    on: T105_expiry
+    on_label: T105 Expiry
+    path:
+      - { action: Start T106, kind: processing }
+      - { decision: t105_expiry_digipeating, branch: No }
+      - { action: Start T107, kind: processing }
+      - { decision: t105_expiry_interrupted, branch: Yes }
+      - { action: Resume Processing Normal Queue, kind: processing }
+    next: Transmitting
+
+  - id: t06_t105_expiry_no_no
+    on: T105_expiry
+    on_label: T105 Expiry
+    path:
+      - { action: Start T106, kind: processing }
+      - { decision: t105_expiry_digipeating, branch: No }
+      - { action: Start T107, kind: processing }
+      - { decision: t105_expiry_interrupted, branch: No }
+      - { action: PH_SIEZE Confirm, kind: signal_upper }
+      - { action: Resume Processing Normal Queue, kind: processing }
+    next: Transmitting

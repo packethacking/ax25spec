@@ -16,7 +16,7 @@ stateDiagram-v2
 
     classDef focal fill:#fff5b1,stroke:#b08800;
     class Transmitting focal
-    Transmitting --> Transmitting: t01_ph_seize_request<br/>on: PH_SEIZE_request<br/>/ ↑ PH-SIEZE Confirm
+    Transmitting --> Transmitting: t01_ph_seize_request<br/>on: PH_SEIZE_request<br/>/ ↑ PH_SEIZE_confirm
     Transmitting --> TransmitterReady: t02_ph_release_request<br/>on: PH_RELEASE_request<br/>/ · Clear Interrupted<br/>/ · Stop T107<br/>/ ↓ HW-TOFF Request
     Transmitting --> TransmitterReady: t03_t107_expiry<br/>on: T107_expiry<br/>/ · Set Interrupted<br/>/ ↓ HW-TOFF Request
     Transmitting --> Transmitting: t04_ph_data_request<br/>on: PH_DATA_request<br/>/ ↓ HW-DATA Request

@@ -17,5 +17,5 @@ stateDiagram-v2
     classDef focal fill:#fff5b1,stroke:#b08800;
     class TransmitterStart focal
     TransmitterStart --> Transmitting: t01_t105_expiry_yes<br/>on: T105_expiry<br/>[interrupted]
-    TransmitterStart --> Transmitting: t01_t105_expiry_no<br/>on: T105_expiry<br/>[not interrupted]<br/>/ ↑ PH-SIEZE Confirm
+    TransmitterStart --> Transmitting: t01_t105_expiry_no<br/>on: T105_expiry<br/>[not interrupted]<br/>/ ↑ PH_SEIZE_confirm
     TransmitterStart --> TransmitterStart: t02_all_other_primitives__from_upper_layer<br/>on: all_other_primitives__from_upper_layer<br/>/ ⇢ Add to Normal Queue
