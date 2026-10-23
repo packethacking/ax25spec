@@ -194,8 +194,13 @@ def content_bounds(svg_root):
 # ── graphml model ────────────────────────────────────────────────────────
 
 
+# Share of a parallelogram ShapeNode's width taken by its slant (the Save
+# symbol). yEd's own rendering of the palette node is close to this.
+PARALLELOGRAM_SLANT = 0.15
+
+
 class Node:
-    __slots__ = ("id", "x", "y", "w", "h", "refid", "labels")
+    __slots__ = ("id", "x", "y", "w", "h", "refid", "labels", "shape")
 
 
 class Edge:
@@ -213,12 +218,20 @@ def load(path):
     graph = root.find(f"{G}graph")
     nodes, edges = {}, []
     for n in graph.findall(f"{G}node"):
+        # Most palette shapes are SVGNodes drawn from an embedded resource.
+        # The Save symbol is a yEd ShapeNode (a built-in parallelogram), with
+        # no resource: draw it from its <y:Shape type=...>.
         svgnode = n.find(f".//{Y}SVGNode")
-        if svgnode is None:
+        shapenode = n.find(f".//{Y}ShapeNode") if svgnode is None else None
+        if svgnode is None and shapenode is None:
             continue
+        if svgnode is None:
+            svgnode = shapenode
         geo = svgnode.find(f"{Y}Geometry")
         node = Node()
         node.id = n.get("id")
+        shape = svgnode.find(f"{Y}Shape")
+        node.shape = shape.get("type") if shape is not None else None
         node.x, node.y = float(geo.get("x")), float(geo.get("y"))
         node.w, node.h = float(geo.get("width")), float(geo.get("height"))
         content = svgnode.find(f"{Y}SVGModel/{Y}SVGContent")
@@ -351,11 +364,25 @@ def _shape_ring(el, m):
     return [apply_matrix(m, px, py) for px, py in ring] if len(ring) >= 3 else None
 
 
+def shape_ring(node):
+    """Outline of a yEd ShapeNode with a built-in shape, or None for a box."""
+    if node.shape == "parallelogram":
+        # yEd slants its parallelogram by a fixed share of the width.
+        k = min(node.w * PARALLELOGRAM_SLANT, node.h)
+        x, y, w, h = node.x, node.y, node.w, node.h
+        return [(x + k, y), (x + w, y), (x + w - k, y + h), (x, y + h)]
+    return None
+
+
 def node_ring(node, resources, cache={}):
     """The node's outline in diagram coordinates, or None to fall back to its box."""
-    key = (node.refid, node.x, node.y, node.w, node.h)
+    key = (node.refid, node.shape, node.x, node.y, node.w, node.h)
     if key in cache:
         return cache[key]
+    if node.refid is None and node.shape:
+        ring = shape_ring(node)
+        cache[key] = ring
+        return ring
     res = resources.get(node.refid)
     ring = None
     if res:
@@ -626,6 +653,9 @@ def render(nodes, edges, resources, crop=None, pad=0.0, restrict=None):
             for child in group:
                 g.append(child)
             out.append(ET.tostring(g, encoding="unicode"))
+        elif shape_ring(n):
+            pts = " ".join(f"{fnum(px)},{fnum(py)}" for px, py in shape_ring(n))
+            out.append(f'<polygon points="{pts}" fill="#FFFFFF" stroke="#000000"/>')
         else:
             out.append(
                 f'<rect x="{fnum(n.x)}" y="{fnum(n.y)}" width="{fnum(n.w)}" '
