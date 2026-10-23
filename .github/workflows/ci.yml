@@ -79,6 +79,19 @@ jobs:
             exit 1
           fi
 
+  # ─── Provenance: every graphml says truthfully how it was made. Only
+  #     files listed in tools/provenance/yed-drawn.txt may carry yEd's
+  #     "Created by yEd" comment; an agent-generated graphml carries a
+  #     dated agent marker instead (agents copy yEd's comment along with
+  #     the palette nodes, which would claim a provenance they don't have).
+  provenance:
+    name: provenance, graphml says how it was made
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: check graphml provenance
+        run: python3 tools/provenance/check_graphml_provenance.py .
+
   # ─── Schema: every committed *.sdl.yaml validates against
   #     spec-sdl/schema/ (sdl-machine for state pages, sdl-subroutines for
   #     subroutines pages).
