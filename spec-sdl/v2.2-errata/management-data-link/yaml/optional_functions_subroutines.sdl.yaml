@@ -1,0 +1,160 @@
+# Auto-generated from ManagementDataLink_OptionalFunctionsSubroutines.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: management_data_link
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc5.4
+
+subroutines:
+
+  - name: Initiate_OF_Negotiation
+    decisions:
+      - id: initiate_of_negotiation_of_negotiation_requested
+        question: "OF Negotiation Requested?"
+        predicate: OF_negotiation_requested
+    paths:
+      - id: t01_initiate_of_negotiation_yes
+        path:
+          - { decision: initiate_of_negotiation_of_negotiation_requested, branch: Yes }
+          - { action: Select Required Functions, kind: processing }
+          - { action: Add Receive OF Parameter field to XID Command, kind: processing }
+      - id: t02_initiate_of_negotiation_no
+        path:
+          - { decision: initiate_of_negotiation_of_negotiation_requested, branch: No }
+
+  - name: OF_Negotiation_Response
+    decisions:
+      - id: of_negotiation_response_of_parameter_field_present
+        question: "OF Parameter Field Present?"
+        predicate: OF_parameter_field_present
+      - id: of_negotiation_response_modulo_128_acceptable
+        question: "Modulo 128 Acceptable ?"
+        predicate: modulo_128_acceptable
+      - id: of_negotiation_response_srej_or_rej_acceptable
+        question: "SREJ/REJ Acceptable ?"
+        predicate: SREJ_or_REJ_acceptable
+      - id: of_negotiation_response_srej_acceptable
+        question: "SREJ Acceptable ?"
+        predicate: SREJ_acceptable
+    paths:
+      - id: t01_of_negotiation_response_yes_yes_yes
+        path:
+          - { decision: of_negotiation_response_of_parameter_field_present, branch: Yes }
+          - { decision: of_negotiation_response_modulo_128_acceptable, branch: Yes }
+          - { action: Set Extended, kind: processing }
+          - { decision: of_negotiation_response_srej_or_rej_acceptable, branch: Yes }
+          - { action: Set Selective Reject/Reject, kind: processing }
+          - { action: Add Receive OF Parameter field to XID Response, kind: processing }
+      - id: t02_of_negotiation_response_yes_yes_no_yes
+        path:
+          - { decision: of_negotiation_response_of_parameter_field_present, branch: Yes }
+          - { decision: of_negotiation_response_modulo_128_acceptable, branch: Yes }
+          - { action: Set Extended, kind: processing }
+          - { decision: of_negotiation_response_srej_or_rej_acceptable, branch: No }
+          - { decision: of_negotiation_response_srej_acceptable, branch: Yes }
+          - { action: Set Selective Reject, kind: processing }
+          - { action: Add Receive OF Parameter field to XID Response, kind: processing }
+      - id: t03_of_negotiation_response_yes_yes_no_no
+        path:
+          - { decision: of_negotiation_response_of_parameter_field_present, branch: Yes }
+          - { decision: of_negotiation_response_modulo_128_acceptable, branch: Yes }
+          - { action: Set Extended, kind: processing }
+          - { decision: of_negotiation_response_srej_or_rej_acceptable, branch: No }
+          - { decision: of_negotiation_response_srej_acceptable, branch: No }
+          - { action: Set Implicit Reject, kind: processing }
+          - { action: Add Receive OF Parameter field to XID Response, kind: processing }
+      - id: t04_of_negotiation_response_yes_no_yes
+        path:
+          - { decision: of_negotiation_response_of_parameter_field_present, branch: Yes }
+          - { decision: of_negotiation_response_modulo_128_acceptable, branch: No }
+          - { action: Set Normal, kind: processing }
+          - { decision: of_negotiation_response_srej_or_rej_acceptable, branch: Yes }
+          - { action: Set Selective Reject/Reject, kind: processing }
+          - { action: Add Receive OF Parameter field to XID Response, kind: processing }
+      - id: t05_of_negotiation_response_yes_no_no_yes
+        path:
+          - { decision: of_negotiation_response_of_parameter_field_present, branch: Yes }
+          - { decision: of_negotiation_response_modulo_128_acceptable, branch: No }
+          - { action: Set Normal, kind: processing }
+          - { decision: of_negotiation_response_srej_or_rej_acceptable, branch: No }
+          - { decision: of_negotiation_response_srej_acceptable, branch: Yes }
+          - { action: Set Selective Reject, kind: processing }
+          - { action: Add Receive OF Parameter field to XID Response, kind: processing }
+      - id: t06_of_negotiation_response_yes_no_no_no
+        path:
+          - { decision: of_negotiation_response_of_parameter_field_present, branch: Yes }
+          - { decision: of_negotiation_response_modulo_128_acceptable, branch: No }
+          - { action: Set Normal, kind: processing }
+          - { decision: of_negotiation_response_srej_or_rej_acceptable, branch: No }
+          - { decision: of_negotiation_response_srej_acceptable, branch: No }
+          - { action: Set Implicit Reject, kind: processing }
+          - { action: Add Receive OF Parameter field to XID Response, kind: processing }
+      - id: t07_of_negotiation_response_no
+        path:
+          - { decision: of_negotiation_response_of_parameter_field_present, branch: No }
+
+  - name: Complete_OF_Negotiation
+    decisions:
+      - id: complete_of_negotiation_of_parameter_field_present
+        question: "OF Parameter Field Present?"
+        predicate: OF_parameter_field_present
+      - id: complete_of_negotiation_modulo_128_acceptable
+        question: "Modulo 128 Acceptable ?"
+        predicate: modulo_128_acceptable
+      - id: complete_of_negotiation_srej_or_rej_acceptable
+        question: "SREJ/REJ Acceptable ?"
+        predicate: SREJ_or_REJ_acceptable
+      - id: complete_of_negotiation_srej_acceptable
+        question: "SREJ Acceptable ?"
+        predicate: SREJ_acceptable
+    paths:
+      - id: t01_complete_of_negotiation_yes_yes_yes
+        path:
+          - { decision: complete_of_negotiation_of_parameter_field_present, branch: Yes }
+          - { decision: complete_of_negotiation_modulo_128_acceptable, branch: Yes }
+          - { action: Set Extended, kind: processing }
+          - { decision: complete_of_negotiation_srej_or_rej_acceptable, branch: Yes }
+          - { action: Set Selective Reject/Reject, kind: processing }
+      - id: t02_complete_of_negotiation_yes_yes_no_yes
+        path:
+          - { decision: complete_of_negotiation_of_parameter_field_present, branch: Yes }
+          - { decision: complete_of_negotiation_modulo_128_acceptable, branch: Yes }
+          - { action: Set Extended, kind: processing }
+          - { decision: complete_of_negotiation_srej_or_rej_acceptable, branch: No }
+          - { decision: complete_of_negotiation_srej_acceptable, branch: Yes }
+          - { action: Set Selective Reject, kind: processing }
+      - id: t03_complete_of_negotiation_yes_yes_no_no
+        path:
+          - { decision: complete_of_negotiation_of_parameter_field_present, branch: Yes }
+          - { decision: complete_of_negotiation_modulo_128_acceptable, branch: Yes }
+          - { action: Set Extended, kind: processing }
+          - { decision: complete_of_negotiation_srej_or_rej_acceptable, branch: No }
+          - { decision: complete_of_negotiation_srej_acceptable, branch: No }
+          - { action: Set Implicit Reject, kind: processing }
+      - id: t04_complete_of_negotiation_yes_no_yes
+        path:
+          - { decision: complete_of_negotiation_of_parameter_field_present, branch: Yes }
+          - { decision: complete_of_negotiation_modulo_128_acceptable, branch: No }
+          - { action: Set Normal, kind: processing }
+          - { decision: complete_of_negotiation_srej_or_rej_acceptable, branch: Yes }
+          - { action: Set Selective Reject/Reject, kind: processing }
+      - id: t05_complete_of_negotiation_yes_no_no_yes
+        path:
+          - { decision: complete_of_negotiation_of_parameter_field_present, branch: Yes }
+          - { decision: complete_of_negotiation_modulo_128_acceptable, branch: No }
+          - { action: Set Normal, kind: processing }
+          - { decision: complete_of_negotiation_srej_or_rej_acceptable, branch: No }
+          - { decision: complete_of_negotiation_srej_acceptable, branch: Yes }
+          - { action: Set Selective Reject, kind: processing }
+      - id: t06_complete_of_negotiation_yes_no_no_no
+        path:
+          - { decision: complete_of_negotiation_of_parameter_field_present, branch: Yes }
+          - { decision: complete_of_negotiation_modulo_128_acceptable, branch: No }
+          - { action: Set Normal, kind: processing }
+          - { decision: complete_of_negotiation_srej_or_rej_acceptable, branch: No }
+          - { decision: complete_of_negotiation_srej_acceptable, branch: No }
+          - { action: Set Implicit Reject, kind: processing }
+      - id: t07_complete_of_negotiation_no
+        path:
+          - { decision: complete_of_negotiation_of_parameter_field_present, branch: No }

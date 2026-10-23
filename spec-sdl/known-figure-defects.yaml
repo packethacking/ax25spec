@@ -8,8 +8,12 @@
 # whose defect no longer occurs fails CI, so this list can't go stale: when
 # a figure is fixed, remove its entry in the same PR.
 #
-# Keys: machine and state of the page, the generated transition id, the
-# next: value the figure draws, and the issue that records it.
+# Two kinds. unknown_next_state (the default): machine and state of the
+# page, the generated transition id, the next: value the figure draws, and
+# the issue; its machine is withheld from generation. missing_catchall:
+# machine, state and issue only, for a state whose figure draws no
+# catch-all input; the machine still generates, with partial coverage. It
+# is the only kind a published machine may carry.
 
 defects:
   - machine: link_mux
@@ -18,3 +22,15 @@ defects:
     next: Sized
     issue: https://github.com/packethacking/ax25spec/issues/121
     note: Figure C3.2's PH-SIEZE Confirm column ends in "2 Sized"; the state is 2 Seized.
+
+  - kind: missing_catchall
+    machine: management_data_link
+    state: Ready
+    issue: https://github.com/packethacking/ax25spec/issues/133
+    note: Figure C5.1 draws no "All Other Primitives" column.
+
+  - kind: missing_catchall
+    machine: management_data_link
+    state: Negotiating
+    issue: https://github.com/packethacking/ax25spec/issues/133
+    note: Figure C5.2 draws no "All Other Primitives" column.

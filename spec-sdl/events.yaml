@@ -35,16 +35,12 @@ frames_received:
   - FRMR_received
   - XID_received
   # Management-Data-Link negotiation distinguishes the XID *command*
-  # (sent by the initiator) from the XID *response* (returned by a
-  # v2.2+ peer) — §4.3.3.7 and §6.3.2 draw them as distinct frames, and
-  # Appendix C5.3's Negotiating state reacts only to the response.
+  # from the XID *response* (figc5.1 and figc5.2 draw both as inputs).
   # `XID_received` above is the undifferentiated data-link spelling
-  # (not yet used by any data-link page); `XID_response_received` is the
-  # MDL-specific input. A future `XID_command_received` event will be
-  # needed once the figc5.x XID-command-reception (collision / error-A)
-  # paths are transcribed — deliberately omitted now (prose-bootstrap
-  # encodes no such transition; see management-data-link backfill).
-  - XID_response_received
+  # (not yet used by any data-link page).
+  - XID_command_received        # figc5.1, figc5.2 "XID Command"
+  - XID_response_received       # figc5.1, figc5.2 "XID Response"
+  - FRMR_response_received      # figc5.2 "FRMR Response"
   - TEST_received
   # Composite event: figc4.3 (AwaitingRelease) groups all info/supervisory
   # command frames into a single SDL input column labelled
