@@ -8,12 +8,15 @@
 # whose defect no longer occurs fails CI, so this list can't go stale: when
 # a figure is fixed, remove its entry in the same PR.
 #
-# Two kinds. unknown_next_state (the default): machine and state of the
+# Three kinds. unknown_next_state (the default): machine and state of the
 # page, the generated transition id, the next: value the figure draws, and
 # the issue; its machine is withheld from generation. missing_catchall:
 # machine, state and issue only, for a state whose figure draws no
-# catch-all input; the machine still generates, with partial coverage. It
-# is the only kind a published machine may carry.
+# catch-all input; the machine still generates, with partial coverage.
+# unknown_subroutine: machine, the call exactly as drawn, and the issue,
+# for a subroutine call naming no subroutine of its machine. The last two
+# change nothing generated, so they are the only kinds a published machine
+# may carry.
 
 defects:
   - machine: link_mux
@@ -34,3 +37,81 @@ defects:
     state: Negotiating
     issue: https://github.com/packethacking/ax25spec/issues/133
     note: Figure C5.2 draws no "All Other Primitives" column.
+
+  # Data Link calls drawn under names Figure C4.7 doesn't use (N(r) Error
+  # Recovery, Select T1, Transmit Enquiry).
+  - kind: unknown_subroutine
+    machine: data_link
+    call: "N(r) Recovery"
+    issue: https://github.com/packethacking/ax25spec/issues/144
+  - kind: unknown_subroutine
+    machine: data_link
+    call: "Select T1 Value"
+    issue: https://github.com/packethacking/ax25spec/issues/144
+  - kind: unknown_subroutine
+    machine: data_link
+    call: "Transmit Enquery"
+    issue: https://github.com/packethacking/ax25spec/issues/144
+
+  # Management Data Link calls on C5.1 and C5.2 whose names don't match
+  # the C5.3 to C5.7 subroutine pages (COP, OF, Notification).
+  - kind: unknown_subroutine
+    machine: management_data_link
+    call: "Initiate Classes of Procedures Negotiation"
+    issue: https://github.com/packethacking/ax25spec/issues/131
+  - kind: unknown_subroutine
+    machine: management_data_link
+    call: "Initiate Optional Functions Negotiation"
+    issue: https://github.com/packethacking/ax25spec/issues/131
+  - kind: unknown_subroutine
+    machine: management_data_link
+    call: "Initiate N1 Negotiation"
+    issue: https://github.com/packethacking/ax25spec/issues/131
+  - kind: unknown_subroutine
+    machine: management_data_link
+    call: "Initiate Window Negotiation"
+    issue: https://github.com/packethacking/ax25spec/issues/131
+  - kind: unknown_subroutine
+    machine: management_data_link
+    call: "Initiate Retry Negotiation"
+    issue: https://github.com/packethacking/ax25spec/issues/131
+  - kind: unknown_subroutine
+    machine: management_data_link
+    call: "Classes of Procedures Negotiation Response"
+    issue: https://github.com/packethacking/ax25spec/issues/131
+  - kind: unknown_subroutine
+    machine: management_data_link
+    call: "Optional Functions Negotiation Response"
+    issue: https://github.com/packethacking/ax25spec/issues/131
+  - kind: unknown_subroutine
+    machine: management_data_link
+    call: "N1 Negotiation Response"
+    issue: https://github.com/packethacking/ax25spec/issues/131
+  - kind: unknown_subroutine
+    machine: management_data_link
+    call: "Window Negotiation Response"
+    issue: https://github.com/packethacking/ax25spec/issues/131
+  - kind: unknown_subroutine
+    machine: management_data_link
+    call: "Retry Negotiation Response"
+    issue: https://github.com/packethacking/ax25spec/issues/131
+  - kind: unknown_subroutine
+    machine: management_data_link
+    call: "Complete Classes of Procedures Negotiation"
+    issue: https://github.com/packethacking/ax25spec/issues/131
+  - kind: unknown_subroutine
+    machine: management_data_link
+    call: "Complete Optional Functions Negotiation"
+    issue: https://github.com/packethacking/ax25spec/issues/131
+  - kind: unknown_subroutine
+    machine: management_data_link
+    call: "Complete N1 Negotiation"
+    issue: https://github.com/packethacking/ax25spec/issues/131
+  - kind: unknown_subroutine
+    machine: management_data_link
+    call: "Complete Window Negotiation"
+    issue: https://github.com/packethacking/ax25spec/issues/131
+  - kind: unknown_subroutine
+    machine: management_data_link
+    call: "Complete Retry Negotiation"
+    issue: https://github.com/packethacking/ax25spec/issues/131
