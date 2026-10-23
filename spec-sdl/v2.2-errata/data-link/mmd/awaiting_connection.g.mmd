@@ -16,7 +16,6 @@ stateDiagram-v2
 
     classDef focal fill:#fff5b1,stroke:#b08800;
     class AwaitingConnection focal
-    AwaitingConnection --> AwaitingConnection: t01_dl_disconnect_request<br/>on: DL_DISCONNECT_request
     AwaitingConnection --> AwaitingConnection: t02_disc_received<br/>on: DISC_received<br/>/ · F := P<br/>/ ↓ DM
     AwaitingConnection --> Disconnected: t03_dm_received_yes<br/>on: DM_received<br/>[F_eq_1]<br/>/ · discard_frame_queue<br/>/ ↑ DL_DISCONNECT_indication<br/>/ · Stop T1
     AwaitingConnection --> AwaitingConnection: t03_dm_received_no<br/>on: DM_received<br/>[not F_eq_1]
