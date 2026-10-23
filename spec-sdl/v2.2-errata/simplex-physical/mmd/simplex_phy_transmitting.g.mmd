@@ -1,0 +1,27 @@
+%% This file was produced by codegen/src/Packet.Sdl.CodeGen from spec-sdl/v2.2-errata/simplex-physical/yaml/transmitting.sdl.yaml
+%% Do not edit by hand. Run `dotnet run --project codegen/src/Packet.Sdl.CodeGen` to regenerate.
+%%
+%% Source: ax.25.2.2.4_Oct_25, figure figc2a.5
+%% Coverage: complete
+%%
+%% Important: this rendering is approximate and intentionally
+%% looks nothing like the original SDL figure. It is a machine-
+%% generated view of the transitions in the .sdl.yaml, useful
+%% for spotting transcription bugs (missing transitions, wrong
+%% destination state) but NOT a substitute for reading the spec
+%% figure itself. See docs/sdl-primer.md.
+
+stateDiagram-v2
+    direction LR
+
+    classDef focal fill:#fff5b1,stroke:#b08800;
+    class Transmitting focal
+    Transmitting --> Transmitting: t01_ph_expedited_data_request<br/>on: PH_EXPEDITED_DATA_request<br/>/ ⇢ Add Frame to Priority Queue
+    Transmitting --> Transmitting: t02_ph_seize_request<br/>on: PH_SEIZE_request<br/>/ ↑ PH_SEIZE_confirm
+    Transmitting --> Transmitting: t03_ph_data_request<br/>on: PH_DATA_request<br/>/ ↓ HW-DATA Request
+    Transmitting --> Transmitting: t04_all_other_primitives__from_upper_layer<br/>on: all_other_primitives__from_upper_layer<br/>/ ⇢ Add to Normal Queue
+    Transmitting --> ReceiverStart: t05_t106_expiry<br/>on: T106_expiry<br/>/ · Stop T107<br/>/ · Set Interrupted<br/>/ · Suspend All Queue Processing<br/>/ ↓ Turn Off Transmitter<br/>/ · Start T106 (T108?)
+    Transmitting --> ReceiverStart: t06_t107_expiry_yes<br/>on: T107_expiry<br/>[priority_queue_empty]<br/>/ · Set Interrupted<br/>/ · Suspend All Queue Processing<br/>/ · Stop T106<br/>/ ↓ Turn Off Transmitter<br/>/ · Start T106 (T108?)
+    Transmitting --> Digipeating: t06_t107_expiry_no<br/>on: T107_expiry<br/>[not priority_queue_empty]<br/>/ · Set Interrupted<br/>/ · Suspend All Queue Processing<br/>/ · Resume Processing Priority Queue<br/>/ · Set_Digipeating_bracketed
+    Transmitting --> ReceiverStart: t07_ph_release_request_yes<br/>on: PH_RELEASE_request<br/>[priority_queue_empty]<br/>/ · Stop T107<br/>/ · Clear Interrupted<br/>/ · Suspend All Queue Processing<br/>/ · Stop T106<br/>/ ↓ Turn Off Transmitter<br/>/ · Start T106 (T108?)
+    Transmitting --> Digipeating: t07_ph_release_request_no<br/>on: PH_RELEASE_request<br/>[not priority_queue_empty]<br/>/ · Stop T107<br/>/ · Clear Interrupted<br/>/ · Suspend All Queue Processing<br/>/ · Resume Processing Priority Queue<br/>/ · Set_Digipeating_bracketed

@@ -1,0 +1,23 @@
+%% This file was produced by codegen/src/Packet.Sdl.CodeGen from spec-sdl/v2.2-errata/simplex-physical/yaml/receiving.sdl.yaml
+%% Do not edit by hand. Run `dotnet run --project codegen/src/Packet.Sdl.CodeGen` to regenerate.
+%%
+%% Source: ax.25.2.2.4_Oct_25, figure figc2a.2
+%% Coverage: complete
+%%
+%% Important: this rendering is approximate and intentionally
+%% looks nothing like the original SDL figure. It is a machine-
+%% generated view of the transitions in the .sdl.yaml, useful
+%% for spotting transcription bugs (missing transitions, wrong
+%% destination state) but NOT a substitute for reading the spec
+%% figure itself. See docs/sdl-primer.md.
+
+stateDiagram-v2
+    direction LR
+
+    classDef focal fill:#fff5b1,stroke:#b08800;
+    class Receiving focal
+    Receiving --> Receiving: t01_ph_expedited_data_request<br/>on: PH_EXPEDITED_DATA_request<br/>/ ⇢ Add Frame to Priority Queue
+    Receiving --> Receiving: t02_all_other_primitives__from_upper_layer<br/>on: all_other_primitives__from_upper_layer<br/>/ ⇢ Add to Normal Queue
+    Receiving --> Receiving: t03_hw_data_indication<br/>on: HW_DATA_indication<br/>/ ↑ PH-DATA Indication
+    Receiving --> TransmitterSuppression: t04_hw_los_indication_yes<br/>on: HW_LOS_indication<br/>[priority_queue_empty]<br/>/ · Start T100<br/>/ · Start T101<br/>/ ↑ PH-QUIET Indication
+    Receiving --> TransmitterStart: t04_hw_los_indication_no<br/>on: HW_LOS_indication<br/>[not priority_queue_empty]<br/>/ · Start T100<br/>/ · Start T101<br/>/ ↑ PH-QUIET Indication<br/>/ · Set Digipeating<br/>/ →() Start Transmitter

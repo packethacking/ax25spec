@@ -1,0 +1,58 @@
+# Auto-generated from SimplexPhy_Receiving.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: simplex_phy
+state: Receiving
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc2a.2
+
+decisions:
+  - id: hw_los_priority_queue_empty
+    question: "Priority Queue Empty?"
+    predicate: priority_queue_empty
+
+transitions:
+
+  - id: t01_ph_expedited_data_request
+    on: PH_EXPEDITED_DATA_request
+    on_label: PH-EXPEDITED-DATA Request
+    path:
+      - { action: Add Frame to Priority Queue, kind: internal_out }
+    next: Receiving
+
+  - id: t02_all_other_primitives__from_upper_layer
+    on: all_other_primitives__from_upper_layer
+    on_label: All Other Primitives
+    path:
+      - { action: Add to Normal Queue, kind: internal_out }
+    next: Receiving
+
+  - id: t03_hw_data_indication
+    on: HW_DATA_indication
+    on_label: HW-DATA Indication
+    path:
+      - { action: PH-DATA Indication, kind: signal_upper }
+    next: Receiving
+
+  - id: t04_hw_los_indication_yes
+    on: HW_LOS_indication
+    on_label: HW-LOS Indication
+    path:
+      - { action: Start T100, kind: processing }
+      - { action: Start T101, kind: processing }
+      - { action: PH-QUIET Indication, kind: signal_upper }
+      - { decision: hw_los_priority_queue_empty, branch: Yes }
+    next: TransmitterSuppression
+
+  - id: t04_hw_los_indication_no
+    on: HW_LOS_indication
+    on_label: HW-LOS Indication
+    path:
+      - { action: Start T100, kind: processing }
+      - { action: Start T101, kind: processing }
+      - { action: PH-QUIET Indication, kind: signal_upper }
+      - { decision: hw_los_priority_queue_empty, branch: No }
+      - { action: Set Digipeating, kind: processing }
+      - { action: Start Transmitter, kind: subroutine }
+    next: TransmitterStart

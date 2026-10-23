@@ -190,3 +190,11 @@ defects:
     state: Receiving
     issue: https://github.com/packethacking/ax25spec/issues/143
     note: C2b.2 draws only HW-DATA Indication and HW-LOS Indication.
+
+  # Figure C2a.1 (Simplex Physical Ready) calls "Acuisition"; the
+  # subroutines page (C2a.s) names it "Acquisition".
+  - kind: unknown_subroutine
+    machine: simplex_phy
+    page: Ready
+    call: "Acuisition"
+    issue: https://github.com/packethacking/ax25spec/issues/148

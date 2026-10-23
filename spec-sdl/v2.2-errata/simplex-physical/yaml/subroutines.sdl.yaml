@@ -1,0 +1,28 @@
+# Auto-generated from SimplexPhy_Subroutines.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: simplex_phy
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc2a.s
+
+subroutines:
+
+  - name: Start_Transmitter
+    paths:
+      - id: t01_start_transmitter
+        path:
+          - { action: Suspend Priority and Normal Queue Processing, kind: processing }
+          - { action: Stop All Timer Except T100., kind: processing }
+          - { action: Start T103., kind: processing }
+          - { action: PH-BUSY Indication, kind: signal_upper }
+          - { action: HW-TON Request, kind: signal_lower }
+
+  - name: Acquisition
+    paths:
+      - id: t01_acquisition
+        path:
+          - { action: Set Repeater Up., kind: processing }
+          - { action: Stop All Timers., kind: processing }
+          - { action: Suspend Priority and Normal Queue Processing, kind: processing }
+          - { action: PH-BUSY Indication, kind: signal_upper }
