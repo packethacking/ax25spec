@@ -13,8 +13,9 @@
 # the issue; its machine is withheld from generation. missing_catchall:
 # machine, state and issue only, for a state whose figure draws no
 # catch-all input; the machine still generates, with partial coverage.
-# unknown_subroutine: machine, the call exactly as drawn, and the issue,
-# for a subroutine call naming no subroutine of its machine. The last two
+# unknown_subroutine: machine, page (the Annex C page key), the call exactly
+# as drawn, and the issue, for a subroutine call naming no subroutine of its
+# machine; one entry per page that draws it. The last two
 # change nothing generated, so they are the only kinds a published machine
 # may carry.
 
@@ -39,79 +40,132 @@ defects:
     note: Figure C5.2 draws no "All Other Primitives" column.
 
   # Data Link calls drawn under names Figure C4.7 doesn't use (N(r) Error
-  # Recovery, Select T1, Transmit Enquiry).
+  # Recovery, Select T1, Transmit Enquiry, Check I Frame Acknowledged).
   - kind: unknown_subroutine
     machine: data_link
-    call: "N(r) Recovery"
-    issue: https://github.com/packethacking/ax25spec/issues/144
-  - kind: unknown_subroutine
-    machine: data_link
+    page: AwaitingConnection
     call: "Select T1 Value"
     issue: https://github.com/packethacking/ax25spec/issues/144
   - kind: unknown_subroutine
     machine: data_link
+    page: AwaitingRelease
+    call: "Select T1 Value"
+    issue: https://github.com/packethacking/ax25spec/issues/144
+  - kind: unknown_subroutine
+    machine: data_link
+    page: AwaitingV22Connection
+    call: "Select T1 Value"
+    issue: https://github.com/packethacking/ax25spec/issues/144
+  - kind: unknown_subroutine
+    machine: data_link
+    page: Connected
+    call: "Select T1 Value"
+    issue: https://github.com/packethacking/ax25spec/issues/144
+  - kind: unknown_subroutine
+    machine: data_link
+    page: Connected
     call: "Transmit Enquery"
+    issue: https://github.com/packethacking/ax25spec/issues/144
+  - kind: unknown_subroutine
+    machine: data_link
+    page: Connected
+    call: "Check I Frames Acknowledged"
+    issue: https://github.com/packethacking/ax25spec/issues/144
+  - kind: unknown_subroutine
+    machine: data_link
+    page: TimerRecovery
+    call: "Select T1 Value"
+    issue: https://github.com/packethacking/ax25spec/issues/144
+  - kind: unknown_subroutine
+    machine: data_link
+    page: TimerRecovery
+    call: "N(r) Recovery"
+    issue: https://github.com/packethacking/ax25spec/issues/144
+  - kind: unknown_subroutine
+    machine: data_link
+    page: TimerRecovery
+    call: "Check I Frames Acknowledged"
+    issue: https://github.com/packethacking/ax25spec/issues/144
+  - kind: unknown_subroutine
+    machine: data_link
+    page: Subroutines
+    call: "Select T1 Value"
     issue: https://github.com/packethacking/ax25spec/issues/144
 
   # Management Data Link calls on C5.1 and C5.2 whose names don't match
   # the C5.3 to C5.7 subroutine pages (COP, OF, Notification).
   - kind: unknown_subroutine
     machine: management_data_link
+    page: Ready
     call: "Initiate Classes of Procedures Negotiation"
     issue: https://github.com/packethacking/ax25spec/issues/131
   - kind: unknown_subroutine
     machine: management_data_link
+    page: Ready
     call: "Initiate Optional Functions Negotiation"
     issue: https://github.com/packethacking/ax25spec/issues/131
   - kind: unknown_subroutine
     machine: management_data_link
+    page: Ready
     call: "Initiate N1 Negotiation"
     issue: https://github.com/packethacking/ax25spec/issues/131
   - kind: unknown_subroutine
     machine: management_data_link
+    page: Ready
     call: "Initiate Window Negotiation"
     issue: https://github.com/packethacking/ax25spec/issues/131
   - kind: unknown_subroutine
     machine: management_data_link
+    page: Ready
     call: "Initiate Retry Negotiation"
     issue: https://github.com/packethacking/ax25spec/issues/131
   - kind: unknown_subroutine
     machine: management_data_link
+    page: Ready
     call: "Classes of Procedures Negotiation Response"
     issue: https://github.com/packethacking/ax25spec/issues/131
   - kind: unknown_subroutine
     machine: management_data_link
+    page: Ready
     call: "Optional Functions Negotiation Response"
     issue: https://github.com/packethacking/ax25spec/issues/131
   - kind: unknown_subroutine
     machine: management_data_link
+    page: Ready
     call: "N1 Negotiation Response"
     issue: https://github.com/packethacking/ax25spec/issues/131
   - kind: unknown_subroutine
     machine: management_data_link
+    page: Ready
     call: "Window Negotiation Response"
     issue: https://github.com/packethacking/ax25spec/issues/131
   - kind: unknown_subroutine
     machine: management_data_link
+    page: Ready
     call: "Retry Negotiation Response"
     issue: https://github.com/packethacking/ax25spec/issues/131
   - kind: unknown_subroutine
     machine: management_data_link
+    page: Negotiating
     call: "Complete Classes of Procedures Negotiation"
     issue: https://github.com/packethacking/ax25spec/issues/131
   - kind: unknown_subroutine
     machine: management_data_link
+    page: Negotiating
     call: "Complete Optional Functions Negotiation"
     issue: https://github.com/packethacking/ax25spec/issues/131
   - kind: unknown_subroutine
     machine: management_data_link
+    page: Negotiating
     call: "Complete N1 Negotiation"
     issue: https://github.com/packethacking/ax25spec/issues/131
   - kind: unknown_subroutine
     machine: management_data_link
+    page: Negotiating
     call: "Complete Window Negotiation"
     issue: https://github.com/packethacking/ax25spec/issues/131
   - kind: unknown_subroutine
     machine: management_data_link
+    page: Negotiating
     call: "Complete Retry Negotiation"
     issue: https://github.com/packethacking/ax25spec/issues/131
