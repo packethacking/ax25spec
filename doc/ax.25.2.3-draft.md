@@ -909,9 +909,11 @@ The status of the TNC at the other end of the link is requested by sending an RN
 The implicit reject frame requests retransmission of I frames starting with N(R). Any frames sent with a sequence number of N(R)-1 or less are acknowledged. Additional I frames which may exist may be appended to the retransmission of the N(R) frame.
 Only one reject frame condition is allowed in each direction at a time. The reject condition is cleared by the proper reception of I frames up to the I frame that caused the reject condition to be initiated. The status of the TNC at the other end of the link is requested by sending a REJ command frame with the P bit set to one.
 
-##### 4.3.2.4 Selective Reject (SREJ) (remove Command and) Response
+##### 4.3.2.4 Selective Reject (SREJ) Response
 
-The selective reject frame is used by the receiving TNC to request retransmission of the single I frame numbered N(R). If the P/F bit in the SREJ frame is set to “1”, then I frames numbered up to N(R)-1 inclusive are considered as acknowledged. However, if the P/F bit in the SREJ frame is set to “0”, then the N(R) of the SREJ frame does not indicate acknowledgement of I frames. Each SREJ exception condition is cleared (reset) upon receipt of the I frame with an N(S) equal to the N(R) of the SREJ frame. The SREJ frame is only sent as a response.
+The selective reject frame is used by the receiving TNC to request retransmission of the single I frame numbered N(R). If the P/F bit in the SREJ frame is set to “1”, then I frames numbered up to N(R)-1 inclusive are considered as acknowledged. However, if the P/F bit in the SREJ frame is set to “0”, then the N(R) of the SREJ frame does not indicate acknowledgement of I frames. Each SREJ exception condition is cleared (reset) upon receipt of the I frame with an N(S) equal to the N(R) of the SREJ frame.
+
+The SREJ frame is only sent as a response.
 
 A receiving TNC may transmit one or more SREJ frames, each containing a different N(R) with the P bit set to “0”, before one or more earlier SREJ exception conditions have been cleared. However, a SREJ is not transmitted if an earlier REJ exception condition has not been cleared as indicated in Section 4.5.4. (To do so would request retransmission of an I frame that would be retransmitted by the REJ operation). Likewise, a REJ frame is not transmitted if one or more SREJ exception conditions have not been cleared as indicated in Section 4.5.4.
 
