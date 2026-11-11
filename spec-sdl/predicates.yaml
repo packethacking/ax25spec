@@ -190,3 +190,15 @@ management_data_link:
   - name: T1_negotiation_requested    # figc5.8 "T1 Negotiation Requested?"
   - name: T1_parameter_field_present  # figc5.8 "T1 Parameter Field Present?"
   - name: transmit_T1_acceptable      # figc5.8 "Transmit T1 Acceptable ?"
+
+# Segmenter (figc6.1) and Reassembler (figc6.2 to figc6.4).
+segmenter_reassembler:
+  - name: longer_than_N1_octets       # figc6.1 "Longer than N1 Octets?"
+  - name: longer_than_N1_128          # figc6.1 "Longer than (N1* 128)?"
+  - name: all_segments_sent           # figc6.1 "All Segments Sent?"
+  - name: segment_header_present      # figc6.2 "Segment Header Present?"
+  - name: first_segment               # figc6.2 "First Segment?"
+  - name: segment_PID_present         # figc6.3, figc6.4 "Segment PID Present?"
+  - name: next_segment                # figc6.3, figc6.4 "Next Segment?"
+  - name: remaining_segments_eq_N     # figc6.3, figc6.4 "Remaining Segments == N?"
+  - name: N_eq_0                      # figc6.3, figc6.4 "N == 0?"

@@ -1,0 +1,25 @@
+%% This file was produced by codegen/src/Packet.Sdl.CodeGen from spec-sdl/v2.2-errata/reassembler/yaml/reassembling_unit_data.sdl.yaml
+%% Do not edit by hand. Run `dotnet run --project codegen/src/Packet.Sdl.CodeGen` to regenerate.
+%%
+%% Source: ax.25.2.2.4_Oct_25, figure figc6.4
+%% Coverage: complete
+%%
+%% Important: this rendering is approximate and intentionally
+%% looks nothing like the original SDL figure. It is a machine-
+%% generated view of the transitions in the .sdl.yaml, useful
+%% for spotting transcription bugs (missing transitions, wrong
+%% destination state) but NOT a substitute for reading the spec
+%% figure itself. See docs/sdl-primer.md.
+
+stateDiagram-v2
+    direction LR
+
+    classDef focal fill:#fff5b1,stroke:#b08800;
+    class ReassemblingUnitData focal
+    ReassemblingUnitData --> Ready: t01_tr210_expiry<br/>on: TR210_expiry<br/>/ · Discard All Accumulated Segments<br/>/ · Free all Allocated Buffers<br/>/ ↑ DL-ERROR Indication (Z)
+    ReassemblingUnitData --> Ready: t02_dl_unit_data_indication_yes_yes_yes_yes<br/>on: DL_UNIT_DATA_indication<br/>[segment_PID_present and next_segment and remaining_segments_eq_N and N_eq_0]<br/>/ · Stop TR210<br/>/ · Assemble Last Segment to Previous<br/>/ ↑ DL_UNIT_DATA_indication
+    ReassemblingUnitData --> ReassemblingUnitData: t02_dl_unit_data_indication_yes_yes_yes_no<br/>on: DL_UNIT_DATA_indication<br/>[segment_PID_present and next_segment and remaining_segments_eq_N and not N_eq_0]<br/>/ · Restart TR210<br/>/ · Assemble This Segment to Previous
+    ReassemblingUnitData --> Ready: t02_dl_unit_data_indication_yes_yes_no<br/>on: DL_UNIT_DATA_indication<br/>[segment_PID_present and next_segment and not remaining_segments_eq_N]<br/>/ · Discard All Accumulated Segments<br/>/ · Free all Allocated Buffers<br/>/ ↑ DL-ERROR Indication (Z)
+    ReassemblingUnitData --> Ready: t02_dl_unit_data_indication_yes_no<br/>on: DL_UNIT_DATA_indication<br/>[segment_PID_present and not next_segment]<br/>/ · Discard All Accumulated Segments<br/>/ · Free all Allocated Buffers<br/>/ ↑ DL-ERROR Indication (Z)
+    ReassemblingUnitData --> Ready: t02_dl_unit_data_indication_no<br/>on: DL_UNIT_DATA_indication<br/>[not segment_PID_present]<br/>/ · Discard All Accumulated Segments<br/>/ · Free all Allocated Buffers<br/>/ ↑ DL-ERROR Indication (Z)
+    ReassemblingUnitData --> ReassemblingUnitData: t03_all_other_dl_primitives__from_lower_layer<br/>on: all_other_dl_primitives__from_lower_layer<br/>/ ↑ Send Unmodified Primitive
