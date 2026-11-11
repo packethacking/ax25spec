@@ -167,7 +167,6 @@ transitions:
     on_label: DL-DATA Request
     path:
       - { decision: dl_data_layer_3_initiated, branch: Yes }
-      - { action: Push Frame on Queue, kind: internal_out }
     next: AwaitingConnection
 
   - id: t09_dl_data_request_no
@@ -175,6 +174,7 @@ transitions:
     on_label: DL-DATA Request
     path:
       - { decision: dl_data_layer_3_initiated, branch: No }
+      - { action: Push Frame on Queue, kind: internal_out }
     next: AwaitingConnection
 
   - id: t10_i_frame_pops_off_queue_yes
@@ -182,7 +182,6 @@ transitions:
     on_label: I Frame Pops Off I Frame Queue
     path:
       - { decision: i_frame_pops_off_queue_layer_3_initiated, branch: Yes }
-      - { action: Push Frame on Queue, kind: internal_out }
     next: AwaitingConnection
 
   - id: t10_i_frame_pops_off_queue_no
@@ -190,6 +189,7 @@ transitions:
     on_label: I Frame Pops Off I Frame Queue
     path:
       - { decision: i_frame_pops_off_queue_layer_3_initiated, branch: No }
+      - { action: Push Frame on Queue, kind: internal_out }
     next: AwaitingConnection
 
   - id: t11_all_other_primitives__from_upper_layer
