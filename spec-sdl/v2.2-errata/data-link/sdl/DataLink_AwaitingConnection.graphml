@@ -194,7 +194,7 @@
           <y:Geometry height="60.0" width="114.11591836734692" x="31.70766581632654" y="698.7733386479592"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="node_width" bottomInset="0" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.1875" horizontalTextPosition="center" iconTextGap="4" leftInset="10" modelName="internal" modelPosition="c" rightInset="0" textColor="#000000" topInset="0" verticalTextPosition="bottom" visible="true" width="114.11591836734692" x="0.0" xml:space="preserve" y="13.90625">DL-DISCONNECT indication</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" bottomInset="0" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.1875" horizontalTextPosition="center" iconTextGap="4" leftInset="10" modelName="internal" modelPosition="c" rightInset="0" textColor="#000000" topInset="0" verticalTextPosition="bottom" visible="true" width="114.11591836734692" x="0.0" xml:space="preserve" y="13.90625">DL-DISCONNECT Indication</y:NodeLabel>
           <y:SVGNodeProperties usingVisualBounds="true"/>
           <y:SVGModel svgBoundsPolicy="0">
             <y:SVGContent refid="7"/>
@@ -290,7 +290,7 @@
           <y:Geometry height="60.0" width="114.11591836734692" x="237.48793925382654" y="596.2733386479592"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="node_width" bottomInset="0" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.1875" horizontalTextPosition="center" iconTextGap="4" leftInset="10" modelName="internal" modelPosition="c" rightInset="0" textColor="#000000" topInset="0" verticalTextPosition="bottom" visible="true" width="114.11591836734692" x="0.0" xml:space="preserve" y="13.90625">DL-ERROR indication (D)</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" bottomInset="0" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.1875" horizontalTextPosition="center" iconTextGap="4" leftInset="10" modelName="internal" modelPosition="c" rightInset="0" textColor="#000000" topInset="0" verticalTextPosition="bottom" visible="true" width="114.11591836734692" x="0.0" xml:space="preserve" y="13.90625">DL-ERROR Indication (D)</y:NodeLabel>
           <y:SVGNodeProperties usingVisualBounds="true"/>
           <y:SVGModel svgBoundsPolicy="0">
             <y:SVGContent refid="7"/>
@@ -632,7 +632,7 @@ Start T1</y:NodeLabel>
           <y:Geometry height="71.89795918367349" width="120.0" x="1325.2599791666676" y="383.2229426020425"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="node_width" bottomInset="0" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.1875" horizontalTextPosition="center" iconTextGap="4" leftInset="20" modelName="internal" modelPosition="c" rightInset="0" textColor="#000000" topInset="0" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="19.855229591836746">DL-CONNECT request</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="node_width" bottomInset="0" configuration="CroppingLabel" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.1875" horizontalTextPosition="center" iconTextGap="4" leftInset="20" modelName="internal" modelPosition="c" rightInset="0" textColor="#000000" topInset="0" verticalTextPosition="bottom" visible="true" width="120.0" x="0.0" xml:space="preserve" y="19.855229591836746">DL-CONNECT Request</y:NodeLabel>
           <y:SVGNodeProperties usingVisualBounds="true"/>
           <y:SVGModel svgBoundsPolicy="0">
             <y:SVGContent refid="2"/>
