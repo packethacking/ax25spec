@@ -118,7 +118,6 @@ signal_upper:
   - name: DL_DISCONNECT_indication
     aliases:
       - "DL-DISCONNECT Indication"
-      - "DL-DISCONNECT indication"
   - name: DL_DISCONNECT_confirm
     aliases:
       - "DL-DISCONNECT Confirm"
@@ -138,7 +137,6 @@ signal_upper:
   - name: DL_ERROR_indication_D
     aliases:
       - "DL-ERROR Indication (D)"
-      - "DL-ERROR indication (D)"
   - name: DL_ERROR_indication_E
   - name: DL_ERROR_indication_F
   - name: DL_ERROR_indication_G
