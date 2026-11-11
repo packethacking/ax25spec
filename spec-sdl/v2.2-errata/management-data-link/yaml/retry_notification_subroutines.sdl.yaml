@@ -1,0 +1,71 @@
+# Auto-generated from ManagementDataLink_RetryNotificationSubroutines.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: management_data_link
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc5.7
+
+subroutines:
+
+  - name: Initiate_Retry_Notification
+    decisions:
+      - id: initiate_retry_notification_n2_notification_requested
+        question: "N2 Notification Requested?"
+        predicate: N2_notification_requested
+    paths:
+      - id: t01_initiate_retry_notification_yes
+        path:
+          - { decision: initiate_retry_notification_n2_notification_requested, branch: Yes }
+          - { action: Add Receive N2 Parameter field to XID Command, kind: processing }
+      - id: t02_initiate_retry_notification_no
+        path:
+          - { decision: initiate_retry_notification_n2_notification_requested, branch: No }
+
+  - name: Retry_Notification_Response
+    decisions:
+      - id: retry_notification_response_n2_parameter_field_present
+        question: "N2 Parameter Field Present?"
+        predicate: N2_parameter_field_present
+      - id: retry_notification_response_transmit_n2_acceptable
+        question: "Transmit N2 Acceptable ?"
+        predicate: transmit_N2_acceptable
+    paths:
+      - id: t01_retry_notification_response_yes_yes
+        path:
+          - { decision: retry_notification_response_n2_parameter_field_present, branch: Yes }
+          - { decision: retry_notification_response_transmit_n2_acceptable, branch: Yes }
+          - { action: Accept Transmit N2 From XID Command, kind: processing }
+          - { action: Add Receive N2 Parameter field to XID Response, kind: processing }
+      - id: t02_retry_notification_response_yes_no
+        path:
+          - { decision: retry_notification_response_n2_parameter_field_present, branch: Yes }
+          - { decision: retry_notification_response_transmit_n2_acceptable, branch: No }
+          - { action: Set Transmit N2 to Default, kind: processing }
+          - { action: Add Receive N2 Parameter field to XID Response, kind: processing }
+      - id: t03_retry_notification_response_no
+        path:
+          - { decision: retry_notification_response_n2_parameter_field_present, branch: No }
+
+  - name: Complete_Retry_Notification
+    decisions:
+      - id: complete_retry_notification_n2_parameter_field_present
+        question: "N2 Parameter Field Present?"
+        predicate: N2_parameter_field_present
+      - id: complete_retry_notification_transmit_n2_acceptable
+        question: "Transmit N2 Acceptable ?"
+        predicate: transmit_N2_acceptable
+    paths:
+      - id: t01_complete_retry_notification_yes_yes
+        path:
+          - { decision: complete_retry_notification_n2_parameter_field_present, branch: Yes }
+          - { decision: complete_retry_notification_transmit_n2_acceptable, branch: Yes }
+          - { action: Accept Receive N2 from XID Response, kind: processing }
+      - id: t02_complete_retry_notification_yes_no
+        path:
+          - { decision: complete_retry_notification_n2_parameter_field_present, branch: Yes }
+          - { decision: complete_retry_notification_transmit_n2_acceptable, branch: No }
+          - { action: Set Receive N2 to Default, kind: processing }
+      - id: t03_complete_retry_notification_no
+        path:
+          - { decision: complete_retry_notification_n2_parameter_field_present, branch: No }

@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="788.89" viewBox="-20 -20 960 788.89" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 1 L 9 5 L 0 9 z" fill="#000000"/></marker></defs>
+<rect x="-20" y="-20" width="960" height="788.89" fill="#FFFFFF"/>
+<path d="M 63.24 71.9 L 61.42 131.13" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 60 225.3 L 60 260" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="72" y="240.86" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 58.14 223.83 L 51.43 390.2" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="70.14" y="239.38" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 57.88 320 L 52.91 390.34" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 263.24 71.9 L 261.42 131.13" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 260 225.3 L 260 260" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="272" y="240.86" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 259.05 224.55 L 250.44 650.1" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="271.05" y="240.1" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 260 355.3 L 260 390" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="272" y="370.86" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 295.14 327.39 L 406.59 390" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="344.01" y="375.1" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 260 450 L 260 520" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 413.85 450 L 306.15 520" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 257.88 580 L 252.91 650.34" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 663.24 71.9 L 661.42 131.13" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 660 225.3 L 660 260" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="672" y="240.86" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 658.74 224.31 L 650.77 520.13" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="670.74" y="239.86" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 660 355.3 L 660 390" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="672" y="370.86" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">Yes</text>
+<path d="M 695.14 327.39 L 806.59 390" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<text x="744.01" y="375.1" font-size="12" text-anchor="middle" stroke="#FFFFFF" stroke-width="3" paint-order="stroke">No</text>
+<path d="M 657.88 450 L 652.91 520.34" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<path d="M 817.73 450 L 689.67 540.89" fill="none" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+<g transform="translate(0 0) scale(5.15 7.08) translate(-6.16 -6.64)" style="stroke-width:0.14"><g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 9.2383895,6.6360261 V 16.785243 H 28.040465 l 0,-10.1492169 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.260906;stroke-opacity:1" d="m 28.297226,6.8882035 c 2.832168,3.5304925 2.382971,6.6180825 1e-6,9.6450405 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.260911;stroke-opacity:1" d="m 8.9876443,6.8912318 c -2.8322152,3.5305292 -2.3830107,6.6181522 -10e-7,9.6451442 z" />
+  </g>
+</g>
+<text x="64.34" y="37.4" font-size="12" text-anchor="middle">Initiate Retry</text>
+<text x="64.34" y="52.47" font-size="12" text-anchor="middle">Notification</text>
+<g transform="translate(0 130) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="60" y="179.11" font-size="12" text-anchor="middle">N2 Notification</text>
+<text x="60" y="194.18" font-size="12" text-anchor="middle">Requested?</text>
+<g transform="translate(0 260) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="60" y="283.91" font-size="12" text-anchor="middle">Add Receive N2</text>
+<text x="60" y="298.98" font-size="12" text-anchor="middle">Parameter field</text>
+<text x="60" y="314.05" font-size="12" text-anchor="middle">to XID Command</text>
+<g transform="translate(0 390) scale(10.88 10.88) translate(-14.01 -6.65)" style="stroke-width:0.09"><g>
+    <circle style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" cx="18.550999" cy="11.190404" r="4.5428672" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="m 15.319238,8.0506505 6.44052,6.2795065 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 15.319238,14.445167 21.828764,8.0736524 Z" />
+  </g>
+</g>
+<g transform="translate(200 0) scale(5.15 7.08) translate(-6.16 -6.64)" style="stroke-width:0.14"><g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 9.2383895,6.6360261 V 16.785243 H 28.040465 l 0,-10.1492169 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.260906;stroke-opacity:1" d="m 28.297226,6.8882035 c 2.832168,3.5304925 2.382971,6.6180825 1e-6,9.6450405 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.260911;stroke-opacity:1" d="m 8.9876443,6.8912318 c -2.8322152,3.5305292 -2.3830107,6.6181522 -10e-7,9.6451442 z" />
+  </g>
+</g>
+<text x="264.34" y="37.4" font-size="12" text-anchor="middle">Retry Notification</text>
+<text x="264.34" y="52.47" font-size="12" text-anchor="middle">Response</text>
+<g transform="translate(200 130) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="260" y="179.11" font-size="12" text-anchor="middle">N2 Parameter</text>
+<text x="260" y="194.18" font-size="12" text-anchor="middle">Field Present?</text>
+<g transform="translate(200 260) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="260" y="309.11" font-size="12" text-anchor="middle">Transmit N2</text>
+<text x="260" y="324.18" font-size="12" text-anchor="middle">Acceptable ?</text>
+<g transform="translate(200 390) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="260" y="413.91" font-size="12" text-anchor="middle">Accept Transmit</text>
+<text x="260" y="428.98" font-size="12" text-anchor="middle">N2 From XID</text>
+<text x="260" y="444.05" font-size="12" text-anchor="middle">Command</text>
+<g transform="translate(400 390) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="460" y="413.91" font-size="12" text-anchor="middle">Set Transmit N2</text>
+<text x="460" y="428.98" font-size="12" text-anchor="middle">to Default</text>
+<g transform="translate(200 520) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="260" y="543.91" font-size="12" text-anchor="middle">Add Receive N2</text>
+<text x="260" y="558.98" font-size="12" text-anchor="middle">Parameter field</text>
+<text x="260" y="574.05" font-size="12" text-anchor="middle">to XID Response</text>
+<g transform="translate(200 650) scale(10.88 10.88) translate(-14.01 -6.65)" style="stroke-width:0.09"><g>
+    <circle style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" cx="18.550999" cy="11.190404" r="4.5428672" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="m 15.319238,8.0506505 6.44052,6.2795065 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 15.319238,14.445167 21.828764,8.0736524 Z" />
+  </g>
+</g>
+<g transform="translate(600 0) scale(5.15 7.08) translate(-6.16 -6.64)" style="stroke-width:0.14"><g>
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 9.2383895,6.6360261 V 16.785243 H 28.040465 l 0,-10.1492169 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.260906;stroke-opacity:1" d="m 28.297226,6.8882035 c 2.832168,3.5304925 2.382971,6.6180825 1e-6,9.6450405 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.260911;stroke-opacity:1" d="m 8.9876443,6.8912318 c -2.8322152,3.5305292 -2.3830107,6.6181522 -10e-7,9.6451442 z" />
+  </g>
+</g>
+<text x="664.34" y="37.4" font-size="12" text-anchor="middle">Complete Retry</text>
+<text x="664.34" y="52.47" font-size="12" text-anchor="middle">Notification</text>
+<g transform="translate(600 130) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="660" y="179.11" font-size="12" text-anchor="middle">N2 Parameter</text>
+<text x="660" y="194.18" font-size="12" text-anchor="middle">Field Present?</text>
+<g transform="translate(600 260) scale(1 1.59) translate(0 0)" style="stroke-width:0.63"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <polygon points="60.0,0 120,30.0 60.0,60 0,30.0" />
+  </g>
+</g>
+<text x="660" y="309.11" font-size="12" text-anchor="middle">Transmit N2</text>
+<text x="660" y="324.18" font-size="12" text-anchor="middle">Acceptable ?</text>
+<g transform="translate(600 390) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="660" y="413.91" font-size="12" text-anchor="middle">Accept Receive N2</text>
+<text x="660" y="428.98" font-size="12" text-anchor="middle">from XID Response</text>
+<g transform="translate(800 390) scale(1.02 1.03) translate(-1 -1)" style="stroke-width:0.97"><g fill="#FFFFFF" stroke="#000000" stroke-width="2" stroke-linejoin="miter" stroke-linecap="butt">
+    <rect x="1.0" y="1.0" width="118" height="58" />
+  </g>
+</g>
+<text x="860" y="413.91" font-size="12" text-anchor="middle">Set Receive N2 to</text>
+<text x="860" y="428.98" font-size="12" text-anchor="middle">Default</text>
+<g transform="translate(600 520) scale(10.88 10.88) translate(-14.01 -6.65)" style="stroke-width:0.09"><g>
+    <circle style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" cx="18.550999" cy="11.190404" r="4.5428672" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="m 15.319238,8.0506505 6.44052,6.2795065 z" />
+    <path style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-opacity:1" d="M 15.319238,14.445167 21.828764,8.0736524 Z" />
+  </g>
+</g>
+</svg>

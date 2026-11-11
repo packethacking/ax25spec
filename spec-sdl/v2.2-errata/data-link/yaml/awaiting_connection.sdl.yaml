@@ -7,6 +7,9 @@ source:
   spec: ax.25.2.2.4_Oct_25
   figure: figc4.2
 
+save:
+  - DL_DISCONNECT_request
+
 decisions:
   - id: dm_f_eq_1
     question: "F == 1?"
@@ -34,12 +37,6 @@ decisions:
     predicate: P_eq_1
 
 transitions:
-
-  - id: t01_dl_disconnect_request
-    on: DL_DISCONNECT_request
-    on_label: DL-DISCONNECT Request
-    path: []
-    next: AwaitingConnection
 
   - id: t02_disc_received
     on: DISC_received
