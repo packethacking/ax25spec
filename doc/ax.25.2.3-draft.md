@@ -1089,7 +1089,7 @@ The Window Size Receive parameter field (PI=8) allows the sending TNC to notify 
 
 The Acknowledge Timer parameter field (PI=9) allows the negotiation of the wait for acknowledgement timer (T1). If this field is not present, the current values are retained. The default is 3000 msec.
 
-The Retries parameter field (PI=10) allows the negotiation of the retry count (N1). If this field is not present, the current values are retained. The default is 10 retries.
+The Retries parameter field (PI=10) allows the negotiation of the retry count (N2). If this field is not present, the current values are retained. The default is 10 retries.
 
 A FRMR error condition may be established if the received XID command information field exceeds the maximum defined storage capability of the station, if the receiving station is using AX.25 version 2.0 or earlier versions, or the receiving station wants to use the defaults for version 2.0 or earlier.
 
@@ -1345,7 +1345,7 @@ The P bit is used in conjunction with the timeout recovery condition discussed i
 To connect to a distant TNC, the originating TNC sends a SABM command frame to the distant TNC and starts its T1 timer. If the distant TNC exists and accepts the CONNECT.Request, it responds with a UA response frame and resets all of its internal state variables (V(S), V(A) and
 V(R)). Reception of the UA response frame by the originating TNC causes it to cancel the T1 timer and set its internal state variables to “0”.
 
-If the distant TNC doesn’t respond before T1 times out, the originating TNC resends the SABM frame and starts T1 running again. The originating TNC tries to establish a connection until it has tried unsuccessfully N2 times. N2 is defined in Section 6.7.2.3.
+If the distant TNC doesn’t respond before T1 times out, the originating TNC resends the SABM frame and starts T1 running again. The originating TNC tries to establish a connection until it has tried unsuccessfully N2 times. N2 is defined in Section 6.7.2.2.
 
 If the distant TNC receives a SABM(E) command and cannot enter the indicated state, it sends a DM frame.
 
@@ -1373,7 +1373,7 @@ The Window Size Receive parameter field (PI=8) allows the sending TNC to notify 
 
 The Acknowledge Timer parameter field (PI=9) allows the negotiation of the "Wait for Acknowledgement" timer (T1). Function reverts to the greater of the values offered in the XID command and XID response frames.
 
-The Retries parameter field (PI=10) allows the negotiation of the retry count (N1). Function reverts to the greater of the values offered in the XID command and XID response frames.
+The Retries parameter field (PI=10) allows the negotiation of the retry count (N2). Function reverts to the greater of the values offered in the XID command and XID response frames.
 
 Defaults for the negotiated parameters for use with version 2.0 or lower of AX.25 are:
 - Set Half Duplex
