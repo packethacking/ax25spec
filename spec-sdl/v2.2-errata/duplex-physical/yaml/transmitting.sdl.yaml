@@ -1,0 +1,55 @@
+# Auto-generated from DuplexPhy_Transmitting.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: duplex_phy
+state: Transmitting
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc2b.5
+
+transitions:
+
+  - id: t01_ph_seize_request
+    on: PH_SEIZE_request
+    on_label: PH-SIEZE Request
+    path:
+      - { action: PH-SIEZE Confirm, kind: signal_upper }
+    next: Transmitting
+
+  - id: t02_ph_release_request
+    on: PH_RELEASE_request
+    on_label: PH-RELEASE Request
+    path:
+      - { action: Clear Interrupted, kind: processing }
+      - { action: Stop T107, kind: processing }
+      - { action: HW-TOFF Request, kind: signal_lower }
+    next: TransmitterReady
+
+  - id: t03_t107_expiry
+    on: T107_expiry
+    on_label: T107 Expiry
+    path:
+      - { action: Set Interrupted, kind: processing }
+      - { action: HW-TOFF Request, kind: signal_lower }
+    next: TransmitterReady
+
+  - id: t04_ph_data_request
+    on: PH_DATA_request
+    on_label: PH-DATA Request
+    path:
+      - { action: HW-DATA Request, kind: signal_lower }
+    next: Transmitting
+
+  - id: t05_ph_expedited_data_request
+    on: PH_EXPEDITED_DATA_request
+    on_label: PH-EXPEDITED_DATA Request
+    path:
+      - { action: HW-DATA Request, kind: signal_lower }
+    next: Transmitting
+
+  - id: t06_all_other_primitives__from_upper_layer
+    on: all_other_primitives__from_upper_layer
+    on_label: All Other Primitives
+    path:
+      - { action: Add to Normal Queue, kind: internal_out }
+    next: Transmitting
