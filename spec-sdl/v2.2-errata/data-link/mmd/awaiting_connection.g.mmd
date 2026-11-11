@@ -28,10 +28,10 @@ stateDiagram-v2
     AwaitingConnection --> AwaitingConnection: t06_all_other_primitives__from_lower_layer<br/>on: all_other_primitives__from_lower_layer
     AwaitingConnection --> AwaitingConnection: t07_dl_connect_request<br/>on: DL_CONNECT_request<br/>/ · Discard Queue<br/>/ · Set Layer 3 Initiated
     AwaitingConnection --> AwaitingConnection: t08_dl_unit_data_request<br/>on: DL_UNIT_DATA_request<br/>/ ↓ UI Command
-    AwaitingConnection --> AwaitingConnection: t09_dl_data_request_yes<br/>on: DL_DATA_request<br/>[layer_3_initiated]<br/>/ ⇢ push_frame_on_queue
-    AwaitingConnection --> AwaitingConnection: t09_dl_data_request_no<br/>on: DL_DATA_request<br/>[not layer_3_initiated]
-    AwaitingConnection --> AwaitingConnection: t10_i_frame_pops_off_queue_yes<br/>on: I_frame_pops_off_queue<br/>[layer_3_initiated]<br/>/ ⇢ push_frame_on_queue
-    AwaitingConnection --> AwaitingConnection: t10_i_frame_pops_off_queue_no<br/>on: I_frame_pops_off_queue<br/>[not layer_3_initiated]
+    AwaitingConnection --> AwaitingConnection: t09_dl_data_request_yes<br/>on: DL_DATA_request<br/>[layer_3_initiated]
+    AwaitingConnection --> AwaitingConnection: t09_dl_data_request_no<br/>on: DL_DATA_request<br/>[not layer_3_initiated]<br/>/ ⇢ push_frame_on_queue
+    AwaitingConnection --> AwaitingConnection: t10_i_frame_pops_off_queue_yes<br/>on: I_frame_pops_off_queue<br/>[layer_3_initiated]
+    AwaitingConnection --> AwaitingConnection: t10_i_frame_pops_off_queue_no<br/>on: I_frame_pops_off_queue<br/>[not layer_3_initiated]<br/>/ ⇢ push_frame_on_queue
     AwaitingConnection --> AwaitingConnection: t11_all_other_primitives__from_upper_layer<br/>on: all_other_primitives__from_upper_layer
     AwaitingConnection --> AwaitingConnection: t12_ui_received_yes<br/>on: UI_received<br/>[P_eq_1]<br/>/ →() UI Check<br/>/ ↓ DM (F = 1)
     AwaitingConnection --> AwaitingConnection: t12_ui_received_no<br/>on: UI_received<br/>[not P_eq_1]<br/>/ →() UI Check
