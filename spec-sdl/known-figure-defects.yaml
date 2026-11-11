@@ -18,3 +18,39 @@ defects:
     next: Sized
     issue: https://github.com/packethacking/ax25spec/issues/121
     note: Figure C3.2's PH-SIEZE Confirm column ends in "2 Sized"; the state is 2 Seized.
+  - machine: link_mux
+    state: Seized
+    transition: t01_lm_expedited_data_request
+    next: Siezed
+    issue: https://github.com/packethacking/ax25spec/issues/121
+    note: Figure C3.3's LM-EXPEDITED-DATA Request column ends in "1 Siezed"; the state is 1 Seized.
+  - machine: link_mux
+    state: Seized
+    transition: t02_lm_data_request
+    next: Siezed
+    issue: https://github.com/packethacking/ax25spec/issues/121
+    note: Figure C3.3's LM-DATA Request column ends in "1 Siezed"; the state is 1 Seized.
+  - machine: link_mux
+    state: Seized
+    transition: t03_lm_seize_request
+    next: Siezed
+    issue: https://github.com/packethacking/ax25spec/issues/121
+    note: Figure C3.3's LM-SIEZE Request column ends in "1 Siezed"; the state is 1 Seized.
+  - machine: link_mux
+    state: Seized
+    transition: t08_ph_data_indication
+    next: Siezed
+    issue: https://github.com/packethacking/ax25spec/issues/121
+    note: Figure C3.3's PH-DATA Indication column ends in "1 Siezed"; the state is 1 Seized.
+  - machine: link_mux
+    state: Seized
+    transition: t09_ph_busy_indication
+    next: Siezed
+    issue: https://github.com/packethacking/ax25spec/issues/121
+    note: Figure C3.3's PH-BUSY Indication column ends in "1 Siezed"; the state is 1 Seized.
+  - machine: link_mux
+    state: Seized
+    transition: t10_ph_quiet_indication
+    next: Siezed
+    issue: https://github.com/packethacking/ax25spec/issues/121
+    note: Figure C3.3's PH-Quiet Indication column ends in "1 Siezed"; the state is 1 Seized.
