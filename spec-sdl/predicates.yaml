@@ -151,3 +151,14 @@ version_mode:
 frame_content:
   - name: info_field_length_le_N1_and_content_is_octet_aligned
     # legacy binding: info_field_valid
+
+# Link Multiplexer subroutines (figc3.4). Frame Received tests the frame's
+# FCS, the digipeat setting and the address field; Queue Event tests the
+# requesting Data Link against the current DL and the Served List.
+link_multiplexer:
+  - name: FCS_OK                     # figc3.4 "FCS OK?"
+  - name: digipeat_enabled           # figc3.4 "Digipeat Enabled?"
+  - name: am_I_to_digipeat_frame     # figc3.4 "Am I to Digipeat Frame?"
+  - name: addressed_to_me            # figc3.4 "Addres-sed to Me?"
+  - name: requestor_eq_current_DL    # figc3.4 "Requestor == Current DL?"
+  - name: requestor_on_served_list   # figc3.4 "Requestor on Served List?"

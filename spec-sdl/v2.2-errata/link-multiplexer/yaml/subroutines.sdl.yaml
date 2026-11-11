@@ -1,0 +1,92 @@
+# Auto-generated from LinkMux_Subroutines.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: link_mux
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc3.4
+
+subroutines:
+
+  - name: Frame_Received
+    decisions:
+      - id: frame_received_fcs_ok
+        question: "FCS OK?"
+        predicate: FCS_OK
+      - id: frame_received_digipeat_enabled
+        question: "Digipeat Enabled?"
+        predicate: digipeat_enabled
+      - id: frame_received_am_i_to_digipeat_frame
+        question: "Am I to Digipeat Frame?"
+        predicate: am_I_to_digipeat_frame
+      - id: frame_received_addressed_to_me
+        question: "Addressed to Me?"
+        predicate: addressed_to_me
+    paths:
+      - id: t01_frame_received_yes_yes_yes
+        path:
+          - { decision: frame_received_fcs_ok, branch: Yes }
+          - { decision: frame_received_digipeat_enabled, branch: Yes }
+          - { decision: frame_received_am_i_to_digipeat_frame, branch: Yes }
+          - { action: "Set \"Has Been Digipeated\" Flag in Frame", kind: processing }
+          - { action: PH-EXPEDITED-DATA Request, kind: signal_lower }
+      - id: t02_frame_received_yes_yes_no_yes
+        path:
+          - { decision: frame_received_fcs_ok, branch: Yes }
+          - { decision: frame_received_digipeat_enabled, branch: Yes }
+          - { decision: frame_received_am_i_to_digipeat_frame, branch: No }
+          - { decision: frame_received_addressed_to_me, branch: Yes }
+          - { action: LM-DATA Indication (Note 1), kind: signal_upper }
+      - id: t03_frame_received_yes_yes_no_no
+        path:
+          - { decision: frame_received_fcs_ok, branch: Yes }
+          - { decision: frame_received_digipeat_enabled, branch: Yes }
+          - { decision: frame_received_am_i_to_digipeat_frame, branch: No }
+          - { decision: frame_received_addressed_to_me, branch: No }
+      - id: t04_frame_received_yes_no_yes
+        path:
+          - { decision: frame_received_fcs_ok, branch: Yes }
+          - { decision: frame_received_digipeat_enabled, branch: No }
+          - { decision: frame_received_addressed_to_me, branch: Yes }
+          - { action: LM-DATA Indication (Note 1), kind: signal_upper }
+      - id: t05_frame_received_yes_no_no
+        path:
+          - { decision: frame_received_fcs_ok, branch: Yes }
+          - { decision: frame_received_digipeat_enabled, branch: No }
+          - { decision: frame_received_addressed_to_me, branch: No }
+      - id: t06_frame_received_no
+        path:
+          - { decision: frame_received_fcs_ok, branch: No }
+
+  - name: Finish_Current_Transmission
+    paths:
+      - id: t01_finish_current_transmission
+        path:
+          - { action: PH-RELEASE Request, kind: signal_lower }
+          - { action: Pop All Frames off Current Queue and onto Served Queue, kind: internal_out }
+          - { action: Place Current DL on Served List., kind: processing }
+          - { action: "Current DL := Null", kind: processing }
+
+  - name: Queue_Event
+    decisions:
+      - id: queue_event_requestor_eq_current_dl
+        question: "Requestor == Current DL?"
+        predicate: requestor_eq_current_DL
+      - id: queue_event_requestor_on_served_list
+        question: "Requestor on Served List?"
+        predicate: requestor_on_served_list
+    paths:
+      - id: t01_queue_event_yes
+        path:
+          - { decision: queue_event_requestor_eq_current_dl, branch: Yes }
+          - { action: Push On Current Queue, kind: internal_out }
+      - id: t02_queue_event_no_yes
+        path:
+          - { decision: queue_event_requestor_eq_current_dl, branch: No }
+          - { decision: queue_event_requestor_on_served_list, branch: Yes }
+          - { action: Push on Served Queue, kind: internal_out }
+      - id: t03_queue_event_no_no
+        path:
+          - { decision: queue_event_requestor_eq_current_dl, branch: No }
+          - { decision: queue_event_requestor_on_served_list, branch: No }
+          - { action: Push on Awaiting Queue, kind: internal_out }
