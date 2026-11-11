@@ -1,0 +1,31 @@
+%% This file was produced by codegen/src/Packet.Sdl.CodeGen from spec-sdl/v2.2-errata/simplex-physical/yaml/transmitter_suppression.sdl.yaml
+%% Do not edit by hand. Run `dotnet run --project codegen/src/Packet.Sdl.CodeGen` to regenerate.
+%%
+%% Source: ax.25.2.2.4_Oct_25, figure figc2a.3
+%% Coverage: complete
+%%
+%% Important: this rendering is approximate and intentionally
+%% looks nothing like the original SDL figure. It is a machine-
+%% generated view of the transitions in the .sdl.yaml, useful
+%% for spotting transcription bugs (missing transitions, wrong
+%% destination state) but NOT a substitute for reading the spec
+%% figure itself. See docs/sdl-primer.md.
+
+stateDiagram-v2
+    direction LR
+
+    classDef focal fill:#fff5b1,stroke:#b08800;
+    class TransmitterSuppression focal
+    TransmitterSuppression --> TransmitterStart: t01_ph_expedited_data_request<br/>on: PH_EXPEDITED_DATA_request<br/>/ ⇢ Add to Priority Queue<br/>/ · Set Digipeating<br/>/ →() Start Transmitter
+    TransmitterSuppression --> TransmitterSuppression: t02_all_other_primitives__from_upper_layer<br/>on: all_other_primitives__from_upper_layer<br/>/ ⇢ Add to Normal Queue
+    TransmitterSuppression --> TransmitterSuppression: t03_t100_expiry<br/>on: T100_expiry<br/>/ · Clear Repeater Up
+    TransmitterSuppression --> TransmitterStart: t04_t101_expiry_yes_yes_yes<br/>on: T101_expiry<br/>[priority_queue_empty and R_lt_p and interrupted]<br/>/ · R := Random Number in Range 0 to 255<br/>/ →() Start Transmitter
+    TransmitterSuppression --> Ready: t04_t101_expiry_yes_yes_no<br/>on: T101_expiry<br/>[priority_queue_empty and R_lt_p and not interrupted]<br/>/ · R := Random Number in Range 0 to 255<br/>/ · Resume Processing Normal Queue
+    TransmitterSuppression --> TransmitterSuppression: t04_t101_expiry_yes_no<br/>on: T101_expiry<br/>[priority_queue_empty and not R_lt_p]<br/>/ · R := Random Number in Range 0 to 255<br/>/ · Start T102
+    TransmitterSuppression --> TransmitterStart: t04_t101_expiry_no<br/>on: T101_expiry<br/>[not priority_queue_empty]<br/>/ · Set Digipeater<br/>/ →() Start Transmitter
+    TransmitterSuppression --> TransmitterStart: t05_t102_expiry_yes_yes_yes<br/>on: T102_expiry<br/>[priority_queue_empty and R_lt_p and interrupted]<br/>/ · R := Random Number in Range 0 to 255<br/>/ →() Start Transmitter
+    TransmitterSuppression --> Ready: t05_t102_expiry_yes_yes_no<br/>on: T102_expiry<br/>[priority_queue_empty and R_lt_p and not interrupted]<br/>/ · R := Random Number in Range 0 to 255<br/>/ · Resume Processing Normal Queue
+    TransmitterSuppression --> TransmitterSuppression: t05_t102_expiry_yes_no<br/>on: T102_expiry<br/>[priority_queue_empty and not R_lt_p]<br/>/ · R := Random Number in Range 0 to 255<br/>/ · Start T102
+    TransmitterSuppression --> TransmitterStart: t05_t102_expiry_no<br/>on: T102_expiry<br/>[not priority_queue_empty]<br/>/ · Set Digipeater<br/>/ →() Start Transmitter
+    TransmitterSuppression --> Receiving: t06_hw_aos_indication<br/>on: HW_AOS_indication<br/>/ →() Acquisition
+    TransmitterSuppression --> Ready: t07_all_other_primitives__from_lower_layer<br/>on: all_other_primitives__from_lower_layer<br/>/ · Discard: Erroneous Primitive

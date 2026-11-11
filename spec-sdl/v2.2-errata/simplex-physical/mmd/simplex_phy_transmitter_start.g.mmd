@@ -1,0 +1,27 @@
+%% This file was produced by codegen/src/Packet.Sdl.CodeGen from spec-sdl/v2.2-errata/simplex-physical/yaml/transmitter_start.sdl.yaml
+%% Do not edit by hand. Run `dotnet run --project codegen/src/Packet.Sdl.CodeGen` to regenerate.
+%%
+%% Source: ax.25.2.2.4_Oct_25, figure figc2a.4
+%% Coverage: complete
+%%
+%% Important: this rendering is approximate and intentionally
+%% looks nothing like the original SDL figure. It is a machine-
+%% generated view of the transitions in the .sdl.yaml, useful
+%% for spotting transcription bugs (missing transitions, wrong
+%% destination state) but NOT a substitute for reading the spec
+%% figure itself. See docs/sdl-primer.md.
+
+stateDiagram-v2
+    direction LR
+
+    classDef focal fill:#fff5b1,stroke:#b08800;
+    class TransmitterStart focal
+    TransmitterStart --> TransmitterStart: t01_ph_expedited_data_request<br/>on: PH_EXPEDITED_DATA_request<br/>/ ⇢ Add Frame to Priority Queue
+    TransmitterStart --> TransmitterStart: t02_all_other_primitives__from_upper_layer<br/>on: all_other_primitives__from_upper_layer<br/>/ ⇢ Add to Normal Queue
+    TransmitterStart --> TransmitterStart: t03_t100_expiry<br/>on: T100_expiry<br/>/ · Clear Repeater Up
+    TransmitterStart --> TransmitterStart: t04_t103_expiry_yes<br/>on: T103_expiry<br/>[repeater_up]<br/>/ · Start T105
+    TransmitterStart --> TransmitterStart: t04_t103_expiry_no<br/>on: T103_expiry<br/>[not repeater_up]<br/>/ · Start T104
+    TransmitterStart --> TransmitterStart: t05_t104_expiry<br/>on: T104_expiry<br/>/ · Set Repeater Up<br/>/ · Start T105
+    TransmitterStart --> Digipeating: t06_t105_expiry_yes<br/>on: T105_expiry<br/>[digipeating]<br/>/ · Start T106<br/>/ · Resume Processing Priority Queue
+    TransmitterStart --> Transmitting: t06_t105_expiry_no_yes<br/>on: T105_expiry<br/>[not digipeating and interrupted]<br/>/ · Start T106<br/>/ · Start T107<br/>/ · Resume Processing Normal Queue
+    TransmitterStart --> Transmitting: t06_t105_expiry_no_no<br/>on: T105_expiry<br/>[not digipeating and not interrupted]<br/>/ · Start T106<br/>/ · Start T107<br/>/ ↑ PH_SEIZE_confirm<br/>/ · Resume Processing Normal Queue

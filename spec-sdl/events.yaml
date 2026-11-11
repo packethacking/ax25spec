@@ -84,6 +84,9 @@ internal:
   # Link Multiplexer, figc3.2 (Sieze Pending) and figc3.3 (Seized)
   # "Current Queue Empty", also an Internal Signal Reception.
   - current_queue_empty
+  # Simplex Physical, figc2a.6 (Digipeating) "Priority Queue Empty", an
+  # Internal Signal Reception.
+  - priority_queue_empty
 
 # Service primitives between Data-Link and Link Multiplexer. Named
 # <PREFIX>_<NAME>_<kind> like every primitive family. figc3.1 and figc3.2
@@ -104,19 +107,21 @@ primitives_physical:
   - PH_DATA_indication          # figc3.1 "PH-DATA Indication"
   - PH_BUSY_indication          # figc3.1 "PH-BUSY Indication"
   - PH_QUIET_indication         # figc3.1 "PH-QUIET Indication"
-  # Duplex Physical (figc2b.3 to figc2b.5) receives the requests the Link
-  # Multiplexer sends. figc2b.3 and figc2b.5 draw "PH-SIEZE Request" (#61).
-  - PH_SEIZE_request            # figc2b.3 "PH-SIEZE Request" (#61)
-  - PH_RELEASE_request          # figc2b.3 "PH-RELEASE Request"
-  - PH_DATA_request             # figc2b.5 "PH-DATA Request"
-  - PH_EXPEDITED_DATA_request   # figc2b.5 "PH-EXPEDITED_DATA Request"
+  # Duplex Physical (figc2b.3 to figc2b.5) and Simplex Physical (figc2a.1
+  # to figc2a.7) receive the requests the Link Multiplexer sends. Both draw
+  # "PH-SIEZE Request" (#61).
+  - PH_SEIZE_request            # figc2b.3, figc2a.1 "PH-SIEZE Request" (#61)
+  - PH_RELEASE_request          # figc2b.3, figc2a.1 "PH-RELEASE Request"
+  - PH_DATA_request             # figc2b.5, figc2a.1 "PH-DATA Request"
+  - PH_EXPEDITED_DATA_request   # figc2b.5 "PH-EXPEDITED_DATA Request"; figc2a.1 "PH-EXPEDITED-DATA Request"; figc2a.5 "PH_EXPEDITED-DATA Request"
 
-# Hardware primitives received by the Duplex Physical state machine from the
-# radio (figc2b.1 and figc2b.2), drawn as receptions from the lower layer.
+# Hardware primitives received by the physical state machines from the
+# radio (figc2b.1, figc2b.2, figc2a.1 to figc2a.3), drawn as receptions from
+# the lower layer.
 primitives_hardware:
-  - HW_AOS_indication           # figc2b.1 "HW-AOS Indication"
-  - HW_DATA_indication          # figc2b.2 "HW-DATA Indication"
-  - HW_LOS_indication           # figc2b.2 "HW-LOS Indication"
+  - HW_AOS_indication           # figc2b.1, figc2a.1 "HW-AOS Indication"
+  - HW_DATA_indication          # figc2b.2, figc2a.2 "HW-DATA Indication"
+  - HW_LOS_indication           # figc2b.2, figc2a.2 "HW-LOS Indication"
 
 # Timer expiries.
 timers:
@@ -130,6 +135,17 @@ timers:
   # TR210, the Reassembler's reassembly timer (figc6.3 and figc6.4
   # "TR210 Expiry", drawn as a reception from the lower layer).
   - TR210_expiry
-  # Duplex Physical timers, drawn as Internal Signal Receptions.
-  - T105_expiry                 # figc2b.4 "T105 Expiry" (remote receiver sync)
-  - T107_expiry                 # figc2b.5 "T107 Expiry" (anti-hogging limit)
+  # Physical layer timers (figc2a.x, figc2b.x), drawn as Internal Signal
+  # Receptions.
+  - T100_expiry                 # figc2a.3, figc2a.4 "T100 Expiry"
+  - T101_expiry                 # figc2a.3 "T101 Expiry"
+  - T102_expiry                 # figc2a.1, figc2a.3 "T102 Expiry"
+  - T103_expiry                 # figc2a.4 "T103 Expiry"
+  - T104_expiry                 # figc2a.4 "T104 Expiry"
+  - T105_expiry                 # figc2b.4, figc2a.4 "T105 Expiry" (remote receiver sync)
+  - T106_expiry                 # figc2a.5, figc2a.6 "T106 Expiry"
+  - T107_expiry                 # figc2b.5, figc2a.5 "T107 Expiry" (anti-hogging limit)
+  # figc2a.7 "T106 Expiry Or T108?": the figure is unsure which timer it
+  # means. 6.7.1.12 defines T108 as the receiver start-up timer; the id
+  # names both rather than picking one (#145).
+  - T106_or_T108_expiry
