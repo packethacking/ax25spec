@@ -1179,9 +1179,9 @@ A TNC receiving the REJ command clears the condition by resending all outstandin
 
 ##### 4.4.4 Selective Reject (SREJ) Recovery
 
-The SREJ command/response initiates more-efficient error recovery by requesting the retransmission of a single I frame following the detection of a sequence error. This is an advance over the earlier versions in which the requested I frame was retransmitted together with all additional I frames subsequently transmitted and successfully received.
+The SREJ response initiates more-efficient error recovery by requesting the retransmission of a single I frame following the detection of a sequence error. This is an advance over the earlier versions in which the requested I frame was retransmitted together with all additional I frames subsequently transmitted and successfully received.
 
-When a TNC sends one or more SREJ commands, each with the P bit set to “0” or “1”, or one or more SREJ responses, each with the F bit set to “0”, and the “sent SREJ” conditions are not cleared when the TNC is ready to issue the next response frame with the F bit set to “1”, the TNC sends a SREJ response with the F bit set to “1”, with the same N(R)
+When a TNC sends one or more SREJ responses, each with the F bit set to “0”, and the “sent SREJ” conditions are not cleared when the TNC is ready to issue the next response frame with the F bit set to “1”, the TNC sends a SREJ response with the F bit set to “1”, with the same N(R)
 as the oldest unresolved SREJ frame.
 
 Because an I or S format frame with the F bit set to “1” can cause checkpoint retransmission, a TNC does not send SREJ frames until it receives at least one in-sequence I frame, or it perceives by timeout that the checkpoint retransmission will not be initiated at the remote
