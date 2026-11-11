@@ -20,10 +20,10 @@ stateDiagram-v2
     AwaitingConnection --> AwaitingConnection: t02_disc_received<br/>on: DISC_received<br/>/ · F := P<br/>/ ↓ DM
     AwaitingConnection --> Disconnected: t03_dm_received_yes<br/>on: DM_received<br/>[F_eq_1]<br/>/ · discard_frame_queue<br/>/ ↑ DL_DISCONNECT_indication<br/>/ · Stop T1
     AwaitingConnection --> AwaitingConnection: t03_dm_received_no<br/>on: DM_received<br/>[not F_eq_1]
-    AwaitingConnection --> AwaitingConnection: t04_ua_received_no<br/>on: UA_received<br/>[not F_eq_1]<br/>/ ↑ DL_ERROR_indication_D
     AwaitingConnection --> Connected: t04_ua_received_yes_yes<br/>on: UA_received<br/>[F_eq_1 and layer_3_initiated]<br/>/ ↑ DL_CONNECT_confirm<br/>/ · Stop T1<br/>/ · Start T3<br/>/ · V(s) := 0<br/>/ · V(a) := 0<br/>/ · V(r) := 0<br/>/ →() Select_T1_Value
     AwaitingConnection --> Connected: t04_ua_received_yes_no_yes<br/>on: UA_received<br/>[F_eq_1 and not layer_3_initiated and vs_eq_va]<br/>/ · Stop T1<br/>/ · Start T3<br/>/ · V(s) := 0<br/>/ · V(a) := 0<br/>/ · V(r) := 0<br/>/ →() Select_T1_Value
     AwaitingConnection --> Connected: t04_ua_received_yes_no_no<br/>on: UA_received<br/>[F_eq_1 and not layer_3_initiated and not vs_eq_va]<br/>/ · SRT := Initial Default<br/>/ · T1V := 2 * SRT<br/>/ · Start T1<br/>/ ↑ DL_CONNECT_confirm<br/>/ · Stop T1<br/>/ · Start T3<br/>/ · V(s) := 0<br/>/ · V(a) := 0<br/>/ · V(r) := 0<br/>/ →() Select_T1_Value
+    AwaitingConnection --> AwaitingConnection: t04_ua_received_no<br/>on: UA_received<br/>[not F_eq_1]<br/>/ ↑ DL_ERROR_indication_D
     AwaitingConnection --> Disconnected: t05_t1_expiry_yes<br/>on: T1_expiry<br/>[RC_eq_N2]<br/>/ · discard_frame_queue<br/>/ ↑ DL-ERROR Indication (G)<br/>/ ↑ DL_DISCONNECT_indication
     AwaitingConnection --> AwaitingConnection: t05_t1_expiry_no<br/>on: T1_expiry<br/>[not RC_eq_N2]<br/>/ · RC := RC + 1<br/>/ ↓ SABM (P == 1)<br/>/ →() Select_T1_Value<br/>/ · Start T1
     AwaitingConnection --> AwaitingConnection: t06_all_other_primitives__from_lower_layer<br/>on: all_other_primitives__from_lower_layer

@@ -29,20 +29,20 @@ subroutines:
         question: "Info Field Length <= N1 & Content is Octet Aligned?"
         predicate: info_field_length_le_N1_and_content_is_octet_aligned
     paths:
-      - id: t01_ui_check_no
-        path:
-          - { decision: ui_check_command, branch: No }
-          - { action: DL-ERROR Indication (Q), kind: signal_upper }
-      - id: t02_ui_check_yes_yes
+      - id: t01_ui_check_yes_yes
         path:
           - { decision: ui_check_command, branch: Yes }
           - { decision: ui_check_info_field_length_le_n1_and_content_is_octet_aligned, branch: Yes }
           - { action: DL-UNIT-DATA Indication, kind: signal_upper }
-      - id: t03_ui_check_yes_no
+      - id: t02_ui_check_yes_no
         path:
           - { decision: ui_check_command, branch: Yes }
           - { decision: ui_check_info_field_length_le_n1_and_content_is_octet_aligned, branch: No }
           - { action: DL-ERROR Indication (K), kind: signal_upper }
+      - id: t03_ui_check_no
+        path:
+          - { decision: ui_check_command, branch: No }
+          - { action: DL-ERROR Indication (Q), kind: signal_upper }
 
   - name: Select_T1
     decisions:
@@ -58,15 +58,15 @@ subroutines:
           - { decision: select_t1_rc_eq_0, branch: Yes }
           - { action: "SRT := 7(SRT)/8 + (T1)/8 - (Remaining Time on T1 When Last Stopped)/8", kind: processing }
           - { action: "Next T1 := 2 * SRT", kind: processing }
-      - id: t02_select_t1_no_no
-        path:
-          - { decision: select_t1_rc_eq_0, branch: No }
-          - { decision: select_t1_t1_expired, branch: No }
-      - id: t03_select_t1_no_yes
+      - id: t02_select_t1_no_yes
         path:
           - { decision: select_t1_rc_eq_0, branch: No }
           - { decision: select_t1_t1_expired, branch: Yes }
           - { action: "Next T1 := (RC*0.25)+SRT*2", kind: processing }
+      - id: t03_select_t1_no_no
+        path:
+          - { decision: select_t1_rc_eq_0, branch: No }
+          - { decision: select_t1_t1_expired, branch: No }
 
   - name: Set_Version_2_0
     paths:
@@ -93,15 +93,15 @@ subroutines:
         path:
           - { decision: check_need_for_response_command_and_p_eq_1, branch: Yes }
           - { action: Enquiry Response (F = 1), kind: subroutine }
-      - id: t02_check_need_for_response_no_no
-        path:
-          - { decision: check_need_for_response_command_and_p_eq_1, branch: No }
-          - { decision: check_need_for_response_response_and_f_eq_1, branch: No }
-      - id: t03_check_need_for_response_no_yes
+      - id: t02_check_need_for_response_no_yes
         path:
           - { decision: check_need_for_response_command_and_p_eq_1, branch: No }
           - { decision: check_need_for_response_response_and_f_eq_1, branch: Yes }
           - { action: DL-ERROR Indication (A), kind: signal_upper }
+      - id: t03_check_need_for_response_no_no
+        path:
+          - { decision: check_need_for_response_command_and_p_eq_1, branch: No }
+          - { decision: check_need_for_response_response_and_f_eq_1, branch: No }
 
   - name: Establish_Extended_Data_Link
     decisions:
@@ -109,22 +109,22 @@ subroutines:
         question: "Mod 128?"
         predicate: mod_128
     paths:
-      - id: t01_establish_extended_data_link_no
-        path:
-          - { action: Clear Exception Conditions, kind: processing }
-          - { action: "RC := 1", kind: processing }
-          - { action: "P := 1", kind: processing }
-          - { decision: establish_extended_data_link_mod_128, branch: No }
-          - { action: SABM, kind: signal_lower }
-          - { action: Stop T3, kind: processing }
-          - { action: Start T1, kind: processing }
-      - id: t02_establish_extended_data_link_yes
+      - id: t01_establish_extended_data_link_yes
         path:
           - { action: Clear Exception Conditions, kind: processing }
           - { action: "RC := 1", kind: processing }
           - { action: "P := 1", kind: processing }
           - { decision: establish_extended_data_link_mod_128, branch: Yes }
           - { action: SABME, kind: signal_lower }
+          - { action: Stop T3, kind: processing }
+          - { action: Start T1, kind: processing }
+      - id: t02_establish_extended_data_link_no
+        path:
+          - { action: Clear Exception Conditions, kind: processing }
+          - { action: "RC := 1", kind: processing }
+          - { action: "P := 1", kind: processing }
+          - { decision: establish_extended_data_link_mod_128, branch: No }
+          - { action: SABM, kind: signal_lower }
           - { action: Stop T3, kind: processing }
           - { action: Start T1, kind: processing }
 
@@ -134,22 +134,22 @@ subroutines:
         question: "Mod 128?"
         predicate: mod_128
     paths:
-      - id: t01_establish_data_link_no
-        path:
-          - { action: Clear Exception Conditions, kind: processing }
-          - { action: "RC := 1", kind: processing }
-          - { action: "P := 1", kind: processing }
-          - { decision: establish_data_link_mod_128, branch: No }
-          - { action: SABM, kind: signal_lower }
-          - { action: Stop T3, kind: processing }
-          - { action: Start T1, kind: processing }
-      - id: t02_establish_data_link_yes
+      - id: t01_establish_data_link_yes
         path:
           - { action: Clear Exception Conditions, kind: processing }
           - { action: "RC := 1", kind: processing }
           - { action: "P := 1", kind: processing }
           - { decision: establish_data_link_mod_128, branch: Yes }
           - { action: SABME, kind: signal_lower }
+          - { action: Stop T3, kind: processing }
+          - { action: Start T1, kind: processing }
+      - id: t02_establish_data_link_no
+        path:
+          - { action: Clear Exception Conditions, kind: processing }
+          - { action: "RC := 1", kind: processing }
+          - { action: "P := 1", kind: processing }
+          - { decision: establish_data_link_mod_128, branch: No }
+          - { action: SABM, kind: signal_lower }
           - { action: Stop T3, kind: processing }
           - { action: Start T1, kind: processing }
 
@@ -245,20 +245,20 @@ subroutines:
         question: "Own receiver busy?"
         predicate: own_receiver_busy
     paths:
-      - id: t01_transmit_enquiry_no
-        path:
-          - { action: "P := 1", kind: processing }
-          - { action: "N(r) := V(r)", kind: processing }
-          - { decision: transmit_enquiry_own_receiver_busy, branch: No }
-          - { action: RR Command, kind: signal_lower }
-          - { action: Clear Acknowledge Pending, kind: processing }
-          - { action: Start T1, kind: processing }
-      - id: t02_transmit_enquiry_yes
+      - id: t01_transmit_enquiry_yes
         path:
           - { action: "P := 1", kind: processing }
           - { action: "N(r) := V(r)", kind: processing }
           - { decision: transmit_enquiry_own_receiver_busy, branch: Yes }
           - { action: RNR Command, kind: signal_lower }
+          - { action: Clear Acknowledge Pending, kind: processing }
+          - { action: Start T1, kind: processing }
+      - id: t02_transmit_enquiry_no
+        path:
+          - { action: "P := 1", kind: processing }
+          - { action: "N(r) := V(r)", kind: processing }
+          - { decision: transmit_enquiry_own_receiver_busy, branch: No }
+          - { action: RR Command, kind: signal_lower }
           - { action: Clear Acknowledge Pending, kind: processing }
           - { action: Start T1, kind: processing }
 

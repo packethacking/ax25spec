@@ -1,0 +1,86 @@
+# Auto-generated from LinkMux_Idle.graphml. DO NOT EDIT.
+# Regenerate via `dotnet run --project codegen/src/Packet.Sdl.Transcribe`.
+
+machine: link_mux
+state: Idle
+source:
+  spec: ax.25.2.2.4_Oct_25
+  figure: figc3.1
+
+transitions:
+
+  - id: t01_lm_release_request
+    on: LM_RELEASE_request
+    on_label: LM-RELEASE Request
+    path: []
+    next: Idle
+
+  - id: t02_lm_data_request
+    on: LM_DATA_request
+    on_label: LM-DATA Request
+    path:
+      - { action: PH-SIEZE Request, kind: signal_lower }
+      - { action: "Current DL := Requesting DL", kind: processing }
+      - { action: Move all events submitted by current DL to Current Queue, kind: internal_out }
+    next: SiezePending
+
+  - id: t03_lm_expedited_data_request
+    on: LM_EXPEDITED_DATA_request
+    on_label: LM-EXPEDITED-DATA Request
+    path:
+      - { action: PH-SIEZE Request, kind: signal_lower }
+      - { action: "Current DL := Requesting DL", kind: processing }
+      - { action: Move all events submitted by current DL to Current Queue, kind: internal_out }
+    next: SiezePending
+
+  - id: t04_lm_seize_request
+    on: LM_SEIZE_request
+    on_label: LM-SIEZE Request
+    path:
+      - { action: PH-SIEZE Request, kind: signal_lower }
+      - { action: "Current DL := Requesting DL", kind: processing }
+      - { action: Move all events submitted by current DL to Current Queue, kind: internal_out }
+    next: SiezePending
+
+  - id: t05_all_other_primitives__from_upper_layer
+    on: all_other_primitives__from_upper_layer
+    on_label: All Other Primitives
+    path:
+      - { action: Queue Event, kind: subroutine }
+    next: Idle
+
+  - id: t06_queue_empty
+    on: queue_empty
+    on_label: Queue Empty
+    path:
+      - { action: Move all events in Served Queue to Awaiting Queue, kind: internal_out }
+      - { action: Clear Served DL List, kind: processing }
+    next: Idle
+
+  - id: t07_ph_seize_confirm
+    on: PH_SEIZE_confirm
+    on_label: PH-SIEZE Confirm
+    path:
+      - { action: PH-RELEASE Request, kind: signal_lower }
+    next: Idle
+
+  - id: t08_ph_data_indication
+    on: PH_DATA_indication
+    on_label: PH-DATA Indication
+    path:
+      - { action: Frame Received, kind: subroutine }
+    next: Idle
+
+  - id: t09_ph_busy_indication
+    on: PH_BUSY_indication
+    on_label: PH-BUSY Indication
+    path:
+      - { action: Suspend Link Layer Timing, kind: processing }
+    next: Idle
+
+  - id: t10_ph_quiet_indication
+    on: PH_QUIET_indication
+    on_label: PH-QUIET Indication
+    path:
+      - { action: Resume Link Layer Timing, kind: processing }
+    next: Idle

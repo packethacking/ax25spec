@@ -26,10 +26,10 @@ stateDiagram-v2
     Disconnected --> Disconnected: t08_info_not_permitted_in_frame<br/>on: info_not_permitted_in_frame<br/>/ ↑ DL-ERROR Indication (M)
     Disconnected --> Disconnected: t09_u_or_s_frame_length_error<br/>on: u_or_s_frame_length_error<br/>/ ↑ DL-ERROR Indication (N)
     Disconnected --> Disconnected: t10_ua_received<br/>on: UA_received<br/>/ ↑ DL_ERROR_indication_C_D
-    Disconnected --> Disconnected: t11_ui_received_no<br/>on: UI_received<br/>[not P_eq_1]<br/>/ →() UI Check
     Disconnected --> Disconnected: t11_ui_received_yes<br/>on: UI_received<br/>[P_eq_1]<br/>/ →() UI Check<br/>/ · F := 1<br/>/ ↓ DM
+    Disconnected --> Disconnected: t11_ui_received_no<br/>on: UI_received<br/>[not P_eq_1]<br/>/ →() UI Check
     Disconnected --> Disconnected: t12_disc_received<br/>on: DISC_received<br/>/ · F := P<br/>/ ↓ DM
-    Disconnected --> Disconnected: t13_sabm_received_no<br/>on: SABM_received<br/>[not able_to_establish]<br/>/ · F := P<br/>/ ↓ DM
     Disconnected --> Connected: t13_sabm_received_yes<br/>on: SABM_received<br/>[able_to_establish]<br/>/ · F := P<br/>/ · set_version_2_0<br/>/ ↓ UA<br/>/ →() Clear Exception Conditions<br/>/ · V(s) := 0<br/>/ · V(a) := 0<br/>/ · V(r) := 0<br/>/ ↑ DL_CONNECT_indication<br/>/ · SRT := Initial Default<br/>/ · T1V := 2 * SRT<br/>/ · Start T3<br/>/ · RC := 0
-    Disconnected --> Disconnected: t14_sabme_received_no<br/>on: SABME_received<br/>[not able_to_establish]<br/>/ · F := P<br/>/ ↓ DM
+    Disconnected --> Disconnected: t13_sabm_received_no<br/>on: SABM_received<br/>[not able_to_establish]<br/>/ · F := P<br/>/ ↓ DM
     Disconnected --> Connected: t14_sabme_received_yes<br/>on: SABME_received<br/>[able_to_establish]<br/>/ · F := P<br/>/ · Set Version 2.2<br/>/ ↓ UA<br/>/ →() Clear Exception Conditions<br/>/ · V(s) := 0<br/>/ · V(a) := 0<br/>/ · V(r) := 0<br/>/ ↑ DL_CONNECT_indication<br/>/ · SRT := Initial Default<br/>/ · T1V := 2 * SRT<br/>/ · Start T3<br/>/ · RC := 0
+    Disconnected --> Disconnected: t14_sabme_received_no<br/>on: SABME_received<br/>[not able_to_establish]<br/>/ · F := P<br/>/ ↓ DM

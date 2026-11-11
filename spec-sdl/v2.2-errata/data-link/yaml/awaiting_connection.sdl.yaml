@@ -66,14 +66,6 @@ transitions:
       - { decision: dm_f_eq_1, branch: No }
     next: AwaitingConnection
 
-  - id: t04_ua_received_no
-    on: UA_received
-    on_label: UA
-    path:
-      - { decision: ua_f_eq_1, branch: No }
-      - { action: DL-ERROR indication (D), kind: signal_upper }
-    next: AwaitingConnection
-
   - id: t04_ua_received_yes_yes
     on: UA_received
     on_label: UA
@@ -122,6 +114,14 @@ transitions:
       - { action: "V(r) := 0", kind: processing }
       - { action: Select T1 Value, kind: subroutine }
     next: Connected
+
+  - id: t04_ua_received_no
+    on: UA_received
+    on_label: UA
+    path:
+      - { decision: ua_f_eq_1, branch: No }
+      - { action: DL-ERROR indication (D), kind: signal_upper }
+    next: AwaitingConnection
 
   - id: t05_t1_expiry_yes
     on: T1_expiry

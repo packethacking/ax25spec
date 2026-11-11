@@ -1,0 +1,13 @@
+# Graphml files drawn by a person in yEd. Only these may carry yEd's
+# "<!--Created by yEd ...-->" comment. Any other graphml must carry an
+# agent marker instead (see check_graphml_provenance.py), so the file says
+# truthfully how it was made. Add a file here only if it really was drawn
+# in yEd, in the PR that adds it.
+spec-sdl/ax25-sdl-all-shapes.graphml
+spec-sdl/v2.2-errata/data-link/sdl/DataLink_AwaitingConnection.graphml
+spec-sdl/v2.2-errata/data-link/sdl/DataLink_AwaitingRelease.graphml
+spec-sdl/v2.2-errata/data-link/sdl/DataLink_AwaitingV22Connection.graphml
+spec-sdl/v2.2-errata/data-link/sdl/DataLink_Connected.graphml
+spec-sdl/v2.2-errata/data-link/sdl/DataLink_Disconnected.graphml
+spec-sdl/v2.2-errata/data-link/sdl/DataLink_Subroutines.graphml
+spec-sdl/v2.2-errata/data-link/sdl/DataLink_TimerRecovery.graphml
