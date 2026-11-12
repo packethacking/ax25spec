@@ -343,6 +343,11 @@ transitions:
       - { action: Clear Exception Conditions, kind: subroutine }
       - { action: DL-ERROR Indication (F), kind: signal_upper }
       - { decision: sabm_vs_eq_va, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Stop T3, kind: processing }
+      - { action: "V(s) := 0", kind: processing }
+      - { action: "V(a) := 0", kind: processing }
+      - { action: "V(r) := 0", kind: processing }
     next: Connected
 
   - id: t13_sabm_received_no
@@ -374,6 +379,11 @@ transitions:
       - { action: Clear Exception Conditions, kind: subroutine }
       - { action: DL-ERROR Indication (F), kind: signal_upper }
       - { decision: sabme_vs_eq_va, branch: Yes }
+      - { action: Stop T1, kind: processing }
+      - { action: Stop T3, kind: processing }
+      - { action: "V(s) := 0", kind: processing }
+      - { action: "V(a) := 0", kind: processing }
+      - { action: "V(r) := 0", kind: processing }
     next: Connected
 
   - id: t14_sabme_received_no
