@@ -554,14 +554,16 @@ transitions:
       function: ax25_std_state4_machine
       line: 328
       note: "RR/RNR non-(resp&pf): enquiry_response if cmd&pf, then ax25_frames_acked(nr) on valid N(R)"
-  t18_rr_received_no_no_no:
+  t18_rr_received_no_no_no_no:
     notes: >-
-      Plain RR (no P/F), N(R) out of window → N(r) Recovery (re-establish via
-      the v2.0 path here), stay/→ AwaitingConnection. AGREEMENT: a bad N(R)
-      triggers establish_data_link in direwolf/rax25/linux. DIVERGENCE: linbpq
-      routes all bad-N(R) to FRMR (SDFRMR) rather than N(r) error recovery; the
-      next-state also differs (figc4.5 keeps TimerRecovery for the v2.0 branch,
-      whereas direwolf/rax25/linux go to AwaitingConnection / STATE_1).
+      Plain RR (no P/F), N(R) out of window → N(r) Recovery, then the Version
+      2.2? decision: v2.0 → AwaitingConnection (this arm), v2.2 →
+      AwaitingV22Connection (t18_rr_received_no_no_no_yes). Before #12's
+      transcription fix this arm stayed in TimerRecovery; the July 1998 figure
+      sends it to 1 awaiting connection. AGREEMENT: a bad N(R) triggers
+      establish_data_link in direwolf/rax25/linux, and they go to
+      AwaitingConnection / STATE_1 as the figure now does. DIVERGENCE: linbpq
+      routes all bad-N(R) to FRMR (SDFRMR) rather than N(r) error recovery.
     references:
     - source: direwolf
       path: src/ax25_link.c
@@ -649,9 +651,11 @@ transitions:
       function: ACKMSG
       line: 3683
       note: "when LINKWS==LINKNS (all acked) and not retrying, L2TIMER=0 + clear POLLSENT (3706-3710) — equivalent of returning to the idle/Connected condition"
-  t19_rnr_received_no_no_no:
+  t19_rnr_received_no_no_no_no:
     notes: >-
-      RNR (no P/F), N(R) out of window → N(r) Recovery. RNR differs from RR only
+      RNR (no P/F), N(R) out of window → N(r) Recovery, then v2.0 →
+      AwaitingConnection (v2.2 → AwaitingV22Connection in
+      t19_rnr_received_no_no_no_yes). RNR differs from RR only
       in setting Peer Busy. DIVERGENCE FOR #-context: rax25 does NOT override
       `rnr` in its Connected/TimerRecovery impl, so RNR received in TimerRecovery
       hits the base-trait no-op stub ("TODO: unexpected RNR", src/state.rs:1007)
