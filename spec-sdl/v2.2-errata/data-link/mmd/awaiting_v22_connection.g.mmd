@@ -36,7 +36,7 @@ stateDiagram-v2
     AwaitingV22Connection --> AwaitingV22Connection: t12_ua_received_no<br/>on: UA_received<br/>[not F_eq_1]<br/>/ ↑ DL_ERROR_indication_D
     AwaitingV22Connection --> Disconnected: t13_t1_expiry_yes<br/>on: T1_expiry<br/>[RC_eq_N2]<br/>/ · discard_frame_queue<br/>/ ↑ DL-ERROR Indication (G)<br/>/ ↑ DL_DISCONNECT_indication
     AwaitingV22Connection --> AwaitingV22Connection: t13_t1_expiry_no<br/>on: T1_expiry<br/>[not RC_eq_N2]<br/>/ · RC := RC + 1<br/>/ ↓ SABME (P = 1)<br/>/ →() Select_T1_Value<br/>/ · Start T1
-    AwaitingV22Connection --> AwaitingConnection: t14_frmr_received<br/>on: FRMR_received<br/>/ · SRT := Initial Default<br/>/ · T1V := 2 * SRT<br/>/ →() Establish_Data_Link<br/>/ · Set Layer 3 Initiated<br/>/ · set_version_2_0
+    AwaitingV22Connection --> AwaitingConnection: t14_frmr_received<br/>on: FRMR_received<br/>/ · SRT := Initial Default<br/>/ · T1V := 2 * SRT<br/>/ · set_version_2_0<br/>/ · Set Layer 3 Initiated<br/>/ →() Establish_Data_Link
     AwaitingV22Connection --> AwaitingV22Connection: t15_sabme_received<br/>on: SABME_received<br/>/ · F := P<br/>/ ↓ UA
     AwaitingV22Connection --> AwaitingConnection: t16_sabm_received<br/>on: SABM_received<br/>/ · F := P<br/>/ ↓ UA<br/>/ · set_version_2_0
     AwaitingV22Connection --> AwaitingV22Connection: t17_disc_received<br/>on: DISC_received<br/>/ · F := P<br/>/ ↓ DM
