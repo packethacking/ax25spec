@@ -919,6 +919,14 @@ A receiving TNC may transmit one or more SREJ frames, each containing a differen
 
 I frames transmitted following the I frame indicated by the SREJ frame are not retransmitted as the result of receiving a SREJ frame.  Additional I frames awaiting initial transmission may be transmitted following the retransmission of the specific I frame requested by the SREJ frame.
 
+If the connection has negotiated SREJ multiframe, then in addition to the frame number in N(R), an SREJ frame may notify of several frames that need retransmission. For Modulo 8 connections, the additional frame numbers are encoded in each byte of the information field, in the three MSB bits. The 5 remaining bits per byte must be zero.
+
+For modulus 128 connections, the frame numbers are encoded in the 7 MSB bits in the information field bytes, with the LSB being zero.
+
+Modulus 128 also support frame ranges. Two adjacent information field bytes may set the LSB to 1, indicating start and end of a range, inclusive. Modulo 8 connections must not support ranges.
+
+All frame numbers, counting the N(R) field before the information field ranges, must be provided in sequence number order from earliest to newest. Not in numerical order.
+
 #### 4.3.3 Unnumbered Frame Control Fields
 
 Unnumbered frame control fields are either commands or responses. Figure 4.4 shows the layout of U frames implemented within this protocol.
@@ -1032,7 +1040,7 @@ The encoding of each PI/PL/PV applicable to AX.25 is detailed in Figure 4.5. Som
 | | | | Reserved \* |   | 7-15 | 0 |
 | HDLC Optional Functions | 3 | 3 | 1 Reserved \* | E | 0 | 0 |
 | | | | 2 REJ command/response | E | 1 | 0/1 |
-| | | | 3A SREJ command/response | E | 2 | 0/1 |
+| | | | 3A SREJ response | E | 2 | 0/1 |
 | | | | 4 UI command/response \* | E | 3 | 0 |
 | | | | 5 SIM command/RIM response \* | E | 4 | 0 |
 | | | | 6 UP command \* | E | 5 | 0 |
@@ -1193,11 +1201,11 @@ With respect to each direction of transmission on the data link, one or more “
 
 The SREJ frame may be repeated when a TNC perceives by timeout that a requested I frame will not be received, because either the requested I frame or the SREJ frame was in error or lost.
 
-When appropriate, a TNC receiving one or more SREJ frames initiates retransmission of the individual I frames indicated by the N(R) contained in each SREJ frame. After having retransmitted the above frames, new I frames are transmitted later if they become available.
-
-When a TNC receives and acts on one or more SREJ commands, each with the P bit set to “0”, or an SREJ command with the P bit set to “1”, or one or more SREJ responses each with the F bit set to “0”, it disables any action on the next SREJ response frame if that SREJ frame has the F bit set to “1” and has the same N(R) (i.e., the same value and the same numbering cycle) as a previously actioned SREJ frame, and if the resultant retransmission was made following the transmission of the P bit set to a “1”.
+When appropriate, a TNC receiving one or more SREJ frames initiates retransmission of the individual I frames indicated by the N(R) contained in each SREJ frame, and (if multiframe SREJ was negotiated) the additional frames listed in the information field. After having retransmitted the above frames, new I frames are transmitted later if they become available.
 
 When the SREJ mechanism is used, the receiving station retains correctly received I frames and delivers them to the higher layer in sequence number order.
+
+This format of multi SREJ is in line with X.25 per "Information technology - Telecommunications and information exchange between Systems - High-level data link control procedures - Description of the X.25 LAPB-compatible DTE data link procedures AMENDMENT 1: Modulo 32 768 and multi-selective reject Option".
 
 ##### 4.4.5 Timeout Error Recovery
 
@@ -1524,7 +1532,7 @@ If the TNC receives a REJ frame with the poll bit set, it responds with either a
 
 ### 6.4.8 Receiving an SREJ
 
-After receiving a SREJ frame, the transmitting TNC retransmits the individual I frame indicated by the N(R) contained in the SREJ at the next available opportunity. After retransmitting the frame above, new I frames may be retransmitted subsequently if they become available. If the P bit was set, then all frames up to N(R)-1 are acknowledged.
+After receiving a SREJ frame, the transmitting TNC retransmits the individual I frame indicated by the N(R) contained in the SREJ, and (if SREJ multiframe was negotiated) any additional frames listed in the information field, at the next available opportunity. After retransmitting the frame above, new I frames may be retransmitted subsequently if they become available. If the P bit was set, then all frames up to N(R)-1 are acknowledged.
 
 ### 6.4.9 Receiving an RNR Frame
 
@@ -1540,7 +1548,7 @@ If the originating TNC’s timer T1 expires while awaiting the distant TNC’s a
 
 If the TNC correctly receives a supervisory response frame with the F bit set and with an N(R) within the range from the last N(R) received to the last N(S) sent plus one, the TNC restarts timer T1 and sets its send state variable V(S) to the received N(R). It may then resume with I frame transmission or retransmission, as appropriate. If, on the other hand, the TNC correctly receives a supervisory response frame with the F bit not set, or an I frame or supervisory command frame, and with an N(R) within the range from the last N(R) received to the last N(S) sent plus one, the TNC does not restart timer T1; it uses the received N(R) as an indication of acknowledgement of transmitted I frames up to and including I frame numbered N(R)-1.
 
-The checkpoint retransmission described in the previous paragraph applies to the RR, RNR and REJ supervisory frames; it does not apply to SREJ. An SREJ response frame received while awaiting acknowledgement is processed as described in Sections 4.3.2.4 and 6.4.8: the TNC does not set its send state variable V(S) to the received N(R), and retransmits only the individual I frame indicated by the N(R) of the SREJ frame; I frames transmitted following that I frame are not retransmitted as the result of receiving the SREJ frame. Acknowledgement is inferred from an SREJ frame only when its F bit is set to “1”, in which case I frames numbered up to N(R)-1 inclusive are considered acknowledged; an SREJ frame with the F bit set to “0” does not indicate acknowledgement of I frames.
+The checkpoint retransmission described in the previous paragraph applies to the RR, RNR and REJ supervisory frames; it does not apply to SREJ. An SREJ frame received while awaiting acknowledgement is processed as described in Sections 4.3.2.4 and 6.4.8: the TNC does not set its send state variable V(S) to the received N(R), and retransmits only the individual I frame indicated by the N(R) of the SREJ frame (and, if enabled, any additional SREJ multiframe frames); I frames transmitted following that I frame are not retransmitted as the result of receiving the SREJ frame. Acknowledgement is inferred from an SREJ frame only when its F bit is set to “1”, in which case I frames numbered up to N(R)-1 inclusive are considered acknowledged; an SREJ frame with the F bit set to “0” does not indicate acknowledgement of I frames.
 
 If timer T1 expires before a supervisory response frame with the F bit set is received, the TNC retransmits an appropriate supervisory command frame (RR or RNR) with the P bit set. After N2 attempts to get a supervisory response frame with the F bit set from the distant TNC, the originating TNC initiates a link resetting procedure as described in Section 6.5.
 
