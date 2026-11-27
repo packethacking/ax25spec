@@ -65,7 +65,7 @@ Code Implementation:
 
 Please note that this Markdown edition is a conversion (and subsequent manual/AI-assisted clean-up) from source PDF/docx documents and as such may contain differences, which we hope through collaboration will be resolved by the community through contributions to this document, made via issues and PRs.
 
-## Forward
+## Foreword
 
 Packet radio has linked many thousands of amateur radio stations together directly and by the packet network. The packet network has grown from a series of digipeaters to a sophisticated global network consisting of several types of nodes, including HF gateways, Internet gateways and satellite links. This progress has happened since the publication of version 2.0 of the AX.25 protocol in 1984 by Terry L. Fox, WB4JFI.
 
